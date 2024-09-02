@@ -18,7 +18,7 @@
 
         <property name="nombreDocumentacion" column="nombre_documentacion" type="string"/>
         
-        <!-- Ver si agrego un set con los TTDOC  -->
+        
 
     </class>
 

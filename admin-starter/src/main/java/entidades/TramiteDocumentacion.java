@@ -4,6 +4,7 @@
  */
 package entidades;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ public class TramiteDocumentacion extends Entidad {
     
     private String archivoTD; // ver xq es tipo file 
     private int codTD;
-    private Date fechaEntregaTD;
+    private Timestamp fechaEntregaTD;
     private Documentacion documentacion;
 
     public TramiteDocumentacion() {
@@ -37,11 +38,11 @@ public class TramiteDocumentacion extends Entidad {
         this.codTD = codTD;
     }
 
-    public Date getFechaEntregaTD() {
+    public Timestamp getFechaEntregaTD() {
         return fechaEntregaTD;
     }
 
-    public void setFechaEntregaTD(Date fechaEntregaTD) {
+    public void setFechaEntregaTD(Timestamp fechaEntregaTD) {
         this.fechaEntregaTD = fechaEntregaTD;
     }
 

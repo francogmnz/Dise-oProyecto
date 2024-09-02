@@ -10,9 +10,9 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="fechaDesdeTTD" column="fecha_desde_ttd" type="date"/>
+        <property name="fechaDesdeTTD" column="fecha_desde_ttd" type="timestamp"/>
 
-        <property name="fechaHastaTTD" column="fecha_hasta_ttd" type="date"/>
+        <property name="fechaHastaTTD" column="fecha_hasta_ttd" type="timestamp"/>
 
         <property name="fechaHoraBajaTTD" column="fecha_hora_baja_ttd" type="timestamp"/>
 

@@ -19,8 +19,8 @@ public class ListaPrecios extends Entidad {
     //Lo mismo ver si usar Date o timestamp
     private int codListaPrecios;
     private Timestamp fechaHoraBajaListaPrecios;
-    private Date fechaHoraDesdeListaPrecios;
-    private Date fechaHoraHastaListaPrecios;
+    private Timestamp fechaHoraDesdeListaPrecios;
+    private Timestamp fechaHoraHastaListaPrecios;
     private List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = new ArrayList<>();  // Relación OneToMany con TipoTramiteListaPrecios
 
     public ListaPrecios() {
@@ -42,19 +42,19 @@ public class ListaPrecios extends Entidad {
         this.fechaHoraBajaListaPrecios = fechaHoraBajaListaPrecios;
     }
 
-    public Date getFechaHoraDesdeListaPrecios() {
+    public Timestamp getFechaHoraDesdeListaPrecios() {
         return fechaHoraDesdeListaPrecios;
     }
 
-    public void setFechaHoraDesdeListaPrecios(Date fechaHoraDesdeListaPrecios) {
+    public void setFechaHoraDesdeListaPrecios(Timestamp fechaHoraDesdeListaPrecios) {
         this.fechaHoraDesdeListaPrecios = fechaHoraDesdeListaPrecios;
     }
 
-    public Date getFechaHoraHastaListaPrecios() {
+    public Timestamp getFechaHoraHastaListaPrecios() {
         return fechaHoraHastaListaPrecios;
     }
 
-    public void setFechaHoraHastaListaPrecios(Date fechaHoraHastaListaPrecios) {
+    public void setFechaHoraHastaListaPrecios(Timestamp fechaHoraHastaListaPrecios) {
         this.fechaHoraHastaListaPrecios = fechaHoraHastaListaPrecios;
     }
 

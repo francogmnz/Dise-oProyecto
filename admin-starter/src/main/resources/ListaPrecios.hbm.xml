@@ -14,9 +14,9 @@
 
         <property name="fechaHoraBajaListaPrecios" column="fecha_hora_baja_lista_precios" type="timestamp"/>
 
-        <property name="fechaHoraDesdeListaPrecios" column="fecha_hora_desde_lista_precios" type="date"/>
+        <property name="fechaHoraDesdeListaPrecios" column="fecha_hora_desde_lista_precios" type="timestamp"/>
 
-        <property name="fechaHoraHastaListaPrecios" column="fecha_hora_hasta_lista_precios" type="date"/>
+        <property name="fechaHoraHastaListaPrecios" column="fecha_hora_hasta_lista_precios" type="timestamp"/>
 
 
         <!-- Relación OneToMany con TipoTramiteListaPrecios -->

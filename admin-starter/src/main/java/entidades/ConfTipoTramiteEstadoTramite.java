@@ -14,8 +14,8 @@ import java.util.List;
 public class ConfTipoTramiteEstadoTramite extends Entidad {
     
     private int contadorConfigTTET;
-    private int EtapaOrigen;  // Relación ManyToOne con EstadoTramite (origen) Ver 
-    private int EtapaDestino;  // Relación ManyToOne con EstadoTramite (destino)Ver
+    private int EtapaOrigen;  
+    private int EtapaDestino;  
     private List<EstadoTramite> estadoTramiteOrigen = new ArrayList<>(); // ??
     private List<EstadoTramite> estadoTramiteDestino = new ArrayList<>(); // ??
 

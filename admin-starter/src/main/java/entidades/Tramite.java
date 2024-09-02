@@ -18,10 +18,10 @@ public class Tramite extends Entidad {
     //Ver si usar Date o Timestamp como en el resto 
    
     private Timestamp fechaAnulacionTramite;
-    private Date fechaFinTramite;
-    private Date fechaInicioTramite;
-    private Date fechaPresentacionTotalDocumentacion;
-    private Date fechaRecepcionTramite;
+    private Timestamp fechaFinTramite;
+    private Timestamp fechaInicioTramite;
+    private Timestamp fechaPresentacionTotalDocumentacion;
+    private Timestamp fechaRecepcionTramite;
     private int nroTramite;
     private int precioTramite; // double.. respete DC..
     private Cliente cliente;  // Relación ManyToOne
@@ -45,35 +45,35 @@ public class Tramite extends Entidad {
         this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
-    public Date getFechaFinTramite() {
+    public Timestamp getFechaFinTramite() {
         return fechaFinTramite;
     }
 
-    public void setFechaFinTramite(Date fechaFinTramite) {
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
         this.fechaFinTramite = fechaFinTramite;
     }
 
-    public Date getFechaInicioTramite() {
+    public Timestamp getFechaInicioTramite() {
         return fechaInicioTramite;
     }
 
-    public void setFechaInicioTramite(Date fechaInicioTramite) {
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
         this.fechaInicioTramite = fechaInicioTramite;
     }
 
-    public Date getFechaPresentacionTotalDocumentacion() {
+    public Timestamp getFechaPresentacionTotalDocumentacion() {
         return fechaPresentacionTotalDocumentacion;
     }
 
-    public void setFechaPresentacionTotalDocumentacion(Date fechaPresentacionTotalDocumentacion) {
+    public void setFechaPresentacionTotalDocumentacion(Timestamp fechaPresentacionTotalDocumentacion) {
         this.fechaPresentacionTotalDocumentacion = fechaPresentacionTotalDocumentacion;
     }
 
-    public Date getFechaRecepcionTramite() {
+    public Timestamp getFechaRecepcionTramite() {
         return fechaRecepcionTramite;
     }
 
-    public void setFechaRecepcionTramite(Date fechaRecepcionTramite) {
+    public void setFechaRecepcionTramite(Timestamp fechaRecepcionTramite) {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
     }
 

@@ -15,27 +15,27 @@ import java.util.Date;
 //Extiendo entidad?
 public class TipoTramiteDocumentacion extends Entidad {
     
-    private Date fechaDesdeTTD;
-    private Date fechaHastaTTD;
+    private Timestamp fechaDesdeTTD;
+    private Timestamp fechaHastaTTD;
     private Timestamp fechaHoraBajaTTD;
-    private Documentacion documentacion;  // Relación ManyToOne con Documentacion
+    private Documentacion documentacion;  
 
     public TipoTramiteDocumentacion() {
     }
 
-    public Date getFechaDesdeTTD() {
+    public Timestamp getFechaDesdeTTD() {
         return fechaDesdeTTD;
     }
 
-    public void setFechaDesdeTTD(Date fechaDesdeTTD) {
+    public void setFechaDesdeTTD(Timestamp fechaDesdeTTD) {
         this.fechaDesdeTTD = fechaDesdeTTD;
     }
 
-    public Date getFechaHastaTTD() {
+    public Timestamp getFechaHastaTTD() {
         return fechaHastaTTD;
     }
 
-    public void setFechaHastaTTD(Date fechaHastaTTD) {
+    public void setFechaHastaTTD(Timestamp fechaHastaTTD) {
         this.fechaHastaTTD = fechaHastaTTD;
     }
 

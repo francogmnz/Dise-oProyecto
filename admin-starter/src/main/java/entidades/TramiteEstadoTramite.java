@@ -14,7 +14,6 @@ public class TramiteEstadoTramite extends Entidad {
     
     private Timestamp fechaHoraAltaTET;
     private Timestamp fechaHoraBajaTET;
-    private Tramite tramite;  // Relación ManyToOne con Tramite
     private EstadoTramite estadoTramite;  // Relación ManyToOne con EstadoTramite
 
     public TramiteEstadoTramite() {
@@ -36,13 +35,6 @@ public class TramiteEstadoTramite extends Entidad {
         this.fechaHoraBajaTET = fechaHoraBajaTET;
     }
 
-    public Tramite getTramite() {
-        return tramite;
-    }
-
-    public void setTramite(Tramite tramite) {
-        this.tramite = tramite;
-    }
 
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;

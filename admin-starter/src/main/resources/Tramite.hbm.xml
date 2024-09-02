@@ -12,13 +12,13 @@
 
         <property name="fechaAnulacionTramite" column="fecha_anulacion_tramite" type="timestamp"/>
 
-        <property name="fechaFinTramite" column="fecha_fin_tramite" type="date"/>
+        <property name="fechaFinTramite" column="fecha_fin_tramite" type="timestamp"/>
 
-        <property name="fechaInicioTramite" column="fecha_inicio_tramite" type="date"/>
+        <property name="fechaInicioTramite" column="fecha_inicio_tramite" type="timestamp"/>
 
-        <property name="fechaPresentacionTotalDocumentacion" column="fecha_presentacion_total_documentacion" type="date"/>
+        <property name="fechaPresentacionTotalDocumentacion" column="fecha_presentacion_total_documentacion" type="timestamp"/>
 
-        <property name="fechaRecepcionTramite" column="fecha_recepcion_tramite" type="date"/>
+        <property name="fechaRecepcionTramite" column="fecha_recepcion_tramite" type="timestamp"/>
 
         <property name="nroTramite" column="nro_tramite" type="int"/>
 

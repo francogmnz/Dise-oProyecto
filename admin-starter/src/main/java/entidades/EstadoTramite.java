@@ -17,7 +17,7 @@ public class EstadoTramite extends Entidad {
     private String descripcionEstadoTramite;
     private Timestamp fechaHoraBajaEstadoTramite;
     private Timestamp fechaHoraAltaEstadoTramite;
-    //private ConfTipoTramiteEstadoTramite confTipoTramiteEstadoTramite;  // Relación ManyToOne con ConfTipoTramiteEstadoTramite
+    
 
     public EstadoTramite() {
     }
