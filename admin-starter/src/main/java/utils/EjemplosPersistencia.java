@@ -97,6 +97,8 @@ public class EjemplosPersistencia {
     
     public void crearElementos2(){
         
+        //Error
+        
         try{
     
         EstadoTramite etapaUno = new EstadoTramite();
@@ -156,7 +158,7 @@ public class EjemplosPersistencia {
     ttd1.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
     
 
-    // Asumiendo que tipoTramite1 y doc1 ya están creados
+    
     
     ttd1.setDocumentacion(doc1);
 
@@ -169,7 +171,7 @@ public class EjemplosPersistencia {
     ttd2.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
  
 
-    // Asumiendo que tipoTramite2 y doc2 ya están creados
+    
     
     ttd2.setDocumentacion(doc2);
 
@@ -427,6 +429,7 @@ public class EjemplosPersistencia {
     FachadaPersistencia.getInstance().finalizarTransaccion();
     
         }
+       
         catch (Exception e) {
         
         System.out.println("Error");
