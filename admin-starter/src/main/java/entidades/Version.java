@@ -5,6 +5,7 @@
 package entidades;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class Version extends Entidad {
     private Timestamp fechaHastaVersion;
     
     private TipoTramite tipoTramite;
-    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite;  // Relación OneToMany con ConfTipoTramiteEstadoTramite
+    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  // Relación OneToMany con ConfTipoTramiteEstadoTramite
 
     public Version() {
     }
@@ -80,6 +81,8 @@ public class Version extends Entidad {
         this.confTipoTramiteEstadoTramite = confTipoTramiteEstadoTramite;
     }
 
-    
+    public void addConfTipoTramiteEstadoTramite(ConfTipoTramiteEstadoTramite cttet) {
+        confTipoTramiteEstadoTramite.add(cttet);   
+}  
     
 }

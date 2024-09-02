@@ -5,6 +5,7 @@
 package entidades;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +25,12 @@ public class Tramite extends Entidad {
     private int nroTramite;
     private int precioTramite; // double.. respete DC..
     private Cliente cliente;  // Relación ManyToOne
-    private List<TramiteEstadoTramite> tramiteEstadoTramite; // Relacion ManyToOne
+    private List<TramiteEstadoTramite> tramiteEstadoTramite = new ArrayList<>(); // Relacion ManyToOne
     private EstadoTramite estadoTramite; //Relacion ManyToOne
     private Consultor consultor; //Relacion ManyToOne
     private Version version; //Relacion ManyToOne
     private TipoTramite tipoTramite; // Relacion ManyToOne
-    private List<TramiteDocumentacion> tramiteDocumentacion;
+    private List<TramiteDocumentacion> tramiteDocumentacion = new ArrayList<>();
     
     
 
@@ -107,6 +108,11 @@ public class Tramite extends Entidad {
     public void setTramiteEstadoTramite(List<TramiteEstadoTramite> tramiteEstadoTramite) {
         this.tramiteEstadoTramite = tramiteEstadoTramite;
     }
+    
+    public void addTramiteEstadoTramite(TramiteEstadoTramite tet) {
+        tramiteEstadoTramite.add(tet);   
+}   
+    
 
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
@@ -148,7 +154,9 @@ public class Tramite extends Entidad {
         this.tramiteDocumentacion = tramiteDocumentacion;
     }
 
-    
+    public void addTramiteDocumentacion(TramiteDocumentacion td) {
+        tramiteDocumentacion.add(td);   
+}   
     
     
 }

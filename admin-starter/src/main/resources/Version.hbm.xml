@@ -25,7 +25,7 @@
 
         <!-- Relación OneToMany con ConfTipoTramiteEstadoTramite -->
         <bag name="confTipoTramiteEstadoTramite" table="conf_tipo_tramite_estado_tramite" cascade="none">
-            <key column="OIDVersion" not-null = "true"/>
+            <key column="OIDVersion" not-null="true"/>
             <one-to-many class="entidades.ConfTipoTramiteEstadoTramite"/>
         </bag>
         

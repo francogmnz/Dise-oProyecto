@@ -23,21 +23,22 @@
         <mapping resource="articulo.hbm.xml"/>
         <mapping resource="detallereposicion.hbm.xml"/>
         <mapping resource="reposicion.hbm.xml"/>
-        <mapping resource="AgendaConsultor.hbm.xml" />
-        <mapping resource="CategoriaTipoTramite.hbm.xml" />
-        <mapping resource="Cliente.hbm.xml" />
-        <mapping resource="ConfTipoTramiteEstadoTramite.hbm.xml" />
-        <mapping resource="Consultor.hbm.xml" />
-        <mapping resource="Documentacion.hbm.xml" />
-        <mapping resource="EstadoTramite.hbm.xml" />
-        <mapping resource="ListaPrecios.hbm.xml" />
-        <mapping resource="TipoTramite.hbm.xml" />
-        <mapping resource="TipoTramiteDocumentacion.hbm.xml" />
-        <mapping resource="TipoTramiteListaPrecios.hbm.xml" />
-        <mapping resource="Tramite.hbm.xml" />
-        <mapping resource="TramiteDocumentacion.hbm.xml" />
-        <mapping resource="TramiteEstadoTramite.hbm.xml" />
-        <mapping resource="Version.hbm.xml" />
+        <mapping resource="AgendaConsultor.hbm.xml"/>
+        <mapping resource="CategoriaTipoTramite.hbm.xml"/>
+        <mapping resource="Cliente.hbm.xml"/>
+        <mapping resource="ConfTipoTramiteEstadoTramite.hbm.xml"/>
+        <mapping resource="Consultor.hbm.xml"/>
+        <mapping resource="Documentacion.hbm.xml"/>
+        <mapping resource="EstadoTramite.hbm.xml"/>
+        <mapping resource="ListaPrecios.hbm.xml"/>
+        <mapping resource="TipoTramite.hbm.xml"/>
+        <mapping resource="TipoTramiteDocumentacion.hbm.xml"/>
+        <mapping resource="TipoTramiteListaPrecios.hbm.xml"/>
+        <mapping resource="Tramite.hbm.xml"/>
+        <mapping resource="TramiteDocumentacion.hbm.xml"/>
+        <mapping resource="TramiteEstadoTramite.hbm.xml"/>
+        <mapping resource="Version.hbm.xml"/>
+
     </session-factory>
 
 </hibernate-configuration>

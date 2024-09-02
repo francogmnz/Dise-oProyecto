@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
 
@@ -15,19 +15,19 @@
         </property>
 
         <!-- Relación OneToMany con EstadoTramite (origen) -->
-        <bag name="estadosTramiteOrigen" table="estado_tramite" cascade="none">
-            <key column="OIDConfTipoTramiteEstadoTramite"not-null = "true"/>
+        <bag name="estadoTramiteOrigen" table="estado_tramite" cascade="none" inverse="true">
+            <key column="OIDConfTipoTramiteEstadoTramite" not-null="true"/>
             <one-to-many class="entidades.EstadoTramite"/>
         </bag>
 
-        <!-- Relación OneToMany con EstadoTramite (destino) -->
-        <bag name="estadosTramiteDestino" table="estado_tramite" cascade="none">
-            <key column="OIDConfTipoTramiteEstadoTramite"not-null = "true"/>
+        <!-- Relación OneToMany con EstadoTramite (destino) 
+        <bag name="estadoTramiteDestino" table="estado_tramite" cascade="none">
+            <key column="OIDConfTipoTramiteEstadoTramite" not-null="true"/>
             <one-to-many class="entidades.EstadoTramite"/>
         </bag>
-
-
-
+        
+        Me hace problemas el origen - Destino
+        -->
     </class>
 
 </hibernate-mapping>

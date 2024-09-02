@@ -4,6 +4,7 @@
  */
 package entidades;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +14,10 @@ import java.util.List;
 public class ConfTipoTramiteEstadoTramite extends Entidad {
     
     private int contadorConfigTTET;
-    private EstadoTramite origen;  // Relación ManyToOne con EstadoTramite (origen) Ver 
-    private EstadoTramite destino;  // Relación ManyToOne con EstadoTramite (destino)Ver
-    private List<EstadoTramite> estadoTramiteOrigen; // ??
-    private List<EstadoTramite> estadoTramiteDestino; // ??
+    private int EtapaOrigen;  // Relación ManyToOne con EstadoTramite (origen) Ver 
+    private int EtapaDestino;  // Relación ManyToOne con EstadoTramite (destino)Ver
+    private List<EstadoTramite> estadoTramiteOrigen = new ArrayList<>(); // ??
+    private List<EstadoTramite> estadoTramiteDestino = new ArrayList<>(); // ??
 
     public ConfTipoTramiteEstadoTramite() {
     }
@@ -29,21 +30,22 @@ public class ConfTipoTramiteEstadoTramite extends Entidad {
         this.contadorConfigTTET = contadorConfigTTET;
     }
 
-    public EstadoTramite getOrigen() {
-        return origen;
+    public int getEtapaOrigen() {
+        return EtapaOrigen;
     }
 
-    public void setOrigen(EstadoTramite origen) {
-        this.origen = origen;
+    public void setEtapaOrigen(int EtapaOrigen) {
+        this.EtapaOrigen = EtapaOrigen;
     }
 
-    public EstadoTramite getDestino() {
-        return destino;
+    public int getEtapaDestino() {
+        return EtapaDestino;
     }
 
-    public void setDestino(EstadoTramite destino) {
-        this.destino = destino;
+    public void setEtapaDestino(int EtapaDestino) {
+        this.EtapaDestino = EtapaDestino;
     }
+
 
     public List<EstadoTramite> getEstadoTramiteOrigen() {
         return estadoTramiteOrigen;
@@ -59,8 +61,16 @@ public class ConfTipoTramiteEstadoTramite extends Entidad {
 
     public void setEstadoTramiteDestino(List<EstadoTramite> estadoTramiteDestino) {
         this.estadoTramiteDestino = estadoTramiteDestino;
+        
     }
 
+    public void addEstadoTramiteOrigen(EstadoTramite eto) {
+        estadoTramiteOrigen.add(eto);   
+}
+    
+    public void addEstadoTramiteDestino(EstadoTramite etd) {
+        estadoTramiteDestino.add(etd);   
+}
 
     
 }

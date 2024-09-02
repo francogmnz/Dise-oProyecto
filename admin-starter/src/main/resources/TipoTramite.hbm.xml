@@ -37,7 +37,7 @@
         
         <!-- Relación OneToMany con TipoTramiteDocumentacion -->
         <bag name="tipoTramiteDocumentacion" table="tipo_tramite_documentacion" cascade="none">
-            <key column="OIDTipoTramite" not-null = "true"/>
+            <key column="OIDTipoTramite" not-null="true"/>
             <one-to-many class="entidades.TipoTramiteDocumentacion"/>
         </bag>
 

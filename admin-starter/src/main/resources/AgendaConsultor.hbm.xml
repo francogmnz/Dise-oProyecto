@@ -1,6 +1,7 @@
-
-</hibernate-mapping>?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
 
 <hibernate-mapping>
 
@@ -11,7 +12,7 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="codigoAgendaConsultor" type="int">
+        <property name="codAgendaConsultor" type="int">
             <column name="codigo_agenda_consultor"/>
         </property>
 
@@ -23,7 +24,7 @@
         
         <!-- Relación ManyToMany con Consultor -->
         <bag name="consultores" table="consultor_agenda_consultor">
-            <key column="OIDAgendaConsultor" not-null = "True"/>
+            <key column="OIDAgendaConsultor" not-null="true"/>
             <many-to-many class="entidades.Consultor" column="OIDConsultor"/>
         </bag>
 

@@ -5,6 +5,7 @@
 package entidades;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class TipoTramite extends Entidad {
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
     private CategoriaTipoTramite categoriaTipoTramite;  // Relación ManyToOne con CategoriaTipoTramite
-    private List<TipoTramiteDocumentacion> tipoTramiteDocumentacion;  // Relación OneToMany con TipoTramiteDocumentacion
+    private List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = new ArrayList<>();  // Relación OneToMany con TipoTramiteDocumentacion
 
     public TipoTramite() {
     }
@@ -89,6 +90,11 @@ public class TipoTramite extends Entidad {
 
     public void setTipoTramiteDocumentacion(List<TipoTramiteDocumentacion> tipoTramiteDocumentacion) {
         this.tipoTramiteDocumentacion = tipoTramiteDocumentacion;
+        
+    }
+    
+    public void addTipoTramiteDocumentacion(TipoTramiteDocumentacion ttd) {
+        tipoTramiteDocumentacion.add(ttd);   
     }
 
     
