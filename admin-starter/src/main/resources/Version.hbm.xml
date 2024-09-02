@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.Version" table="version">
+
+        <id name="OID" type="string">
+            <column name="OIDVersion"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="nroVersion" column="nro_version" type="int"/>
+
+        <property name="descripcionVersion" column="descripcion_version" type="string"/>
+
+        <property name="fechaBajaVersion" column="fecha_baja_version" type="timestamp"/>
+
+        <property name="fechaDesdeVersion" column="fecha_desde_version" type="timestamp"/>
+
+        <property name="fechaHastaVersion" column="fecha_hasta_version" type="timestamp"/>
+
+        <!-- Relación ManyToOne con TipoTramite -->
+        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
+
+        <!-- Relación OneToMany con ConfTipoTramiteEstadoTramite -->
+        <bag name="confTipoTramiteEstadoTramite" table="conf_tipo_tramite_estado_tramite" cascade="none">
+            <key column="OIDVersion" not-null = "true"/>
+            <one-to-many class="entidades.ConfTipoTramiteEstadoTramite"/>
+        </bag>
+        
+
+
+
+    </class>
+
+</hibernate-mapping>

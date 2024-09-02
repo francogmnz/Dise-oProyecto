@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Estado"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+        
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Trabajar con Estado
+    </ui:define>
+
+    <ui:define name="body">
+    <h:form>
+        <p:focus context="@form"/>
+            <div class="box box-primary">
+                        
+                     <div class="box-header with-border">
+                         <div id="main-buttons">
+
+                            <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmEstadoLista.irAgregarEstado()}"   styleClass="btn-primary"/>
+                               </div>
+                      </div>
+        <!-- Tabla para mostrar la lista de artículos -->
+         <p:separator/>
+
+                   <div class="ui-g ui-fluid">
+                   <div class="ui-g-12 ui-md-6">
+                    <p:outputPanel>
+                        <h:outputText value="Código:"/>
+                        <p:spacer height="10"/>
+                        <p:inputText id="codFilter"  style="width:150px"
+                                     placeholder="" value="#{uiabmEstadoLista.codigoFiltro}" onfocus="Javascript:this.focus();this.select();">
+                                        <p:ajax event="keyup" 
+                                            listener="#{uiabmEstadoLista.filtrar()}" 
+                                            update="@form:grid1"
+                                            />
+                                     
+                                    </p:inputText>
+
+                    </p:outputPanel> </div>
+
+                   <div class="ui-g-12 ui-md-6">
+                   <p:outputPanel>
+                        <h:outputText value="Descripción:"/>
+                        <p:spacer height="10"/>
+                        <p:inputText id="nomFilter"  style="width:150px"
+                                     placeholder="" value="#{uiabmEstadoLista.nombreFiltro}">
+                                        <p:ajax event="keyup" 
+                                            listener="#{uiabmEstadoLista.filtrar()}" 
+                                            update="@form:grid1"
+                                        />
+                                     
+                        </p:inputText>
+                    </p:outputPanel> 
+                   </div>
+                   </div>
+            <p:spacer height="5"/>
+            <p:dataTable id="grid1" widgetVar="estadoTable" value="#{uiabmEstadoLista.buscarEstados()}" var="estado" >
+
+            <p:column>
+                <f:facet name="header">Código</f:facet>
+                #{estado.codigo}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Nombre</f:facet>
+                #{estado.nombre}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Fecha Alta</f:facet>
+                #{estado.fechaAlta}
+            </p:column>
+
+
+            <p:column>
+                <f:facet name="header">Fecha Baja</f:facet>
+                #{estado.fechaBaja}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Acciones</f:facet>
+                <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmEstadoLista.irModificarEstado(estado.codigo)}" disabled="#{estado.fechaBaja != null}">
+                    <f:ajax render="@form"/>
+                </p:commandButton>
+                <p:spacer width="5"/>
+                <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmEstadoLista.darDeBajaEstado(estado.codigo)}" disabled="#{estado.fechaBaja != null}">
+                   
+                    <p:confirm header="Anulación de #{estado.codigo} #{estado.nombre}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                    
+                </p:commandButton>
+                
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+            </p:column>
+
+        </p:dataTable>
+            </div>
+
+   </h:form>
+
+ </ui:define>
+    </ui:composition>

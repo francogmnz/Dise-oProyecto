@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.Tramite" table="tramite">
+
+        <id name="OID" type="string">
+            <column name="OIDTramite"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="fechaAnulacionTramite" column="fecha_anulacion_tramite" type="timestamp"/>
+
+        <property name="fechaFinTramite" column="fecha_fin_tramite" type="date"/>
+
+        <property name="fechaInicioTramite" column="fecha_inicio_tramite" type="date"/>
+
+        <property name="fechaPresentacionTotalDocumentacion" column="fecha_presentacion_total_documentacion" type="date"/>
+
+        <property name="fechaRecepcionTramite" column="fecha_recepcion_tramite" type="date"/>
+
+        <property name="nroTramite" column="nro_tramite" type="int"/>
+
+        <property name="precioTramite" column="precio_tramite" type="int"/>
+
+
+
+        <!-- Relación ManyToOne con EstadoTramite -->
+        <many-to-one name="estadoTramite" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="true"/>
+
+        <!-- Relación ManyToOne con Consultor -->
+        <many-to-one name="consultor" class="entidades.Consultor" column="OIDConsultor" not-null="true"/>
+
+        <!-- Relación ManyToOne con Cliente -->
+        <many-to-one name="cliente" class="entidades.Cliente" column="OIDCliente" not-null="true"/>        
+        
+        <!-- Relación ManyToOne con Version -->
+        <many-to-one name="version" class="entidades.Version" column="OIDVersion" not-null="true"/>
+
+        <!-- Relación ManyToOne con TipoTramite -->
+        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
+
+        <!-- Relación OneToMany con TramiteEstadoTramite -->
+        <bag name="tramiteEstadoTramite" table="tramite_estado_tramite">
+            <key column="OIDTramite" not-null = "true"/>
+            <one-to-many class="entidades.TramiteEstadoTramite"/>
+        </bag>
+
+        <!-- Relación OneToMany con TramiteDocumentacion -->
+        <bag name="tramiteDocumentacion" table="tramite_documentacion" cascade="none">
+            <key column="OIDTramite" not-null = "true"/>
+            <one-to-many class="entidades.TramiteDocumentacion"/>
+        </bag>
+
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.TipoTramiteListaPrecios" table="tipo_tramite_lista_precios">
+
+        <id name="OID" type="string">
+            <column name="OIDprecioTipoTramite"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="precioTipoTramite" type="int">
+            <column name="precio_tipo_tramite"/>
+        </property>
+
+        <!-- Relación ManyToOne con TipoTramite -->
+        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.Documentacion" table="documentacion">
+
+        <id name="OID" type="string">
+            <column name="OIDDocumentacion"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="codDocumentacion" column="cod_documentacion" type="int"/>
+
+        <property name="descripcionDocumentacion" column="descripcion_documentacion" type="string"/>
+
+        <property name="fechaHoraBajaDocumentacion" column="fecha_hora_baja_documentacion" type="timestamp"/>
+
+        <property name="nombreDocumentacion" column="nombre_documentacion" type="string"/>
+        
+        <!-- Ver si agrego un set con los TTDOC  -->
+
+    </class>
+
+</hibernate-mapping>

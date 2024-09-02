@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.DetalleReposicion" table="detallereposicion">
+
+        <id name="OID" type="string">
+            <column name="OIDDetalleReposicion"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="cantidad" type="int">
+            <column name="cantidad"/>
+        </property>
+
+        <many-to-one name="articulo" class="entidades.Articulo" column="OIDArticulo" not-null="true"/>
+    </class>
+
+</hibernate-mapping>

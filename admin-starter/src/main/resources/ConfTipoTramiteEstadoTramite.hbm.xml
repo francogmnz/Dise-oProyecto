@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.ConfTipoTramiteEstadoTramite" table="conf_tipo_tramite_estado_tramite">
+
+        <id name="OID" type="string">
+            <column name="OIDConfTipoTramiteEstadoTramite"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="contadorConfigTTET" type="int">
+            <column name="contador_config_tt_et"/>
+        </property>
+
+        <!-- Relación OneToMany con EstadoTramite (origen) -->
+        <bag name="estadosTramiteOrigen" table="estado_tramite" cascade="none">
+            <key column="OIDConfTipoTramiteEstadoTramite"not-null = "true"/>
+            <one-to-many class="entidades.EstadoTramite"/>
+        </bag>
+
+        <!-- Relación OneToMany con EstadoTramite (destino) -->
+        <bag name="estadosTramiteDestino" table="estado_tramite" cascade="none">
+            <key column="OIDConfTipoTramiteEstadoTramite"not-null = "true"/>
+            <one-to-many class="entidades.EstadoTramite"/>
+        </bag>
+
+
+
+    </class>
+
+</hibernate-mapping>
