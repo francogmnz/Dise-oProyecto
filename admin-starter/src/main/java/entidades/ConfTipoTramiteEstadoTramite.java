@@ -16,8 +16,8 @@ public class ConfTipoTramiteEstadoTramite extends Entidad {
     private int contadorConfigTTET;
     private int EtapaOrigen;  
     private int EtapaDestino;  
-    private List<EstadoTramite> estadoTramiteOrigen = new ArrayList<>(); // ??
-    private List<EstadoTramite> estadoTramiteDestino = new ArrayList<>(); // ??
+    private List<EstadoTramite> estadoTramiteOrigen = new ArrayList<>(); 
+    private List<EstadoTramite> estadoTramiteDestino = new ArrayList<>(); 
 
     public ConfTipoTramiteEstadoTramite() {
     }

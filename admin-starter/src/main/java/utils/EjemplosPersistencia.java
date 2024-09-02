@@ -24,7 +24,7 @@ public class EjemplosPersistencia {
      */
     public void Metodo() {
         // Reemplazar la siguiente linea con el metodo que se desea probar.
-        crearElementos();
+        crearElementos2();
     }
 
     /**
@@ -106,6 +106,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaUno = new EstadoTramite();
         etapaUno.setCodEstadoTramite(1);
+        etapaUno.setNombreEstadoTramite("Nombre1");
         etapaUno.setDescripcionEstadoTramite("Pendiente Doc");
         etapaUno.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaUno.setFechaHoraBajaEstadoTramite(null);
@@ -115,6 +116,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaDos = new EstadoTramite();
         etapaDos.setCodEstadoTramite(2);
+        etapaDos.setNombreEstadoTramite("Nombre2");
         etapaDos.setDescripcionEstadoTramite("Pendiente Consultor");
         etapaDos.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaDos.setFechaHoraBajaEstadoTramite(null);
@@ -167,6 +169,7 @@ public class EjemplosPersistencia {
 
     
     // Ejemplo 1 - TipoTramiteDocumentacion
+    /* 
     TipoTramiteDocumentacion ttd1 = new TipoTramiteDocumentacion();
     ttd1.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
     ttd1.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
@@ -469,6 +472,7 @@ public class EjemplosPersistencia {
 
     FachadaPersistencia.getInstance().guardar(tramite2);
 
+    */
     
     FachadaPersistencia.getInstance().finalizarTransaccion();
     
