@@ -96,6 +96,8 @@ public class EjemplosPersistencia {
     }
     
     public void crearElementos2(){
+        
+        try{
     
         EstadoTramite etapaUno = new EstadoTramite();
         etapaUno.setCodEstadoTramite(1);
@@ -150,8 +152,8 @@ public class EjemplosPersistencia {
     
     // Ejemplo 1 - TipoTramiteDocumentacion
     TipoTramiteDocumentacion ttd1 = new TipoTramiteDocumentacion();
-    ttd1.setFechaDesdeTTD(Timestamp.valueOf("2024-01-01 00:00:00"));
-    ttd1.setFechaHastaTTD(Timestamp.valueOf("2024-12-31 23:59:59"));
+    ttd1.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+    ttd1.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
     
 
     // Asumiendo que tipoTramite1 y doc1 ya están creados
@@ -163,8 +165,8 @@ public class EjemplosPersistencia {
 
     // Ejemplo 2 - TipoTramiteDocumentacion
     TipoTramiteDocumentacion ttd2 = new TipoTramiteDocumentacion();
-    ttd2.setFechaDesdeTTD(Timestamp.valueOf("2025-01-01 00:00:00"));
-    ttd2.setFechaHastaTTD(Timestamp.valueOf("2025-12-31 23:59:59"));
+    ttd2.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+    ttd2.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
  
 
     // Asumiendo que tipoTramite2 y doc2 ya están creados
@@ -223,8 +225,8 @@ public class EjemplosPersistencia {
         // Ejemplo 1 - ListaPrecios
     ListaPrecios listaPrecios1 = new ListaPrecios();
     listaPrecios1.setCodListaPrecios(1);
-    listaPrecios1.setFechaHoraDesdeListaPrecios(Date.valueOf("2024-01-01"));
-    listaPrecios1.setFechaHoraHastaListaPrecios(Date.valueOf("2024-12-31"));
+    listaPrecios1.setFechaHoraDesdeListaPrecios(null);
+    listaPrecios1.setFechaHoraHastaListaPrecios(null);
     
     listaPrecios1.addTipoTramiteListaPrecios(tipoTramiteListaPrecios1);
 
@@ -235,8 +237,8 @@ public class EjemplosPersistencia {
     // Ejemplo 2 - ListaPrecios
     ListaPrecios listaPrecios2 = new ListaPrecios();
     listaPrecios2.setCodListaPrecios(2);
-    listaPrecios2.setFechaHoraDesdeListaPrecios(Date.valueOf("2025-01-01"));
-    listaPrecios2.setFechaHoraHastaListaPrecios(Date.valueOf("2025-12-31"));
+    listaPrecios2.setFechaHoraDesdeListaPrecios(null);
+    listaPrecios2.setFechaHoraHastaListaPrecios(null);
     
     listaPrecios2.addTipoTramiteListaPrecios(tipoTramiteListaPrecios2);
     
@@ -247,7 +249,7 @@ public class EjemplosPersistencia {
     // Ejemplo 1 - TramiteDocumentacion
     TramiteDocumentacion tramiteDoc1 = new TramiteDocumentacion();
     tramiteDoc1.setCodTD(1);
-    tramiteDoc1.setFechaEntregaTD(Date.valueOf("2024-02-15"));
+    tramiteDoc1.setFechaEntregaTD(null);
     tramiteDoc1.setArchivoTD("excel");
     
     tramiteDoc1.setDocumentacion(doc1);
@@ -259,7 +261,7 @@ public class EjemplosPersistencia {
     // Ejemplo 2 - TramiteDocumentacion
     TramiteDocumentacion tramiteDoc2 = new TramiteDocumentacion();
     tramiteDoc2.setCodTD(2);
-    tramiteDoc2.setFechaEntregaTD(Date.valueOf("2024-03-20"));
+    tramiteDoc2.setFechaEntregaTD(null);
     tramiteDoc2.setArchivoTD("Word");
     tramiteDoc2.setDocumentacion(doc2);
 
@@ -355,8 +357,8 @@ public class EjemplosPersistencia {
     Version version1 = new Version();
     version1.setNroVersion(1);
     version1.setDescripcionVersion("Versión inicial");
-    version1.setFechaDesdeVersion(Timestamp.valueOf("2024-01-01 00:00:00"));
-    version1.setFechaHastaVersion(Timestamp.valueOf("2024-06-30 23:59:59"));
+    version1.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis()));
+    version1.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
     //version1.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
     
     version1.setTipoTramite(tipoTramiteA);
@@ -369,8 +371,8 @@ public class EjemplosPersistencia {
     Version version2 = new Version();
     version2.setNroVersion(2);
     version2.setDescripcionVersion("Actualización de mitad de año");
-    version2.setFechaDesdeVersion(Timestamp.valueOf("2024-07-01 00:00:00"));
-    version2.setFechaHastaVersion(Timestamp.valueOf("2024-12-31 23:59:59"));
+    version2.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis()));
+    version2.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
     //version2.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
     
     version2.setTipoTramite(tipoTramiteB);
@@ -382,10 +384,10 @@ public class EjemplosPersistencia {
     // Ejemplo 1 - Tramite
     Tramite tramite1 = new Tramite();
     tramite1.setNroTramite(1001);
-    tramite1.setFechaInicioTramite(Date.valueOf("2024-01-05"));
-    tramite1.setFechaFinTramite(Date.valueOf("2024-02-10"));
-    tramite1.setFechaPresentacionTotalDocumentacion(Date.valueOf("2024-01-15"));
-    tramite1.setFechaRecepcionTramite(Date.valueOf("2024-01-10"));
+    tramite1.setFechaInicioTramite(null);
+    tramite1.setFechaFinTramite(null);
+    tramite1.setFechaPresentacionTotalDocumentacion(null);
+    tramite1.setFechaRecepcionTramite(null);
     tramite1.setFechaAnulacionTramite(null);  // Trámite no anulado
     tramite1.setPrecioTramite(1500);
     
@@ -404,10 +406,10 @@ public class EjemplosPersistencia {
     // Ejemplo 2 - Tramite
     Tramite tramite2 = new Tramite();
     tramite2.setNroTramite(1002);
-    tramite2.setFechaInicioTramite(Date.valueOf("2024-03-01"));
-    tramite2.setFechaFinTramite(Date.valueOf("2024-04-15"));
-    tramite2.setFechaPresentacionTotalDocumentacion(Date.valueOf("2024-03-10"));
-    tramite2.setFechaRecepcionTramite(Date.valueOf("2024-03-05"));
+    tramite2.setFechaInicioTramite(null);
+    tramite2.setFechaFinTramite(null);
+    tramite2.setFechaPresentacionTotalDocumentacion(null);
+    tramite2.setFechaRecepcionTramite(null);
     tramite2.setFechaAnulacionTramite(null);  // Trámite no anulado
     tramite2.setPrecioTramite(2000);
     
@@ -423,6 +425,16 @@ public class EjemplosPersistencia {
     FachadaPersistencia.getInstance().guardar(tramite2);
     
     FachadaPersistencia.getInstance().finalizarTransaccion();
+    
+        }
+        catch (Exception e) {
+        
+        System.out.println("Error");
+             
+        
+       
+    }
+       
 
 
 
