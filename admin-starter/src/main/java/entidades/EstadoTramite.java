@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  *
  * @author licciardi
  */
-class EstadoTramite extends Entidad {
+public class EstadoTramite extends Entidad {
     
     private int codEstadoTramite;
     private String nombreEstadoTramite;

@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author licciardi
  */
-class ConfTipoTramiteEstadoTramite extends Entidad {
+public class ConfTipoTramiteEstadoTramite extends Entidad {
     
     private int contadorConfigTTET;
     private EstadoTramite origen;  // Relación ManyToOne con EstadoTramite (origen) Ver 

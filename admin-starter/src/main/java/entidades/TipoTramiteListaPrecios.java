@@ -8,7 +8,7 @@ package entidades;
  *
  * @author licciardi
  */
-class TipoTramiteListaPrecios extends Entidad {
+public class TipoTramiteListaPrecios extends Entidad {
     private int precioTipoTramite;
     private TipoTramite tipoTramite;
     

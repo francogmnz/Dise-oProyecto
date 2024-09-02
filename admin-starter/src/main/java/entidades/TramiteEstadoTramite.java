@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  *
  * @author licciardi
  */
-class TramiteEstadoTramite extends Entidad {
+public class TramiteEstadoTramite extends Entidad {
     
     private Timestamp fechaHoraAltaTET;
     private Timestamp fechaHoraBajaTET;

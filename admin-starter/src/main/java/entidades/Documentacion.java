@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author licciardi
  */
-class Documentacion extends Entidad {
+public class Documentacion extends Entidad {
 
     private int codDocumentacion;
     private String descripcionDocumentacion;

@@ -13,7 +13,7 @@ import java.util.Date;
  */
 
 //Extiendo entidad?
-class TipoTramiteDocumentacion extends Entidad {
+public class TipoTramiteDocumentacion extends Entidad {
     
     private Date fechaDesdeTTD;
     private Date fechaHastaTTD;

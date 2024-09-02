@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author licciardi
  */
-class CategoriaTipoTramite extends Entidad {
+public class CategoriaTipoTramite extends Entidad {
     
     private int codCategoriaTipoTramite;
     private String descripcionCategoriaTipoTramite;
