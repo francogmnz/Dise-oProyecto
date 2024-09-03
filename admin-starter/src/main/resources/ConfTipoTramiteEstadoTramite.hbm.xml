@@ -23,7 +23,7 @@
         </property>
 
         <!-- Relación OneToMany con EstadoTramite (origen) -->
-        <bag name="estadoTramiteOrigen" table="estado_tramite" cascade="none" inverse="true">
+        <bag name="estadoTramiteOrigen" table="estado_tramite" cascade="none" > <!-- inverse="true" -->
             <key column="OIDConfTipoTramiteEstadoTramiteOrigen" not-null="false"/> <!--Seteo en false para probar dsp cambiar -->
             <one-to-many class="entidades.EstadoTramite"/>
         </bag>

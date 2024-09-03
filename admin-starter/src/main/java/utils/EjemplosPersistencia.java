@@ -166,23 +166,83 @@ public class EjemplosPersistencia {
 
  
     FachadaPersistencia.getInstance().guardar(doc2);
+    
+    Cliente cliente1 = new Cliente();
+    cliente1.setNombreCliente("Juan");
+    cliente1.setApellidoCliente("Pérez");
+    cliente1.setDniCliente(12345678);
+    cliente1.setMailCliente("juan.perez@example.com");
+    cliente1.setFechaHoraBajaCliente(null);
+    
+
+
+    FachadaPersistencia.getInstance().guardar(cliente1);
+
+
+
+    Cliente cliente2 = new Cliente();
+    cliente2.setNombreCliente("María");
+    cliente2.setApellidoCliente("González");
+    cliente2.setDniCliente(87654321);
+    cliente2.setMailCliente("maria.gonzalez@example.com");
+    cliente2.setFechaHoraBajaCliente(null);
+
+
+
+    FachadaPersistencia.getInstance().guardar(cliente2);
 
     
-    // Ejemplo 1 - TipoTramiteDocumentacion
-    /* 
+
+    Consultor consultor1 = new Consultor();
+    consultor1.setLegajoConsultor(1001);
+    consultor1.setNombreConsultor("Carlos Fernández");
+    consultor1.setNroMaximoTramites(5);
+    consultor1.setFechaHoraBajaConsultor(null);
+    
+
+ 
+    FachadaPersistencia.getInstance().guardar(consultor1);
+ 
+
+
+    Consultor consultor2 = new Consultor();
+    consultor2.setLegajoConsultor(1002);
+    consultor2.setNombreConsultor("Ana López");
+    consultor2.setNroMaximoTramites(3);
+    consultor2.setFechaHoraBajaConsultor(null);
+    
+
+
+    FachadaPersistencia.getInstance().guardar(consultor2);
+    
+    AgendaConsultor agendaConsultor1 = new AgendaConsultor();
+    
+    agendaConsultor1.setCodAgendaConsultor(1);
+    agendaConsultor1.setFechaAgenda(new Timestamp(System.currentTimeMillis()));
+    agendaConsultor1.setFechaBajaAgendaConsultor(null);
+    agendaConsultor1.setFechaAltaAgendaConsultor(new Timestamp(System.currentTimeMillis()));
+    
+    agendaConsultor1.addConsultor(consultor1);
+    
+    FachadaPersistencia.getInstance().guardar(agendaConsultor1);
+    
+    
+
+    /*
     TipoTramiteDocumentacion ttd1 = new TipoTramiteDocumentacion();
     ttd1.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
     ttd1.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
     ttd1.setFechaHoraBajaTTD(null);
     
-
-    
-    
     ttd1.setDocumentacion(doc1);
 
     // Guardar en la base de datos
     FachadaPersistencia.getInstance().guardar(ttd1);
- 
+    
+        
+
+    
+    
 
     // Ejemplo 2 - TipoTramiteDocumentacion
     TipoTramiteDocumentacion ttd2 = new TipoTramiteDocumentacion();
@@ -190,23 +250,20 @@ public class EjemplosPersistencia {
     ttd2.setFechaHastaTTD(new Timestamp(System.currentTimeMillis()));
     ttd2.setFechaHoraBajaTTD(null);
  
-
-    
-    
     ttd2.setDocumentacion(doc2);
 
     // Guardar en la base de datos
     FachadaPersistencia.getInstance().guardar(ttd2);
-
-
     
     TipoTramite tipoTramiteA = new TipoTramite();
     tipoTramiteA.setCodTipoTramite(1);
     tipoTramiteA.setDescripcionTipoTramite("TipoTramite de prueba 1");
     tipoTramiteA.setDescripcionWebTipoTramite("TipoTramite de prueba web 1");
+    tipoTramiteA.setPlazoEntregaDocumentacionTT(10);
     tipoTramiteA.setNombreTipoTramite("TipoTramite A");
     tipoTramiteA.setCategoriaTipoTramite(categoriaA);
     
+     
     tipoTramiteA.addTipoTramiteDocumentacion(ttd1);
     
     FachadaPersistencia.getInstance().guardar(tipoTramiteA);
@@ -216,14 +273,27 @@ public class EjemplosPersistencia {
     tipoTramiteB.setCodTipoTramite(2);
     tipoTramiteB.setDescripcionTipoTramite("TipoTramite de prueba 2");
     tipoTramiteB.setDescripcionWebTipoTramite("TipoTramite de prueba web 2");
+    tipoTramiteB.setPlazoEntregaDocumentacionTT(10);
     tipoTramiteB.setNombreTipoTramite("TipoTramite B");
     tipoTramiteB.setCategoriaTipoTramite(categoriaB);
+    
     
     tipoTramiteB.addTipoTramiteDocumentacion(ttd2);
     
     FachadaPersistencia.getInstance().guardar(tipoTramiteB);
+    
+    
 
     
+    
+    
+
+
+
+    
+
+
+     
   
     TipoTramiteListaPrecios tipoTramiteListaPrecios1 = new TipoTramiteListaPrecios();
     tipoTramiteListaPrecios1.setPrecioTipoTramite(500); 
@@ -303,53 +373,7 @@ public class EjemplosPersistencia {
 
     
 
-    Cliente cliente1 = new Cliente();
-    cliente1.setNombreCliente("Juan");
-    cliente1.setApellidoCliente("Pérez");
-    cliente1.setDniCliente(12345678);
-    cliente1.setMailCliente("juan.perez@example.com");
-    cliente1.setFechaHoraBajaCliente(null);
-    
 
-
-    FachadaPersistencia.getInstance().guardar(cliente1);
-
-
-
-    Cliente cliente2 = new Cliente();
-    cliente2.setNombreCliente("María");
-    cliente2.setApellidoCliente("González");
-    cliente2.setDniCliente(87654321);
-    cliente2.setMailCliente("maria.gonzalez@example.com");
-    cliente2.setFechaHoraBajaCliente(null);
-
-
-
-    FachadaPersistencia.getInstance().guardar(cliente2);
-
-    
-
-    Consultor consultor1 = new Consultor();
-    consultor1.setLegajoConsultor(1001);
-    consultor1.setNombreConsultor("Carlos Fernández");
-    consultor1.setNroMaximoTramites(5);
-    consultor1.setFechaHoraBajaConsultor(null);
-    
-
- 
-    FachadaPersistencia.getInstance().guardar(consultor1);
- 
-
-
-    Consultor consultor2 = new Consultor();
-    consultor2.setLegajoConsultor(1002);
-    consultor2.setNombreConsultor("Ana López");
-    consultor2.setNroMaximoTramites(3);
-    consultor2.setFechaHoraBajaConsultor(null);
-    
-
-
-    FachadaPersistencia.getInstance().guardar(consultor2);
 
     
 
