@@ -5,6 +5,7 @@
 package entidades;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class AgendaConsultor extends Entidad {
     private Timestamp fechaAgenda;
     private Timestamp fechaAltaAgendaConsultor;
     private Timestamp fechaBajaAgendaConsultor;
-    private List<Consultor> consultores;
+    private List<Consultor> consultores = new ArrayList<>();
 
     public AgendaConsultor() {
     }
@@ -62,8 +63,9 @@ public class AgendaConsultor extends Entidad {
         this.consultores = consultores;
     }
 
+    public void addConsultor(Consultor consultor) {
+        consultores.add(consultor);   
 
-
-    
+   }
     
 }

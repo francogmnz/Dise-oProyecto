@@ -15,8 +15,9 @@ public class Consultor extends Entidad {
     
     private int legajoConsultor;
     private String nombreConsultor;
-    private int nroMaximoTramites;
-    private Timestamp fechaHoraBajaConsultor;
+    private int numMaximoTramites;
+    private Timestamp fechaAltaConsultor;
+    private Timestamp fechaBajaConsultor;
     private List<AgendaConsultor> agendas;  // Relación ManyToMany No se si va..
     
 
@@ -39,21 +40,30 @@ public class Consultor extends Entidad {
         this.nombreConsultor = nombreConsultor;
     }
 
-    public int getNroMaximoTramites() {
-        return nroMaximoTramites;
+    public int getNumMaximoTramites() {
+        return numMaximoTramites;
     }
 
-    public void setNroMaximoTramites(int nroMaximoTramites) {
-        this.nroMaximoTramites = nroMaximoTramites;
+    public void setNumMaximoTramites(int numMaximoTramites) {
+        this.numMaximoTramites = numMaximoTramites;
     }
 
-    public Timestamp getFechaHoraBajaConsultor() {
-        return fechaHoraBajaConsultor;
+    public Timestamp getFechaBajaConsultor() {
+        return fechaBajaConsultor;
     }
 
-    public void setFechaHoraBajaConsultor(Timestamp fechaHoraBajaConsultor) {
-        this.fechaHoraBajaConsultor = fechaHoraBajaConsultor;
+    public void setFechaBajaConsultor(Timestamp fechaHoraBajaConsultor) {
+        this.fechaBajaConsultor = fechaBajaConsultor;
     }
+
+    public Timestamp getFechaAltaConsultor() {
+        return fechaAltaConsultor;
+    }
+
+    public void setFechaAltaConsultor(Timestamp fechaAltaConsultor) {
+        this.fechaAltaConsultor = fechaAltaConsultor;
+    }
+    
 
     public List<AgendaConsultor> getAgendas() {
         return agendas;

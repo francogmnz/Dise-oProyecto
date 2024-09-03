@@ -18,11 +18,12 @@
             <column name="nombre_consultor"/>
         </property>
 
-        <property name="nroMaximoTramites" type="int">
-            <column name="nro_maximo_tramites"/>
+        <property name="numMaximoTramites" type="int">
+            <column name="num_maximo_tramites"/>
         </property>
 
-        <property name="fechaHoraBajaConsultor" column="fecha_hora_baja_consultor" type="timestamp"/>
+        <property name="fechaAltaConsultor" column="fecha_alta_consultor" type="timestamp"/>
+        <property name="fechaBajaConsultor" column="fecha_baja_consultor" type="timestamp"/>
 
 
 
