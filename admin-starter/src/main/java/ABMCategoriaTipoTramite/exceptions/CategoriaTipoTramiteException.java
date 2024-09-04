@@ -8,6 +8,10 @@ package ABMCategoriaTipoTramite.exceptions;
  *
  * @author licciardi
  */
-public class CategoriaTipoTramiteException {
+public class CategoriaTipoTramiteException extends Exception{
+    
+    public CategoriaTipoTramiteException(String mensaje) {
+        super(mensaje);
+    }
     
 }
