@@ -76,7 +76,7 @@ public class ExpertoABMCliente {
             cliente.setDniCliente(nuevoClienteDTO.getDniCliente());
             cliente.setNombreCliente(nuevoClienteDTO.getNombreCliente());
             cliente.setApellidoCliente(nuevoClienteDTO.getApellidoCliente());
-            cliente.setMailCliente(cliente.getMailCliente());
+            cliente.setMailCliente(nuevoClienteDTO.getMailCliente());
 
             FachadaPersistencia.getInstance().guardar(cliente);
             FachadaPersistencia.getInstance().finalizarTransaccion();
