@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+
+<hibernate-mapping>
+
+    <class name="entidades.AgendaConsultor" table="agenda_consultor">
+
+        <id name="OID" type="string">
+            <column name="OIDAgendaConsultor"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="codAgendaConsultor" type="int">
+            <column name="codigo_agenda_consultor"/>
+        </property>
+
+        <property name="fechaAgenda" column="fecha_agenda" type="timestamp" not-null="true"/>
+
+        <property name="fechaAltaAgendaConsultor" column="fecha_alta_agenda_consultor" type="timestamp" not-null="true"/>
+
+        <property name="fechaBajaAgendaConsultor" column="fecha_baja_agenda_consultor" type="timestamp"/>
+        
+        <!-- Relación ManyToMany con Consultor -->
+        <bag name="consultores" table="consultor_agenda_consultor">
+            <key column="OIDAgendaConsultor" not-null="true"/>
+            <many-to-many class="entidades.Consultor" column="OIDConsultor"/>
+        </bag>
+
+    </class>
+
+</hibernate-mapping>
