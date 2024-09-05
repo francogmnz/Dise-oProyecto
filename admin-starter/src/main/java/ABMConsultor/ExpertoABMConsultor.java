@@ -137,9 +137,9 @@ public class ExpertoABMConsultor {
         criterioList.add(dto);
         DTOCriterio dto2 = new DTOCriterio();
 
-        dto.setAtributo("fechaBajaConsultor");
+        dto2.setAtributo("fechaBajaConsultor");
         dto2.setOperacion("=");
-        dto.setValor(null);
+        dto2.setValor(null);
 
         criterioList.add(dto2);
         Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);

@@ -52,7 +52,7 @@ public class Consultor extends Entidad {
         return fechaBajaConsultor;
     }
 
-    public void setFechaBajaConsultor(Timestamp fechaHoraBajaConsultor) {
+    public void setFechaBajaConsultor(Timestamp fechaBajaConsultor) {
         this.fechaBajaConsultor = fechaBajaConsultor;
     }
 
