@@ -28,7 +28,7 @@ public class ExpertoABMCategoriaTipoTramite {
         
         if (codCategoriaTipoTramite > 0) {
             DTOCriterio criterio1 = new DTOCriterio();
-            criterio1.setAtributo("codigo");
+            criterio1.setAtributo("codCategoriaTipoTramite");
             criterio1.setOperacion("=");
             criterio1.setValor(codCategoriaTipoTramite); // valor es un objeto en DTOCritero..
             primerCriterio.add(criterio1);
@@ -36,7 +36,7 @@ public class ExpertoABMCategoriaTipoTramite {
 
         if (nombreCategoriaTipoTramite.trim().length() > 0) {
             DTOCriterio criterio2 = new DTOCriterio();
-            criterio2.setAtributo("nombre");
+            criterio2.setAtributo("nombreCategoriaTipoTramite");
             criterio2.setOperacion("like");
             criterio2.setValor(nombreCategoriaTipoTramite);
             primerCriterio.add(criterio2);
@@ -68,7 +68,7 @@ public class ExpertoABMCategoriaTipoTramite {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
-        dto.setAtributo("codigo");
+        dto.setAtributo("codCategoriaTipoTramite");
         dto.setOperacion("=");
         dto.setValor(nuevaCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite());
 
@@ -93,19 +93,20 @@ public class ExpertoABMCategoriaTipoTramite {
         }
     }
     
-        public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codigo) {
+        public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite) {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
-        dto.setAtributo("codigo");
+        dto.setAtributo("codCategoriaTipoTramite");
         dto.setOperacion("=");
-        dto.setValor(codigo);
+        dto.setValor(codCategoriaTipoTramite);
 
         criterioList.add(dto);
 
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
 
         ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = new ModificarCategoriaTipoTramiteDTO();
+        modificarCategoriaTipoTramiteDTO.setCodCategoriaTipoTramite(categoriaTipoTramiteEncontrada.getCodCategoriaTipoTramite());
         modificarCategoriaTipoTramiteDTO.setNombreCategoriaTipoTramite(categoriaTipoTramiteEncontrada.getNombreCategoriaTipoTramite());
         modificarCategoriaTipoTramiteDTO.setDescripcionCategoriaTipoTramite(categoriaTipoTramiteEncontrada.getDescripcionCategoriaTipoTramite());
         modificarCategoriaTipoTramiteDTO.setDescripcionWebCategoriaTipoTramite(categoriaTipoTramiteEncontrada.getDescripcionWebCategoriaTipoTramite()); //
@@ -120,10 +121,12 @@ public class ExpertoABMCategoriaTipoTramite {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
         
-        dto.setAtributo("codigo");
+        dto.setAtributo("codCategoriaTipoTramite");
         dto.setOperacion("=");
         dto.setValor(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
-        
+
+        criterioList.add(dto);
+
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
         
         categoriaTipoTramiteEncontrada.setCodCategoriaTipoTramite(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
@@ -133,19 +136,20 @@ public class ExpertoABMCategoriaTipoTramite {
         
         FachadaPersistencia.getInstance().guardar(categoriaTipoTramiteEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
-          
+     
+        
     }
     
         
-        public void darDeBajaCategoriaTipoTramite(int codigo) throws CategoriaTipoTramiteException {
+        public void darDeBajaCategoriaTipoTramite(int codCategoriaTipoTramite) throws CategoriaTipoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
         
-        dto.setAtributo("codigo");
+        dto.setAtributo("codCategoriaTipoTramite");
         dto.setOperacion("=");
-        dto.setValor(codigo);
+        dto.setValor(codCategoriaTipoTramite);
         
         criterioList.add(dto);
         

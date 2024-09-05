@@ -31,7 +31,7 @@ public class ControladorABMCategoriaTipoTramite {
         return expertoABMCategoriaTipoTramite.buscarCategoriaTipoTramiteAModificar(codCategoriaTipoTramite);
     }
 
-    public void modificarArticulo(ModificarCategoriaTipoTramiteDTOIn modificarCategoriaTipoTramiteDTOIn) {
+    public void modificarCategoriaTipoTramite(ModificarCategoriaTipoTramiteDTOIn modificarCategoriaTipoTramiteDTOIn) {
         expertoABMCategoriaTipoTramite.modificarCategoriaTipoTramite(modificarCategoriaTipoTramiteDTOIn);
     }
 
