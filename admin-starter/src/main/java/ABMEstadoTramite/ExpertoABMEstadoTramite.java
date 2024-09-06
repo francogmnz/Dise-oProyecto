@@ -128,7 +128,7 @@ public class ExpertoABMEstadoTramite {
         dto.setAtributo("codEstadoTramite");
         dto.setOperacion("=");
         dto.setValor(modificarEstadoTramiteDTOIn.getCodEstadoTramite());
-
+        criterioList.add(dto);
         EstadoTramite estadoTramiteEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
 
         criterioList.clear();

@@ -72,40 +72,34 @@ public class UIABMEstadoTramite implements Serializable {
         this.descripcionEstadoTramite = descripcionEstadoTramite;
     }
 
-    
-    
     public UIABMEstadoTramite() throws EstadoTramiteException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        
-        int codEstadoTramite = Integer.parseInt(request.getParameter("codEstadoTramite"));
+
+        codEstadoTramite = Integer.parseInt(request.getParameter("codEstadoTramite"));
         insert = true;
-                if(codEstadoTramite > 0)
-        {
-            insert=false;
+        if (codEstadoTramite > 0) {
+            insert = false;
             ModificarEstadoTramiteDTO modificarEstadoTramiteDTO = controladorABMEstadoTramite.buscarEstadoTramiteAModificar(codEstadoTramite);
             setNombreEstadoTramite(modificarEstadoTramiteDTO.getNombreEstadoTramite());
             setCodEstadoTramite(modificarEstadoTramiteDTO.getCodEstadoTramite());
             setDescripcionEstadoTramite(modificarEstadoTramiteDTO.getDescripcionEstadoTramite());
         }
+        nombreEstadoTramite = "<b>hola mundo</b>";
     }
-    
-        public String agregarEstadoTramite(){
+
+    public String agregarEstadoTramite() {
         try {
 
-        
-            if(!insert)
-            {
+            if (!insert) {
                 ModificarEstadoTramiteDTOIn modificarEstadoTramiteDTOIn = new ModificarEstadoTramiteDTOIn();
                 modificarEstadoTramiteDTOIn.setNombreEstadoTramite(getNombreEstadoTramite());
                 modificarEstadoTramiteDTOIn.setCodEstadoTramite(getCodEstadoTramite());
                 modificarEstadoTramiteDTOIn.setDescripcionEstadoTramite(getDescripcionEstadoTramite());
                 controladorABMEstadoTramite.modificarEstadoTramite(modificarEstadoTramiteDTOIn);
                 return BeansUtils.redirectToPreviousPage();
-            }
-            else
-            {
+            } else {
                 NuevoEstadoTramiteDTO nuevoEstadoTramiteDTO = new NuevoEstadoTramiteDTO();
                 nuevoEstadoTramiteDTO.setNombreEstadoTramite(getNombreEstadoTramite());
                 nuevoEstadoTramiteDTO.setCodEstadoTramite(getCodEstadoTramite());
@@ -114,11 +108,9 @@ public class UIABMEstadoTramite implements Serializable {
 
             }
             return BeansUtils.redirectToPreviousPage();
+        } catch (EstadoTramiteException e) {
+            Messages.create(e.getMessage()).fatal().add();
+            return "";
         }
-        
-        catch (EstadoTramiteException e) {
-                Messages.create(e.getMessage()).fatal().add();
-                return "";
-         }
     }
 }

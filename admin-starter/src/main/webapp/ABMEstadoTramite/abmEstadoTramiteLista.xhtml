@@ -110,7 +110,7 @@
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmEstadoTramiteLista.irModificarEstadoTramite(estadoTramite.codEstadoTramite)}" disabled="#{estadoTramite.fechaHoraBajaEstadoTramite != null}">
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmEstadoTramiteLista.irModificarEstadoTramite(estadoTramite.codEstadoTramite )}" disabled="#{estadoTramite.fechaHoraBajaEstadoTramite != null}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
