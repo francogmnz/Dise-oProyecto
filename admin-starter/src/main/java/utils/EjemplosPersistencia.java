@@ -1,9 +1,11 @@
 package utils;
 
+import ABMEstadoTramite.exceptions.EstadoTramiteException;
 import entidades.*;
 import java.sql.Date;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -400,26 +402,6 @@ public class EjemplosPersistencia {
 
             /*
 
-  
-
-
-
-
-    
-    
-
-
-    
-
-
-
-    
-
-
-
-    
-
-
              */
             FachadaPersistencia.getInstance().finalizarTransaccion();
 
@@ -581,5 +563,5 @@ public class EjemplosPersistencia {
         System.out.println("\tEstado: " + reposicion.getEstado());
         System.out.println("\tFecha: " + reposicion.getFecha());
     }
-
+    
 }

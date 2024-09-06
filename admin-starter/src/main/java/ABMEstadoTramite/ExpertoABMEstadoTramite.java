@@ -129,6 +129,7 @@ public class ExpertoABMEstadoTramite {
         dto.setOperacion("=");
         dto.setValor(modificarEstadoTramiteDTOIn.getCodEstadoTramite());
         criterioList.add(dto);
+        
         EstadoTramite estadoTramiteEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
 
         criterioList.clear();
@@ -149,26 +150,20 @@ public class ExpertoABMEstadoTramite {
 
         criterioList.add(dto3);
 
-        List<Version> objetoList = (List<Version>) (List<?>) FachadaPersistencia.getInstance().buscar("Version", criterioList);
-        for (Version v : objetoList) {
-            List<ConfTipoTramiteEstadoTramite> configTTEEList = v.getConfTipoTramiteEstadoTramite();
-            for (ConfTipoTramiteEstadoTramite c : configTTEEList) {
-                List<EstadoTramite> estadoOrigen = c.getEstadoTramiteOrigen();
-                for (EstadoTramite e : estadoOrigen) {
-                    if (e.getCodEstadoTramite() == estadoTramiteEncontrado.getCodEstadoTramite()) {
-                        throw new EstadoTramiteException("No se pudo modficar el Estado debido a que"
-                                + "pertenece a una version actual/posterior");
-                    }
-                }
-            }
-            for (ConfTipoTramiteEstadoTramite c : configTTEEList) {
-                List<EstadoTramite> estadoDestino = c.getEstadoTramiteDestino();
-                for (EstadoTramite e : estadoDestino) {
-                    if (e.getCodEstadoTramite() == estadoTramiteEncontrado.getCodEstadoTramite()) {
-                        throw new EstadoTramiteException("No se pudo modficar el Estado debido a que"
-                                + "pertenece a una version actual/posterior");
-                    }
-                }
+        List<Object> objetoList =  FachadaPersistencia.getInstance().buscar("Version", criterioList); 
+        
+        //por cada Version --> getConfigTTET
+        for(Object o: objetoList){
+          
+            Version version = (Version) o;
+            List<ConfTipoTramiteEstadoTramite> confTTETList = version.getConfTipoTramiteEstadoTramite();
+            
+            //por cada confTTET-->getEstadoTramite(Origen y Destino)
+            for(ConfTipoTramiteEstadoTramite confTTET : confTTETList){
+                
+                //verifico si el EstadoTramite no se encuentra en alguna version activa.
+               verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), estadoTramiteEncontrado);
+               verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), estadoTramiteEncontrado);
             }
         }
 
@@ -196,48 +191,60 @@ public class ExpertoABMEstadoTramite {
 
         criterioList.clear();
 
-        DTOCriterio dto2 = new DTOCriterio();
-
+        //buscar("Version", "fechaDesdeVersion >"+ fechaActual + "AND fechaBajaVersion ="+ null): list<Object>
+        
+        DTOCriterio dto2 = new DTOCriterio(); 
         dto2.setAtributo("fechaDesdeVersion");
         dto2.setOperacion(">");
         dto2.setValor(Timestamp.from(Instant.now()));
-
-        criterioList.add(dto2);
+        
+        criterioList.add(dto2);   
 
         DTOCriterio dto3 = new DTOCriterio();
-
         dto3.setAtributo("fechaBajaVersion");
         dto3.setOperacion("=");
         dto3.setValor(null);
-
+        
         criterioList.add(dto3);
-
-        List<Version> objetoList = (List<Version>) (List<?>) FachadaPersistencia.getInstance().buscar("Version", criterioList);
-        for (Version v : objetoList) {
-            List<ConfTipoTramiteEstadoTramite> configTTEEList = v.getConfTipoTramiteEstadoTramite();
-            for (ConfTipoTramiteEstadoTramite c : configTTEEList) {
-                List<EstadoTramite> estadoOrigen = c.getEstadoTramiteOrigen();
-                for (EstadoTramite e : estadoOrigen) {
-                    if (e.getCodEstadoTramite() == estadoTramiteEncontrado.getCodEstadoTramite()) {
-                        throw new EstadoTramiteException("No se pudo modficar el Estado debido a que"
-                                + "pertenece a una version actual/posterior");
-                    }
-                }
-            }
-            for (ConfTipoTramiteEstadoTramite c : configTTEEList) {
-                List<EstadoTramite> estadoDestino = c.getEstadoTramiteDestino();
-                for (EstadoTramite e : estadoDestino) {
-                    if (e.getCodEstadoTramite() == estadoTramiteEncontrado.getCodEstadoTramite()) {
-                        throw new EstadoTramiteException("No se pudo modficar el Estado debido a que"
-                                + "pertenece a una version actual/posterior");
-                    }
-                }
+        
+        List<Object> objetoList =  FachadaPersistencia.getInstance().buscar("Version", criterioList); 
+        
+        //por cada Version --> getConfigTTET
+        for(Object o: objetoList){
+          
+            Version version = (Version) o;
+            List<ConfTipoTramiteEstadoTramite> confTTETList = version.getConfTipoTramiteEstadoTramite();
+            
+            //por cada confTTET-->getEstadoTramite(Origen y Destino)
+            for(ConfTipoTramiteEstadoTramite confTTET : confTTETList){
+                
+                //verifico si el EstadoTramite no se encuentra en alguna version activa.
+               verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), codEstadoTramite);
+               verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), codEstadoTramite);
             }
         }
-
+    
         estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(new Timestamp(System.currentTimeMillis()));
-
+        
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
+
+        //metodo para verificar si el Estado a eliminar es el mismo que estoy buscando con los get
+        private void verificarEstadoTramite(List<EstadoTramite> estadoTramites, int codEstadoTramite) throws EstadoTramiteException {
+            for (EstadoTramite e : estadoTramites) {
+                if (e.getCodEstadoTramite() == codEstadoTramite) {
+                    throw new EstadoTramiteException("No se pudo modificar el Estado debido a que pertenece a una versión actual/posterior");
+                }
+            }
+        }
+        
+        //metodo para verificar si el Estado a modificar es el mismo que estoy buscando con los get
+        private void verificarEstadoTramite(List<EstadoTramite> estadoTramites, EstadoTramite estadoTramiteEncontrado) throws EstadoTramiteException {
+            for (EstadoTramite e : estadoTramites) {
+                if (e.getCodEstadoTramite() == estadoTramiteEncontrado.getCodEstadoTramite()) {
+                    throw new EstadoTramiteException("No se pudo modificar el Estado debido a que pertenece a una versión actual/posterior");
+                }
+            }
+        }
 }
