@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Version"/> <!-- Crear automáticamente el breadcrumb y el título de la página cuando se proporciona el parámetro 'title'. -->
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Trabajar con Version
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons">
+                        <p:commandButton value="Agregar" icon="fa fa-plus" action="#{uiabmVersionLista.irAgregarVersion()}" styleClass="btn-primary"/>
+                    </div>
+                </div>
+
+                <!-- Filtros para la tabla -->
+                <p:separator/>
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Número de Versión:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nroVersionFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.nroVersionFiltro}" onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Descripción:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="descripcionFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.descripcionFiltro}">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+                </div>
+
+                <!-- Tabla para mostrar la lista de Versiones -->
+                <p:spacer height="5"/>
+                <p:dataTable id="grid1" widgetVar="versionTable" value="#{uiabmVersionLista.buscarVersiones()}" var="version">
+
+                    <p:column>
+                        <f:facet name="header">Número de Versión</f:facet>
+                            #{version.nroVersion}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Descripción</f:facet>
+                            #{version.descripcionVersion}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Desde</f:facet>
+                            #{version.fechaDesdeVersion}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Hasta</f:facet>
+                            #{version.fechaHastaVersion}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Baja</f:facet>
+                            #{version.fechaBajaVersion}
+                    </p:column>
+                    <!--
+                    <p:column>
+                        <f:facet name="header">Tipo de Trámite</f:facet>
+                            #{version.tipoTramite.nombreTipoTramite}
+                    </p:column>
+                   -->    
+                    <p:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmVersionLista.irModificarVersion(version.nroVersion)}" disabled="#{version.fechaBajaVersion != null}">
+                            <f:ajax render="@form"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmVersionLista.darDeBajaVersion(version.nroVersion)}" disabled="#{version.fechaBajaVersion != null}">
+                            <p:confirm header="Anulación de #{version.nroVersion}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                            <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                             icon="fa fa-check"/>
+                            <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                             icon="fa fa-close"/>
+                        </p:confirmDialog>
+                    </p:column>
+
+
+                </p:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
