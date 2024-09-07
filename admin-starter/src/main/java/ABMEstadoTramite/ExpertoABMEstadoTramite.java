@@ -141,14 +141,22 @@ public class ExpertoABMEstadoTramite {
         dto2.setValor(Timestamp.from(Instant.now()));
 
         criterioList.add(dto2);
-
+        
         DTOCriterio dto3 = new DTOCriterio();
-
-        dto3.setAtributo("fechaBajaVersion");
-        dto3.setOperacion("=");
-        dto3.setValor(null);
-
+        
+        dto2.setAtributo("fechaHastaVersion");
+        dto2.setOperacion("<");
+        dto2.setValor(Timestamp.from(Instant.now()));
+        
         criterioList.add(dto3);
+
+        DTOCriterio dto4 = new DTOCriterio();
+
+        dto4.setAtributo("fechaBajaVersion");
+        dto4.setOperacion("=");
+        dto4.setValor(null);
+
+        criterioList.add(dto4);
 
         List<Object> objetoList =  FachadaPersistencia.getInstance().buscar("Version", criterioList); 
         
@@ -196,16 +204,24 @@ public class ExpertoABMEstadoTramite {
         DTOCriterio dto2 = new DTOCriterio(); 
         dto2.setAtributo("fechaDesdeVersion");
         dto2.setOperacion(">");
+        dto2.setValor(Timestamp.from(Instant.now()));    
+        
+        criterioList.add(dto2); 
+        
+        DTOCriterio dto3 = new DTOCriterio();
+        
+        dto2.setAtributo("fechaHastaVersion");
+        dto2.setOperacion("<");
         dto2.setValor(Timestamp.from(Instant.now()));
         
-        criterioList.add(dto2);   
-
-        DTOCriterio dto3 = new DTOCriterio();
-        dto3.setAtributo("fechaBajaVersion");
-        dto3.setOperacion("=");
-        dto3.setValor(null);
-        
         criterioList.add(dto3);
+
+        DTOCriterio dto4 = new DTOCriterio();
+        dto4.setAtributo("fechaBajaVersion");
+        dto4.setOperacion("=");
+        dto4.setValor(null);
+        
+        criterioList.add(dto4);
         
         List<Object> objetoList =  FachadaPersistencia.getInstance().buscar("Version", criterioList); 
         
@@ -234,7 +250,7 @@ public class ExpertoABMEstadoTramite {
         private void verificarEstadoTramite(List<EstadoTramite> estadoTramites, int codEstadoTramite) throws EstadoTramiteException {
             for (EstadoTramite e : estadoTramites) {
                 if (e.getCodEstadoTramite() == codEstadoTramite) {
-                    throw new EstadoTramiteException("No se pudo modificar el Estado debido a que pertenece a una versión actual/posterior");
+                    throw new EstadoTramiteException("No se pudo eliminar el Estado debido a que pertenece a una versión actual/posterior");
                 }
             }
         }
