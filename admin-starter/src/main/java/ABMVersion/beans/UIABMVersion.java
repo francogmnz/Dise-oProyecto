@@ -5,6 +5,8 @@ import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.NuevaVersionDTO;
 import ABMVersion.exceptions.VersionException;
+import entidades.EstadoTramite;
+import entidades.TipoTramite;
 import utils.BeansUtils;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -13,7 +15,9 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.omnifaces.util.Messages;
 
 @Named("uiabmVersion")
@@ -30,6 +34,45 @@ public class UIABMVersion implements Serializable {
     private Date fechaBajaVersion; // Cambiado a Date
     private Date fechaDesdeVersion; // Cambiado a Date
     private Date fechaHastaVersion; // Cambiado a Date
+     private List<TipoTramite> listaTiposTramite = new ArrayList<>();
+    private List<EstadoTramite> listaEstados = new ArrayList<>();
+
+    // Getters and Setters...
+private String estadoTramiteOrigenSeleccionados;
+    private String estadoTramiteDestinoSeleccionados;
+
+    // Getters and Setters...
+
+    public String getEstadoTramiteOrigenSeleccionados() {
+        return estadoTramiteOrigenSeleccionados;
+    }
+
+    public void setEstadoTramiteOrigenSeleccionados(String estadoTramiteOrigenSeleccionados) {
+        this.estadoTramiteOrigenSeleccionados = estadoTramiteOrigenSeleccionados;
+    }
+
+    public String getEstadoTramiteDestinoSeleccionados() {
+        return estadoTramiteDestinoSeleccionados;
+    }
+
+    public void setEstadoTramiteDestinoSeleccionados(String estadoTramiteDestinoSeleccionados) {
+        this.estadoTramiteDestinoSeleccionados = estadoTramiteDestinoSeleccionados;
+    }
+    public List<TipoTramite> getListaTiposTramite() {
+        return listaTiposTramite;
+    }
+
+    public void setListaTiposTramite(List<TipoTramite> listaTiposTramite) {
+        this.listaTiposTramite = listaTiposTramite;
+    }
+
+    public List<EstadoTramite> getListaEstados() {
+        return listaEstados;
+    }
+
+    public void setListaEstados(List<EstadoTramite> listaEstados) {
+        this.listaEstados = listaEstados;
+    }
 public Date getFechaDesdeVersion() {
     return fechaDesdeVersion;
 }

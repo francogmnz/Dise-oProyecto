@@ -27,6 +27,12 @@ public class TipoTramite extends Entidad {
     public TipoTramite() {
     }
 
+  public TipoTramite(int codTipoTramite, String nombreTipoTramite) {
+    this.codTipoTramite = codTipoTramite;
+    this.nombreTipoTramite = nombreTipoTramite;
+}
+
+
     public int getCodTipoTramite() {
         return codTipoTramite;
     }

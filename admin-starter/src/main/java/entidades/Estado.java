@@ -12,6 +12,10 @@ public class Estado extends Entidad {
     public Estado() {
     }
 
+    public Estado(int i, String estado_1, String descripción_1, Object object, Object object0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public int getCodigo() {
         return codigo;
     }

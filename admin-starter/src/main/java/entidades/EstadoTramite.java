@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author licciardi
- */
 public class EstadoTramite extends Entidad {
     
     private int codEstadoTramite;
@@ -17,10 +9,6 @@ public class EstadoTramite extends Entidad {
     private String descripcionEstadoTramite;
     private Timestamp fechaHoraBajaEstadoTramite;
     private Timestamp fechaHoraAltaEstadoTramite;
-    
-
-    public EstadoTramite() {
-    }
 
     public int getCodEstadoTramite() {
         return codEstadoTramite;
@@ -61,6 +49,4 @@ public class EstadoTramite extends Entidad {
     public void setFechaHoraAltaEstadoTramite(Timestamp fechaHoraAltaEstadoTramite) {
         this.fechaHoraAltaEstadoTramite = fechaHoraAltaEstadoTramite;
     }
-    
-    
 }
