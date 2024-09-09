@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ABMTipoTramite.beans;
+import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
 import ABMTipoTramite.beans.*;
 import utils.BeansUtils;
 import ABMTipoTramite.ControladorABMTipoTramite;
@@ -16,6 +17,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.List;
 import org.omnifaces.util.Messages;
 
 /**
@@ -36,6 +38,8 @@ public class UIABMTipoTramite implements Serializable {
     private String descripcionTipoTramite;
     private String descripcionWebTipoTramite;
     private int plazoEntregaDocumentacionTT;
+    private int codCategoriaTipoTramite;
+    private List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas;
     
 
 
@@ -87,6 +91,22 @@ public class UIABMTipoTramite implements Serializable {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
 
+    public int getCodCategoriaTipoTramite() {
+        return codCategoriaTipoTramite;
+    }
+
+    public void setCodCategoriaTipoTramite(int codCategoriaTipoTramite) {
+        this.codCategoriaTipoTramite = codCategoriaTipoTramite;
+    }
+
+    public List<CategoriaTipoTramiteDTO> getCategoriasTipoTramiteActivas() {
+        return categoriasTipoTramiteActivas;
+    }
+
+    public void setCategoriasTipoTramiteActivas(List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas) {
+        this.categoriasTipoTramiteActivas = categoriasTipoTramiteActivas;
+    }
+
 
 
     
@@ -97,6 +117,7 @@ public class UIABMTipoTramite implements Serializable {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
         int codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite")); 
+        categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
         
         insert = true;
 
@@ -109,6 +130,8 @@ public class UIABMTipoTramite implements Serializable {
             setDescripcionTipoTramite(modificarTipoTramiteDTO.getDescripcionTipoTramite());
             setDescripcionWebTipoTramite(modificarTipoTramiteDTO.getDescripcionWebTipoTramite());
             setPlazoEntregaDocumentacionTT(modificarTipoTramiteDTO.getPlazoEntregaDocumentacionTT());
+            
+            setCodCategoriaTipoTramite(modificarTipoTramiteDTO.getCodCategoriaTipoTramite());
 
 
         }
@@ -126,6 +149,8 @@ public class UIABMTipoTramite implements Serializable {
                 modificarTipoTramiteDTOIn.setDescripcionWebTipoTramite(getDescripcionWebTipoTramite());
                 modificarTipoTramiteDTOIn.setPlazoEntregaDocumentacionTT(getPlazoEntregaDocumentacionTT());
                 
+                modificarTipoTramiteDTOIn.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
+                
                 controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn);
                 return BeansUtils.redirectToPreviousPage();
             }
@@ -137,6 +162,8 @@ public class UIABMTipoTramite implements Serializable {
                 nuevoTipoTramiteDTO.setDescripcionTipoTramite(getDescripcionTipoTramite());
                 nuevoTipoTramiteDTO.setDescripcionWebTipoTramite(getDescripcionWebTipoTramite());    
                 nuevoTipoTramiteDTO.setPlazoEntregaDocumentacionTT(getPlazoEntregaDocumentacionTT());
+                
+                nuevoTipoTramiteDTO.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
                         
                 controladorABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO);
 

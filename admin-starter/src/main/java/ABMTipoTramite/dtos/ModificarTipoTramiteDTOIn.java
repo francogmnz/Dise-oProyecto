@@ -17,6 +17,8 @@ public class ModificarTipoTramiteDTOIn {
     private String descripcionTipoTramite;
     private String descripcionWebTipoTramite;
     private int plazoEntregaDocumentacionTT;
+    private int codCategoriaTipoTramite;
+
 
     public int getCodTipoTramite() {
         return codTipoTramite;
@@ -57,6 +59,16 @@ public class ModificarTipoTramiteDTOIn {
     public void setPlazoEntregaDocumentacionTT(int plazoEntregaDocumentacionTT) {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
+
+    public int getCodCategoriaTipoTramite() {
+        return codCategoriaTipoTramite;
+    }
+
+    public void setCodCategoriaTipoTramite(int codCategoriaTipoTramite) {
+        this.codCategoriaTipoTramite = codCategoriaTipoTramite;
+    }
+
+    
     
     
     

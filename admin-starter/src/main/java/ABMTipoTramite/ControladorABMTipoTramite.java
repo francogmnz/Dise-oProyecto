@@ -4,6 +4,7 @@
  */
 package ABMTipoTramite;
 
+import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
 import ABMTipoTramite.*;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
@@ -22,6 +23,10 @@ public class ControladorABMTipoTramite {
 
     public List<TipoTramiteDTO> buscarTipoTramites (int codTipoTramite, String nombreTipoTramite) {
         return expertoABMTipoTramite.buscarTipoTramites(codTipoTramite, nombreTipoTramite);
+    }
+    
+    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() {
+        return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
     }
 
     public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO) throws TipoTramiteException {

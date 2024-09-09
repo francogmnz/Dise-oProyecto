@@ -73,6 +73,8 @@ public class UIABMTipoTramiteLista implements Serializable {
             tipoTramiteGrillaUI.setDescripcionWebTipoTramite(tipoTramiteDTO.getDescripcionWebTipoTramite());
             tipoTramiteGrillaUI.setFechaHoraBajaTipoTramite(tipoTramiteDTO.getFechaHoraBajaTipoTramite());
             tipoTramiteGrillaUI.setPlazoEntregaDocumentacionTT(tipoTramiteDTO.getPlazoEntregaDocumentacionTT());
+            tipoTramiteGrillaUI.setNombreCategoriaTipoTramite(tipoTramiteDTO.getCategoriaTipoTramite().getNombreCategoriaTipoTramite());
+            
 
             tipoTramitesGrilla.add(tipoTramiteGrillaUI);
         }

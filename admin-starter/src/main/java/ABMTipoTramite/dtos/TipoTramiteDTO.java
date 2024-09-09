@@ -5,6 +5,7 @@
 package ABMTipoTramite.dtos;
 
 import ABMTipoTramite.dtos.*;
+import entidades.CategoriaTipoTramite;
 import java.sql.Timestamp;
 
 /**
@@ -19,6 +20,8 @@ public class TipoTramiteDTO {
     private Timestamp fechaHoraBajaTipoTramite;
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
+    private CategoriaTipoTramite categoriaTipoTramite;
+
 
     public int getCodTipoTramite() {
         return codTipoTramite;
@@ -67,6 +70,16 @@ public class TipoTramiteDTO {
     public void setPlazoEntregaDocumentacionTT(int plazoEntregaDocumentacionTT) {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
+
+    public CategoriaTipoTramite getCategoriaTipoTramite() {
+        return categoriaTipoTramite;
+    }
+
+    public void setCategoriaTipoTramite(CategoriaTipoTramite categoriaTipoTramite) {
+        this.categoriaTipoTramite = categoriaTipoTramite;
+    }
+
+
     
     
     

@@ -22,7 +22,7 @@
         <div class="ui-g ui-fluid">
             <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="codTipoTramite" value="Código de la tipoTramite:" />
+                            <p:outputLabel for="codTipoTramite" value="Código de tipoTramite:" />
                </div>
                  <div class="ui-sm-12 ui-g-11">
                      <p:inputText id="codTipoTramite" value="#{uiabmTipoTramite.codTipoTramite}" style="width: 150px;" disabled="#{!uiabmTipoTramite.insert}"  > <!-- readonly="true" -->
@@ -62,11 +62,28 @@
             <div class="ui-sm-12 ui-g-11"> 
                   <p:inputText id="plazoEntregaDocumentacionTT" value="#{uiabmTipoTramite.plazoEntregaDocumentacionTT}" />
              </div>
-        </div>  
+        </div>
+            
+            <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+               <div class="ui-sm-12 ui-g-11">
+                   <p:outputLabel for="categoriaTipoTramite" value="Categoría del TipoTramite:" />
+               </div>
+               <div class="ui-sm-12 ui-g-11">
+                   <h:selectOneMenu id="categoriaTipoTramite" value="#{uiabmTipoTramite.codCategoriaTipoTramite}" style="width: 100%;">
+                       <f:selectItem itemLabel="Seleccione una categoría" itemValue="" />
+                       <f:selectItems value="#{uiabmTipoTramite.categoriasTipoTramiteActivas}" var="categoria"
+                                      itemLabel="#{categoria.nombreCategoriaTipoTramite}" 
+                                      itemValue="#{categoria.codCategoriaTipoTramite}" />
+                   </h:selectOneMenu>
+                   <p:message id="categoriaMSG" for="categoriaTipoTramite" />
+               </div>
+            </div>
+            
+            
     
             <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                <div class="ui-sm-12 ui-g-4">
-                <!-- Botón para agregar CategoriaTT -->
+                <!-- Botón para agregar TT -->
                 <p:commandButton value="Agregar" action="#{uiabmTipoTramite.agregarTipoTramite()}" icon="fa fa-check"
                                    styleClass=" btn-primary" /> 
                              </div>

@@ -21,6 +21,7 @@ public class TipoTramiteGrillaUI {
     private Timestamp fechaHoraBajaTipoTramite;
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
+    private String nombreCategoriaTipoTramite;
 
     public int getCodTipoTramite() {
         return codTipoTramite;
@@ -69,7 +70,13 @@ public class TipoTramiteGrillaUI {
     public void setPlazoEntregaDocumentacionTT(int plazoEntregaDocumentacionTT) {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
-    
-    
+
+    public String getNombreCategoriaTipoTramite() {
+        return nombreCategoriaTipoTramite;
+    }
+
+    public void setNombreCategoriaTipoTramite(String nombreCategoriaTipoTramite) {
+        this.nombreCategoriaTipoTramite = nombreCategoriaTipoTramite;
+    }
     
 }
