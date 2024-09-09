@@ -4,19 +4,19 @@ import java.sql.Timestamp;
 
 public class TramiteDTO {
     
-    private int nroTramie;
+    private int nroTramite;
     private int dni;
     private Timestamp fechaRecepcionTramite;
-    private int codTipoTramite;
+    private String nombreTipoTramite;
     private String nombreEstado;
     private Timestamp fechaAnulacion;
 
-    public int getNroTramie() {
-        return nroTramie;
+    public int getNroTramite() {
+        return nroTramite;
     }
 
-    public void setNroTramie(int nroTramie) {
-        this.nroTramie = nroTramie;
+    public void setNroTramite(int nroTramite) {
+        this.nroTramite = nroTramite;
     }
 
     public int getDni() {
@@ -36,12 +36,12 @@ public class TramiteDTO {
     }
 
 
-    public int getCodTipoTramite() {
-        return codTipoTramite;
+    public String getNombreTipoTramite() {
+        return nombreTipoTramite;
     }
 
-    public void setCodTipoTramite(int codTipoTramite) {
-        this.codTipoTramite = codTipoTramite;
+    public void setNombreTipoTramite(String nombreTipoTramite) {
+        this.nombreTipoTramite = nombreTipoTramite;
     }
 
     public String getNombreEstado() {

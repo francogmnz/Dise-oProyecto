@@ -141,15 +141,7 @@ public class ExpertoABMEstadoTramite {
         dto2.setValor(Timestamp.from(Instant.now()));
 
         criterioList.add(dto2);
-        
-        DTOCriterio dto3 = new DTOCriterio();
-        
-        dto2.setAtributo("fechaHastaVersion");
-        dto2.setOperacion("<");
-        dto2.setValor(Timestamp.from(Instant.now()));
-        
-        criterioList.add(dto3);
-
+         
         DTOCriterio dto4 = new DTOCriterio();
 
         dto4.setAtributo("fechaBajaVersion");
@@ -182,7 +174,8 @@ public class ExpertoABMEstadoTramite {
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
-
+    
+    
     public void darDeBajaEstadoTramite(int codEstadoTramite) throws EstadoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
@@ -207,21 +200,13 @@ public class ExpertoABMEstadoTramite {
         dto2.setValor(Timestamp.from(Instant.now()));    
         
         criterioList.add(dto2); 
-        
+
         DTOCriterio dto3 = new DTOCriterio();
-        
-        dto2.setAtributo("fechaHastaVersion");
-        dto2.setOperacion("<");
-        dto2.setValor(Timestamp.from(Instant.now()));
+        dto3.setAtributo("fechaBajaVersion");
+        dto3.setOperacion("=");
+        dto3.setValor(null);
         
         criterioList.add(dto3);
-
-        DTOCriterio dto4 = new DTOCriterio();
-        dto4.setAtributo("fechaBajaVersion");
-        dto4.setOperacion("=");
-        dto4.setValor(null);
-        
-        criterioList.add(dto4);
         
         List<Object> objetoList =  FachadaPersistencia.getInstance().buscar("Version", criterioList); 
         
@@ -234,7 +219,7 @@ public class ExpertoABMEstadoTramite {
             //por cada confTTET-->getEstadoTramite(Origen y Destino)
             for(ConfTipoTramiteEstadoTramite confTTET : confTTETList){
                 
-                //verifico si el EstadoTramite no se encuentra en alguna version activa.
+               //verifico si el EstadoTramite no se encuentra en alguna version activa.
                verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), codEstadoTramite);
                verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), codEstadoTramite);
             }
@@ -243,6 +228,7 @@ public class ExpertoABMEstadoTramite {
         estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
+        
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
