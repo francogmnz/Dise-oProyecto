@@ -4,13 +4,11 @@
  */
 package ABMCategoriaTipoTramite.dtos;
 
-import java.sql.Timestamp;
-
 /**
  *
  * @author licciardi
  */
-public class ModificarCategoriaTipoTramiteDTO {
+public class NuevaCategoriaTipoTramiteDTO {
     
     private int codCategoriaTipoTramite;
     private String nombreCategoriaTipoTramite;
@@ -50,6 +48,5 @@ public class ModificarCategoriaTipoTramiteDTO {
     }
     
     
-
     
 }

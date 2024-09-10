@@ -95,7 +95,14 @@
                             <p:message id="estadoDestinoMSG" for="estadoDestino"/>
                         </div>
                     </div>
-
+                    
+                    <p:selectOneMenu id="tipoTramiteMenu" value="#{uiabmVersion.tipoTramiteSeleccionado}">
+                        <f:selectItem itemLabel="Seleccione un Tipo de Trámite" itemValue="" />
+                        <f:selectItems value="#{uiabmVersion.listaTiposTramite}"
+                                       var="tipo"
+                                       itemValue="#{tipo.OID}" 
+                                       itemLabel="#{tipo.nombreTipoTramite}" />
+                    </p:selectOneMenu>
 
                     <!-- Botón para Agregar otro estado -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
@@ -103,17 +110,19 @@
                             <p:commandButton value="Agregar otro estado" action="#{uiabmVersion.agregarEstado}" update="@form" />
                         </div>
                     </div>
-
-                </div>
-                <!-- Botón de Guardar -->
-                <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                    <div class="ui-sm-12 ui-g-11">
-                        <p:commandButton value="Guardar" action="#{uiabmVersion.agregarVersion}" 
-                                         update=":form" 
-                                         icon="pi pi-save" 
-                                         styleClass="ui-button-primary" />
+                    <!-- Botón de Guardar -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-4">
+                            <p:commandButton value="Agregar nueva versión" 
+                                             action="#{uiabmVersion.agregarVersion()}" 
+                                             icon="fa fa-check"
+                                             styleClass="btn-primary" /> 
+                        </div>
                     </div>
                 </div>
+               
+
+                
 
             </p:panel>
         </h:form>

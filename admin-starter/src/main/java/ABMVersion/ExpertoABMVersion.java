@@ -1,12 +1,15 @@
 package ABMVersion;
 
 import ABMEstadoTramite.dtos.EstadoTramiteDTO;
+import ABMEstadoTramite.dtos.ModificarEstadoTramiteDTOIn;
+import ABMEstadoTramite.exceptions.EstadoTramiteException;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.NuevaVersionDTO;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
 import entidades.EstadoTramite;
+import entidades.TipoTramite;
 import entidades.Version;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -65,36 +68,42 @@ public class ExpertoABMVersion {
     }
 
     public void agregarVersion(NuevaVersionDTO nuevaVersionDTO) throws VersionException {
-    FachadaPersistencia.getInstance().iniciarTransaccion();
+        FachadaPersistencia.getInstance().iniciarTransaccion();
 
-    try {
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        try {
+            // Buscar el mayor número de versión
+            List<Object> todasVersiones = FachadaPersistencia.getInstance().buscar("Version", null);
+            int maxNroVersion = 0;
 
-        dto.setAtributo("nroVersion");
-        dto.setOperacion("=");
-        dto.setValor(nuevaVersionDTO.getNroVersion());
+            // Iterar para obtener el número de versión más alto
+            for (Object obj : todasVersiones) {
+                Version versionExistente = (Version) obj;
+                if (versionExistente.getNroVersion() > maxNroVersion) {
+                    maxNroVersion = versionExistente.getNroVersion();
+                }
+            }
 
-        criterioList.add(dto);
+            // Incrementar el número de versión
+            nuevaVersionDTO.setNroVersion(maxNroVersion + 1);
 
-        List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+            // Crear nueva versión
+            Version nuevaVersion = new Version();
+            nuevaVersion.setNroVersion(nuevaVersionDTO.getNroVersion());
+            nuevaVersion.setDescripcionVersion(nuevaVersionDTO.getDescripcionVersion());
+            nuevaVersion.setFechaDesdeVersion(new Timestamp(nuevaVersionDTO.getFechaDesdeVersion().getTime()));
+            nuevaVersion.setFechaHastaVersion(new Timestamp(nuevaVersionDTO.getFechaHastaVersion().getTime()));
 
-        if (!lVersion.isEmpty()) {
-            throw new VersionException("El número de versión ya existe");
-        } else {
-            Version version = new Version();
+            // Guardar la nueva versión
+            FachadaPersistencia.getInstance().guardar(nuevaVersion);
 
-            version.setNroVersion(nuevaVersionDTO.getNroVersion());
-            version.setDescripcionVersion(nuevaVersionDTO.getDescripcionVersion());
-            version.setFechaDesdeVersion(new Timestamp(nuevaVersionDTO.getFechaDesdeVersion().getTime()));
-            version.setFechaHastaVersion(new Timestamp(nuevaVersionDTO.getFechaHastaVersion().getTime()));
-            FachadaPersistencia.getInstance().guardar(version);
+            // Finalizar transacción
             FachadaPersistencia.getInstance().finalizarTransaccion();
+
+        } catch (Exception e) {
+       
         }
-    } catch (Exception e) {        throw new VersionException("Error al agregar la versión: " + e.getMessage(), e);
-    
     }
-}
+
     // Método para buscar una versión para modificar
     public ModificarVersionDTO buscarVersionAModificar(int nroVersion) {
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -126,10 +135,10 @@ public class ExpertoABMVersion {
     // Método para modificar una versión
     public void modificarVersion(ModificarVersionDTOIn modificarVersionDTOIn) {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
+
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-        
+
         dto.setAtributo("nroVersion");
         dto.setOperacion("=");
         dto.setValor(modificarVersionDTOIn.getNroVersion());
@@ -143,17 +152,17 @@ public class ExpertoABMVersion {
             FachadaPersistencia.getInstance().finalizarTransaccion();
             return;
         }
-        
+
         Version versionEncontrada = (Version) lVersion.get(0);
-        
+
         versionEncontrada.setDescripcionVersion(modificarVersionDTOIn.getDescripcionVersion());
         versionEncontrada.setFechaDesdeVersion(modificarVersionDTOIn.getFechaDesdeVersion());
         versionEncontrada.setFechaHastaVersion(modificarVersionDTOIn.getFechaHastaVersion());
-   
+
         FachadaPersistencia.getInstance().guardar(versionEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
-    
+
     // Método para dar de baja una versión
     public void darDeBajaVersion(int nroVersion) throws VersionException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -205,6 +214,27 @@ public class ExpertoABMVersion {
         }
 
         return estadosTramiteActivos;
+    }
+    public List<TipoTramite> obtenerTiposTramitesActivos() {
+
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
+        dto.setAtributo("fechaHoraBajaTipoTramite");
+        dto.setOperacion("=");
+        dto.setValor(null);
+
+        criterioList.add(dto);
+
+        List<Object> objetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+        List<TipoTramite> tiposTramitesActivos = new ArrayList<>();
+
+        for (Object x : objetoList) {
+            TipoTramite tipoTramite = (TipoTramite) x;
+            tiposTramitesActivos.add(tipoTramite);
+        }
+
+        return tiposTramitesActivos;
     }
 
 }

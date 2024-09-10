@@ -6,6 +6,7 @@ import ABMVersion.dtos.NuevaVersionDTO;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
 import entidades.EstadoTramite;
+import entidades.TipoTramite;
 import java.util.List;
 
 /**
@@ -42,5 +43,8 @@ public class ControladorABMVersion {
     }
     public List<EstadoTramite> obtenerEstadosTramiteActivos() {
         return expertoABMVersion.obtenerEstadosTramiteActivos();
+    }
+    public List<TipoTramite> obtenerTiposTramitesActivos() {
+        return expertoABMVersion.obtenerTiposTramitesActivos();
     }
 }

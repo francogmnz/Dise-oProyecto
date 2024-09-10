@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Categoria TipoTramite"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+        
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Trabajar con CategoriaTipoTramite
+    </ui:define>
+
+    <ui:define name="body">
+    <h:form>
+        <p:focus context="@form"/>
+            <div class="box box-primary">
+                        
+                     <div class="box-header with-border">
+                         <div id="main-buttons">
+
+                             <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmCategoriaTipoTramiteLista.irAgregarCategoriaTipoTramite()}"   styleClass="btn-primary"/>
+                               </div>
+                      </div>
+        <!-- Tabla para mostrar la lista de categorias -->
+         <p:separator/>
+
+                   <div class="ui-g ui-fluid">
+                   <div class="ui-g-12 ui-md-6">
+                    <p:outputPanel>
+                        <h:outputText value="Código:"/>
+                        <p:spacer height="10"/>
+                        <p:inputText id="codFilter"  style="width:150px"
+                                     placeholder="" value="#{uiabmCategoriaTipoTramiteLista.codCategoriaTipoTramiteFiltro}" onfocus="Javascript:this.focus();this.select();">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uiabmCategoriaTipoTramiteLista.filtrar()}" 
+                                            update="@form:grid1"
+                                            />
+                                     
+                                    </p:inputText>
+
+                    </p:outputPanel> </div>
+
+                   <div class="ui-g-12 ui-md-6">
+                   <p:outputPanel>
+                        <h:outputText value="Nombre:"/>
+                        <p:spacer height="10"/>
+                        <p:inputText id="nomFilter"  style="width:150px"
+                                     placeholder="" value="#{uiabmCategoriaTipoTramiteLista.nombreCategoriaTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                            listener="#{uiabmCategoriaTipoTramiteLista.filtrar()}" 
+                                            update="@form:grid1"
+                                        />
+                                     
+                        </p:inputText>
+                    </p:outputPanel> 
+                   </div>
+                   </div>
+            <p:spacer height="5"/>
+            <p:dataTable id="grid1" widgetVar="categoriaTipoTramiteTable" value="#{uiabmCategoriaTipoTramiteLista.buscarCategoriasTipoTramite()}" var="categoriaTipoTramite" >
+
+            <p:column>
+                <f:facet name="header">Código CategoriaTipoTramite</f:facet>
+                #{categoriaTipoTramite.codCategoriaTipoTramite}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Nombre CategoriaTipoTramite</f:facet>
+                #{categoriaTipoTramite.nombreCategoriaTipoTramite}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Descripcion</f:facet>
+                #{categoriaTipoTramite.descripcionCategoriaTipoTramite}
+            </p:column>
+            
+            <p:column>
+                <f:facet name="header">Descripcion Web</f:facet>
+                #{categoriaTipoTramite.descripcionWebCategoriaTipoTramite}
+            </p:column>
+
+
+            <p:column>
+                <f:facet name="header">Fecha Hora Baja</f:facet>
+                #{categoriaTipoTramite.fechaHoraBajaCategoriaTipoTramite}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Acciones</f:facet>
+                <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmCategoriaTipoTramiteLista.irModificarCategoriaTipoTramite(categoriaTipoTramite.codCategoriaTipoTramite)}" disabled="#{categoriaTipoTramite.fechaHoraBajaCategoriaTipoTramite != null}">
+                    <f:ajax render="@form"/>
+                </p:commandButton>
+                <p:spacer width="5"/>
+                <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmCategoriaTipoTramiteLista.darDeBajaCategoriaTipoTramite(categoriaTipoTramite.codCategoriaTipoTramite)}" disabled="#{categoriaTipoTramite.fechaHoraBajaCategoriaTipoTramite != null}">
+                   
+                    <p:confirm header="Anulación de #{categoriaTipoTramite.codCategoriaTipoTramite} #{categoriaTipoTramite.nombreCategoriaTipoTramite}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                    
+                </p:commandButton>
+                
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+            </p:column>
+
+        </p:dataTable>
+            </div>
+
+   </h:form>
+
+ </ui:define>
+    </ui:composition>

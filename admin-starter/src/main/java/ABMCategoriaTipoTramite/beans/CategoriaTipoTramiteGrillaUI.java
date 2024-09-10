@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ABMCategoriaTipoTramite.dtos;
+package ABMCategoriaTipoTramite.beans;
 
 import java.sql.Timestamp;
 
@@ -10,12 +10,15 @@ import java.sql.Timestamp;
  *
  * @author licciardi
  */
-public class ModificarCategoriaTipoTramiteDTO {
+
+//Grilla que muestro del ABMCategoriaTipoTramite
+public class CategoriaTipoTramiteGrillaUI {
     
     private int codCategoriaTipoTramite;
-    private String nombreCategoriaTipoTramite;
     private String descripcionCategoriaTipoTramite;
     private String descripcionWebCategoriaTipoTramite;
+    private Timestamp fechaHoraBajaCategoriaTipoTramite;
+    private String nombreCategoriaTipoTramite;
 
     public int getCodCategoriaTipoTramite() {
         return codCategoriaTipoTramite;
@@ -23,14 +26,6 @@ public class ModificarCategoriaTipoTramiteDTO {
 
     public void setCodCategoriaTipoTramite(int codCategoriaTipoTramite) {
         this.codCategoriaTipoTramite = codCategoriaTipoTramite;
-    }
-
-    public String getNombreCategoriaTipoTramite() {
-        return nombreCategoriaTipoTramite;
-    }
-
-    public void setNombreCategoriaTipoTramite(String nombreCategoriaTipoTramite) {
-        this.nombreCategoriaTipoTramite = nombreCategoriaTipoTramite;
     }
 
     public String getDescripcionCategoriaTipoTramite() {
@@ -48,8 +43,23 @@ public class ModificarCategoriaTipoTramiteDTO {
     public void setDescripcionWebCategoriaTipoTramite(String descripcionWebCategoriaTipoTramite) {
         this.descripcionWebCategoriaTipoTramite = descripcionWebCategoriaTipoTramite;
     }
-    
-    
 
+    public Timestamp getFechaHoraBajaCategoriaTipoTramite() {
+        return fechaHoraBajaCategoriaTipoTramite;
+    }
+
+    public void setFechaHoraBajaCategoriaTipoTramite(Timestamp fechaHoraBajaCategoriaTipoTramite) {
+        this.fechaHoraBajaCategoriaTipoTramite = fechaHoraBajaCategoriaTipoTramite;
+    }
+
+    public String getNombreCategoriaTipoTramite() {
+        return nombreCategoriaTipoTramite;
+    }
+
+    public void setNombreCategoriaTipoTramite(String nombreCategoriaTipoTramite) {
+        this.nombreCategoriaTipoTramite = nombreCategoriaTipoTramite;
+    }
+    
+    
     
 }

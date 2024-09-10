@@ -39,8 +39,27 @@ public class UIABMVersion implements Serializable {
     private Date fechaHastaVersion;
     private List<EstadoTramite> listaEstadosTramite = new ArrayList<>();
     private String estadoSeleccionado;
+    private String tipoTramiteSeleccionado;
 
-    // Getters y Setters
+    public String getTipoTramiteSeleccionado() {
+        return tipoTramiteSeleccionado;
+    }
+
+    public void setTipoTramiteSeleccionado(String tipoTramiteSeleccionado) {
+        this.tipoTramiteSeleccionado = tipoTramiteSeleccionado;
+    }
+    private List<TipoTramite> listaTiposTramite = new ArrayList<>();
+    public ControladorABMVersion getControladorABMVersion() {
+        return controladorABMVersion;
+    }
+
+    public void setControladorABMVersion(ControladorABMVersion controladorABMVersion) {
+        this.controladorABMVersion = controladorABMVersion;
+    }
+
+    public List<TipoTramite> getListaTiposTramite() {
+        return listaTiposTramite;
+    }
     public List<EstadoTramite> getListaEstadosTramite() {
         return listaEstadosTramite;
     }
@@ -126,6 +145,14 @@ public class UIABMVersion implements Serializable {
             Messages.create("Error al cargar los estados de trámite: " + e.getMessage()).fatal().add();
         }
     }
+    public void actualizarTiposTramite() {
+        try {
+            this.listaTiposTramite = controladorABMVersion.obtenerTiposTramitesActivos();
+        } catch (Exception e) {
+            Messages.create("Error al cargar los tipos de trámite: " + e.getMessage()).fatal().add();
+        }
+    }
+
 
     public UIABMVersion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -155,6 +182,7 @@ public class UIABMVersion implements Serializable {
 
             // Cargar los estados de trámite
             actualizarEstadosTramite();
+            actualizarTiposTramite();
             // También puedes cargar otros datos si es necesario, como los tipos de trámite
             // this.listaTiposTramite = controladorABMVersion.obtenerTiposTramite();
 
