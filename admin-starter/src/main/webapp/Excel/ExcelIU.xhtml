@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        Excel Leer / Escribir
+    </ui:define>
+
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Upload"/>
+
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h:form>
+                    <div>
+                        <p:fileUpload listener="#{uiExcelFile.handleFileUpload}" 
+                                  dragDropSupport="false" auto="true" onstart="showBar()" oncomplete="hideBar()"
+                                   mode="advanced"  multiple="false" update="messages" sizeLimit="100000000" 
+                                  />
+                    </div>
+                                          
+                    <p:spacer height="20"/>                      
+               <div>
+           
+                      <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+                         icon="pi pi-arrow-down"  styleClass="btn-success">
+                            <p:fileDownload value="#{uiExcelFile.fileD}"/> 
+                     </p:commandButton>
+               </div>
+                </h:form>
+
+       
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="code">
+        <p:tabView>
+            <p:tab title="upload.xhtml">
+           <pre>
+               <code class="language-html">
+                   <h:outputText value="#{sourceCodeMB.getPageSource()}" escape="true"/>
+               </code>
+           </pre>
+            </p:tab>
+
+            <p:tab title="FileuploadMB.java">
+              <pre>
+               <code class="language-java">
+                   <h:outputText value="#{sourceCodeMB.getJavaSource('com.github.adminfaces.showcase.bean.FileuploadMB')}"
+                                 escape="false"/>
+               </code>
+             </pre>
+            </p:tab>
+        </p:tabView>
+    </ui:define>
+</ui:composition>
