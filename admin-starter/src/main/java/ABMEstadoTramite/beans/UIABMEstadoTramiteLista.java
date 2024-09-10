@@ -27,6 +27,7 @@ public class UIABMEstadoTramiteLista implements Serializable {
     private ControladorABMEstadoTramite controladorABMEstadoTramite = new ControladorABMEstadoTramite();
     private int codigoFiltro = 0;
     private String nombreFiltro = "";
+    private String descripcionFiltro = "";
 
     public ControladorABMEstadoTramite getControladorABMEstadoTramite() {
         return controladorABMEstadoTramite;
@@ -52,16 +53,25 @@ public class UIABMEstadoTramiteLista implements Serializable {
         this.nombreFiltro = nombreFiltro;
     }
 
+    public String getDescripcionFiltro() {
+        return descripcionFiltro;
+    }
+
+    public void setDescripcionFiltro(String descripcionFiltro) {
+        this.descripcionFiltro = descripcionFiltro;
+    }
+    
     public void filtrar() {
 
     }
 
-    public List<EstadoTramiteGrillaUI> buscarEstadoTramites() {
+    public List<EstadoTramiteGrillaUI> buscarEstadosTramite() {
         System.out.println(codigoFiltro);
         System.out.println(nombreFiltro);
+        System.out.println(descripcionFiltro);
 
         List<EstadoTramiteGrillaUI> estadosTramiteGrilla = new ArrayList<>();
-        List<EstadoTramiteDTO> estadosTramiteDTO = controladorABMEstadoTramite.buscarEstadosTramite(codigoFiltro, nombreFiltro);
+        List<EstadoTramiteDTO> estadosTramiteDTO = controladorABMEstadoTramite.buscarEstadosTramite(codigoFiltro, nombreFiltro, descripcionFiltro);
         for (EstadoTramiteDTO estadoTramiteDTO : estadosTramiteDTO) {
             EstadoTramiteGrillaUI estadoTramiteGrillaUI = new EstadoTramiteGrillaUI();
             estadoTramiteGrillaUI.setCodEstadoTramite(estadoTramiteDTO.getCodEstadoTramite());

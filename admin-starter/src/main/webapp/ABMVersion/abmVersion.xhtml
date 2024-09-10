@@ -61,32 +61,18 @@
                         </div>
                     </div>
 
-                    <!-- Desplegable para el Tipo de Trámite -->
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="codTipoTramite" value="Tipo de Trámite:" />
-                        </div>
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:selectOneMenu id="codTipoTramite" value="#{uiabmVersion.codTipoTramite}" required="true">
-                                <f:selectItem itemLabel="Seleccione un Tipo de Trámite" itemValue="" />
-                                <f:selectItems value="#{empty uiabmVersion.listaTiposTramite ? [] : uiabmVersion.listaTiposTramite}" var="tipoTramite"
-                                               itemValue="#{tipoTramite.codTipoTramite}" 
-                                               itemLabel="#{tipoTramite.nombreTipoTramite}" />
-                            </p:selectOneMenu>
-                            <p:message id="codTipoTramiteMSG" for="codTipoTramite"/>
-                        </div>
-                    </div>
-
+                   
                     <!-- Desplegable para Estado de Origen -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
                             <p:outputLabel for="estadoOrigen" value="Estado de Origen:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:selectOneMenu id="estadoOrigen" value="#{uiabmVersion.estadoTramiteOrigenSeleccionados}" required="true">
+                            <p:selectOneMenu id="estadoOrigen" value="#{uiabmVersion.estadoSeleccionado}" required="true">
                                 <f:selectItem itemLabel="Seleccione un Estado de Origen" itemValue="" />
-                                <f:selectItems value="#{empty uiabmVersion.listaEstados ? [] : uiabmVersion.listaEstados}" var="estado"
-                                               itemValue="#{estado.codEstadoTramite}" 
+                                <f:selectItems value="#{uiabmVersion.listaEstadosTramite}"
+                                               var="estado"
+                                               itemValue="#{estado.OID}" 
                                                itemLabel="#{estado.nombreEstadoTramite}" />
                             </p:selectOneMenu>
                             <p:message id="estadoOrigenMSG" for="estadoOrigen"/>
@@ -99,15 +85,17 @@
                             <p:outputLabel for="estadoDestino" value="Estado de Destino:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:selectOneMenu id="estadoDestino" value="#{uiabmVersion.estadoTramiteDestinoSeleccionados}" required="true">
+                            <p:selectOneMenu id="estadoDestino" value="#{uiabmVersion.estadoSeleccionado}" required="true">
                                 <f:selectItem itemLabel="Seleccione un Estado de Destino" itemValue="" />
-                                <f:selectItems value="#{empty uiabmVersion.listaEstados ? [] : uiabmVersion.listaEstados}" var="estado"
-                                               itemValue="#{estado.codEstadoTramite}" 
+                                <f:selectItems value="#{uiabmVersion.listaEstadosTramite}"
+                                               var="estado"
+                                               itemValue="#{estado.OID}" 
                                                itemLabel="#{estado.nombreEstadoTramite}" />
                             </p:selectOneMenu>
                             <p:message id="estadoDestinoMSG" for="estadoDestino"/>
                         </div>
                     </div>
+
 
                     <!-- Botón para Agregar otro estado -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">

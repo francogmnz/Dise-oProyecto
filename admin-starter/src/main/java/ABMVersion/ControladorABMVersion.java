@@ -1,9 +1,11 @@
 package ABMVersion;
+import ABMEstadoTramite.dtos.EstadoTramiteDTO;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.NuevaVersionDTO;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
+import entidades.EstadoTramite;
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ public class ControladorABMVersion {
     // Método para buscar versiones
     public List<VersionDTO> buscarVersion(int nroVersion, String nombreTipoTramite, int codTipoTramite) {
         return expertoABMVersion.buscarVersion(nroVersion, codTipoTramite, nombreTipoTramite);
-    }
+    }    
 
     // Método para agregar una nueva versión
     public void agregarVersion(NuevaVersionDTO nuevaVersionDTO) throws VersionException {
@@ -37,5 +39,8 @@ public class ControladorABMVersion {
     // Método para dar de baja una versión
     public void darDeBajaVersion(int nroVersion) throws VersionException {
         expertoABMVersion.darDeBajaVersion(nroVersion);
+    }
+    public List<EstadoTramite> obtenerEstadosTramiteActivos() {
+        return expertoABMVersion.obtenerEstadosTramiteActivos();
     }
 }

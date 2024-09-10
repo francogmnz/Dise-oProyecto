@@ -1,10 +1,12 @@
 package ABMVersion;
 
+import ABMEstadoTramite.dtos.EstadoTramiteDTO;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.NuevaVersionDTO;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
+import entidades.EstadoTramite;
 import entidades.Version;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -155,27 +157,54 @@ public class ExpertoABMVersion {
     // Método para dar de baja una versión
     public void darDeBajaVersion(int nroVersion) throws VersionException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
+
+        // Crear el criterio de búsqueda para encontrar la versión
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-        
+
         dto.setAtributo("nroVersion");
         dto.setOperacion("=");
         dto.setValor(nroVersion);
-        
+
         criterioList.add(dto);
-        
+
+        // Buscar la versión con el criterio dado
         List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
 
         if (lVersion.isEmpty()) {
+            // Lanzar una excepción si la versión no se encuentra
             throw new VersionException("La versión no existe");
         }
-        
+
+        // Obtener la versión encontrada y actualizar la fecha de baja
         Version versionEncontrada = (Version) lVersion.get(0);
-        
         versionEncontrada.setFechaBajaVersion(new Timestamp(System.currentTimeMillis()));
-        
+
+        // Guardar los cambios y finalizar la transacción
         FachadaPersistencia.getInstance().guardar(versionEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
+    // En ExpertoABMVersion.java
+
+    public List<EstadoTramite> obtenerEstadosTramiteActivos() {
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
+        dto.setAtributo("fechaHoraBajaEstadoTramite");
+        dto.setOperacion("=");
+        dto.setValor(null);
+
+        criterioList.add(dto);
+
+        List<Object> objetoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+        List<EstadoTramite> estadosTramiteActivos = new ArrayList<>();
+
+        for (Object x : objetoList) {
+            EstadoTramite estadoTramite = (EstadoTramite) x;
+            estadosTramiteActivos.add(estadoTramite);
+        }
+
+        return estadosTramiteActivos;
+    }
+
 }

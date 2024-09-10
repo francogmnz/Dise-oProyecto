@@ -19,19 +19,19 @@ public class ControladorABMEstadoTramite {
     
     private ExpertoABMEstadoTramite expertoABMEstadoTramite = new ExpertoABMEstadoTramite();
 
-    public List<EstadoTramiteDTO> buscarEstadosTramite(int codEstadoTramite, String nombreEstadoTramite) {
-        return expertoABMEstadoTramite.buscarEstadosTramite(codEstadoTramite, nombreEstadoTramite);
+    public List<EstadoTramiteDTO> buscarEstadosTramite(int codEstadoTramite, String nombreEstadoTramite, String descripcionEstadoTramite) {
+        return expertoABMEstadoTramite.buscarEstadosTramite(codEstadoTramite, nombreEstadoTramite, descripcionEstadoTramite);
     }
 
     public void agregarEstadoTramite(NuevoEstadoTramiteDTO nuevoEstadoTramiteDTO) throws EstadoTramiteException {
         expertoABMEstadoTramite.agregarEstadoTramite(nuevoEstadoTramiteDTO);
     }
 
-    public ModificarEstadoTramiteDTO buscarEstadoTramiteAModificar(int codEstadoTramite) {
+    public ModificarEstadoTramiteDTO buscarEstadoTramiteAModificar(int codEstadoTramite) throws EstadoTramiteException {
         return expertoABMEstadoTramite.buscarEstadoTramiteAModificar(codEstadoTramite);
     }
 
-    public void modificarEstadoTramite(ModificarEstadoTramiteDTOIn modificarEstadoTramiteDTOIn) {
+    public void modificarEstadoTramite(ModificarEstadoTramiteDTOIn modificarEstadoTramiteDTOIn) throws EstadoTramiteException {
         expertoABMEstadoTramite.modificarEstadoTramite(modificarEstadoTramiteDTOIn);
     }
 
