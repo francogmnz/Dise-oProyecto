@@ -79,6 +79,18 @@
                </div>
             </div>
             
+            <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+               <div class="ui-sm-12 ui-g-11">
+                   <p:outputLabel for="documentacionesSeleccionadas" value="Documentaciones:" />
+               </div>
+               <div class="ui-sm-12 ui-g-11">
+                   <p:selectCheckboxMenu id="documentacionesSeleccionadas" value="#{uiabmTipoTramite.documentacionesSeleccionadas}" label="Seleccione Documentaciones" style="width:100%">
+                       <f:selectItems value="#{uiabmTipoTramite.documentacionesActivas}" var="documentacion"
+                                      itemLabel="#{documentacion.nombreDocumentacion}" itemValue="#{documentacion.codDocumentacion}" />
+                   </p:selectCheckboxMenu>
+                   <p:message id="documentacionesMSG" for="documentacionesSeleccionadas" />
+               </div>
+            </div>            
             
     
             <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 

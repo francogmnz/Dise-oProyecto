@@ -5,6 +5,7 @@
 package ABMTipoTramite;
 
 import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.*;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
@@ -25,12 +26,15 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.buscarTipoTramites(codTipoTramite, nombreTipoTramite);
     }
     
+    public List<DocumentacionDTO> obtenerDocumentacionesActivas() {
+        return expertoABMTipoTramite.obtenerDocumentacionesActivas();
+    }
     public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() {
         return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
     }
 
-    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO) throws TipoTramiteException {
-        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO);
+    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO,List<DocumentacionDTO> documentacionesSeleccionadas) throws TipoTramiteException {
+        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadas);
     }
 
     public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
