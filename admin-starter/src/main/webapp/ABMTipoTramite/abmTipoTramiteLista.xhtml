@@ -63,7 +63,7 @@
                    </div>
                    </div>
             <p:spacer height="5"/>
-            <p:dataTable id="grid1" widgetVar="tipoTramiteTable" value="#{uiabmTipoTramiteLista.buscarTipoTramites()}" var="tipoTramite" >
+            <p:dataTable id="grid1" widgetVar="tipoTramiteTable" value="#{uiabmTipoTramiteLista.buscarTipoTramites()}" var="tipoTramite" rowKey="#{tipoTramite.codTipoTramite}" >
 
             <p:column>
                 <f:facet name="header">Código TipoTramite</f:facet>
@@ -89,6 +89,17 @@
                 <f:facet name="header">Plazo Entrega</f:facet>
                 #{tipoTramite.plazoEntregaDocumentacionTT}
             </p:column>
+                
+    
+                
+            <p:column headerText="Documentación Asociada">
+                <p:dataList value="#{tipoTramite.documentaciones}" var="doc" itemType="unordered">
+                    <p:outputLabel value="#{doc.nombreDocumentacion}" />
+                </p:dataList>
+            </p:column>
+
+
+                
                 
             <p:column>
                 <f:facet name="header">Nombre Categoria</f:facet>

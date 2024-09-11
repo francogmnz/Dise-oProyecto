@@ -4,6 +4,7 @@
  */
 package ABMTipoTramite.beans;
 
+import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.beans.*;
 import ABMTipoTramite.ControladorABMTipoTramite;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
@@ -75,6 +76,9 @@ public class UIABMTipoTramiteLista implements Serializable {
             tipoTramiteGrillaUI.setPlazoEntregaDocumentacionTT(tipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             tipoTramiteGrillaUI.setNombreCategoriaTipoTramite(tipoTramiteDTO.getCategoriaTipoTramite().getNombreCategoriaTipoTramite());
             
+            
+            
+            tipoTramiteGrillaUI.setDocumentaciones(tipoTramiteDTO.getDocumentacionesDTO());
 
             tipoTramitesGrilla.add(tipoTramiteGrillaUI);
         }

@@ -61,6 +61,28 @@ public class ExpertoABMTipoTramite {
             tipoTramiteDTO.setFechaHoraBajaTipoTramite(tipoTramite.getFechaHoraBajaTipoTramite());
             tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
             tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
+            
+            List<TipoTramiteDocumentacion> listaTTD = tipoTramite.getTipoTramiteDocumentacion();
+            List<DocumentacionDTO> documentacionesDTO = new ArrayList<>();            
+           
+            for(TipoTramiteDocumentacion ttd: listaTTD){
+                if(ttd.getFechaHoraBajaTTD() == null){
+                               
+                    Documentacion documentacion = ttd.getDocumentacion();
+                    DocumentacionDTO docDTO = new DocumentacionDTO();
+                    
+                    docDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
+                    docDTO.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+                    
+                    documentacionesDTO.add(docDTO);
+                    
+  
+                    
+                }
+            }
+            
+            tipoTramiteDTO.setDocumentacionesDTO(documentacionesDTO);
+           
             tipoTramiteResultado.add(tipoTramiteDTO);
         }
 
