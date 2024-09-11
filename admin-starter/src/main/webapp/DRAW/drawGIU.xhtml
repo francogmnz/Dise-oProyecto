@@ -1,0 +1,65 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" >
+    <h:head>
+      <title>Drawflow | Simple Flow program libray</title>
+   <script src="https://cdn.jsdelivr.net/gh/jerosoler/Drawflow/dist/drawflow.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jerosoler/Drawflow/dist/drawflow.min.css"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+  <link rel="stylesheet" href="../resources/css/beautiful.css" type="text/css"/>      
+    </h:head>
+    <body>
+
+    <p:tooltip/>
+
+    <h:form>
+        <p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+        </p:messages>
+    </h:form>
+    <h:form id="form" prependId="false">
+      <header style="height: 0px">
+  </header>
+        
+      
+
+ <div class="wrapper" style="height:100vh">
+     
+                   
+    <div class="col" id="seleccion" >
+      
+        
+    </div>
+    <div class="col-right">
+      <div class="menu">
+        <ul>
+            <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">#{uiDraw.titulo}</li>
+        </ul>
+      </div>
+      <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+          <div id="btn-export" class="btn-export" onclick="guardar()">Guardar</div>
+
+        <div class="bar-zoom">
+          <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+          <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+          <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+ <h:outputText id="eposibles" value="#{uiDraw.nodosPosibles}" style="visibility: hidden"/>
+ <h:outputText id="editable" value="#{uiDraw.editable}" style="visibility: hidden"/>
+ <h:outputText id="ecargarJson" value="#{uiDraw.cargarJSON}" style="visibility: hidden"/>
+
+ <h:inputHidden id="jsonGuardar" value="#{uiDraw.guardarJSON}"/>
+ <p:commandButton ajax="true" id="guardarBean" action="#{uiDraw.guardar()}" style="visibility: hidden"/>
+  <h:outputScript library="js" name="draw.js"/>
+      </h:form>
+    </body>
+</html>
