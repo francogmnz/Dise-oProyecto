@@ -259,9 +259,10 @@ public class ExpertoRegistrarTramite {
        DTOCriterio criterioEstado = new DTOCriterio();
        criterioEstado.setAtributo("nombreEstadoTramite");
        criterioEstado.setOperacion("like");
-       criterioEstado.setValor("'Iniciado'");
+       criterioEstado.setValor("Nombre1");
        
        criterioList.add(criterioEstado);
+       
        EstadoTramite estadoEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
        
        TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
@@ -274,19 +275,27 @@ public class ExpertoRegistrarTramite {
        tramiteCreado.setEstadoTramite(estadoEncontrado);
        
        //busco lista de precio para setearle el precio
-       criterioList.clear();
-
+       criterioList.clear(); 
+       
+       /*buscar "ListaPrecio", "fechaHoraBaja ="+ null 
+       "AND fechaHoraDesde <"+ fechaActual "AND fechaHoraHasta >" + fechaActual*/
        DTOCriterio dto1 = new DTOCriterio(); 
-       dto1.setAtributo("fechaHoraDesdeVersion");
+       dto1.setAtributo("fechaHoraDesdeListaPrecios");
        dto1.setOperacion("<");
        dto1.setValor(new Timestamp(System.currentTimeMillis()));
        criterioList.add(dto1);
        
        DTOCriterio dto2 = new DTOCriterio(); 
-       dto2.setAtributo("fechaHorasHastaVersion");
+       dto2.setAtributo("fechaHoraHastaListaPrecios");
        dto2.setOperacion(">");
        dto2.setValor(new Timestamp(System.currentTimeMillis()));
        criterioList.add(dto2);
+       
+       DTOCriterio dto3 = new DTOCriterio(); 
+       dto3.setAtributo("fechaHoraBajaListaPrecios");
+       dto3.setOperacion("=");
+       dto3.setValor(null);
+       criterioList.add(dto3);
        
        ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
        List<TipoTramiteListaPrecios> precioTTList = listaPreciosEncontrada.getTipoTramiteListaPrecios();
@@ -309,8 +318,9 @@ public class ExpertoRegistrarTramite {
        }
        
        FachadaPersistencia.getInstance().guardar(tramiteCreado);
-        
-        
+       
+       FachadaPersistencia.getInstance().finalizarTransaccion();
+   
     }
     
 

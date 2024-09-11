@@ -21,7 +21,7 @@
         <property name="fechaRecepcionTramite" column="fecha_recepcion_tramite" type="timestamp"/>
 
         <property name="nroTramite" column="nro_tramite" type="int"/>
-
+       
         <property name="precioTramite" column="precio_tramite" type="int"/>
 
 

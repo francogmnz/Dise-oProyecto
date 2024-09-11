@@ -1,16 +1,20 @@
 
 
 import ABMEstadoTramite.exceptions.EstadoTramiteException;
-import utils.EjemplosPersistencia;
+import RegistrarTramite.ExpertoRegistrarTramite;
+import RegistrarTramite.exceptions.RegistrarTramiteException;
+
 
 public class Main {
 
-    public static void main(String[] args) throws EstadoTramiteException {
-        EjemplosPersistencia ejemplos = new EjemplosPersistencia();
-        ejemplos.crearElementos2();
+    public static void main(String[] args) throws EstadoTramiteException, RegistrarTramiteException {
+        //EjemplosPersistencia ejemplos = new EjemplosPersistencia();
+        //ejemplos.crearElementos2();
+        
+        ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
+        expertoRegistrarTramite.registrarTramite(12345678, 1);
         
         
-        System.out.println("Funcionando");
     }
 
 }
