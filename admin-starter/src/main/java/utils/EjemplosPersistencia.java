@@ -258,8 +258,14 @@ public class EjemplosPersistencia {
 
             ListaPrecios listaPrecios1 = new ListaPrecios();
             listaPrecios1.setCodListaPrecios(1);
-            listaPrecios1.setFechaHoraDesdeListaPrecios(new Timestamp(System.currentTimeMillis()));
-            listaPrecios1.setFechaHoraHastaListaPrecios(new Timestamp(System.currentTimeMillis()));
+
+            Calendar lp1Desde = Calendar.getInstance();
+            lp1Desde.set(2024, Calendar.JANUARY, 1, 1, 30, 0);
+            Calendar lp1Hasta = Calendar.getInstance();
+            lp1Hasta.set(2025, Calendar.DECEMBER, 10, 1, 30, 0);
+
+            listaPrecios1.setFechaHoraDesdeListaPrecios(new Timestamp(lp1Desde.getTimeInMillis()));
+            listaPrecios1.setFechaHoraHastaListaPrecios(new Timestamp(lp1Hasta.getTimeInMillis()));
             listaPrecios1.setFechaHoraBajaListaPrecios(null);
 
             listaPrecios1.addTipoTramiteListaPrecios(tipoTramiteListaPrecios1);
@@ -268,8 +274,14 @@ public class EjemplosPersistencia {
 
             ListaPrecios listaPrecios2 = new ListaPrecios();
             listaPrecios2.setCodListaPrecios(2);
-            listaPrecios2.setFechaHoraDesdeListaPrecios(new Timestamp(System.currentTimeMillis()));
-            listaPrecios2.setFechaHoraHastaListaPrecios(new Timestamp(System.currentTimeMillis()));
+
+            Calendar lp2Desde = Calendar.getInstance();
+            lp2Desde.set(2023, Calendar.JANUARY, 10, 14, 30, 0);
+            Calendar lp2Hasta = Calendar.getInstance();
+            lp2Hasta.set(2025, Calendar.SEPTEMBER, 10, 21, 30, 0);
+
+            listaPrecios2.setFechaHoraDesdeListaPrecios(new Timestamp(lp2Desde.getTimeInMillis()));
+            listaPrecios2.setFechaHoraHastaListaPrecios(new Timestamp(lp2Hasta.getTimeInMillis()));
             listaPrecios2.setFechaHoraBajaListaPrecios(null);
 
             listaPrecios2.addTipoTramiteListaPrecios(tipoTramiteListaPrecios2);
@@ -312,8 +324,8 @@ public class EjemplosPersistencia {
             conf1.setEtapaOrigen(1);  // Etapa 1 como origen
             conf1.setEtapaDestino(2);  // Etapa 2 como destino
 
-            conf1.addEstadoTramiteDestino(etapaDos);
             conf1.addEstadoTramiteOrigen(etapaUno);
+            conf1.addEstadoTramiteDestino(etapaDos);
 
             FachadaPersistencia.getInstance().guardar(conf1);
 
@@ -322,8 +334,8 @@ public class EjemplosPersistencia {
             conf2.setEtapaOrigen(2);  // Etapa 2 como origen
             conf2.setEtapaDestino(3);  // Etapa 3 como destino
 
-            conf2.addEstadoTramiteDestino(etapaDos);
-            conf2.addEstadoTramiteOrigen(etapaUno);
+            conf2.addEstadoTramiteOrigen(etapaDos);
+            conf2.addEstadoTramiteDestino(etapaUno);
 
             FachadaPersistencia.getInstance().guardar(conf2);
 
@@ -331,12 +343,14 @@ public class EjemplosPersistencia {
             version1.setNroVersion(1);
             version1.setDescripcionVersion("Versión inicial");
 
-            Calendar calendario1 = Calendar.getInstance();
-            calendario1.set(2024, Calendar.JANUARY, 1, 14, 30, 0);
+            Calendar v1Desde = Calendar.getInstance();
+            v1Desde.set(2023, Calendar.OCTOBER, 1, 14, 30, 0);
+            Calendar v1Hasta = Calendar.getInstance();
+            v1Hasta.set(2025, Calendar.DECEMBER, 1, 10, 30, 0);
 
             // Crear un objeto Timestamp con la fecha y hora especificada
-            version1.setFechaDesdeVersion(new Timestamp(calendario1.getTimeInMillis()));
-            version1.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
+            version1.setFechaDesdeVersion(new Timestamp(v1Desde.getTimeInMillis()));
+            version1.setFechaHastaVersion(new Timestamp(v1Hasta.getTimeInMillis()));
             version1.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
 
             version1.setTipoTramite(tipoTramiteA);
@@ -348,13 +362,15 @@ public class EjemplosPersistencia {
             Version version2 = new Version();
             version2.setNroVersion(2);
             version2.setDescripcionVersion("Actualización de mitad de año");
-            
-            Calendar calendario2 = Calendar.getInstance();
-            calendario2.set(2023, Calendar.JANUARY, 1, 14, 30, 0);
+
+            Calendar v2Desde = Calendar.getInstance();
+            v2Desde.set(2024, Calendar.JANUARY, 1, 14, 30, 0);
+            Calendar v2Hasta = Calendar.getInstance();
+            v2Hasta.set(2024, Calendar.DECEMBER, 11, 12, 30, 0);
 
             // Crear un objeto Timestamp con la fecha y hora especificada
-            version2.setFechaDesdeVersion(new Timestamp(calendario2.getTimeInMillis()));
-            version2.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
+            version2.setFechaDesdeVersion(new Timestamp(v2Desde.getTimeInMillis()));
+            version2.setFechaHastaVersion(new Timestamp(v2Hasta.getTimeInMillis()));
             version2.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
 
             version2.setTipoTramite(tipoTramiteB);
@@ -563,5 +579,5 @@ public class EjemplosPersistencia {
         System.out.println("\tEstado: " + reposicion.getEstado());
         System.out.println("\tFecha: " + reposicion.getFecha());
     }
-    
+
 }
