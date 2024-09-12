@@ -169,7 +169,17 @@ public class UIABMTipoTramite implements Serializable {
                 
                 modificarTipoTramiteDTOIn.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
                 
-                controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn);
+                List<DocumentacionDTO> documentacionesSeleccionadasDTO = new ArrayList<>();
+                for(Integer codDocumentacion: documentacionesSeleccionadas){
+                    for(DocumentacionDTO documentacionDTO: documentacionesActivas){
+                        if(documentacionDTO.getCodDocumentacion() == codDocumentacion){
+                            documentacionesSeleccionadasDTO.add(documentacionDTO);
+                            break;
+                        }
+                    }
+                }
+                
+                controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn,documentacionesSeleccionadasDTO);
                 return BeansUtils.redirectToPreviousPage();
             }
             else

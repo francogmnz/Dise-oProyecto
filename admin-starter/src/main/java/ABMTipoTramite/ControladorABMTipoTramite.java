@@ -33,16 +33,16 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
     }
 
-    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO,List<DocumentacionDTO> documentacionesSeleccionadas) throws TipoTramiteException {
-        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadas);
+    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO,List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);
     }
 
     public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
         return expertoABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
     }
 
-    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn) {
-        expertoABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn);
+    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn, List<DocumentacionDTO> documentacionesSeleccionadasDTO) {
+        expertoABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn, documentacionesSeleccionadasDTO);
     }
 
     public void darDeBajaTipoTramite(int codTipoTramite) throws TipoTramiteException {
