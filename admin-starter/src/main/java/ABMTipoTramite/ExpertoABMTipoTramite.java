@@ -18,7 +18,9 @@ import entidades.TipoTramite;
 import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
@@ -49,11 +51,16 @@ public class ExpertoABMTipoTramite {
         }
 
         List objetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", primerCriterio);
-        List<TipoTramiteDTO> tipoTramiteResultado = new ArrayList<>();
-
+        //List<TipoTramiteDTO> tipoTramiteResultado = new ArrayList<>();
+        Map<Integer,TipoTramiteDTO> tipoTramiteMap = new HashMap<>();
+        
+                
         for (Object x : objetoList) {
             TipoTramite tipoTramite = (TipoTramite) x;
-            TipoTramiteDTO tipoTramiteDTO = new TipoTramiteDTO();
+            TipoTramiteDTO tipoTramiteDTO = tipoTramiteMap.getOrDefault(tipoTramite.getCodTipoTramite(), new TipoTramiteDTO());
+            //TipoTramiteDTO tipoTramiteDTO = new TipoTramiteDTO();
+            
+            if(!tipoTramiteMap.containsKey(tipoTramite.getCodTipoTramite())){
             tipoTramiteDTO.setCodTipoTramite(tipoTramite.getCodTipoTramite());
             tipoTramiteDTO.setNombreTipoTramite(tipoTramite.getNombreTipoTramite());
             tipoTramiteDTO.setDescripcionTipoTramite(tipoTramite.getDescripcionTipoTramite());
@@ -61,14 +68,16 @@ public class ExpertoABMTipoTramite {
             tipoTramiteDTO.setFechaHoraBajaTipoTramite(tipoTramite.getFechaHoraBajaTipoTramite());
             tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
             tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
+            }
             
             List<TipoTramiteDocumentacion> listaTTD = tipoTramite.getTipoTramiteDocumentacion();
             List<DocumentacionDTO> documentacionesDTO = new ArrayList<>();            
            
             for(TipoTramiteDocumentacion ttd: listaTTD){
                 if(ttd.getFechaHoraBajaTTD() == null){
-                               
+                    
                     Documentacion documentacion = ttd.getDocumentacion();
+                    
                     DocumentacionDTO docDTO = new DocumentacionDTO();
                     
                     docDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
@@ -83,11 +92,12 @@ public class ExpertoABMTipoTramite {
             
             tipoTramiteDTO.setDocumentacionesDTO(documentacionesDTO);
            
-            tipoTramiteResultado.add(tipoTramiteDTO);
+            //tipoTramiteResultado.add(tipoTramiteDTO);
+            tipoTramiteMap.put(tipoTramite.getCodTipoTramite(), tipoTramiteDTO);
         }
 
-        return tipoTramiteResultado;
-    
+        return new ArrayList<>(tipoTramiteMap.values());
+ 
     }
     
     public List<DocumentacionDTO> obtenerDocumentacionesActivas(){
@@ -302,9 +312,9 @@ public class ExpertoABMTipoTramite {
         List<TipoTramiteDocumentacion> tipoTramiteDocumentacionRelacionada = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
         for(TipoTramiteDocumentacion ttdr: tipoTramiteDocumentacionRelacionada){
             ttdr.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
-          
+            FachadaPersistencia.getInstance().guardar(ttdr);
         }
-         // FachadaPersistencia.getInstance().guardar(ttdr);
+         
         // Nueva parte
         List<TipoTramiteDocumentacion> nuevaListaTipoTramiteDocumentacion = new ArrayList<>();
 
@@ -330,10 +340,10 @@ public class ExpertoABMTipoTramite {
 
         FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacionModificada);
 
-        nuevaListaTipoTramiteDocumentacion.add(tipoTramiteDocumentacionModificada);
+        tipoTramiteEncontrada.addTipoTramiteDocumentacion(tipoTramiteDocumentacionModificada);
         }
 
-        tipoTramiteEncontrada.setTipoTramiteDocumentacion(nuevaListaTipoTramiteDocumentacion);
+       // tipoTramiteEncontrada.setTipoTramiteDocumentacion(nuevaListaTipoTramiteDocumentacion);
 
         FachadaPersistencia.getInstance().guardar(tipoTramiteEncontrada);
         //tipoTramite.setTipoTramiteDocumentacion(listaTipoTramiteDocumentacion); aca funciona
