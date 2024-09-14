@@ -4,17 +4,15 @@ package ABCListaPrecios.dtos;
 
 public class DetalleListaPreciosDTO {
 
-   private int codListaPrecios;
+   private int codTipoTramite;
    private double nuevoPrecioTipoTramite;
-  
-   
 
-    public int getCodListaPrecios() {
-        return codListaPrecios;
+    public int getCodTipoTramite() {
+        return codTipoTramite;
     }
 
-    public void setCodListaPrecios(int codListaPrecios) {
-        this.codListaPrecios = codListaPrecios;
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
     }
 
     public double getNuevoPrecioTipoTramite() {

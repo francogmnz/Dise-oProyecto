@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Estado"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Trabajar con Listas de Precios
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+
+                <div class="box-header with-border">
+                    <div id="main-buttons">
+                        <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmListaPreciosLista.irAgregarListaPrecios()}"   styleClass="btn-primary"/>
+                    </div>
+                </div>
+                <!-- Tabla para mostrar la listas de precios -->
+                <p:separator/>
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Fecha Hasta"/>
+                            <p:spacer height="10"/>
+                            <p:datePicker id="fechaHastaFilter"
+                                          value="#{uiabmListaPreciosLista.fechaHoraHastaListaPreciosFiltro}"
+                                          showTime="true">
+                                <p:ajax event="dateSelect" 
+                                        listener="#{uiabmListaPreciosLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:datePicker>
+                        </p:outputPanel>
+                    </div>
+                </div>
+
+                <p:spacer height="5"/>
+                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios" >
+
+                    <p:column>
+                        <f:facet name="header">Código</f:facet>
+                            #{listaPrecios.codListaPrecios}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Desde</f:facet>
+                            #{listaPrecios.fechaHoraDesdeListaPrecios}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Hasta</f:facet>
+                            #{listaPrecios.fechaHoraHastaListaPrecios}
+                    </p:column>
+
+
+                    <p:column>
+                        <f:facet name="header">Fecha Baja</f:facet>
+                            #{listaPrecios.fechaHoraBajaListaPrecios}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <p:commandButton value="Exportar" styleClass="btn-info" action="#{uiabmListaPreciosLista.exportarListaPrecios(listaPrecios.codListaPrecios)}" disabled="#{listaPrecios.fechaHoraBajaListaPrecios != null}">
+                            <f:ajax render="@form"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}" disabled="#{listaPrecios.fechaHoraBajaListaPrecios != null}">
+                            <p:confirm header="Anulación de Lista de Precios código #{listaPrecios.codListaPrecios}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                            <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                             icon="fa fa-check"/>
+                            <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                             icon="fa fa-close"/>
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

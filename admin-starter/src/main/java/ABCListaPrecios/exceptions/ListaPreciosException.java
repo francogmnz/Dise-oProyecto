@@ -2,6 +2,8 @@
 package ABCListaPrecios.exceptions;
 
 
-public class ListaPreciosException {
-    
+public class ListaPreciosException extends Exception { 
+    public ListaPreciosException(String mensaje){
+        super(mensaje);
+    } 
 }

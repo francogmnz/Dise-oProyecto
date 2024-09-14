@@ -126,9 +126,9 @@ public class ExcelFileUI implements Serializable {
                     break; // Salimos del bucle si la fila está vacía
                 }
                 if (cell != null && cell.getCellType() == CellType.NUMERIC) {
-                    int codListaPrecios = (int)cell.getNumericCellValue();
-                    detalle.setCodListaPrecios(codListaPrecios);
-                    Messages.create("Fila "+ iRow + " CodListaPrecios:").detail(String.valueOf(codListaPrecios)).add();
+                    int codTipoTramite = (int)cell.getNumericCellValue();
+                    detalle.setCodTipoTramite(codTipoTramite);
+                    Messages.create("Fila "+ iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
                 }
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
                     double nuevoPrecioTipoTramite = cell2.getNumericCellValue();

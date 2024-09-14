@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <f:metadata/>
+        <ui:param name="renderFormAsterisks" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+        Importar Lista de Precios
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form" prependId="false">
+            <p:panel styleClass="box-primary card">
+                <div class="ui-g ui-fluid">
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="codigo" value="Código de la Lista de Precios:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" />
+                            <p:message id="codigoMSG" for="codigo" />
+                        </div>
+                    </div>
+
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="fechaDesde" value="Fecha Desde:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:datePicker id="fechaDesde" value="#{uiabmListaPrecios.fechaHoraDesdeListaPrecios}" showTime="true" />
+                        </div>
+                    </div>
+
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="fechaHasta" value="Fecha Hasta:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:datePicker id="fechaHasta" value="#{uiabmListaPrecios.fechaHoraHastaListaPrecios}" showTime="true" />
+                        </div>
+                    </div>
+
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="fileUpload" value="Archivo:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:fileUpload id="fileUpload" listener="#{uiabmListaPrecios.handleFileUpload}" 
+                                          dragDropSupport="false" auto="true" 
+                                          onstart="showBar()" oncomplete="hideBar()" 
+                                          mode="advanced" multiple="false" 
+                                          update="messages" sizeLimit="100000000"
+                                          allowTypes="/(\.|\/)(xlsx)$/"/>
+                            <p:message id="fileUploadMSG" for="fileUpload" />
+                        </div>
+                    </div>
+
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-4">
+                            <p:commandButton value="Agregar" action="#{uiabmListaPrecios.agregarListaPrecios()}" 
+                                             icon="fa fa-check" styleClass="btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -21,7 +21,7 @@
 
         <!-- Relación OneToMany con TipoTramiteListaPrecios -->
         <bag name="tipoTramiteListaPrecios" table="tipo_tramite_lista_precios" cascade="none">
-            <key column="OIDListaPrecios" not-null="true"/>
+            <key column="OIDListaPrecios" not-null="false"/>
             <one-to-many class="entidades.TipoTramiteListaPrecios"/>
         </bag>
 

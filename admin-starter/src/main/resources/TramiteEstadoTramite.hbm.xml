@@ -17,7 +17,7 @@
 
 
         <!-- Relación ManyToOne con EstadoTramite -->
-        <many-to-one name="estadoTramite" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="true"/>
+        <many-to-one name="estadoTramite" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false"/>
 
     </class>
 
