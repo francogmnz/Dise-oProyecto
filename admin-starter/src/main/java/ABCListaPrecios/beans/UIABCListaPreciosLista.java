@@ -4,6 +4,7 @@ package ABCListaPrecios.beans;
 import ABCListaPrecios.ControladorABCListaPrecios;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
+import entidades.ListaPrecios;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.omnifaces.util.Messages;
+import org.primefaces.model.StreamedContent;
 import utils.BeansUtils;
 
 @Named("uiabmListaPreciosLista")
@@ -59,13 +61,8 @@ public class UIABCListaPreciosLista implements Serializable {
         return "abmListaPrecios?faces-redirect=true&codigo=0";
     }
     
-    public void exportarListaPrecios(int codigo) {
-        try {
-            controladorABCListaPrecios.exportarListaPrecios(codigo);
-            Messages.create("Exportada").detail("Lista de Precios exportada").add();
-        } catch (ListaPreciosException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
-        }
+    public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
+        return controladorABCListaPrecios.exportarListaPrecios(codigo);
     }
     
     public void darDeBajaListaPrecios(int codigo){
@@ -75,6 +72,12 @@ public class UIABCListaPreciosLista implements Serializable {
         } catch (ListaPreciosException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
         }
+    }
+    
+    public boolean habilitarBotonDarDeBaja(ListaPrecios listaPrecios){
+        
+        return !listaPrecios.getFechaHoraDesdeListaPrecios().after(new Date());
+        
     }
     
 }

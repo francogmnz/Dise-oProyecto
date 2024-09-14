@@ -6,6 +6,7 @@ import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
 import java.sql.Timestamp;
 import java.util.List;
+import org.primefaces.model.StreamedContent;
 
 public class ControladorABCListaPrecios {
     
@@ -23,8 +24,8 @@ public class ControladorABCListaPrecios {
         expertoABCListaPrecios.darDeBajaListaPrecios(codigo);
     }
 
-    public void exportarListaPrecios(int codigo) throws ListaPreciosException {
-        expertoABCListaPrecios.exportarListaPrecios(codigo);
+    public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
+        return expertoABCListaPrecios.exportarListaPrecios(codigo);
     }
     
 }

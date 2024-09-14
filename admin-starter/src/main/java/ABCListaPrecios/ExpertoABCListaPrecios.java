@@ -5,25 +5,42 @@ import ABCListaPrecios.dtos.DetalleListaPreciosDTO;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
+import Excel.beans.ExcelFileUI;
 import entidades.ListaPrecios;
 import entidades.TipoTramite;
 import entidades.TipoTramiteListaPrecios;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.omnifaces.util.Messages;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
 public class ExpertoABCListaPrecios {
+    
+    private StreamedContent fileD;
 
     public List<ListaPreciosDTO> buscarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
         List<DTOCriterio> lCriterio=new ArrayList<DTOCriterio>();
         if(fechaHoraHastaListaPreciosFiltro != null){
             DTOCriterio unCriterio=new DTOCriterio();
             unCriterio.setAtributo("fechaHoraHastaListaPrecios");
-            unCriterio.setOperacion("=");
+            unCriterio.setOperacion(">=");
             unCriterio.setValor(fechaHoraHastaListaPreciosFiltro);
             lCriterio.add(unCriterio);
         }
@@ -33,11 +50,12 @@ public class ExpertoABCListaPrecios {
             ListaPrecios listaPrecios = (ListaPrecios) x;
             ListaPreciosDTO listaPreciosDTO = new ListaPreciosDTO();
             listaPreciosDTO.setCodListaPrecios(listaPrecios.getCodListaPrecios());
-            listaPreciosDTO.setFechaHoraDesdeListaPrecios(listaPreciosDTO.getFechaHoraDesdeListaPrecios());
+            listaPreciosDTO.setFechaHoraDesdeListaPrecios(listaPrecios.getFechaHoraDesdeListaPrecios());
             listaPreciosDTO.setFechaHoraHastaListaPrecios(listaPrecios.getFechaHoraHastaListaPrecios());
             listaPreciosDTO.setFechaHoraBajaListaPrecios(listaPrecios.getFechaHoraBajaListaPrecios());
             listasPreciosResultado.add(listaPreciosDTO);
         }
+        listasPreciosResultado.sort(Comparator.comparing(ListaPreciosDTO::getCodListaPrecios).reversed());
         return listasPreciosResultado;
     }
 
@@ -64,7 +82,7 @@ public class ExpertoABCListaPrecios {
         Timestamp ultimaFechaHoraDesde = ultimaListaPrecios.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraDesde = nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios(); 
         if(nuevaFechaHoraDesde.before(new Date()) || nuevaFechaHoraDesde.before(ultimaFechaHoraDesde)){
-            throw new ListaPreciosException("La fecha desde de la nueva lista de precios debe ser mayor a la fecha actual.");
+            throw new ListaPreciosException("Las fechas ingresadas son incorrectas. Intentelo nuevamente.");
         }
         
         Timestamp FechaHoraHasta = ultimaListaPrecios.getFechaHoraHastaListaPrecios();   
@@ -141,12 +159,81 @@ public class ExpertoABCListaPrecios {
 
     public void darDeBajaListaPrecios(int codigo) {
         
-    }
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
 
-    public void exportarListaPrecios(int codigo) {
+        dto.setAtributo("codListaPrecios");
+        dto.setOperacion("=");
+        dto.setValor(codigo);
+
+        criterioList.add(dto);
+        
+        ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
         
     }
-    
 
-    
+    public StreamedContent exportarListaPrecios(int codigo) {
+        
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
+        dto.setAtributo("codListaPrecios");
+        dto.setOperacion("=");
+        dto.setValor(codigo);
+
+        criterioList.add(dto);
+        
+        ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
+        
+        try {
+            Workbook libro = new XSSFWorkbook();
+            final String nombreArchivo = "./tmp.xlsx";
+            Sheet hoja = libro.createSheet("Hoja 1");
+
+            Row headerRow = hoja.createRow(0);
+            Cell headerCell1 = headerRow.createCell(0);
+            headerCell1.setCellValue("codTipoTramite");
+            Cell headerCell2 = headerRow.createCell(1);
+            headerCell2.setCellValue("nombreTipoTramite");
+            Cell headerCell3 = headerRow.createCell(2);
+            headerCell3.setCellValue("descripcionTipoTramite");
+            Cell headerCell4 = headerRow.createCell(3);
+            headerCell4.setCellValue("precioTipoTramite");
+            
+            List<TipoTramiteListaPrecios> detalles = listaPreciosEncontrada.getTipoTramiteListaPrecios();
+
+            for (int j = 0; j < detalles.size(); j++) {
+                Row dataRow = hoja.createRow(j + 1); 
+                Cell cell1 = dataRow.createCell(0);
+                cell1.setCellValue(detalles.get(j).getTipoTramite().getCodTipoTramite());
+                
+                Cell cell2 = dataRow.createCell(1);
+                cell2.setCellValue(detalles.get(j).getTipoTramite().getNombreTipoTramite());
+
+                Cell cell3 = dataRow.createCell(2);
+                cell3.setCellValue(detalles.get(j).getTipoTramite().getDescripcionTipoTramite());
+                
+                Cell cell4 = dataRow.createCell(3);
+                cell4.setCellValue(detalles.get(j).getPrecioTipoTramite());
+                
+            }
+            
+            FileOutputStream outputStream;
+            outputStream = new FileOutputStream(nombreArchivo);
+            libro.write(outputStream);
+            libro.close();
+            InputStream ie = new FileInputStream(nombreArchivo);
+            fileD = DefaultStreamedContent.builder()
+                    .name("ListaPrecios"+ listaPreciosEncontrada.getFechaHoraDesdeListaPrecios() +".xlsx")
+                    .contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    .stream(() -> ie)
+                    .build();
+        } catch (IOException ex) {
+            Logger.getLogger(ExcelFileUI.class.getName()).log(Level.SEVERE, null, ex);
+            Messages.create(ex.getMessage()).error().add();
+        }
+        return fileD;
+        
+    }
+       
 }

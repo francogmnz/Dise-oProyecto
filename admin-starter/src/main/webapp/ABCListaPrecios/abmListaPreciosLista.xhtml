@@ -47,7 +47,7 @@
                 </div>
 
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios" >
+                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios">
 
                     <p:column>
                         <f:facet name="header">Código</f:facet>
@@ -72,8 +72,9 @@
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Exportar" styleClass="btn-info" action="#{uiabmListaPreciosLista.exportarListaPrecios(listaPrecios.codListaPrecios)}" disabled="#{listaPrecios.fechaHoraBajaListaPrecios != null}">
-                            <f:ajax render="@form"/>
+                        <p:commandButton value="Exportar" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+                         icon="pi pi-arrow-down"  styleClass="btn-success">
+                            <p:fileDownload value="#{uiabmListaPreciosLista.exportarListaPrecios(listaPrecios.codListaPrecios)}"/> 
                         </p:commandButton>
                         <p:spacer width="5"/>
                         <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}" disabled="#{listaPrecios.fechaHoraBajaListaPrecios != null}">
