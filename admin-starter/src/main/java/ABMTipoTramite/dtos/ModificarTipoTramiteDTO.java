@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ABMTipoTramite.dtos;
+
+import ABMDocumentacion.dtos.DocumentacionDTO;
+import java.util.List;
+
 /**
  *
  * @author licciardi
@@ -15,6 +19,7 @@ public class ModificarTipoTramiteDTO {
     private String descripcionWebTipoTramite;
     private int plazoEntregaDocumentacionTT;
     private int codCategoriaTipoTramite;
+    private List<DocumentacionDTO> documentacionesDTO;
 
 
     public int getCodTipoTramite() {
@@ -63,6 +68,14 @@ public class ModificarTipoTramiteDTO {
 
     public void setCodCategoriaTipoTramite(int codCategoriaTipoTramite) {
         this.codCategoriaTipoTramite = codCategoriaTipoTramite;
+    }
+
+    public List<DocumentacionDTO> getDocumentacionesDTO() {
+        return documentacionesDTO;
+    }
+
+    public void setDocumentacionesDTO(List<DocumentacionDTO> documentacionesDTO) {
+        this.documentacionesDTO = documentacionesDTO;
     }
 
 

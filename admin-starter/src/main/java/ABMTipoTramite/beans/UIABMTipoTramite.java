@@ -150,6 +150,11 @@ public class UIABMTipoTramite implements Serializable {
             setPlazoEntregaDocumentacionTT(modificarTipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             
             setCodCategoriaTipoTramite(modificarTipoTramiteDTO.getCodCategoriaTipoTramite());
+            
+            documentacionesSeleccionadas = new ArrayList<>();
+            for (DocumentacionDTO doc : modificarTipoTramiteDTO.getDocumentacionesDTO()) {
+                documentacionesSeleccionadas.add(doc.getCodDocumentacion());
+            }
 
 
         }

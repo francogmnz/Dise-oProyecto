@@ -155,10 +155,37 @@ public class ExpertoABMCategoriaTipoTramite {
         
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
         
+        List<DTOCriterio> tipoTramiteCriterioList = new ArrayList<>();
+        
+        DTOCriterio criterioCategoriaTipoTramiteRelacionada = new DTOCriterio();
+        criterioCategoriaTipoTramiteRelacionada.setAtributo("categoriaTipoTramite");
+        criterioCategoriaTipoTramiteRelacionada.setOperacion("=");
+        criterioCategoriaTipoTramiteRelacionada.setValor(categoriaTipoTramiteEncontrada);
+
+        tipoTramiteCriterioList.add(criterioCategoriaTipoTramiteRelacionada);  
+        
+        
+        DTOCriterio criterioTipoTramiteActivo = new DTOCriterio();
+        criterioTipoTramiteActivo.setAtributo("fechaHoraBajaTipoTramite");
+        criterioTipoTramiteActivo.setOperacion("=");
+        criterioTipoTramiteActivo.setValor(null);
+
+
+        tipoTramiteCriterioList.add(criterioTipoTramiteActivo);
+
+        List tipoTramitesRelacionados =  FachadaPersistencia.getInstance().buscar("TipoTramite", tipoTramiteCriterioList);
+        
+        if(!tipoTramitesRelacionados.isEmpty()){
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw new CategoriaTipoTramiteException("No se puede dar de baja la categoria ya que tiene relacionado un tipoTramite Activo");
+        } else{
+
+        
         categoriaTipoTramiteEncontrada.setFechaHoraBajaCategoriaTipoTramite(new Timestamp(System.currentTimeMillis()));
         
         FachadaPersistencia.getInstance().guardar(categoriaTipoTramiteEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
+        }
     }
     
 }
