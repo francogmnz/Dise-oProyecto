@@ -8,6 +8,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
+
     <ui:define name="metadata">
         <ui:param name="title" value="Gestión de Trámites"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
 
@@ -27,26 +28,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <p:focus context="@form"/>
             <div class="box box-primary">
 
-                <div class="box-header with-border">
-                    <div id="main-buttons">
-                        <p:commandButton value="Agregar trámite"  icon="fa fa-plus" action="#{uitramiteLista.irRegistrarTramite()}"
-                                         styleClass="btn-block btn-warning btn-lg"/>
-                    </div>
-                </div>
-
-
-                <!-- Tabla para mostrar la lista de Tramites -->
                 <p:separator/>
 
                 <div class="ui-g ui-fluid">
 
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
-                            <h:outputText value="Número trámite:"/>
+                            <h:outputText value="Codigo TipoTramite:"/>
                             <br/>
                             <p:spacer height="10"/>
-                            <p:inputText id="nroTramiteFiltro" style="width:150px"
-                                         placeholder="Número trámite" value="#{uitramiteLista.nroTramiteFiltro}"
+                            <p:inputText id="codTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
@@ -57,11 +49,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
-                            <h:outputText value="DNI:"/>
+                            <h:outputText value="Categoría TipoTramite:"/>
                             <br/>
                             <p:spacer height="10"/>
-                            <p:inputText id="dniFiltro" style="width:150px"
-                                         placeholder="DNI" value="#{uitramiteLista.dniFiltro}"
+                            <p:inputText id="nombreCategoriaTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Categoria" value="#{uitramiteLista.nombreCategoriaTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
@@ -69,16 +61,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             </p:inputText>
                         </p:outputPanel>
                     </div>
-                </div>
 
-                <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
-                            <h:outputText value="Tipo trámite:"/>
+                            <h:outputText value="Nombre TipoTramite:"/>
                             <br/>
                             <p:spacer height="10"/>
                             <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
-                                         placeholder="Tipo trámite" value="#{uitramiteLista.nombreTipoTramiteFiltro}"
+                                         placeholder="Nombre" value="#{uitramiteLista.nombreTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
@@ -89,73 +79,54 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
-                            <h:outputText value="Fecha recepción:"/>
+                            <h:outputText value="Descripcion TipoTramite:"/>
+                            <br/>
                             <p:spacer height="10"/>
-                            <p:calendar id="fechaRecepcionTramiteFiltro" style="width:150px"
-                                        value="#{uitramiteLista.fechaRecepcionTramiteFiltro}"
-                                        pattern="dd/MM/yyyy" showButtonPanel="true" 
-                                        placeholder="Seleccionar fecha">
-                                <p:ajax event="dateSelect" 
+                            <p:inputText id="descripcionTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Descripcion" value="#{uitramiteLista.descripcionTipoTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
-                            </p:calendar>
+                            </p:inputText>
                         </p:outputPanel>
                     </div>
-                </div>
 
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputLabel for="estadoMenu" value="Estado del Trámite:" />
-                        <p:selectOneMenu id="estadoMenu" value="#{uitramite.nombreEstadoSeleccionado}">
-                            <f:selectItem itemLabel="Estado" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"
-                                           var="estadoTramite"
-                                           itemValue="#{estadoTramite.OID}"
-                                           itemLabel="#{tramite.nombreEstado}" />
-                        </p:selectOneMenu>
-                    </div>
                 </div>
 
                 <p:spacer height="5"/>
 
-                <p:dataTable id="grid1" widgetVar="tramiteTable" value="#{uitramiteLista.buscarTramites()}" var="tramite" 
-                             paginator="true" rowsPerPageTemplate="5,10" rows="5"  paginatorPosition="bottom">
+                <p:dataTable id="grid1" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}" sortMode="multiple">
 
-                    <p:column>
-                        <f:facet name="header">Número Trámite</f:facet>
-                            #{tramite.nroTramite}
+                    <p:column sortBy="#{tipoTramite.codTipoTramite}">
+                        <f:facet name="header">Código</f:facet>
+                            #{tipoTramite.codTipoTramite}
                     </p:column>
 
-                    <p:column>
-                        <f:facet name="header">DNI</f:facet>
-                            #{tramite.dni}
+                    <p:column sortBy="#{nombreCategoriaTipoTramite}">
+                        <f:facet name="header">Categoría</f:facet>
+                            #{tipoTramite.nombreCategoriaTipoTramite}
                     </p:column>
 
-                    <p:column>
-                        <f:facet name="header">Tipo Trámite</f:facet>
-                            #{tramite.nombreTipoTramite}
+                    <p:column sortBy="#{tipoTramite.nombreTipoTramite}">
+                        <f:facet name="header">Nombre</f:facet>
+                            #{tipoTramite.nombreTipoTramite}
                     </p:column>
 
-                    <p:column>
-                        <f:facet name="header">Fecha Recepción</f:facet>
-                        <h:outputText value="#{tramite.fechaRecepcionTramite}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">Estado Trámite</f:facet>
-                            #{tramite.nombreEstado}
+                    <p:column sortBy="#{tipoTramite.descripcionTipoTramite}">
+                        <f:facet name="header">Descripción</f:facet>
+                            #{tipoTramite.descripcionTipoTramite}
                     </p:column>
 
                 </p:dataTable>
+
             </div>
 
             <div class="col-sm-12 col-md-3">
                 <p:commandButton value="Volver Atrás" onclick="window.history.back();"
                                  styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
             </div>
-        </h:form>
 
+        </h:form>
     </ui:define>
 </ui:composition>

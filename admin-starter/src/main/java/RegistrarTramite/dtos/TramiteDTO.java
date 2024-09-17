@@ -1,15 +1,19 @@
 package RegistrarTramite.dtos;
 
+import entidades.EstadoTramite;
 import java.sql.Timestamp;
 
 public class TramiteDTO {
     
     private int nroTramite;
     private int dni;
+    private int codTipoTramite;
     private Timestamp fechaRecepcionTramite;
     private String nombreTipoTramite;
     private String nombreEstado;
     private Timestamp fechaAnulacion;
+    
+    private EstadoTramite estadoTramite;
 
     public int getNroTramite() {
         return nroTramite;
@@ -27,6 +31,15 @@ public class TramiteDTO {
         this.dni = dni;
     }
 
+    public int getCodTipoTramite() {
+        return codTipoTramite;
+    }
+
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
+    }
+
+    
     public Timestamp getFechaRecepcionTramite() {
         return fechaRecepcionTramite;
     }
@@ -59,6 +72,15 @@ public class TramiteDTO {
     public void setFechaAnulacion(Timestamp fechaAnulacion) {
         this.fechaAnulacion = fechaAnulacion;
     }
+
+    public EstadoTramite getEstadoTramite() {
+        return estadoTramite;
+    }
+
+    public void setEstadoTramite(EstadoTramite estadoTramite) {
+        this.estadoTramite = estadoTramite;
+    }
+    
     
     
     

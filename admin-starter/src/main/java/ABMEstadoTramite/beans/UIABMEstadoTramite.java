@@ -86,7 +86,6 @@ public class UIABMEstadoTramite implements Serializable {
             setCodEstadoTramite(modificarEstadoTramiteDTO.getCodEstadoTramite());
             setDescripcionEstadoTramite(modificarEstadoTramiteDTO.getDescripcionEstadoTramite());
         }
-        nombreEstadoTramite = "<b>hola mundo</b>";
     }
 
     public String agregarEstadoTramite() {

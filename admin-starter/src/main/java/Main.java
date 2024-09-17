@@ -12,8 +12,8 @@ public class Main {
 //        EjemplosPersistencia ejemplos = new EjemplosPersistencia();
 //        ejemplos.crearElementos2();
         
-       ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
-       expertoRegistrarTramite.registrarTramite(12345678, 1);
+//       ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
+//       expertoRegistrarTramite.registrarTramite(12345678, 1);
         
         
     }

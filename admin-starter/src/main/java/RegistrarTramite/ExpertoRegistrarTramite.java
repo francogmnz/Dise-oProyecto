@@ -19,6 +19,8 @@ import entidades.TramiteEstadoTramite;
 import entidades.Version;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
@@ -27,7 +29,7 @@ public class ExpertoRegistrarTramite {
 
     //BuscarTramites(con filtros)
     public List<TramiteDTO> buscarTramites(int nroTramite, int dni,
-            Timestamp fechaRecepcionTramite, int codTipoTramite, String nombreEstado) {
+            Date fechaRecepcionTramite, int codTipoTramite, String nombreEstado) {
 
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
@@ -42,15 +44,31 @@ public class ExpertoRegistrarTramite {
             criterioList.add(dto1);
         }
 
-        //filtro para la fechaRecepcion
+        // Filtro para la fechaRecepcionTramite
         if (fechaRecepcionTramite != null) {
-            DTOCriterio dto2 = new DTOCriterio();
+            // Establecer la hora de inicio del día
+            Calendar calInicio = Calendar.getInstance();
+            calInicio.setTime(fechaRecepcionTramite);
+            calInicio.set(Calendar.HOUR_OF_DAY, 0);
+            calInicio.set(Calendar.MINUTE, 0);
+            Date fechaInicio = calInicio.getTime();
 
-            dto2.setAtributo("fechaRecepcionTramite");
-            dto2.setOperacion("=");
-            dto2.setValor(fechaRecepcionTramite);
+            // Establecer la hora de fin del día
+            Calendar calFin = Calendar.getInstance();
+            calFin.setTime(fechaRecepcionTramite);
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+            Date fechaFin = calFin.getTime();
 
-            criterioList.add(dto2);
+            // Crear criterio de rango de fechas
+            DTOCriterio dtoFechaRango = new DTOCriterio();
+            dtoFechaRango.setAtributo("fechaRecepcionTramite");
+            dtoFechaRango.setOperacion("range");  // Usamos "range" para manejar el rango de fechas
+            dtoFechaRango.setValor(new Date[]{fechaInicio, fechaFin});  // El valor es un arreglo con fecha inicio y fin
+            criterioList.add(dtoFechaRango);
+
+            System.out.println("fecha inicio: " + fechaInicio);
+            System.out.println("fecha fin: " + fechaFin);
         }
 
         //filtro para traerme los tramites de un cliente
@@ -237,12 +255,14 @@ public class ExpertoRegistrarTramite {
         return (TipoTramite) tipoTramiteEncontrado.get(0);
     }
 
+    private static int ultimoNroTramite = 0;//variable estatica para el ultimo nroTramite
+
     public void registrarTramite(int dni, int codTipoTramite) throws RegistrarTramiteException {
 
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         Tramite tramiteCreado = new Tramite();
-        //agregar el nro tramite ???
+//        tramiteCreado.setNroTramite(generarNroTramite());
         tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
 
         tramiteCreado.setCliente(obtenerCliente(dni));
@@ -288,11 +308,9 @@ public class ExpertoRegistrarTramite {
 
         Version versionEncontrada = (Version) FachadaPersistencia.getInstance().buscar("Version", criterioList).get(0);
         tramiteCreado.setVersion(versionEncontrada);
-        
+
 //        criterioList.clear();
 //        TipoTramite tipoTramite = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
-
-
         //busco lista de precio para setearle el precio
         criterioList.clear();
 
@@ -342,10 +360,21 @@ public class ExpertoRegistrarTramite {
 
     }
 
+//    public static synchronized int generarNroTramite() {
+//        ultimoNroTramite++;
+//        return ultimoNroTramite;
+//    }
     //se listan todos los tipos tramites al hacer click en el boton de ayuda
-    public List<TipoTramiteResumenDTO> buscarTipoTramite(String nomTipoTramite, String nomCategoria, String descTipoTramite) {
+    public List<TipoTramiteResumenDTO> buscarTipoTramite(int codTipoTramite, String nomTipoTramite, String nomCategoria, String descTipoTramite) {
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
+        if(codTipoTramite > 0) {
+            DTOCriterio criterio = new DTOCriterio();
+            criterio.setAtributo("codTipoTramite");
+            criterio.setOperacion("=");
+            criterio.setValor(codTipoTramite);
+            criterioList.add(criterio);
+        }
         if (nomTipoTramite.trim().length() > 0) {
             DTOCriterio criterio1 = new DTOCriterio();
             criterio1.setAtributo("nombreTipoTramite");

@@ -7,13 +7,14 @@ import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.Cliente;
 import entidades.TipoTramite;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
 public class ControladorRegistrarTramite {
     private ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
 
-    public List<TramiteDTO> buscarTramites(int nroTramite, int dni, Timestamp fechaRecepcionTramite, int codTipoTramite, String nombreEstado) {
+    public List<TramiteDTO> buscarTramites(int nroTramite, int dni, Date fechaRecepcionTramite, int codTipoTramite, String nombreEstado) {
         return expertoRegistrarTramite.buscarTramites(nroTramite, dni, fechaRecepcionTramite, codTipoTramite, nombreEstado);
     }
 
@@ -37,8 +38,8 @@ public class ControladorRegistrarTramite {
         expertoRegistrarTramite.registrarTramite(dni, codTipoTramite);
     }
 
-    public List<TipoTramiteResumenDTO> buscarTipoTramite(String nomTipoTramite, String nomCategoria, String descTipoTramite) {
-        return expertoRegistrarTramite.buscarTipoTramite(nomTipoTramite, nomCategoria, descTipoTramite);
+    public List<TipoTramiteResumenDTO> buscarTipoTramite(int codTipoTramite, String nomTipoTramite, String nomCategoria, String descTipoTramite) {
+        return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nomTipoTramite, nomCategoria, descTipoTramite);
     }
     
 }

@@ -11,7 +11,7 @@ public class TramiteGrillaUI {
     private String nombreTipoTramite;
     private String nombreEstado;
     private Timestamp fechaAnulacion;
-
+    
     public int getNroTramite() {
         return nroTramite;
     }
@@ -60,5 +60,5 @@ public class TramiteGrillaUI {
     public void setFechaAnulacion(Timestamp fechaAnulacion) {
         this.fechaAnulacion = fechaAnulacion;
     }
-    
+
 }
