@@ -41,7 +41,7 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
     }
 
-    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn, List<DocumentacionDTO> documentacionesSeleccionadasDTO) {
+    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
         expertoABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn, documentacionesSeleccionadasDTO);
     }
 

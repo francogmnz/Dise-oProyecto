@@ -99,10 +99,10 @@ public class UIABMTipoTramiteLista implements Serializable {
     public void darDeBajaTipoTramite(int codTipoTramite){
         try {
             controladorABMTipoTramite.darDeBajaTipoTramite(codTipoTramite);
-            Messages.create("Anulado").detail("Anulado").add();;
+            Messages.create("Anulado").detail("Anulado").add();
                     
         } catch (TipoTramiteException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create(e.getMessage()).fatal().add();
         }
     }
     
