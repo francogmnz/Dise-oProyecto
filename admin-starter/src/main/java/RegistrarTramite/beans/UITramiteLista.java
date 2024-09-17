@@ -36,7 +36,6 @@ public class UITramiteLista implements Serializable {
     private String descripcionTipoTramiteFiltro = "";
 
     private String nombreEstadoSeleccionado;
-    private List<EstadoTramite> estadosTramiteDisponibles;
 
     public ControladorRegistrarTramite getControladorRegistrarTramite() {
         return controladorRegistrarTramite;
@@ -122,29 +121,6 @@ public class UITramiteLista implements Serializable {
     public void filtrar() {
     }
 
-    public List<EstadoTramite> getEstadoTramiteDisponibles() {
-        if (estadosTramiteDisponibles == null) {
-            cargarEstadosTramiteDisponibles();
-        }
-        return estadosTramiteDisponibles;
-    }
-
-    public void cargarEstadosTramiteDisponibles() {
-        List<Object> resultado = FachadaPersistencia.getInstance().buscar("EstadoTramite", new ArrayList<>());
-        estadosTramiteDisponibles = resultado.stream()
-                .map(obj -> (EstadoTramite) obj)
-                .collect(Collectors.toList());
-    }
-
-    private EstadoTramite buscarEstadoTramitePorOID(String oid) {
-        for (EstadoTramite estadoTramite : estadosTramiteDisponibles) {
-            if (estadoTramite.getOID().equals(oid)) {
-                return estadoTramite;
-            }
-        }
-        return null;
-    }
-
     public List<TramiteGrillaUI> buscarTramites() {
 
         System.out.println(nroTramiteFiltro);
@@ -168,11 +144,6 @@ public class UITramiteLista implements Serializable {
             TramiteGrillaUI tramiteGrillaUI = new TramiteGrillaUI();
             tramiteGrillaUI.setNroTramite(tramiteDTO.getNroTramite());
             tramiteGrillaUI.setDni(tramiteDTO.getDni());
-
-//            EstadoTramite estadoTramite = buscarEstadoTramitePorOID(nombreEstadoFiltro);
-//            tramiteDTO.setNombreEstado(estadoTramite.getNombreEstadoTramite());
-            
-//            tramiteGrillaUI.setNombreEstado(tramiteDTO.getEstadoTramite().getNombreEstadoTramite());
 
             tramiteGrillaUI.setNombreEstado(tramiteDTO.getNombreEstado());
             tramiteGrillaUI.setNombreTipoTramite(tramiteDTO.getNombreTipoTramite());

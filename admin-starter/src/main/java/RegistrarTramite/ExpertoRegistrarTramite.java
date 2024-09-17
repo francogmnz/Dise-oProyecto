@@ -1,5 +1,6 @@
 package RegistrarTramite;
 
+import RegistrarTramite.dtos.DTOEstadoTramite;
 import RegistrarTramite.dtos.ResumenDocumentacionDTO;
 import RegistrarTramite.dtos.ResumenTramiteDTO;
 import RegistrarTramite.dtos.TipoTramiteResumenDTO;
@@ -255,14 +256,11 @@ public class ExpertoRegistrarTramite {
         return (TipoTramite) tipoTramiteEncontrado.get(0);
     }
 
-    private static int ultimoNroTramite = 0;//variable estatica para el ultimo nroTramite
-
     public void registrarTramite(int dni, int codTipoTramite) throws RegistrarTramiteException {
 
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         Tramite tramiteCreado = new Tramite();
-//        tramiteCreado.setNroTramite(generarNroTramite());
         tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
 
         tramiteCreado.setCliente(obtenerCliente(dni));
@@ -360,15 +358,11 @@ public class ExpertoRegistrarTramite {
 
     }
 
-//    public static synchronized int generarNroTramite() {
-//        ultimoNroTramite++;
-//        return ultimoNroTramite;
-//    }
     //se listan todos los tipos tramites al hacer click en el boton de ayuda
     public List<TipoTramiteResumenDTO> buscarTipoTramite(int codTipoTramite, String nomTipoTramite, String nomCategoria, String descTipoTramite) {
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
-        if(codTipoTramite > 0) {
+        if (codTipoTramite > 0) {
             DTOCriterio criterio = new DTOCriterio();
             criterio.setAtributo("codTipoTramite");
             criterio.setOperacion("=");
@@ -426,4 +420,20 @@ public class ExpertoRegistrarTramite {
 
     }
 
+    public List<DTOEstadoTramite> mostrarComboEstados() {
+
+        List objetoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", null);
+        List<DTOEstadoTramite> estadosTramite = new ArrayList<>();
+
+        for (Object x : objetoList) {
+            EstadoTramite estadoTramite = (EstadoTramite) x;
+            DTOEstadoTramite dtoEstadoTramite = new DTOEstadoTramite();
+
+            dtoEstadoTramite.setNombreEstadoTramite(estadoTramite.getNombreEstadoTramite());
+            estadosTramite.add(dtoEstadoTramite);
+        }
+        return estadosTramite;
+    }
 }
+
+

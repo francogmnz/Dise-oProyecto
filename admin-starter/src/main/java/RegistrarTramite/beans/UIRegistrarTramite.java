@@ -1,6 +1,7 @@
 package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
+import RegistrarTramite.dtos.DTOEstadoTramite;
 import RegistrarTramite.dtos.TramiteDTO;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.Cliente;
@@ -39,7 +40,7 @@ public class UIRegistrarTramite implements Serializable {
     private int codTipoTramite;
 
     private List<TipoTramite> tiposTramiteDisponibles;
-    private List<EstadoTramite> estadosTramiteDisponibles;
+//    private List<EstadoTramite> estadosTramiteDisponibles;
 
     public String getNombreTipoTramiteSeleccionado() {
         return nombreTipoTramiteSeleccionado;
@@ -139,29 +140,28 @@ public class UIRegistrarTramite implements Serializable {
                 .collect(Collectors.toList());
     }
 
-    public List<EstadoTramite> getEstadoTramiteDisponibles() {
-        if (estadosTramiteDisponibles == null) {
-            cargarEstadosTramiteDisponibles();
-        }
-        return estadosTramiteDisponibles;
-    }
-
-    public void cargarEstadosTramiteDisponibles() {
-        List<Object> resultado = FachadaPersistencia.getInstance().buscar("EstadoTramite", new ArrayList<>());
-        estadosTramiteDisponibles = resultado.stream()
-                .map(obj -> (EstadoTramite) obj)
-                .collect(Collectors.toList());
-    }
-
-    private EstadoTramite buscarEstadoTramitePorOID(String oid) {
-        for (EstadoTramite estadoTramite : estadosTramiteDisponibles) {
-            if (estadoTramite.getOID().equals(oid)) {
-                return estadoTramite;
-            }
-        }
-        return null;
-    }
-
+//    public List<EstadoTramite> getEstadoTramiteDisponibles() {
+//        if (estadosTramiteDisponibles == null) {
+//            cargarEstadosTramiteDisponibles();
+//        }
+//        return estadosTramiteDisponibles;
+//    }
+//
+//    public void cargarEstadosTramiteDisponibles() {
+//        List<Object> resultado = FachadaPersistencia.getInstance().buscar("EstadoTramite", new ArrayList<>());
+//        estadosTramiteDisponibles = resultado.stream()
+//                .map(obj -> (EstadoTramite) obj)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private EstadoTramite buscarEstadoTramitePorOID(String oid) {
+//        for (EstadoTramite estadoTramite : estadosTramiteDisponibles) {
+//            if (estadoTramite.getOID().equals(oid)) {
+//                return estadoTramite;
+//            }
+//        }
+//        return null;
+//    }
     public String registrarTramite() throws RegistrarTramiteException {
         TramiteDTO tramiteDTO = new TramiteDTO();
         tramiteDTO.setDni(dni);
@@ -196,6 +196,25 @@ public class UIRegistrarTramite implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el TipoTramite"));
             this.nombreTipoTramiteSeleccionado = "";
         }
+    }
+
+    List<DTOEstadoTramite> nombresEstadoTramite = controladorRegistrarTramite.mostrarComboEstados();
+
+    public List<DTOEstadoTramite> getNombresEstadoTramite() {
+        return nombresEstadoTramite;
+    }
+
+    public void setNombresEstadoTramite(List<DTOEstadoTramite> nombresEstadoTramite) {
+        this.nombresEstadoTramite = nombresEstadoTramite;
+    }
+
+    private List<DTOEstadoTramite> estadosTramiteDisponibles;
+
+    public List<DTOEstadoTramite> getEstadosTramiteDisponibles() {
+        if (estadosTramiteDisponibles == null) {
+            estadosTramiteDisponibles = controladorRegistrarTramite.mostrarComboEstados();
+        }
+        return estadosTramiteDisponibles;
     }
 
     public String redirigirAfiltrosTipoTramite() {

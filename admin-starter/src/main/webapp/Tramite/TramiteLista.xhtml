@@ -105,13 +105,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-6">
-                        <p:outputLabel for="estadoMenu" value="Estado del Trámite:" />
-                        <p:selectOneMenu id="estadoMenu" value="#{uitramite.nombreEstadoSeleccionado}">
-                            <f:selectItem itemLabel="Estado" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"
+                        <p:outputLabel for="estadoMenu" value="Estado del Trámite:"/>
+                        <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
+                            <f:selectItem itemLabel="Seleccione un Estado" />
+                            <f:selectItems value="#{uitramite.estadosTramiteDisponibles}"
                                            var="estadoTramite"
-                                           itemValue="#{estadoTramite.OID}"
-                                           itemLabel="#{tramite.nombreEstado}" />
+                                           itemValue="#{estadoTramite.nombreEstadoTramite}"
+                                           itemLabel="#{estadoTramite.nombreEstadoTramite}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 package RegistrarTramite;
 
+import RegistrarTramite.dtos.DTOEstadoTramite;
 import RegistrarTramite.dtos.ResumenTramiteDTO;
 import RegistrarTramite.dtos.TipoTramiteResumenDTO;
 import RegistrarTramite.dtos.TramiteDTO;
@@ -41,5 +42,9 @@ public class ControladorRegistrarTramite {
     public List<TipoTramiteResumenDTO> buscarTipoTramite(int codTipoTramite, String nomTipoTramite, String nomCategoria, String descTipoTramite) {
         return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nomTipoTramite, nomCategoria, descTipoTramite);
     }
+
+    public List<DTOEstadoTramite> mostrarComboEstados() {
+        return expertoRegistrarTramite.mostrarComboEstados();
+    } 
     
 }
