@@ -1,4 +1,3 @@
-
 package ABCListaPrecios.beans;
 
 import ABCListaPrecios.ControladorABCListaPrecios;
@@ -6,12 +5,15 @@ import ABCListaPrecios.dtos.DetalleListaPreciosDTO;
 import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,13 +31,31 @@ import utils.BeansUtils;
 
 @Named("uiabmListaPrecios")
 @ViewScoped
-public class UIABCListaPrecios implements Serializable{
-    
+public class UIABCListaPrecios implements Serializable {
+
     private ControladorABCListaPrecios controladorABCListaPrecios = new ControladorABCListaPrecios();
+    private boolean insert;
     private int codListaPrecios;
     private Date fechaHoraDesdeListaPrecios;
     private Date fechaHoraHastaListaPrecios;
     private List<DetalleListaPreciosDTO> detalles = new ArrayList<>();
+
+// GETTERS y SETTERS
+    public ControladorABCListaPrecios getControladorABCListaPrecios() {
+        return controladorABCListaPrecios;
+    }
+
+    public void setControladorABCListaPrecios(ControladorABCListaPrecios controladorABCListaPrecios) {
+        this.controladorABCListaPrecios = controladorABCListaPrecios;
+    }
+
+    public boolean isInsert() {
+        return insert;
+    }
+
+    public void setInsert(boolean insert) {
+        this.insert = insert;
+    }
 
     public int getCodListaPrecios() {
         return codListaPrecios;
@@ -68,13 +88,25 @@ public class UIABCListaPrecios implements Serializable{
     public void setDetalles(List<DetalleListaPreciosDTO> detalles) {
         this.detalles = detalles;
     }
-    
-    public void addDetalle(DetalleListaPreciosDTO detalle){
-        detalles.add(detalle);
+// GETTERS y SETTERS
+
+    public UIABCListaPrecios() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+
+        int cod = Integer.parseInt(request.getParameter("codLP"));
+        String fd = request.getParameter("fDesde");
+
+        insert = true;
+        if (cod > 0) {
+            insert = false;
+            setCodListaPrecios(cod + 1);
+            setFechaHoraDesdeListaPrecios(StringToTimestamp(fd));
+            setFechaHoraHastaListaPrecios(null);
+        }
     }
-    
-    public UIABCListaPrecios(){}
-    
+
     public void handleFileUpload(FileUploadEvent event) {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize() / 1024f);
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -83,17 +115,17 @@ public class UIABCListaPrecios implements Serializable{
             Workbook wb = WorkbookFactory.create(inp);
             Sheet sheet = wb.getSheetAt(0);
             int iRow = 1;
-            Row row = sheet.getRow(iRow); 
+            Row row = sheet.getRow(iRow);
             while (row != null) {
                 DetalleListaPreciosDTO detalle = new DetalleListaPreciosDTO();
                 Cell cell = row.getCell(0);
                 Cell cell2 = row.getCell(1);
 
-                if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
-                    break; 
-                }
+//                if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
+//                    break;
+//                }
 
-                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {   //VER ACA
                     int codTipoTramite = (int) cell.getNumericCellValue();
                     detalle.setCodTipoTramite(codTipoTramite);
                     Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
@@ -114,8 +146,8 @@ public class UIABCListaPrecios implements Serializable{
             Messages.create(ex.getMessage()).error().add();
         }
     }
-    
-    public String agregarListaPrecios(){
+
+    public String agregarListaPrecios() {
         try {
             NuevaListaPreciosDTO nuevaListaPrecios = new NuevaListaPreciosDTO();
             nuevaListaPrecios.setCodListaPrecios(getCodListaPrecios());
@@ -129,5 +161,25 @@ public class UIABCListaPrecios implements Serializable{
             return "";
         }
     }
-    
+
+    public static Timestamp StringToTimestamp(String s) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // El formato esperado
+        Timestamp t = null;
+
+        try {
+            // Convertir String a Date
+            Date date = dateFormat.parse(s);
+
+            // Convertir Date a Timestamp
+            t = new Timestamp(date.getTime());
+
+            // Imprimir el Timestamp
+            System.out.println("El Timestamp es: " + t);
+            return t;
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejar el caso en que el formato es incorrecto
+        }
+        return t;
+    }
+
 }

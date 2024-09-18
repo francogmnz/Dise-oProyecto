@@ -18,38 +18,76 @@
     </ui:define>
 
     <ui:define name="body">
+        <style type="text/css">
+            .deBaja {
+                color: whitesmoke;
+                background-color: #ff7884;
+            }
+            .laActiva {
+                background-color: #7bff9a;
+            }
+            .futura{
+                background-color: #ffff8f;
+            }
+            .pasada{
+                background-color: #d9d9d9;
+            }
+        </style>
         <h:form>
             <p:focus context="@form"/>
             <div class="box box-primary">
 
                 <div class="box-header with-border">
                     <div id="main-buttons">
-                        <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmListaPreciosLista.irAgregarListaPrecios()}"   styleClass="btn-primary"/>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-3">
+                                <p:outputPanel>
+                                    <h:outputText value="Fecha Hasta"/>
+                                    <p:spacer height="10"/>
+                                    <p:datePicker id="fechaHastaFilter"
+                                                  value="#{uiabmListaPreciosLista.fechaHoraHastaListaPreciosFiltro}"
+                                                  showTime="true">
+                                        <p:ajax event="dateSelect" 
+                                                listener="#{uiabmListaPreciosLista.filtrar()}" 
+                                                update="@form:grid1" />
+                                    </p:datePicker>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-1"/>  <!--                            //Rellenador-->
+
+                            <!--COMBOBOX PARA ORDENAR-->
+                            <div class="ui-g-12 ui-md-4" style="display: inline-flex;flex-direction: column-reverse;">
+                                <div class="ui-material">
+                                    <p:selectOneMenu id="select" value="#{uiabmListaPreciosLista.criterio}" >
+                                        <f:selectItem itemLabel="Seleccionar"/>
+                                        <f:selectItem itemLabel="Codigo Lista Precio (Ascendente)" itemValue="codAsc"/>
+                                        <f:selectItem itemLabel="Codigo Lista Precio (Descendente)" itemValue="codDsc"/>
+                                        <f:selectItem itemLabel="Fecha Desde Lista Precio (Ascendente)" itemValue="fDAsc"/>
+                                        <f:selectItem itemLabel="Fecha Desde Lista Precio (Descendente)" itemValue="fDDsc"/>
+                                        <f:selectItem itemLabel="Fecha Hasta Lista Precio (Ascendente)" itemValue="fHAsc"/>
+                                        <f:selectItem itemLabel="Fecha Hasta Lista Precio (Descendente)" itemValue="fHDsc"/>
+                                        <p:ajax event="change" listener="#{uiabmListaPreciosLista.buscarListasPrecios()}" update="grid1" />
+                                    </p:selectOneMenu>
+                                    <p:outputLabel for="select" value="Ordenar por:"/>
+                                    <p:message for="select"/>
+                                </div>
+                            </div>
+                            <!--                           FIN COMBOBOX PARA ORDENAR-->
+
+
+                            <div class="ui-g-12 ui-md-1"/>  <!--                            //Rellenador-->
+
+                            <div class="ui-g-12 ui-md-3" style="display: inline-flex;">
+                                <p:commandButton value="Nueva Lista"  icon="fa fa-plus" action="#{uiabmListaPreciosLista.irAgregarListaPrecios()}"   styleClass="btn-primary"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Tabla para mostrar la listas de precios -->
-                <p:separator/>
-
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="Fecha Hasta"/>
-                            <p:spacer height="10"/>
-                            <p:datePicker id="fechaHastaFilter"
-                                          value="#{uiabmListaPreciosLista.fechaHoraHastaListaPreciosFiltro}"
-                                          showTime="true">
-                                <p:ajax event="dateSelect" 
-                                        listener="#{uiabmListaPreciosLista.filtrar()}" 
-                                        update="@form:grid1" />
-                            </p:datePicker>
-                        </p:outputPanel>
-                    </div>
-                </div>
-
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios">
+                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios" 
+                             rowStyleClass="#{uiabmListaPreciosLista.isLaActiva(listaPrecios) ? 'laActiva' : uiabmListaPreciosLista.isAnulada(listaPrecios) ? 'deBaja' : uiabmListaPreciosLista.isFutura(listaPrecios) ? 'futura' : 'pasada'}">
 
-                    <p:column>
+                    <p:column >
                         <f:facet name="header">Código</f:facet>
                             #{listaPrecios.codListaPrecios}
                     </p:column>
@@ -64,7 +102,6 @@
                             #{listaPrecios.fechaHoraHastaListaPrecios}
                     </p:column>
 
-
                     <p:column>
                         <f:facet name="header">Fecha Baja</f:facet>
                             #{listaPrecios.fechaHoraBajaListaPrecios}
@@ -73,11 +110,11 @@
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
                         <p:commandButton value="Exportar" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
-                         icon="pi pi-arrow-down"  styleClass="btn-success">
+                                         icon="pi pi-arrow-down"  styleClass="btn-success">
                             <p:fileDownload value="#{uiabmListaPreciosLista.exportarListaPrecios(listaPrecios.codListaPrecios)}"/> 
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}" disabled="#{listaPrecios.fechaHoraBajaListaPrecios != null}">
+                        <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}" rendered="#{uiabmListaPreciosLista.habilitarBtnBaja(listaPrecios)}">
                             <p:confirm header="Anulación de Lista de Precios código #{listaPrecios.codListaPrecios}" message="¿Está seguro?" icon="ui-icon-alert"/>
                         </p:commandButton>
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
@@ -88,6 +125,7 @@
                         </p:confirmDialog>
                     </p:column>
                 </p:dataTable>
+
             </div>
         </h:form>
     </ui:define>

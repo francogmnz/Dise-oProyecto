@@ -25,7 +25,7 @@
                             <p:outputLabel for="codigo" value="Código de la Lista de Precios:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" />
+                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" disabled="false"/>
                             <p:message id="codigoMSG" for="codigo" />
                         </div>
                     </div>
@@ -65,7 +65,7 @@
 
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-4">
-                            <p:commandButton value="Agregar" action="#{uiabmListaPrecios.agregarListaPrecios()}" 
+                            <p:commandButton value="Confirmar" action="#{uiabmListaPrecios.agregarListaPrecios()}" 
                                              icon="fa fa-check" styleClass="btn-primary" />
                         </div>
                     </div>

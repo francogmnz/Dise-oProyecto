@@ -18,9 +18,7 @@
 
         <property name="fechaHoraHastaListaPrecios" column="fecha_hora_hasta_lista_precios" type="timestamp"/>
 
-
-        <!-- Relación OneToMany con TipoTramiteListaPrecios -->
-        <bag name="tipoTramiteListaPrecios" table="tipo_tramite_lista_precios" cascade="none">
+        <bag name="tipoTramiteListaPrecios" table="tipo_tramite_lista_precios" cascade="none" inverse="false">
             <key column="OIDListaPrecios" not-null="false"/>
             <one-to-many class="entidades.TipoTramiteListaPrecios"/>
         </bag>

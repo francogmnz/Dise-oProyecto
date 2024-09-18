@@ -41,6 +41,6 @@ public class ListaPreciosGrillaUI {
     public void setFechaHoraHastaListaPrecios(Timestamp fechaHoraHastaListaPrecios) {
         this.fechaHoraHastaListaPrecios = fechaHoraHastaListaPrecios;
     }
-    
+
     
 }

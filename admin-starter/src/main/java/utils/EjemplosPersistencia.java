@@ -469,31 +469,7 @@ public class EjemplosPersistencia {
 
     FachadaPersistencia.getInstance().guardar(tramite2);
 
-    
-    /*
-
-  
-
-
-
-
-    
-    
-
-
-    
-
-
-
-    
-
-
-
-    
-
-
-    */
-    
+        
     FachadaPersistencia.getInstance().finalizarTransaccion();
     
         }
