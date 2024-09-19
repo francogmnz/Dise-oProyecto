@@ -2,16 +2,16 @@ package RegistrarTramite.beans;
 
 import java.sql.Timestamp;
 
-
 public class TramiteGrillaUI {
-    
+
     private int nroTramite;
     private int dni;
     private Timestamp fechaRecepcionTramite;
     private String nombreTipoTramite;
+    private int codTipoTramite;
     private String nombreEstado;
     private Timestamp fechaAnulacion;
-    
+
     public int getNroTramite() {
         return nroTramite;
     }
@@ -36,13 +36,20 @@ public class TramiteGrillaUI {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
     }
 
-
     public String getNombreTipoTramite() {
         return nombreTipoTramite;
     }
 
     public void setNombreTipoTramite(String nombreTipoTramite) {
         this.nombreTipoTramite = nombreTipoTramite;
+    }
+
+    public int getCodTipoTramite() {
+        return codTipoTramite;
+    }
+
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
     }
 
     public String getNombreEstado() {

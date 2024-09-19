@@ -78,15 +78,20 @@ public class ExpertoRegistrarTramite {
             DTOCriterio dtoCliente = new DTOCriterio();
 
             dtoCliente.setAtributo("dniCliente");
-            dtoCliente.setOperacion("contains");
+            dtoCliente.setOperacion("=");
             dtoCliente.setValor(dniCliente);
             criterioList.add(dtoCliente);
 
-            Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+            Cliente clienteEncontrado = null;
+
+            List lClientes = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+            if (!lClientes.isEmpty()) {
+                clienteEncontrado = (Cliente) lClientes.get(0);
+            }
 
             criterioList.clear();
 
-            dtoCliente.setAtributo("cliente"); // buscar los Tramites relacionados al TipoTramite encontrado
+            dtoCliente.setAtributo("cliente"); // buscar los Tramites relacionados al Cliente encontrado
             dtoCliente.setOperacion("=");
             dtoCliente.setValor(clienteEncontrado);
 
@@ -103,7 +108,13 @@ public class ExpertoRegistrarTramite {
             dtoTipoTramite.setOperacion("=");
             dtoTipoTramite.setValor(codTipoTramite);
             criterioList.add(dtoTipoTramite);
-            TipoTramite tipoTramiteEncontrado = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
+            
+            TipoTramite tipoTramiteEncontrado = null;
+            
+            List ltipoTramites = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+            if (!ltipoTramites.isEmpty()) {
+                tipoTramiteEncontrado = (TipoTramite) ltipoTramites.get(0);
+            }
 
             criterioList.clear();
 
@@ -148,7 +159,7 @@ public class ExpertoRegistrarTramite {
             dtoTramite.setNroTramite(tramite.getNroTramite());  // setea nroTramite
             dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite()); //setea FechaRecepcionTramite
             dtoTramite.setDni(tramite.getCliente().getDniCliente()); //setea el dniCliente
-            dtoTramite.setNombreTipoTramite(tramite.getTipoTramite().getNombreTipoTramite()); // setea el nombreTipoTramite
+            dtoTramite.setCodTipoTramite(tramite.getTipoTramite().getCodTipoTramite()); // setea el nombreTipoTramite
             dtoTramite.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite()); // setea el nombreEstado
             dtoTramite.setFechaAnulacion(tramite.getFechaAnulacionTramite()); //setea la fechaAnulacionTramite
 

@@ -140,7 +140,7 @@ public class UITramiteLista implements Serializable {
             tramiteGrillaUI.setNroTramite(tramiteDTO.getNroTramite());
             tramiteGrillaUI.setDni(tramiteDTO.getDni());
             tramiteGrillaUI.setNombreEstado(tramiteDTO.getNombreEstado());
-            tramiteGrillaUI.setNombreTipoTramite(tramiteDTO.getNombreTipoTramite());
+            tramiteGrillaUI.setCodTipoTramite(tramiteDTO.getCodTipoTramite());
             tramiteGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
 
             tramiteGrilla.add(tramiteGrillaUI);

@@ -63,7 +63,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="dniFiltro" style="width:150px"
                                          placeholder="DNI" value="#{uitramiteLista.dniFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
-                                <p:ajax event="keyup" 
+                                <p:ajax event="blur" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
                             </p:inputText>
@@ -74,13 +74,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
-                            <h:outputText value="Tipo trámite:"/>
+                            <h:outputText value="Codigo Tipo trámite:"/>
                             <br/>
                             <p:spacer height="10"/>
-                            <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
-                                         placeholder="Tipo trámite" value="#{uitramiteLista.nombreTipoTramiteFiltro}"
+                            <p:inputText id="codTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Codigo tipo trámite" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
-                                <p:ajax event="keyup" 
+                                <p:ajax event="blur" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="grid1" />
                             </p:inputText>
@@ -133,8 +133,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </p:column>
 
                 <p:column>
-                    <f:facet name="header">Tipo Trámite</f:facet>
-                        #{tramite.nombreTipoTramite}
+                    <f:facet name="header">Codigo Tipo Trámite</f:facet>
+                        #{tramite.codTipoTramite}
                 </p:column>
 
                 <p:column>
