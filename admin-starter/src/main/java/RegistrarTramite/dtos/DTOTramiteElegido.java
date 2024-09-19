@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ResumenTramiteDTO {
+public class DTOTramiteElegido {
    
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
@@ -18,7 +18,7 @@ public class ResumenTramiteDTO {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
-    private List<ResumenDocumentacionDTO> resumenDoc = new ArrayList<>(); //para agregar la documentacion al resumen
+    private List<DTODocumentacion> resumenDoc = new ArrayList<>(); //para agregar la documentacion al resumen
 
 
     public int getNroTramite() {
@@ -109,15 +109,15 @@ public class ResumenTramiteDTO {
         this.mailCliente = mailCliente;
     }
 
-    public List<ResumenDocumentacionDTO> getResumenDoc() {
+    public List<DTODocumentacion> getResumenDoc() {
         return resumenDoc;
     }
 
-    public void setResumenDoc(List<ResumenDocumentacionDTO> resumenDoc) {
+    public void setResumenDoc(List<DTODocumentacion> resumenDoc) {
         this.resumenDoc = resumenDoc;
     }
 
-    public void addResumenDoc(ResumenDocumentacionDTO doc){
+    public void addResumenDoc(DTODocumentacion doc){
         resumenDoc.add(doc);
     }
     

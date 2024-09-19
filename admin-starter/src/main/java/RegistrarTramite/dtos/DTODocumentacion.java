@@ -3,7 +3,7 @@ package RegistrarTramite.dtos;
 import java.sql.Timestamp;
 
 
-public class ResumenDocumentacionDTO {
+public class DTODocumentacion {
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
     

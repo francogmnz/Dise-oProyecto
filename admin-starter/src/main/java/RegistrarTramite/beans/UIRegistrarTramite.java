@@ -1,8 +1,10 @@
 package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
+import RegistrarTramite.dtos.DTOCliente;
 import RegistrarTramite.dtos.DTOEstadoTramite;
-import RegistrarTramite.dtos.TramiteDTO;
+import RegistrarTramite.dtos.DTOTipoTramite;
+import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.Cliente;
 import entidades.EstadoTramite;
@@ -40,7 +42,6 @@ public class UIRegistrarTramite implements Serializable {
     private int codTipoTramite;
 
     private List<TipoTramite> tiposTramiteDisponibles;
-//    private List<EstadoTramite> estadosTramiteDisponibles;
 
     public String getNombreTipoTramiteSeleccionado() {
         return nombreTipoTramiteSeleccionado;
@@ -140,30 +141,8 @@ public class UIRegistrarTramite implements Serializable {
                 .collect(Collectors.toList());
     }
 
-//    public List<EstadoTramite> getEstadoTramiteDisponibles() {
-//        if (estadosTramiteDisponibles == null) {
-//            cargarEstadosTramiteDisponibles();
-//        }
-//        return estadosTramiteDisponibles;
-//    }
-//
-//    public void cargarEstadosTramiteDisponibles() {
-//        List<Object> resultado = FachadaPersistencia.getInstance().buscar("EstadoTramite", new ArrayList<>());
-//        estadosTramiteDisponibles = resultado.stream()
-//                .map(obj -> (EstadoTramite) obj)
-//                .collect(Collectors.toList());
-//    }
-//
-//    private EstadoTramite buscarEstadoTramitePorOID(String oid) {
-//        for (EstadoTramite estadoTramite : estadosTramiteDisponibles) {
-//            if (estadoTramite.getOID().equals(oid)) {
-//                return estadoTramite;
-//            }
-//        }
-//        return null;
-//    }
     public String registrarTramite() throws RegistrarTramiteException {
-        TramiteDTO tramiteDTO = new TramiteDTO();
+        DTOTramite tramiteDTO = new DTOTramite();
         tramiteDTO.setDni(dni);
         tramiteDTO.setCodTipoTramite(codTipoTramite);
         controladorRegistrarTramite.registrarTramite(dni, codTipoTramite);
@@ -172,17 +151,14 @@ public class UIRegistrarTramite implements Serializable {
 
     public void obtenerCliente() {
         try {
-            Cliente cliente = controladorRegistrarTramite.obtenerCliente(dni);
-            if (cliente != null) {
-                this.nombreCliente = cliente.getNombreCliente();
-                this.apellidoCliente = cliente.getApellidoCliente();
-                this.mailCliente = cliente.getMailCliente();
+            DTOCliente dtoCliente = controladorRegistrarTramite.obtenerCliente(dni);
+            if (dtoCliente != null) {
+                nombreCliente = dtoCliente.getNombreCliente();
+                apellidoCliente = dtoCliente.getApellidoCliente();
+                mailCliente = dtoCliente.getMailCliente();
             }
         } catch (RegistrarTramiteException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el Cliente"));
-            this.nombreCliente = "";
-            this.apellidoCliente = "";
-            this.mailCliente = "";
         }
     }
 
@@ -190,6 +166,7 @@ public class UIRegistrarTramite implements Serializable {
         try {
             TipoTramite tipoTramite = controladorRegistrarTramite.obtenerTipoTramite(codTipoTramite);
             if (tipoTramite != null) {
+                DTOTipoTramite dtoTipoTramite = new DTOTipoTramite();
                 this.nombreTipoTramiteSeleccionado = tipoTramite.getNombreTipoTramite();
             }
         } catch (RegistrarTramiteException e) {
@@ -198,27 +175,20 @@ public class UIRegistrarTramite implements Serializable {
         }
     }
 
-    List<DTOEstadoTramite> nombresEstadoTramite = controladorRegistrarTramite.mostrarComboEstados();
-
-    public List<DTOEstadoTramite> getNombresEstadoTramite() {
-        return nombresEstadoTramite;
-    }
-
-    public void setNombresEstadoTramite(List<DTOEstadoTramite> nombresEstadoTramite) {
-        this.nombresEstadoTramite = nombresEstadoTramite;
-    }
-
-    private List<DTOEstadoTramite> estadosTramiteDisponibles;
-
-    public List<DTOEstadoTramite> getEstadosTramiteDisponibles() {
-        if (estadosTramiteDisponibles == null) {
-            estadosTramiteDisponibles = controladorRegistrarTramite.mostrarComboEstados();
-        }
-        return estadosTramiteDisponibles;
-    }
-
     public String redirigirAfiltrosTipoTramite() {
         return "FiltrosTipoTramite.xhtml?faces-redirect=true";
+    }
+
+    // UIRegistrarTramite -> mostrarComboEstados(): List<DTOEstadoTramite>
+    // Lista para guardar los estados disponibles
+    private List<DTOEstadoTramite> estadoTramiteDisponibles;
+
+    // Método para llamar al controlador y obtener la lista de estados
+    public List<DTOEstadoTramite> getEstadoTramiteDisponibles() {
+        if (estadoTramiteDisponibles == null) {
+            estadoTramiteDisponibles = controladorRegistrarTramite.mostrarComboEstados();
+        }
+        return estadoTramiteDisponibles;
     }
 
 }

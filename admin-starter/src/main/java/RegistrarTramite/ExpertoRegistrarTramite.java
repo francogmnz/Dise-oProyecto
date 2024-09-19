@@ -1,10 +1,11 @@
 package RegistrarTramite;
 
+import RegistrarTramite.dtos.DTOCliente;
 import RegistrarTramite.dtos.DTOEstadoTramite;
-import RegistrarTramite.dtos.ResumenDocumentacionDTO;
-import RegistrarTramite.dtos.ResumenTramiteDTO;
+import RegistrarTramite.dtos.DTODocumentacion;
+import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.dtos.TipoTramiteResumenDTO;
-import RegistrarTramite.dtos.TramiteDTO;
+import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.CategoriaTipoTramite;
 import entidades.Cliente;
@@ -28,13 +29,14 @@ import utils.FachadaPersistencia;
 
 public class ExpertoRegistrarTramite {
 
-    //BuscarTramites(con filtros)
-    public List<TramiteDTO> buscarTramites(int nroTramite, int dni,
-            Date fechaRecepcionTramite, int codTipoTramite, String nombreEstado) {
+    /* mostrarTramites(nroTramite, fechaRecepcionTramite, dniCliente, codTipoTramite, 
+    nombreEstadoTramite): List<DTOTramite> */
+    public List<DTOTramite> mostrarTramites(int nroTramite, Date fechaRecepcionTramite,
+            int dniCliente, int codTipoTramite, String nombreEstadoTramite) {
 
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
-        //filtro para el nroTramite
+        // Filtro para el nroTramite
         if (nroTramite > 0) {
             DTOCriterio dto1 = new DTOCriterio();
 
@@ -47,49 +49,53 @@ public class ExpertoRegistrarTramite {
 
         // Filtro para la fechaRecepcionTramite
         if (fechaRecepcionTramite != null) {
+            // Buscamos asi porque hay un problema con Timestamp
             // Establecer la hora de inicio del día
             Calendar calInicio = Calendar.getInstance();
             calInicio.setTime(fechaRecepcionTramite);
             calInicio.set(Calendar.HOUR_OF_DAY, 0);
             calInicio.set(Calendar.MINUTE, 0);
-            Date fechaInicio = calInicio.getTime();
+            Date fechaInicioDia = calInicio.getTime();
 
             // Establecer la hora de fin del día
             Calendar calFin = Calendar.getInstance();
             calFin.setTime(fechaRecepcionTramite);
             calFin.set(Calendar.HOUR_OF_DAY, 23);
             calFin.set(Calendar.MINUTE, 59);
-            Date fechaFin = calFin.getTime();
+            Date fechaFinDia = calFin.getTime();
 
             // Crear criterio de rango de fechas
             DTOCriterio dtoFechaRango = new DTOCriterio();
             dtoFechaRango.setAtributo("fechaRecepcionTramite");
-            dtoFechaRango.setOperacion("range");  // Usamos "range" para manejar el rango de fechas
-            dtoFechaRango.setValor(new Date[]{fechaInicio, fechaFin});  // El valor es un arreglo con fecha inicio y fin
+            dtoFechaRango.setOperacion("range");  // creado en FachadaInterna
+            dtoFechaRango.setValor(new Date[]{fechaInicioDia, fechaFinDia});
             criterioList.add(dtoFechaRango);
-
-            System.out.println("fecha inicio: " + fechaInicio);
-            System.out.println("fecha fin: " + fechaFin);
         }
 
-        //filtro para traerme los tramites de un cliente
-        if (dni > 0) {
+        // Filtro para Cliente
+        // Buscar("Cliente", "dniCliente = " + dniCliente): List<Object>
+        if (dniCliente > 0) {
             DTOCriterio dtoCliente = new DTOCriterio();
 
             dtoCliente.setAtributo("dniCliente");
-            dtoCliente.setOperacion("=");
-            dtoCliente.setValor(dni);
+            dtoCliente.setOperacion("contains");
+            dtoCliente.setValor(dniCliente);
             criterioList.add(dtoCliente);
+
             Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
 
             criterioList.clear();
 
-            dtoCliente.setAtributo("cliente"); //buscar los Tramites relacionados al Cliente encontrado
+            dtoCliente.setAtributo("cliente"); // buscar los Tramites relacionados al TipoTramite encontrado
             dtoCliente.setOperacion("=");
             dtoCliente.setValor(clienteEncontrado);
+
+            criterioList.add(dtoCliente);
+
         }
 
-        //filtro para traerme todos los Tramites de un TipoTramite asociado
+        // Filtro para TipoTramite
+        // buscar("TipoTramite", "codTipoTramite = " + codTipoTramite): List<Object>
         if (codTipoTramite > 0) {
             DTOCriterio dtoTipoTramite = new DTOCriterio();
 
@@ -101,50 +107,59 @@ public class ExpertoRegistrarTramite {
 
             criterioList.clear();
 
-            dtoTipoTramite.setAtributo("tipoTramite"); //buscar los Tramites relacionados al TipoTramite encontrado
+            dtoTipoTramite.setAtributo("tipoTramite"); // buscar los Tramites relacionados al TipoTramite encontrado
             dtoTipoTramite.setOperacion("=");
             dtoTipoTramite.setValor(tipoTramiteEncontrado);
+
+            criterioList.add(dtoTipoTramite);
         }
 
-        //filtro para traerme todos los Tramites relacionados a un Estado asociado
-        if (nombreEstado.trim().length() > 0) {
+        // Filtro para EstadoTramite
+        // buscar("EstadoTramite", "nombreEstadoTramite = " + nombreEstadoTramite): List<Object>
+        if (nombreEstadoTramite.trim().length() > 0) {
             DTOCriterio dtoEstado = new DTOCriterio();
 
             dtoEstado.setAtributo("nombreEstadoTramite");
             dtoEstado.setOperacion("like");
-            dtoEstado.setValor(nombreEstado);
+            dtoEstado.setValor(nombreEstadoTramite);
             criterioList.add(dtoEstado);
-            EstadoTramite estadoEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("Estado", criterioList).get(0);
+            EstadoTramite estadoEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
 
             criterioList.clear();
 
-            dtoEstado.setAtributo("estadoTramite"); //buscar los Tramites relacionados al TipoTramite encontrado
+            dtoEstado.setAtributo("estadoTramite"); // buscar los Tramites relacionados al TipoTramite encontrado
             dtoEstado.setOperacion("=");
             dtoEstado.setValor(estadoEncontrado);
 
+            criterioList.add(dtoEstado);
         }
 
-        List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList); //busca Tramites, segun los criterios indicados
-        List<TramiteDTO> tramiteResultados = new ArrayList<>();
+        /* buscar("Tramite", "nroTramite = " + nroTramite + " OR fechaRecepcionTramite = " + fechaRecepcionTramite
+        + "OR Cliente = " + cliente.toString() + "OR TipoTramite = " + tipoTramite.toString() 
+        + "OR EstadoTramite = " + estadoTramite.toString()*/
+        List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList); // busca Tramites, segun los criterios indicados
+        List<DTOTramite> tramiteResultados = new ArrayList<>();
 
+        // Loop por cada Tramite
+        // Creo DTOTramite
         for (Object t : objetoList) {
             Tramite tramite = (Tramite) t;
-            TramiteDTO tramiteDTO = new TramiteDTO();
-            tramiteDTO.setNroTramite(tramite.getNroTramite());  //setea nroTramite
-            tramiteDTO.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite()); //setea FechaRecepcionTramite
-            tramiteDTO.setDni(tramite.getCliente().getDniCliente()); //setea el dni del Cliente
-            tramiteDTO.setNombreTipoTramite(tramite.getTipoTramite().getNombreTipoTramite()); //setea el codTipoTramite
-            tramiteDTO.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite()); //setea el nombreEstado
-            tramiteDTO.setFechaAnulacion(tramite.getFechaAnulacionTramite()); //setea la fechaAnulacionTramite
+            DTOTramite dtoTramite = new DTOTramite();
+            dtoTramite.setNroTramite(tramite.getNroTramite());  // setea nroTramite
+            dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite()); //setea FechaRecepcionTramite
+            dtoTramite.setDni(tramite.getCliente().getDniCliente()); //setea el dniCliente
+            dtoTramite.setNombreTipoTramite(tramite.getTipoTramite().getNombreTipoTramite()); // setea el nombreTipoTramite
+            dtoTramite.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite()); // setea el nombreEstado
+            dtoTramite.setFechaAnulacion(tramite.getFechaAnulacionTramite()); //setea la fechaAnulacionTramite
 
-            tramiteResultados.add(tramiteDTO); //Carga la lista de dtos
+            tramiteResultados.add(dtoTramite); // Cargo los datos seteados en dtoTramite a la lista
         }
 
-        return tramiteResultados; //Retorna la lista de dtos para ser mostrada por pantalla
+        return tramiteResultados; // Retorna la lista
     }
 
     //Mostrar resumenTramite
-    public ResumenTramiteDTO mostrarResumenTramite(int nroTramite) {
+    public DTOTramiteElegido mostrarResumenTramite(int nroTramite) {
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
         if (nroTramite > 0) {
@@ -158,7 +173,7 @@ public class ExpertoRegistrarTramite {
         }
 
         Tramite tramiteEncontrado = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
-        ResumenTramiteDTO resumenDTO = new ResumenTramiteDTO();
+        DTOTramiteElegido resumenDTO = new DTOTramiteElegido();
         resumenDTO.setNroTramite(tramiteEncontrado.getNroTramite());
         resumenDTO.setFechaRecepcionTramite(tramiteEncontrado.getFechaRecepcionTramite());
         resumenDTO.setPlazoDocumentacion(tramiteEncontrado.getTipoTramite().getPlazoEntregaDocumentacionTT());
@@ -171,9 +186,9 @@ public class ExpertoRegistrarTramite {
         resumenDTO.setApellidoCliente(tramiteEncontrado.getCliente().getApellidoCliente());
         resumenDTO.setMailCliente(tramiteEncontrado.getCliente().getMailCliente());
 
-        List<ResumenDocumentacionDTO> resumenDocList = new ArrayList<>();
+        List<DTODocumentacion> resumenDocList = new ArrayList<>();
         for (TramiteDocumentacion doc : tramiteEncontrado.getTramiteDocumentacion()) {
-            ResumenDocumentacionDTO resumenDoc = new ResumenDocumentacionDTO();
+            DTODocumentacion resumenDoc = new DTODocumentacion();
             resumenDoc.setNombreDocumentacion(doc.getDocumentacion().getNombreDocumentacion());
             resumenDoc.setFechaEntregaDoc(doc.getFechaEntregaTD());
             resumenDocList.add(resumenDoc);
@@ -207,12 +222,14 @@ public class ExpertoRegistrarTramite {
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
-    //Obtengo el cliente para el registro del tramite
-    public Cliente obtenerCliente(int dni) throws RegistrarTramiteException {
+    private Cliente clienteEncontrado;
 
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-        List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
+    // obtenerCliente(dniCliente): DTOCliente
+    public DTOCliente obtenerCliente(int dni) throws RegistrarTramiteException {
 
+        List<DTOCriterio> criterioList = new ArrayList<>();
+
+        // buscar("Cliente", "dniCliente = " + dniCliente + " AND fechaHoraBaja = " + null): List<Object>
         if (dni > 0) {
             DTOCriterio dto1 = new DTOCriterio();
             dto1.setAtributo("dniCliente");
@@ -222,13 +239,22 @@ public class ExpertoRegistrarTramite {
             criterioList.add(dto1);
         }
 
-        List<Object> clienteEncontrado = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+        // creamos el DTOCliente
+        DTOCliente dtoCliente = new DTOCliente();
 
-        if (clienteEncontrado.isEmpty()) {
-            throw new RegistrarTramiteException("No se encontro al cliente");
+        // seteamos los datos del cliente encontrado en el dto
+        try {
+            clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+
+            dtoCliente.setNombreCliente(clienteEncontrado.getNombreCliente());
+            dtoCliente.setApellidoCliente(clienteEncontrado.getApellidoCliente());
+            dtoCliente.setMailCliente(clienteEncontrado.getMailCliente());
+
+        } catch (Exception e) {
+            throw new RegistrarTramiteException("Error al obtener el cliente");
         }
 
-        return (Cliente) clienteEncontrado.get(0);
+        return dtoCliente; // Retornamos el DTOCliente
     }
 
     //Obtengo al TipoTramite para registrar el Tramite
@@ -261,9 +287,10 @@ public class ExpertoRegistrarTramite {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         Tramite tramiteCreado = new Tramite();
+//        tramiteCreado.setNroTramite(generarNroTramite());
         tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
 
-        tramiteCreado.setCliente(obtenerCliente(dni));
+        tramiteCreado.setCliente(clienteEncontrado);
         tramiteCreado.setTipoTramite(obtenerTipoTramite(codTipoTramite));
 
         //busco el Estado iniciado 
@@ -423,17 +450,15 @@ public class ExpertoRegistrarTramite {
     public List<DTOEstadoTramite> mostrarComboEstados() {
 
         List objetoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", null);
-        List<DTOEstadoTramite> estadosTramite = new ArrayList<>();
 
+        List<DTOEstadoTramite> estadosTramite = new ArrayList<>();
         for (Object x : objetoList) {
             EstadoTramite estadoTramite = (EstadoTramite) x;
             DTOEstadoTramite dtoEstadoTramite = new DTOEstadoTramite();
 
-            dtoEstadoTramite.setNombreEstadoTramite(estadoTramite.getNombreEstadoTramite());
+            dtoEstadoTramite.setNombreEstado(estadoTramite.getNombreEstadoTramite());
             estadosTramite.add(dtoEstadoTramite);
         }
         return estadosTramite;
     }
 }
-
-

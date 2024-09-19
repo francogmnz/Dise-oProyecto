@@ -82,7 +82,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                          onfocus="Javascript:this.focus();this.select();">
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
-                                        update="@form:grid1" />
+                                        update="grid1" />
                             </p:inputText>
                         </p:outputPanel>
                     </div>
@@ -108,54 +108,55 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p:outputLabel for="estadoMenu" value="Estado del Trámite:"/>
                         <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
                             <f:selectItem itemLabel="Seleccione un Estado" />
-                            <f:selectItems value="#{uitramite.estadosTramiteDisponibles}"
+                            <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"
                                            var="estadoTramite"
-                                           itemValue="#{estadoTramite.nombreEstadoTramite}"
-                                           itemLabel="#{estadoTramite.nombreEstadoTramite}"/>
-                        </p:selectOneMenu>
-                    </div>
+                                           itemValue="#{estadoTramite.nombreEstado}"
+                                           itemLabel="#{estadoTramite.nombreEstado}"/>
+                    </p:selectOneMenu>
                 </div>
-
-                <p:spacer height="5"/>
-
-                <p:dataTable id="grid1" widgetVar="tramiteTable" value="#{uitramiteLista.buscarTramites()}" var="tramite" 
-                             paginator="true" rowsPerPageTemplate="5,10" rows="5"  paginatorPosition="bottom">
-
-                    <p:column>
-                        <f:facet name="header">Número Trámite</f:facet>
-                            #{tramite.nroTramite}
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">DNI</f:facet>
-                            #{tramite.dni}
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">Tipo Trámite</f:facet>
-                            #{tramite.nombreTipoTramite}
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">Fecha Recepción</f:facet>
-                        <h:outputText value="#{tramite.fechaRecepcionTramite}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">Estado Trámite</f:facet>
-                            #{tramite.nombreEstado}
-                    </p:column>
-
-                </p:dataTable>
             </div>
 
-            <div class="col-sm-12 col-md-3">
-                <p:commandButton value="Volver Atrás" onclick="window.history.back();"
-                                 styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
-            </div>
-        </h:form>
 
-    </ui:define>
+            <p:spacer height="5"/>
+
+            <p:dataTable id="grid1" widgetVar="tramiteTable" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
+                         paginator="true" rowsPerPageTemplate="5,10" rows="5"  paginatorPosition="bottom" >
+
+                <p:column>
+                    <f:facet name="header">Número Trámite</f:facet>
+                        #{tramite.nroTramite}
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">DNI</f:facet>
+                        #{tramite.dni}
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">Tipo Trámite</f:facet>
+                        #{tramite.nombreTipoTramite}
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">Fecha Recepción</f:facet>
+                    <h:outputText value="#{tramite.fechaRecepcionTramite}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">Estado Trámite</f:facet>
+                        #{tramite.nombreEstado}
+                </p:column>
+
+            </p:dataTable>
+        </div>
+
+        <div class="col-sm-12 col-md-3">
+            <p:commandButton value="Volver Atrás" onclick="window.history.back();"
+                             styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
+        </div>
+    </h:form>
+
+</ui:define>
 </ui:composition>

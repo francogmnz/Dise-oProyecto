@@ -1,8 +1,9 @@
 package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
+import RegistrarTramite.dtos.DTOEstadoTramite;
 import RegistrarTramite.dtos.TipoTramiteResumenDTO;
-import RegistrarTramite.dtos.TramiteDTO;
+import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.EstadoTramite;
 import jakarta.faces.view.ViewScoped;
@@ -34,8 +35,6 @@ public class UITramiteLista implements Serializable {
     private String nombreTipoTramiteFiltro = "";
     private String nombreCategoriaTipoTramiteFiltro = "";
     private String descripcionTipoTramiteFiltro = "";
-
-    private String nombreEstadoSeleccionado;
 
     public ControladorRegistrarTramite getControladorRegistrarTramite() {
         return controladorRegistrarTramite;
@@ -110,24 +109,19 @@ public class UITramiteLista implements Serializable {
         this.descripcionTipoTramiteFiltro = descripcionTipoTramiteFiltro;
     }
 
-    public String getNombreEstadoSeleccionado() {
-        return nombreEstadoSeleccionado;
-    }
-
-    public void setNombreEstadoSeleccionado(String nombreEstadoSeleccionado) {
-        this.nombreEstadoSeleccionado = nombreEstadoSeleccionado;
-    }
-
     public void filtrar() {
     }
 
-    public List<TramiteGrillaUI> buscarTramites() {
+    // get desde la UI a DTOTramite para los filtros
+    /* mostrarTramites(nroTramite, fechaRecepcionTramite, dniCliente, codTipoTramite, 
+    nombreEstadoTramite): List<DTOTramite> */
+    public List<TramiteGrillaUI> mostrarTramites() {
 
-        System.out.println(nroTramiteFiltro);
-        System.out.println(nombreEstadoFiltro);
-        System.out.println(nombreTipoTramiteFiltro);
-        System.out.println(fechaRecepcionTramiteFiltro);
-        System.out.println(dniFiltro);
+        System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
+        System.out.println("fechaRecepcionTramiteFiltro: " + fechaRecepcionTramiteFiltro);
+        System.out.println("dniFiltro: " + dniFiltro);
+        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
+        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
 
         if (fechaRecepcionTramiteFiltro != null) {
             Calendar calFiltro = Calendar.getInstance();
@@ -138,18 +132,19 @@ public class UITramiteLista implements Serializable {
         }
 
         List<TramiteGrillaUI> tramiteGrilla = new ArrayList<TramiteGrillaUI>();
-        List<TramiteDTO> tramiteDTOList = controladorRegistrarTramite.buscarTramites(nroTramiteFiltro, dniFiltro, fechaRecepcionTramiteFiltro, dniFiltro, nombreEstadoFiltro);
+        List<DTOTramite> tramiteDTOList = controladorRegistrarTramite.mostrarTramites(nroTramiteFiltro, fechaRecepcionTramiteFiltro, dniFiltro, codTipoTramiteFiltro, nombreEstadoFiltro);
 
-        for (TramiteDTO tramiteDTO : tramiteDTOList) {
+        // Loop por cada DTOTramite
+        for (DTOTramite tramiteDTO : tramiteDTOList) {
             TramiteGrillaUI tramiteGrillaUI = new TramiteGrillaUI();
             tramiteGrillaUI.setNroTramite(tramiteDTO.getNroTramite());
             tramiteGrillaUI.setDni(tramiteDTO.getDni());
-
             tramiteGrillaUI.setNombreEstado(tramiteDTO.getNombreEstado());
             tramiteGrillaUI.setNombreTipoTramite(tramiteDTO.getNombreTipoTramite());
             tramiteGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
+
             tramiteGrilla.add(tramiteGrillaUI);
-        } 
+        }
 
         return tramiteGrilla;
     }

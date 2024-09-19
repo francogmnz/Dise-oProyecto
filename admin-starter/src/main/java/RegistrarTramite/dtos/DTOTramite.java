@@ -3,7 +3,7 @@ package RegistrarTramite.dtos;
 import entidades.EstadoTramite;
 import java.sql.Timestamp;
 
-public class TramiteDTO {
+public class DTOTramite {
     
     private int nroTramite;
     private int dni;
