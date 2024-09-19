@@ -2,12 +2,14 @@ package ABMVersion;
 import ABMEstadoTramite.dtos.EstadoTramiteDTO;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
-import ABMVersion.dtos.NuevaVersionDTO;
+import ABMVersion.dtos.DTODatosVersion;
+import ABMVersion.dtos.HistorialVersionDTO;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
 import java.util.List;
+import utils.FachadaPersistencia;
 
 /**
  * Controlador para la gestión de versiones.
@@ -23,7 +25,7 @@ public class ControladorABMVersion {
     }    
 
     // Método para agregar una nueva versión
-    public void agregarVersion(NuevaVersionDTO nuevaVersionDTO) throws VersionException {
+    public void agregarVersion(DTODatosVersion nuevaVersionDTO) throws VersionException {
         expertoABMVersion.agregarVersion(nuevaVersionDTO);
     }
 
@@ -47,4 +49,8 @@ public class ControladorABMVersion {
     public List<TipoTramite> obtenerTiposTramitesActivos() {
         return expertoABMVersion.obtenerTiposTramitesActivos();
     }
+  //  public List<HistorialVersionDTO> obtenerHistorialVersion(int nroVersion) {
+    //    expertoABMVersion.obtenerHistorialVersion(nroVersion);
+
+
 }

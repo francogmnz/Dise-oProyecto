@@ -1,5 +1,6 @@
 package ABMVersion.dtos;
 
+import entidades.ConfTipoTramiteEstadoTramite;
 import java.sql.Timestamp;
 
 /**
@@ -7,15 +8,13 @@ import java.sql.Timestamp;
  * 
  * @author franco
  */
-public class NuevaVersionDTO {
+public class DTODatosVersion {
     private int nroVersion;
     private String descripcionVersion;
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
     private int codTipoTramite;  // Attribute for the code of the type of trámite
-
-    // Getters and Setters
 
     public int getNroVersion() {
         return nroVersion;

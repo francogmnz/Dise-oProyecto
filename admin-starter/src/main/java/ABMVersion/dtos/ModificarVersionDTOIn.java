@@ -10,7 +10,7 @@ public class ModificarVersionDTOIn {
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    private int codTipoTramite;  // Nuevo atributo para el código del tipo de trámite
+    private int codTipoTramite; 
 
     public int getNroVersion() {
         return nroVersion;

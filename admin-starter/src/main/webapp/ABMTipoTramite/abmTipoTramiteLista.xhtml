@@ -106,6 +106,13 @@
                     <f:ajax render="@form"/>
                 </p:commandButton>
                 <p:spacer width="5"/>
+               <p:commandButton value="Agregar Versión" styleClass="btn-info" 
+                 action="#{uiabmVersion.irAgregarVersion()}" 
+                 update="@none">
+    <f:ajax execute="@this" render="@none"/>
+</p:commandButton>
+
+
                 <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmTipoTramiteLista.darDeBajaTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
                    
                     <p:confirm header="Anulación de #{tipoTramite.codTipoTramite} #{tipoTramite.nombreTipoTramite}" message="¿Está seguro?" icon="ui-icon-alert"/>

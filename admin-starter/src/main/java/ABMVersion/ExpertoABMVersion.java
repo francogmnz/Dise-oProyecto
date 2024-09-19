@@ -5,7 +5,7 @@ import ABMEstadoTramite.dtos.ModificarEstadoTramiteDTOIn;
 import ABMEstadoTramite.exceptions.EstadoTramiteException;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
-import ABMVersion.dtos.NuevaVersionDTO;
+import ABMVersion.dtos.DTODatosVersion;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
 import entidades.EstadoTramite;
@@ -67,7 +67,7 @@ public class ExpertoABMVersion {
         return versionResultado;
     }
 
-    public void agregarVersion(NuevaVersionDTO nuevaVersionDTO) throws VersionException {
+    public void agregarVersion(DTODatosVersion nuevaVersionDTO) throws VersionException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         try {
@@ -236,5 +236,6 @@ public class ExpertoABMVersion {
 
         return tiposTramitesActivos;
     }
+   
 
 }

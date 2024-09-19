@@ -38,7 +38,7 @@
     <div class="col-right">
       <div class="menu">
         <ul>
-            <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">#{uiDraw.titulo}</li>
+            <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">#{uiabmVersion.titulo}</li>
         </ul>
       </div>
       <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -53,12 +53,12 @@
       </div>
     </div>
   </div>
- <h:outputText id="eposibles" value="#{uiDraw.nodosPosibles}" style="visibility: hidden"/>
- <h:outputText id="editable" value="#{uiDraw.editable}" style="visibility: hidden"/>
- <h:outputText id="ecargarJson" value="#{uiDraw.cargarJSON}" style="visibility: hidden"/>
+ <h:outputText id="eposibles" value="#{uiabmVersion.nodosPosibles}" style="visibility: hidden"/>
+ <h:outputText id="editable" value="#{uiabmVersion.editable}" style="visibility: hidden"/>
+ <h:outputText id="ecargarJson" value="#{uiabmVersion.cargarJSON}" style="visibility: hidden"/>
 
- <h:inputHidden id="jsonGuardar" value="#{uiDraw.guardarJSON}"/>
- <p:commandButton ajax="true" id="guardarBean" action="#{uiDraw.guardar()}" style="visibility: hidden"/>
+ <h:inputHidden id="jsonGuardar" value="#{uiabmVersion.guardarJSON}"/>
+ <p:commandButton ajax="true" id="guardarBean" action="#{uiabmVersion.guardar()}" style="visibility: hidden"/>
   <h:outputScript library="js" name="draw.js"/>
       </h:form>
     </body>

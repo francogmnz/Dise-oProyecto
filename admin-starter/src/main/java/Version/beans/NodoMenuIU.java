@@ -1,5 +1,5 @@
 
-package Draw.beans;
+package Version.beans;
 
 public class NodoMenuIU {
     int codigo;

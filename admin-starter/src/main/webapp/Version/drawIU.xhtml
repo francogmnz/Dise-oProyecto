@@ -11,13 +11,13 @@
         <ui:param name="renderFormAsterisks" value="true"/>
     </ui:define>
     <ui:define name="title">
-        Versión Tipo Caso 1
+        Versión 
     </ui:define>
     <ui:define name="body">
         
     <h:form id="form" prependId="false">
         <p:panel styleClass="box-primary card">
-                <div class="ui-g ui-fluid">
+      <div class="ui-g ui-fluid">
                     <!-- Número de Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
@@ -62,55 +62,6 @@
                         </div>
                     </div>
 
-                   
-                    <!-- Desplegable para Estado de Origen -->
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="estadoOrigen" value="Estado de Origen:" />
-                        </div>
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:selectOneMenu id="estadoOrigen" value="#{uiabmVersion.estadoSeleccionado}" required="true">
-                                <f:selectItem itemLabel="Seleccione un Estado de Origen" itemValue="" />
-                                <f:selectItems value="#{uiabmVersion.listaEstadosTramite}"
-                                               var="estado"
-                                               itemValue="#{estado.OID}" 
-                                               itemLabel="#{estado.nombreEstadoTramite}" />
-                            </p:selectOneMenu>
-                            <p:message id="estadoOrigenMSG" for="estadoOrigen"/>
-                        </div>
-                    </div>
-
-                    <!-- Desplegable para Estado de Destino -->
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="estadoDestino" value="Estado de Destino:" />
-                        </div>
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:selectOneMenu id="estadoDestino" value="#{uiabmVersion.estadoSeleccionado}" required="true">
-                                <f:selectItem itemLabel="Seleccione un Estado de Destino" itemValue="" />
-                                <f:selectItems value="#{uiabmVersion.listaEstadosTramite}"
-                                               var="estado"
-                                               itemValue="#{estado.OID}" 
-                                               itemLabel="#{estado.nombreEstadoTramite}" />
-                            </p:selectOneMenu>
-                            <p:message id="estadoDestinoMSG" for="estadoDestino"/>
-                        </div>
-                    </div>
-                    
-                    <p:selectOneMenu id="tipoTramiteMenu" value="#{uiabmVersion.tipoTramiteSeleccionado}">
-                        <f:selectItem itemLabel="Seleccione un Tipo de Trámite" itemValue="" />
-                        <f:selectItems value="#{uiabmVersion.listaTiposTramite}"
-                                       var="tipo"
-                                       itemValue="#{tipo.OID}" 
-                                       itemLabel="#{tipo.nombreTipoTramite}" />
-                    </p:selectOneMenu>
-
-                    <!-- Botón para Agregar otro estado -->
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:commandButton value="Agregar otro estado" action="#{uiabmVersion.agregarEstado}" update="@form" />
-                        </div>
-                    </div>
                     <!-- Botón de Guardar -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-4">
@@ -122,9 +73,6 @@
                     </div>
                 </div>
                
-
-                
-
             </p:panel>
         <p:panel styleClass="box-primary card" >
         <!-- Campo de entrada para el código del artículo -->
