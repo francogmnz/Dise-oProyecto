@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Seleccionar Categoría</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estilosCategoria.css" />
+</h:head>
+<h:body>
+    <h:form>
+        <div class="container-centralizado">
+            <h:panelGrid columns="1" styleClass="panel-principal">
+
+                <!-- Título y barra de progreso -->
+                <h:outputText value="Gestión de trámites" styleClass="titulo"/>
+                <div class="barra-progreso">
+                    <div class="progreso">
+                        <div class="paso">Acceder</div>
+                        <div class="paso activo">Categoría</div>
+                        <div class="paso">Trámite</div>
+                        <div class="paso">Confirmar</div>
+                    </div>
+                </div>
+
+                <!-- Instrucción -->
+                <h:outputText value="Seleccione la categoría de trámite que desea realizar:" styleClass="subtitulo"/>
+
+                <!-- Grid de Categorías -->
+                <div class="categorias-grid">
+                    <ui:repeat value="#{seleccionarCategoria.listarCategoriasTipoTramite()}" var="categoria">
+                        <div class="categoria-item">
+                            <div class="categoria-header">
+                                <h:outputText value="#{categoria.nombreCategoriaTipoTramite}" />
+                            </div>
+                            <div class="categoria-body">
+                                <h:outputText value="#{categoria.descripcionCategoriaTipoTramite}" />
+                                <hr class="categoria-separator"/>
+                                <h:outputText value="#{categoria.descripcionWebCategoriaTipoTramite}" />
+                            </div>
+                            <p:commandButton value="Seleccionar" actionListener="#{seleccionarCategoria.seleccionarCategoria(categoria)}" styleClass="btn-seleccionar"/>
+                        </div>
+                    </ui:repeat>
+                </div>
+
+                <!-- Botón Cancelar -->
+                <p:commandButton value="Cancelar" actionListener="#{seleccionarCategoria.cancelar}" styleClass="btn-cancelar"/>
+                
+            </h:panelGrid>
+        </div>
+    </h:form>
+</h:body>
+</html>
+

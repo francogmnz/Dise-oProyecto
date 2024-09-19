@@ -27,13 +27,7 @@ public class ControladorRegistrarTramiteWeb {
     }
 */
     public DTOCliente buscarClienteIngresado(int dniCliente) throws RegistrarTramiteWebException {
-        DTOCliente cliente = expertoRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
-
-        if (cliente == null) {
-            throw new RegistrarTramiteWebException("Cliente no encontrado. Reintentar.");
-        }
-
-        return cliente;
+        return expertoRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
     }
     
     

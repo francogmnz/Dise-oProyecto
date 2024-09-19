@@ -38,7 +38,7 @@ public class ExpertoRegistrarTramiteWeb {
     
     private Cliente cliente;
     
-    public DTOCliente buscarClienteIngresado(int dniCliente){
+    public DTOCliente buscarClienteIngresado(int dniCliente)  throws RegistrarTramiteWebException{
         List<DTOCriterio> criterioBuscarClienteList = new ArrayList<>();
         DTOCriterio criterioDniIngresado = new DTOCriterio();
         
@@ -57,7 +57,18 @@ public class ExpertoRegistrarTramiteWeb {
         criterioBuscarClienteList.add(criterioFechaHoraBajaCliente);
         
         //Cliente clienteIngresado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
-        this.cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
+        try {
+            // Intentar obtener el cliente
+            this.cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
+
+            // Validar si el DNI coincide
+            if (dniCliente != cliente.getDniCliente()) {
+                throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            // Capturar cuando la búsqueda no arroja resultados
+            throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
+        }
         DTOCliente dtoCliente = new DTOCliente();
         dtoCliente.setDniCliente(cliente.getDniCliente());
         dtoCliente.setNombreCliente(cliente.getNombreCliente());
@@ -66,7 +77,7 @@ public class ExpertoRegistrarTramiteWeb {
                 
         return dtoCliente;
                 
-    
+        
     }
     
     public List<DTOCategoriaTipoTramite> listarCategoriasTipoTramtite(){
