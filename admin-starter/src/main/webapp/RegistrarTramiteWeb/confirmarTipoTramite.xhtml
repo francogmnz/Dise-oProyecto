@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Confirmar Trámite</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estilosMostrarResumenTipoTramite.css" />
+</h:head>
+<h:body>
+    <h:form>
+        <div class="container">
+            <h1 class="titulo">Confirmación del Trámite</h1>
+            <div class="resumen-tramite">
+                <h2>Datos del Cliente</h2>
+                <p><strong>Nombre:</strong> #{mostrarResumenTipoTramite.dtoResumen.nombreTipoTramite}</p>
+                <p><strong>Apellido:</strong> #{mostrarResumenTipoTramite.dtoResumen.apellidoCliente}</p>
+                <p><strong>DNI:</strong> #{mostrarResumenTipoTramite.dtoResumen.dniCliente}</p>
+                <p><strong>Email:</strong> #{mostrarResumenTipoTramite.dtoResumen.mailCliente}</p>
+
+                <h2>Datos del Trámite</h2>
+                <p><strong>Nombre del Trámite:</strong> #{mostrarResumenTipoTramite.dtoResumen.nombreTipoTramite}</p>
+                <p><strong>Descripción:</strong> #{mostrarResumenTipoTramite.dtoResumen.descripcionTipoTramite}</p>
+                <p><strong>Plazo de Entrega de Documentación:</strong> #{mostrarResumenTipoTramite.dtoResumen.plazoEntregaDocumentacionTT} días</p>
+                <p><strong>Precio:</strong> $#{mostrarResumenTipoTramite.dtoResumen.precioTramite}</p>
+            </div>
+            <div class="botones">
+                <h:commandButton value="Confirmar" action="#{mostrarResumenTipoTramite.confirmar}" styleClass="btn-confirmar" />
+                <h:commandButton value="Cancelar" action="#{mostrarResumenTipoTramite.cancelar}" styleClass="btn-cancelar" />
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>

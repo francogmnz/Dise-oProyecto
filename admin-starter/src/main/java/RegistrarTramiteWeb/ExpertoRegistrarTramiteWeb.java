@@ -180,13 +180,13 @@ public class ExpertoRegistrarTramiteWeb {
 
     }
     
-    public DTOResumen confirmacionTipoTramite(int codTipoTramite){
+    public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
         
     
         List<DTOCriterio> criterioTipoTramiteRelacionadoList = new ArrayList<>();
         DTOCriterio criterioCodigoTT = new DTOCriterio();
         
-        criterioCodigoTT.setAtributo("codCategoriaTipoTramite");
+        criterioCodigoTT.setAtributo("codTipoTramite");
         criterioCodigoTT.setOperacion("=");
         criterioCodigoTT.setValor(codTipoTramite);
         
@@ -256,27 +256,10 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioUltimaVersionTTList.add(criterioTTRelacionado);
         
-        Version version = (Version) FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionTTList);
+        Version version = (Version) FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionTTList).get(0);
         
         nuevoTramite.setVersion(version);
-        
-/*  Creo que esta de mas.. ya fue seteado anteriormente el estado y con sus respectivas verificaciones
-        List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramiteList = version.getConfTipoTramiteEstadoTramite();
-        
-        for(ConfTipoTramiteEstadoTramite cttet: confTipoTramiteEstadoTramiteList){
-            List<EstadoTramite> estadosTramite = cttet.getEstadoTramiteOrigen();
-            
-            for(EstadoTramite estadoTramiteValidacion : estadosTramite){
-            String nombreEstadoTramite = estadoTramiteValidacion.getNombreEstadoTramite();
-            if("Pendiente Documentacion" == nombreEstadoTramite){
-            nuevoTramite.setEstadoTramite(estadoTramite);
-            }
-            }
-            
-            
-        }
-        
-*/       
+           
         TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
         
         tramiteEstadoTramite.setFechaHoraBajaTET(null);
@@ -325,7 +308,7 @@ public class ExpertoRegistrarTramiteWeb {
         DTOCriterio criterioFechaHoraHastaLP = new DTOCriterio();
         
         criterioFechaHoraHastaLP.setAtributo("fechaHoraHastaListaPrecios");
-        criterioFechaHoraHastaLP.setOperacion("<");
+        criterioFechaHoraHastaLP.setOperacion(">");
         criterioFechaHoraHastaLP.setValor(new Timestamp(System.currentTimeMillis()));
         
         criterioListaPreciosList.add(criterioFechaHoraHastaLP); 

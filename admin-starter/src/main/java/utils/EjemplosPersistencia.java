@@ -7,6 +7,7 @@ import java.sql.Date;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EjemplosPersistencia {
@@ -107,7 +108,7 @@ public class EjemplosPersistencia {
         EstadoTramite etapaUno = new EstadoTramite();
         etapaUno.setCodEstadoTramite(1);
         etapaUno.setNombreEstadoTramite("Nombre1");
-        etapaUno.setDescripcionEstadoTramite("Pendiente Doc");
+        etapaUno.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaUno.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaUno.setFechaHoraBajaEstadoTramite(null);
         
@@ -117,7 +118,7 @@ public class EjemplosPersistencia {
         EstadoTramite etapaDos = new EstadoTramite();
         etapaDos.setCodEstadoTramite(2);
         etapaDos.setNombreEstadoTramite("Nombre2");
-        etapaDos.setDescripcionEstadoTramite("Pendiente Consultor");
+        etapaDos.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaDos.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaDos.setFechaHoraBajaEstadoTramite(null);
         
@@ -302,11 +303,32 @@ public class EjemplosPersistencia {
 
     FachadaPersistencia.getInstance().guardar(tipoTramiteListaPrecios2);
     
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.YEAR, 2025);
+    calendar.set(Calendar.MONTH, Calendar.DECEMBER); // Meses empiezan desde 0, así que DICIEMBRE es 11
+    calendar.set(Calendar.DAY_OF_MONTH, 31); // Último día del año
+    calendar.set(Calendar.HOUR_OF_DAY, 23); // Hora: 23
+    calendar.set(Calendar.MINUTE, 59); // Minuto: 59
+    calendar.set(Calendar.SECOND, 59); // Segundo: 59
+    calendar.set(Calendar.MILLISECOND, 999); // Milisegundo
+    
+    Timestamp fechaHasta2025 = new Timestamp(calendar.getTimeInMillis());
+
+    Calendar calendar2 = Calendar.getInstance();
+    calendar2.set(Calendar.YEAR, 2022);
+    calendar2.set(Calendar.MONTH, Calendar.DECEMBER); // Meses empiezan desde 0, así que DICIEMBRE es 11
+    calendar2.set(Calendar.DAY_OF_MONTH, 31); // Último día del año
+    calendar2.set(Calendar.HOUR_OF_DAY, 23); // Hora: 23
+    calendar2.set(Calendar.MINUTE, 59); // Minuto: 59
+    calendar2.set(Calendar.SECOND, 59); // Segundo: 59
+    calendar2.set(Calendar.MILLISECOND, 999); // Milisegundo 
+    
+    Timestamp fechaDesde2022 = new Timestamp(calendar2.getTimeInMillis());
     
     ListaPrecios listaPrecios1 = new ListaPrecios();
     listaPrecios1.setCodListaPrecios(1);
-    listaPrecios1.setFechaHoraDesdeListaPrecios(new Timestamp(System.currentTimeMillis()));
-    listaPrecios1.setFechaHoraHastaListaPrecios(new Timestamp(System.currentTimeMillis()));
+    listaPrecios1.setFechaHoraDesdeListaPrecios(fechaDesde2022);
+    listaPrecios1.setFechaHoraHastaListaPrecios(fechaHasta2025);
     listaPrecios1.setFechaHoraBajaListaPrecios(null);
     
     listaPrecios1.addTipoTramiteListaPrecios(tipoTramiteListaPrecios1);
@@ -319,8 +341,8 @@ public class EjemplosPersistencia {
 
     ListaPrecios listaPrecios2 = new ListaPrecios();
     listaPrecios2.setCodListaPrecios(2);
-    listaPrecios2.setFechaHoraDesdeListaPrecios(new Timestamp(System.currentTimeMillis()));
-    listaPrecios2.setFechaHoraHastaListaPrecios(new Timestamp(System.currentTimeMillis()));
+    listaPrecios2.setFechaHoraDesdeListaPrecios(fechaDesde2022);
+    listaPrecios2.setFechaHoraHastaListaPrecios(fechaHasta2025);
     listaPrecios2.setFechaHoraBajaListaPrecios(null);
     
     listaPrecios2.addTipoTramiteListaPrecios(tipoTramiteListaPrecios2);
@@ -399,8 +421,8 @@ public class EjemplosPersistencia {
     Version version1 = new Version();
     version1.setNroVersion(1);
     version1.setDescripcionVersion("Versión inicial");
-    version1.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis()));
-    version1.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
+    version1.setFechaDesdeVersion(fechaDesde2022);
+    version1.setFechaHastaVersion(fechaHasta2025);
     version1.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
     
     version1.setTipoTramite(tipoTramiteA);
@@ -414,8 +436,8 @@ public class EjemplosPersistencia {
     Version version2 = new Version();
     version2.setNroVersion(2);
     version2.setDescripcionVersion("Actualización de mitad de año");
-    version2.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis()));
-    version2.setFechaHastaVersion(new Timestamp(System.currentTimeMillis()));
+    version2.setFechaDesdeVersion(fechaDesde2022);
+    version2.setFechaHastaVersion(fechaHasta2025);
     version2.setFechaBajaVersion(null);  // Versión activa sin fecha de baja
     
     version2.setTipoTramite(tipoTramiteB);

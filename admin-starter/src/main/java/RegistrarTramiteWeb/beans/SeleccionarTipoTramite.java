@@ -9,6 +9,7 @@ import RegistrarTramiteWeb.dtos.DTOCategoriaTipoTramite;
 import RegistrarTramiteWeb.dtos.DTOTipoTramite;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.Flash;
 import jakarta.faces.view.ViewScoped;
@@ -28,7 +29,8 @@ import java.util.List;
 @SessionScoped
 public class SeleccionarTipoTramite implements Serializable {
 
-
+    private List<DTOTipoTramite> tipoTramites;
+    private List<TipoTramiteGrillaUI> tipoTramiteGrilla;
     private ControladorRegistrarTramiteWeb controladorRegistrarTramiteWeb = new ControladorRegistrarTramiteWeb();
 
     
@@ -44,6 +46,7 @@ public class SeleccionarTipoTramite implements Serializable {
     }    
 
     public SeleccionarTipoTramite() {
+        tipoTramites = new ArrayList<>();
     }
 
     DTOCategoriaTipoTramite dtoCategoriaSeleccionada = (DTOCategoriaTipoTramite) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("categoriaSeleccionada");
@@ -53,6 +56,7 @@ public class SeleccionarTipoTramite implements Serializable {
     List<DTOTipoTramite> dtoTipoTramites = controladorRegistrarTramiteWeb.listarTipoTramites(codCategoriaSeleccionada);
     
     for(DTOTipoTramite dtoTT: dtoTipoTramites){
+        tipoTramites.add(dtoTT);
         TipoTramiteGrillaUI tipoTramiteGrillaUI = new TipoTramiteGrillaUI();
         tipoTramiteGrillaUI.setCodTipoTramite(dtoTT.getCodTipoTramite());
         tipoTramiteGrillaUI.setNombreTipoTramite(dtoTT.getNombreTipoTramite());
@@ -71,12 +75,24 @@ public class SeleccionarTipoTramite implements Serializable {
 
 
     // Método para seleccionar el trámite
-    public void seleccionarTipoTramite(TipoTramiteGrillaUI tramite) {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("codTipoTramiteSeleccionado", tramite.getCodTipoTramite());
-            FacesContext.getCurrentInstance().getExternalContext().redirect("confirmarTipoTramiteTramite.xhtml");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void seleccionarTipoTramite(TipoTramiteGrillaUI tipoTramiteGrillaUI) {
+        DTOTipoTramite tipoTramiteSeleccionado = null;
+        for (DTOTipoTramite tipoTramite : tipoTramites) {
+            if (tipoTramite.getCodTipoTramite() == tipoTramiteGrillaUI.getCodTipoTramite()) {
+                tipoTramiteSeleccionado = tipoTramite;
+                break; 
+            }
+        }
+        if(tipoTramiteSeleccionado != null){
+            try {
+                ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                Flash flash = externalContext.getFlash();
+                flash.put("tipoTramiteSeleccionado", tipoTramiteSeleccionado);
+                flash.keep("tipoTramiteSeleccionado"); // Asegura que el dato se mantenga después del redirect
+                externalContext.redirect("confirmarTipoTramite.xhtml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

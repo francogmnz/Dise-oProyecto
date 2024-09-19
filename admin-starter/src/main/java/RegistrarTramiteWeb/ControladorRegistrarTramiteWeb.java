@@ -39,8 +39,8 @@ public class ControladorRegistrarTramiteWeb {
         return expertoRegistrarTramiteWeb.listarTipoTramites(codCategoriaTipoTramite);
     }
 
-    public DTOResumen confirmarTipoTramite(int codTipoTramite) throws RegistrarTramiteWebException {
-        return expertoRegistrarTramiteWeb.confirmacionTipoTramite(codTipoTramite);
+    public DTOResumen mostrarResumenTipoTramite(int codTipoTramite) throws RegistrarTramiteWebException {
+        return expertoRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramite);
     }
 
     public DTONumeroTramite registrarTramite(Tramite nuevoTramite) throws RegistrarTramiteWebException {
