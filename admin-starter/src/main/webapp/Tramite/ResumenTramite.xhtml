@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Gestión de Trámites"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Gestión de Trámites
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <p:commandButton value="Datos Trámite" action="#" />
+            <p:commandButton value="Documentación" action="#" />
+            <!-- Sección de Datos Trámite -->
+            <h:panelGrid columns="2" styleClass="custom-grid">
+                <h:outputText value="Número Trámite:" />
+                <h:outputText value="12345" />
+
+                <h:outputText value="Fecha Ingreso:" />
+                <h:outputText value="2023-09-20" />
+
+                <h:outputText value="Plazo entrega documentación:" />
+                <h:outputText value="10 días" />
+
+                <h:outputText value="Cod Tipo Trámite:" />
+                <h:outputText value="CT001" />
+
+                <h:outputText value="Tipo Trámite:" />
+                <h:outputText value="Trámite A" />
+
+                <h:outputText value="Estado Trámite:" />
+                <h:outputText value="En Proceso" />
+
+                <h:outputText value="Precio:" />
+                <h:outputText value="$1000" />
+            </h:panelGrid>
+
+            <!-- Sección de Datos Cliente -->
+            <h:panelGrid columns="2" styleClass="custom-grid">
+                <h:outputText value="Nombre:" />
+                <h:outputText value="Juan" />
+
+                <h:outputText value="Apellido:" />
+                <h:outputText value="Pérez" />
+
+                <h:outputText value="DNI:" />
+                <h:outputText value="12345678" />
+
+                <h:outputText value="Correo:" />
+                <h:outputText value="juan.perez@example.com" />
+            </h:panelGrid>
+
+            
+            <p:commandButton value="Anular Trámite" action="#" style="color:red;" />
+        </h:form>
+    </ui:define>
+</ui:composition>

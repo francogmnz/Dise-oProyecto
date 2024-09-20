@@ -124,7 +124,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <p:column>
                     <f:facet name="header">Número Trámite</f:facet>
-                        #{tramite.nroTramite}
+                    <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
+                                   value="#{tramite.nroTramite}" 
+                                   style="text-decoration: none; color: blue;" />
                 </p:column>
 
                 <p:column>

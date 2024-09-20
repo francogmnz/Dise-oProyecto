@@ -134,8 +134,14 @@ public class ExpertoRegistrarTramite {
             dtoEstado.setOperacion("like");
             dtoEstado.setValor(nombreEstadoTramite);
             criterioList.add(dtoEstado);
-            EstadoTramite estadoEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
-
+            
+            EstadoTramite estadoEncontrado = null;
+            
+            List estadoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+            if(!estadoList.isEmpty()){
+                estadoEncontrado = (EstadoTramite) estadoList.get(0);
+            }
+            
             criterioList.clear();
 
             dtoEstado.setAtributo("estadoTramite"); // buscar los Tramites relacionados al TipoTramite encontrado
@@ -255,7 +261,7 @@ public class ExpertoRegistrarTramite {
 
         // seteamos los datos del cliente encontrado en el dto
         try {
-            clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+            this.clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
 
             dtoCliente.setNombreCliente(clienteEncontrado.getNombreCliente());
             dtoCliente.setApellidoCliente(clienteEncontrado.getApellidoCliente());
@@ -298,7 +304,7 @@ public class ExpertoRegistrarTramite {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         Tramite tramiteCreado = new Tramite();
-//        tramiteCreado.setNroTramite(generarNroTramite());
+        //tramiteCreado.setNroTramite(generarNroTramite());
         tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
 
         tramiteCreado.setCliente(clienteEncontrado);
@@ -472,4 +478,6 @@ public class ExpertoRegistrarTramite {
         }
         return estadosTramite;
     }
+    
+    
 }
