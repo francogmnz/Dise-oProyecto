@@ -104,6 +104,10 @@
                         <p:column>
                             <f:facet name="header">Fecha Baja</f:facet>
                                 #{consultor.fechaBajaConsultor}
+
+                        <p:column>
+                            <f:facet name="header">Fecha Baja</f:facet>
+                                #{consultor.fechaHoraBajaConsultor}
                         </p:column>
 
 
@@ -114,6 +118,11 @@
                             </p:commandButton>
                             <p:spacer width="5"/>
                             <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmConsultorLista.darDeBajaConsultor(consultor.legajoConsultor)}" disabled="#{consultor.fechaBajaConsultor != null}">
+                            <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmConsultorLista.irModificarConsultor(consultor.legajoConsultor)}" disabled="#{consultor.fechaHoraBajaConsultor != null}">
+                                <f:ajax render="@form"/>
+                            </p:commandButton>
+                            <p:spacer width="5"/>
+                            <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmConsultorLista.darDeBajaConsultor(consultor.legajoConsultor)}" disabled="#{consultor.fechaHoraBajaConsultor != null}">
 
                                 <p:confirm header="Anulación de #{consultor.legajoConsultor} #{consultor.nombreConsultor}" message="¿Está seguro?" icon="ui-icon-alert"/>
 

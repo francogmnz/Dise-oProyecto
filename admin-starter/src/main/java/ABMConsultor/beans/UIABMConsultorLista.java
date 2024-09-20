@@ -73,6 +73,7 @@ public class UIABMConsultorLista implements Serializable {
             consultorGrillaUI.setNumMaximoTramites(consultorDTO.getNumMaximoTramites());
             consultorGrillaUI.setFechaAltaConsultor(consultorDTO.getFechaAltaConsultor());
             consultorGrillaUI.setFechaBajaConsultor(consultorDTO.getFechaBajaConsultor());
+            consultorGrillaUI.setFechaHoraBajaConsultor(consultorDTO.getFechaHoraBajaConsultor());
             consultorsGrilla.add(consultorGrillaUI);
         }
         return consultorsGrilla;
@@ -96,6 +97,7 @@ public class UIABMConsultorLista implements Serializable {
                     
         } catch (ConsultorException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create("Error!").error().detail("No se puede dar de baja, el consultor tiene asignado al menos un tramite.").add();
         }
     }
     

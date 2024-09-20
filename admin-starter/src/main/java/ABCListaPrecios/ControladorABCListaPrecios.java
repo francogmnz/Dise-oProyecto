@@ -26,6 +26,12 @@ public class ControladorABCListaPrecios {
     
     public ListaPrecios buscarUltimaLista(){
         return expertoABCListaPrecios.buscarUltimaLista();
+    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
+        return expertoABCListaPrecios.mostrarListasPrecios(fechaHoraHastaListaPreciosFiltro);
+    }
+    
+    public ListaPrecios buscarUltimaLista(String s){
+        return expertoABCListaPrecios.buscarUltimaLista(s);
     }
 
     public void darDeBajaListaPrecios(int codigo) throws ListaPreciosException {

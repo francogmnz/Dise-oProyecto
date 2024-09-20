@@ -11,6 +11,13 @@ public class ConsultorGrillaUI {
     private Timestamp fechaAltaConsultor;
     private Timestamp fechaBajaConsultor;
     
+public class ConsultorGrillaUI {
+
+    private int legajoConsultor;
+    private String nombreConsultor;
+    private int numMaximoTramites;
+    private Timestamp fechaHoraBajaConsultor;
+
     public int getLegajoConsultor() {
         return legajoConsultor;
     }
@@ -51,5 +58,13 @@ public class ConsultorGrillaUI {
         this.fechaBajaConsultor = fechaBajaConsultor;
     }
 
+
+    public Timestamp getFechaHoraBajaConsultor() {
+        return fechaHoraBajaConsultor;
+    }
+
+    public void setFechaHoraBajaConsultor(Timestamp fechaHoraBajaConsultor) {
+        this.fechaHoraBajaConsultor = fechaHoraBajaConsultor;
+    }
 
 }

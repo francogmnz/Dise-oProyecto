@@ -1,5 +1,6 @@
 package ABCListaPrecios;
 
+import ABCListaPrecios.beans.UIABCListaPreciosLista;
 import ABCListaPrecios.dtos.DetalleListaPreciosDTO;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
@@ -35,6 +36,7 @@ public class ExpertoABCListaPrecios {
     
 
     public List<ListaPreciosDTO> buscarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
+    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
         if (fechaHoraHastaListaPreciosFiltro != null) {
             DTOCriterio unCriterio = new DTOCriterio();
@@ -78,6 +80,19 @@ public class ExpertoABCListaPrecios {
         unCriterio.setAtributo("fechaHoraBajaListaPrecios");
         unCriterio.setOperacion("isNull");
         lCriterio.add(unCriterio);
+        return listasPreciosResultado;
+    }
+
+    public ListaPrecios buscarUltimaLista(String crit) {
+//    BUSCA ULTIMA LISTA Y LA DEVUELVE
+        List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
+        DTOCriterio unCriterio = new DTOCriterio();
+        if (crit == "noNulas") {
+            unCriterio.setAtributo("fechaHoraBajaListaPrecios");
+            unCriterio.setOperacion("=");
+            unCriterio.setValor(null);
+            lCriterio.add(unCriterio);
+        }
 
         List objetoList = FachadaPersistencia.getInstance().buscar("ListaPrecios", lCriterio);
         ListaPrecios ultimaListaPrecios = null;
@@ -120,6 +135,7 @@ public class ExpertoABCListaPrecios {
         }
         if (nuevaFechaHoraDesde.before(new Date())) {
             throw new ListaPreciosException("Las fecha desde ingresada es menor a la actual. Intentelo nuevamente.");
+            throw new ListaPreciosException("Las fecha desde ingresada es menor a la fecha actual. Intentelo nuevamente.");
         }
         if (nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
             throw new ListaPreciosException("Las fecha desde ingresada es menor a la ultima fecha desde. Intentelo nuevamente.");
@@ -144,6 +160,7 @@ public class ExpertoABCListaPrecios {
 
         if (lListaPrecios.size() > 0) {
             throw new ListaPreciosException("El código de estado ya existe");
+            throw new ListaPreciosException("El código ya existe");
         } else {
             ListaPrecios nuevaListaPrecios = new ListaPrecios();
             nuevaListaPrecios.setCodListaPrecios(nuevaListaPreciosDTO.getCodListaPrecios());
@@ -167,6 +184,8 @@ public class ExpertoABCListaPrecios {
                 nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(0);
                 int codTipoTramite = tipoTramite.getCodTipoTramite();
                 List<DetalleListaPreciosDTO> detalles = nuevaListaPreciosDTO.getDetalles();
+
+//                isENCONTRADO ES PARA SABER SI SE PONE EL PRECIO DE LA ULTIMA LISTA (CUANDO NO HAY PRECIO EN LA IMPORTADA) O PONER EL PRECIO DE LA IMPORTADA
                 boolean isEncontrado = false;
                 for (DetalleListaPreciosDTO detalle : detalles) {
                     int codigoTT = detalle.getCodTipoTramite();
@@ -227,6 +246,9 @@ public class ExpertoABCListaPrecios {
         FachadaPersistencia.getInstance().guardar(ultiLP2);
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
+            FachadaPersistencia.getInstance().guardar(nuevaListaPrecios);
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+        }
     }
 
     public StreamedContent exportarListaPrecios(int codigo) {
@@ -234,6 +256,7 @@ public class ExpertoABCListaPrecios {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
+//    BUSCA LA LISTA DE PRECIOS POR EL CODIGO EN PARAMETRO
         dto.setAtributo("codListaPrecios");
         dto.setOperacion("=");
         dto.setValor(codigo);
@@ -243,6 +266,7 @@ public class ExpertoABCListaPrecios {
         ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
 
         try {
+//            CREA EL ARCHIVO DE EXCEL SETEANDOLE LOS DATOS DE LA LISTA ENCONTRADA
             Workbook libro = new XSSFWorkbook();
             final String nombreArchivo = "./tmp.xlsx";
             Sheet hoja = libro.createSheet("Hoja 1");
@@ -288,10 +312,44 @@ public class ExpertoABCListaPrecios {
 
         } catch (IOException ex) {
             Logger.getLogger(ExcelFileUI.class
+            Logger.getLogger(UIABCListaPreciosLista.class
                     .getName()).log(Level.SEVERE, null, ex);
             Messages.create(ex.getMessage()).error().add();
         }
         return fileD;
+    }
+
+    public void darDeBajaListaPrecios(int codigo) {
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
+//    BUSCA LA LISTA DE PRECIOS POR EL CODIGO EN PARAMETRO
+        dto.setAtributo("codListaPrecios");
+        dto.setOperacion("=");
+        dto.setValor(codigo);
+
+        criterioList.add(dto);
+
+        ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
+        ListaPrecios ultiLP = buscarUltimaLista("noNulas");
+//        VERIFICA SI ES LA LISTA ENCONTRADA ES LA ULTIMA LISTA DE PRECIOS
+        if (codigo == ultiLP.getCodListaPrecios()) {
+//            LE SETEA LA FECHAHORABAJA
+            listaPreciosEncontrada.setFechaHoraBajaListaPrecios(new Timestamp(System.currentTimeMillis()));
+        }
+
+        Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+        FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
+
+//        VUELVE A BUSCAR LA ULTIMA LISTA PARA SETEARLE LA FECHAHORAHASTA IGUAL A FECHAHORAHASTA DE LA LISTA QUE DIMOS DE BAJA
+        ListaPrecios ultiLP2 = buscarUltimaLista("noNulas");
+
+        ultiLP2.setFechaHoraHastaListaPrecios(fh);
+        FachadaPersistencia.getInstance().guardar(ultiLP2);
+        FachadaPersistencia.getInstance().finalizarTransaccion();
 
     }
 

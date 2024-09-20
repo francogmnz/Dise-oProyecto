@@ -12,14 +12,14 @@ import java.util.List;
  * @author licciardi
  */
 public class Consultor extends Entidad {
-    
+
     private int legajoConsultor;
     private String nombreConsultor;
     private int numMaximoTramites;
     private Timestamp fechaAltaConsultor;
     private Timestamp fechaBajaConsultor;
+    private Timestamp fechaHoraBajaConsultor;
     private List<AgendaConsultor> agendas;  // Relación ManyToMany No se si va..
-    
 
     public Consultor() {
     }
@@ -72,5 +72,5 @@ public class Consultor extends Entidad {
     public void setAgendas(List<AgendaConsultor> agendas) {
         this.agendas = agendas;
     }
-  
+
 }

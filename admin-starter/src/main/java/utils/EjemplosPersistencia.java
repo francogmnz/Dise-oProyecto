@@ -198,6 +198,7 @@ public class EjemplosPersistencia {
     consultor1.setNombreConsultor("Carlos Fernández");
     consultor1.setNumMaximoTramites(5);
     consultor1.setFechaBajaConsultor(null);
+    consultor1.setFechaHoraBajaConsultor(null);
     
 
  
@@ -210,6 +211,7 @@ public class EjemplosPersistencia {
     consultor2.setNombreConsultor("Ana López");
     consultor2.setNumMaximoTramites(3);
     consultor2.setFechaBajaConsultor(null);
+    consultor2.setFechaHoraBajaConsultor(null);
     
 
 

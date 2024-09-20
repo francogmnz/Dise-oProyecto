@@ -91,6 +91,9 @@ public class UIABCListaPrecios implements Serializable {
 // GETTERS y SETTERS
 
     public UIABCListaPrecios() {
+//        CONSTRUCTOR
+    public UIABCListaPrecios() {
+//        CON ESTO RECIBE LOS PARAMETROS ENVIADOS EN LA URL
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
@@ -102,6 +105,9 @@ public class UIABCListaPrecios implements Serializable {
         if (cod > 0) {
             insert = false;
             setCodListaPrecios(cod + 1);
+//        SETEAR POR DEFECTO LOS VALORES EN LOS CAMPOS
+        if (cod > 0) {
+            setCodListaPrecios(cod);
             setFechaHoraDesdeListaPrecios(StringToTimestamp(fd));
             setFechaHoraHastaListaPrecios(null);
         }
@@ -111,6 +117,12 @@ public class UIABCListaPrecios implements Serializable {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize() / 1024f);
         FacesContext.getCurrentInstance().addMessage(null, message);
 
+//    MANEJA LA IMPORTACION DEL ARCHIVO
+    public void handleFileUpload(FileUploadEvent event) {
+//        MUESTRA EL MENSAJE DE SUBIDA EXITOSA DEL ARCHIVO
+        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize() / 1024f);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+//        CREA UN WORKBOOK -> CREA UNA PAGINA ->  CREA LAS FILAS Y COLUMNAS, LES SETEA LOS VALORES
         try (InputStream inp = event.getFile().getInputStream()) {
             Workbook wb = WorkbookFactory.create(inp);
             Sheet sheet = wb.getSheetAt(0);
@@ -126,6 +138,11 @@ public class UIABCListaPrecios implements Serializable {
 //                }
 
                 if (cell != null && cell.getCellType() == CellType.NUMERIC) {   //VER ACA
+                if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
+                    break;
+                }
+
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {   
                     int codTipoTramite = (int) cell.getNumericCellValue();
                     detalle.setCodTipoTramite(codTipoTramite);
                     Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
@@ -164,6 +181,9 @@ public class UIABCListaPrecios implements Serializable {
 
     public static Timestamp StringToTimestamp(String s) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // El formato esperado
+//        SIRVE PARA CONVERTIR UN STRING A TIMESTAMP
+    public static Timestamp StringToTimestamp(String s) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
         Timestamp t = null;
 
         try {
@@ -175,6 +195,8 @@ public class UIABCListaPrecios implements Serializable {
 
             // Imprimir el Timestamp
             System.out.println("El Timestamp es: " + t);
+            // Convertir Date a Timestamp
+            t = new Timestamp(date.getTime());
             return t;
         } catch (Exception e) {
             e.printStackTrace(); // Manejar el caso en que el formato es incorrecto

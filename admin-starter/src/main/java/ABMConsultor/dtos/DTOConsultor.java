@@ -14,6 +14,20 @@ public class DTOConsultor {
     public DTOConsultor() {
     }
     
+package ABMConsultor.dtos;
+
+import java.sql.Timestamp;
+
+public class DTOConsultor {
+
+    private int legajoConsultor;
+    private String nombreConsultor;
+    private int numMaximoTramites;
+    private Timestamp fechaHoraBajaConsultor;
+
+    public DTOConsultor() {
+    }
+
     public int getLegajoConsultor() {
         return legajoConsultor;
     }
@@ -57,3 +71,12 @@ public class DTOConsultor {
 
 }
 
+    public Timestamp getFechaHoraBajaConsultor() {
+        return fechaHoraBajaConsultor;
+    }
+
+    public void setFechaHoraBajaConsultor(Timestamp fechaHoraBajaConsultor) {
+        this.fechaHoraBajaConsultor = fechaHoraBajaConsultor;
+    }
+
+}
