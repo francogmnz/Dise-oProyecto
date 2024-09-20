@@ -59,7 +59,7 @@ public class ExpertoRegistrarTramiteWeb {
         //Cliente clienteIngresado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
         try {
             // Intentar obtener el cliente
-            this.cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
+            cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
 
             // Validar si el DNI coincide
             if (dniCliente != cliente.getDniCliente()) {
@@ -182,6 +182,10 @@ public class ExpertoRegistrarTramiteWeb {
     
     public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
         
+        TipoTramite tipoTramiteRelacionado = null;
+        EstadoTramite estadoTramite = null;
+        Version version = null;
+        ListaPrecios listaPrecios = null;
     
         List<DTOCriterio> criterioTipoTramiteRelacionadoList = new ArrayList<>();
         DTOCriterio criterioCodigoTT = new DTOCriterio();
@@ -200,7 +204,13 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioTipoTramiteRelacionadoList.add(criterioFechaHoraBajaTT);
         
-        TipoTramite tipoTramiteRelacionado = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramiteRelacionadoList).get(0);
+        List<Object> tipoTramiteList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramiteRelacionadoList);
+        if (tipoTramiteList != null && !tipoTramiteList.isEmpty()) {
+            tipoTramiteRelacionado = (TipoTramite) tipoTramiteList.get(0);
+        } else {
+            System.out.println("Error: No se encontró un TipoTramite con los criterios especificados.");
+            return null;  // O maneja el error de forma adecuada
+        }
         
         List<DTOCriterio> criterioEstadoTramiteList = new ArrayList<>();
         DTOCriterio criterioNombreEstadoTramite = new DTOCriterio();
@@ -219,11 +229,17 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioEstadoTramiteList.add(criterioFechaHoraBajaET);
         
-        EstadoTramite estadoTramite = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioEstadoTramiteList).get(0);
+        List<Object> estadoTramiteList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioEstadoTramiteList);
+        if (estadoTramiteList != null && !estadoTramiteList.isEmpty()) {
+            estadoTramite = (EstadoTramite) estadoTramiteList.get(0);
+        } else {
+            System.out.println("Error: No se encontró un EstadoTramite con los criterios especificados.");
+            return null;  // O maneja el error de forma adecuada
+        }
         
         Tramite nuevoTramite = new Tramite();
         
-        nuevoTramite.setCliente(this.cliente);
+        nuevoTramite.setCliente(cliente);
         nuevoTramite.setTipoTramite(tipoTramiteRelacionado);
         nuevoTramite.setEstadoTramite(estadoTramite);
         nuevoTramite.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
@@ -256,7 +272,13 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioUltimaVersionTTList.add(criterioTTRelacionado);
         
-        Version version = (Version) FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionTTList).get(0);
+        List<Object> versionList = FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionTTList);
+        if (versionList != null && !versionList.isEmpty()) {
+            version = (Version) versionList.get(0);
+        } else {
+            System.out.println("Error: No se encontró una Versión con los criterios especificados.");
+            return null;  // O maneja el error de forma adecuada
+        }
         
         nuevoTramite.setVersion(version);
            
@@ -292,7 +314,7 @@ public class ExpertoRegistrarTramiteWeb {
         DTOCriterio criterioFechaHoraBajaLP = new DTOCriterio();
         
         criterioFechaHoraBajaLP.setAtributo("fechaHoraBajaListaPrecios");
-        criterioFechaHoraBajaLP.setOperacion("null");
+        criterioFechaHoraBajaLP.setOperacion("=");
         criterioFechaHoraBajaLP.setValor(null);
         
         criterioListaPreciosList.add(criterioFechaHoraBajaLP);
@@ -313,7 +335,13 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioListaPreciosList.add(criterioFechaHoraHastaLP); 
         
-        ListaPrecios listaPrecios = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioListaPreciosList).get(0);
+        List<Object> listaPreciosList = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioListaPreciosList);
+        if (listaPreciosList != null && !listaPreciosList.isEmpty()) {
+            listaPrecios = (ListaPrecios) listaPreciosList.get(0);
+        } else {
+            System.out.println("Error: No se encontró una ListaPrecios con los criterios especificados.");
+            return null;  // O maneja el error de forma adecuada
+        }
         
         List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = listaPrecios.getTipoTramiteListaPrecios();
         
@@ -329,10 +357,10 @@ public class ExpertoRegistrarTramiteWeb {
         DTOResumen dtoResumen = new DTOResumen();
         
         
-        dtoResumen.setNombreCliente(this.cliente.getNombreCliente());
-        dtoResumen.setApellidoCliente(this.cliente.getApellidoCliente());
-        dtoResumen.setDniCliente(this.cliente.getDniCliente());
-        dtoResumen.setMailCliente(this.cliente.getMailCliente());
+        dtoResumen.setNombreCliente(nuevoTramite.getCliente().getNombreCliente());
+        dtoResumen.setApellidoCliente(nuevoTramite.getCliente().getApellidoCliente());
+        dtoResumen.setDniCliente(nuevoTramite.getCliente().getDniCliente());
+        dtoResumen.setMailCliente(nuevoTramite.getCliente().getMailCliente());
         
         dtoResumen.setNombreTipoTramite(tipoTramiteRelacionado.getNombreTipoTramite());
         dtoResumen.setDescripcionTipoTramite(tipoTramiteRelacionado.getDescripcionTipoTramite());

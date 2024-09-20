@@ -31,7 +31,7 @@ import utils.FachadaPersistencia;
  */
 public class ExpertoABMTipoTramite {
 
-    
+    /*
     // Este buscar tipoTramite de esta manera se debe al fetch join 
     public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
         
@@ -101,9 +101,9 @@ public class ExpertoABMTipoTramite {
  
     }
     
-
-    /*
-    Buscar tipoTramite sin fetch Join
+    */
+    
+    //Buscar tipoTramite sin fetch Join
     public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
         
         List<DTOCriterio> criterioBuscarTipoTramiteList = new ArrayList<DTOCriterio>();
@@ -165,7 +165,7 @@ public class ExpertoABMTipoTramite {
         return tipoTramiteResultado;
     
     }
-    */
+    
 
     public List<DocumentacionDTO> obtenerDocumentacionesActivas(){
         List<DTOCriterio> criterioDocumentacionesActivasList = new ArrayList<>();
