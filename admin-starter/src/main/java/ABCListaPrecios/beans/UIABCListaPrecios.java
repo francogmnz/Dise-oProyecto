@@ -90,7 +90,6 @@ public class UIABCListaPrecios implements Serializable {
     }
 // GETTERS y SETTERS
 
-    public UIABCListaPrecios() {
 //        CONSTRUCTOR
     public UIABCListaPrecios() {
 //        CON ESTO RECIBE LOS PARAMETROS ENVIADOS EN LA URL
@@ -100,11 +99,6 @@ public class UIABCListaPrecios implements Serializable {
 
         int cod = Integer.parseInt(request.getParameter("codLP"));
         String fd = request.getParameter("fDesde");
-
-        insert = true;
-        if (cod > 0) {
-            insert = false;
-            setCodListaPrecios(cod + 1);
 //        SETEAR POR DEFECTO LOS VALORES EN LOS CAMPOS
         if (cod > 0) {
             setCodListaPrecios(cod);
@@ -112,10 +106,6 @@ public class UIABCListaPrecios implements Serializable {
             setFechaHoraHastaListaPrecios(null);
         }
     }
-
-    public void handleFileUpload(FileUploadEvent event) {
-        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize() / 1024f);
-        FacesContext.getCurrentInstance().addMessage(null, message);
 
 //    MANEJA LA IMPORTACION DEL ARCHIVO
     public void handleFileUpload(FileUploadEvent event) {
@@ -133,11 +123,6 @@ public class UIABCListaPrecios implements Serializable {
                 Cell cell = row.getCell(0);
                 Cell cell2 = row.getCell(1);
 
-//                if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
-//                    break;
-//                }
-
-                if (cell != null && cell.getCellType() == CellType.NUMERIC) {   //VER ACA
                 if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
                     break;
                 }
@@ -164,6 +149,7 @@ public class UIABCListaPrecios implements Serializable {
         }
     }
 
+    
     public String agregarListaPrecios() {
         try {
             NuevaListaPreciosDTO nuevaListaPrecios = new NuevaListaPreciosDTO();
@@ -179,8 +165,6 @@ public class UIABCListaPrecios implements Serializable {
         }
     }
 
-    public static Timestamp StringToTimestamp(String s) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // El formato esperado
 //        SIRVE PARA CONVERTIR UN STRING A TIMESTAMP
     public static Timestamp StringToTimestamp(String s) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
@@ -189,12 +173,6 @@ public class UIABCListaPrecios implements Serializable {
         try {
             // Convertir String a Date
             Date date = dateFormat.parse(s);
-
-            // Convertir Date a Timestamp
-            t = new Timestamp(date.getTime());
-
-            // Imprimir el Timestamp
-            System.out.println("El Timestamp es: " + t);
             // Convertir Date a Timestamp
             t = new Timestamp(date.getTime());
             return t;

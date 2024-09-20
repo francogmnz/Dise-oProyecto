@@ -1,19 +1,3 @@
-
-package ABMConsultor.dtos;
-
-
-import java.sql.Timestamp;
-
-public class DTOConsultor {
-    private int legajoConsultor;
-    private String nombreConsultor;
-    private int numMaximoTramites;
-    private Timestamp fechaAltaConsultor;
-    private Timestamp fechaBajaConsultor;
-
-    public DTOConsultor() {
-    }
-    
 package ABMConsultor.dtos;
 
 import java.sql.Timestamp;
@@ -51,25 +35,6 @@ public class DTOConsultor {
     public void setNumMaximoTramites(int numMaximoTramites) {
         this.numMaximoTramites = numMaximoTramites;
     }
-
-    public Timestamp getFechaAltaConsultor() {
-        return fechaAltaConsultor;
-    }
-
-    public void setFechaAltaConsultor(Timestamp fechaAltaConsultor) {
-        this.fechaAltaConsultor = fechaAltaConsultor;
-    }
-
-    public Timestamp getFechaBajaConsultor() {
-        return fechaBajaConsultor;
-    }
-
-    public void setFechaBajaConsultor(Timestamp fechaBajaConsultor) {
-        this.fechaBajaConsultor = fechaBajaConsultor;
-    }
-
-
-}
 
     public Timestamp getFechaHoraBajaConsultor() {
         return fechaHoraBajaConsultor;

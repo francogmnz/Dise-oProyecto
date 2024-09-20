@@ -22,7 +22,7 @@
             <column name="nro_maximo_tramites"/>
         </property>
 
-        <property name="fechaBajaConsultor" column="fecha_hora_baja_consultor" type="timestamp"/>
+        <property name="fechaHoraBajaConsultor" column="fecha_hora_baja_consultor" type="timestamp"/>
 
 
 

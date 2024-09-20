@@ -51,17 +51,6 @@ public class UIABCListaPreciosLista implements Serializable {
         this.fechaHoraHastaListaPreciosFiltro = fechaHoraHastaListaPreciosFiltro;
     }
 
-    public void filtrar() {
-    }
-    
-     public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
-        return controladorABCListaPrecios.exportarListaPrecios(codigo);
-    }
-
-    public List<ListaPreciosGrillaUI> buscarListasPrecios() {
-
-        List<ListaPreciosGrillaUI> listasPreciosGrilla = new ArrayList<>();
-        List<ListaPreciosDTO> listasPreciosDTO = controladorABCListaPrecios.buscarListasPrecios(new Timestamp(fechaHoraHastaListaPreciosFiltro.getTime()));
     public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
         return controladorABCListaPrecios.exportarListaPrecios(codigo);
     }
@@ -84,30 +73,7 @@ public class UIABCListaPreciosLista implements Serializable {
         return ordenarListaPrecios(listasPreciosGrilla);
     }
 
-//    public List<ListaPreciosGrillaUI> buscarListasPreciosSinBaja() {
-//
-//        List<ListaPreciosGrillaUI> listasPreciosGrilla = new ArrayList<>();
-//        List<ListaPrecios> listasPreciosDTO = controladorABCListaPrecios.buscarListasPreciosSinBaja();
-//        for (ListaPrecios listaPreciosDTO : listasPreciosDTO) {
-//            ListaPreciosGrillaUI listaPreciosGrilla = new ListaPreciosGrillaUI();
-//            listaPreciosGrilla.setCodListaPrecios(listaPreciosDTO.getCodListaPrecios());
-//            listaPreciosGrilla.setFechaHoraDesdeListaPrecios(listaPreciosDTO.getFechaHoraDesdeListaPrecios());
-//            listaPreciosGrilla.setFechaHoraHastaListaPrecios(listaPreciosDTO.getFechaHoraHastaListaPrecios());
-//            listaPreciosGrilla.setFechaHoraBajaListaPrecios(listaPreciosDTO.getFechaHoraBajaListaPrecios());
-//            listasPreciosGrilla.add(listaPreciosGrilla);
-//        }
-//        for (ListaPreciosGrillaUI l : listasPreciosGrilla) {
-//            System.out.println(l.getCodListaPrecios());
-//            System.out.println(l.getFechaHoraDesdeListaPrecios());
-//            System.out.println(l.getFechaHoraHastaListaPrecios());
-//            System.out.println(l.getFechaHoraBajaListaPrecios());
-//
-//        }
-//        return listasPreciosGrilla;
-//    }
-=======
 //    SUMA UN MINUTO AL TIMESTAMP EN PARAMETRO, PARA CUANDO SE CREA LA NUEVA LP SE PONGA ESTA FHASTAVIEJA EN FDESDENUEVA
->>>>>>> Stashed changes
     public static Timestamp sumarMinuto(Timestamp t) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(t.getTime());
@@ -115,16 +81,6 @@ public class UIABCListaPreciosLista implements Serializable {
         return new Timestamp(calendar.getTimeInMillis());
     }
 
-    public String irAgregarListaPrecios() {
-        BeansUtils.guardarUrlAnterior();
-        ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaLista();
-        String newCod = Integer.toString(ultimaLP.getCodListaPrecios());
-        Timestamp newFDesde = sumarMinuto(ultimaLP.getFechaHoraHastaListaPrecios());
-        System.out.println(newCod);
-        System.out.println(newFDesde);
-
-        if (ultimaLP == null) {
-            newCod = Integer.toString(0);
 //    NOS REDIRECCIONA A LA IMPORTACION DE LA NUEVA LISTA
     public String irAgregarListaPrecios() {
         BeansUtils.guardarUrlAnterior();
@@ -155,25 +111,6 @@ public class UIABCListaPreciosLista implements Serializable {
         switch (criterio) {
 
             case "codAsc":
-                lpGrilla.sort((lp1, lp2) -> Integer.compare(lp1.getCodListaPrecios(), lp2.getCodListaPrecios()));//Para ordenar las listas en orden ASC por el Codigo
-                break;
-            case "codDsc":
-                lpGrilla.sort((lp1, lp2) -> Integer.compare(lp2.getCodListaPrecios(), lp1.getCodListaPrecios()));//Para ordenar las listas en orden DESC por el Codigo
-                break;
-            case "fDAsc":
-                Collections.sort(lpGrilla, (lp1, lp2) -> lp1.getFechaHoraDesdeListaPrecios().compareTo(lp2.getFechaHoraDesdeListaPrecios()));  //Para ordenar las listas en orden ASC por el FDesde
-                break;
-            case "fDDsc":
-                Collections.sort(lpGrilla, (lp1, lp2) -> lp2.getFechaHoraDesdeListaPrecios().compareTo(lp1.getFechaHoraDesdeListaPrecios()));  //Para ordenar las listas en orden DESC por el FDesde
-                break;
-            case "fHAsc":
-                Collections.sort(lpGrilla, (lp1, lp2) -> lp1.getFechaHoraHastaListaPrecios().compareTo(lp2.getFechaHoraHastaListaPrecios()));  //Para ordenar las listas en orden ASC por el FHasta
-                break;
-            case "fHDsc":
-                Collections.sort(lpGrilla, (lp1, lp2) -> lp2.getFechaHoraHastaListaPrecios().compareTo(lp1.getFechaHoraHastaListaPrecios()));  //Para ordenar las listas en orden DESC por el FHasta
-                break;
-            default:
-                Collections.sort(lpGrilla, (lp1, lp2) -> lp2.getFechaHoraDesdeListaPrecios().compareTo(lp1.getFechaHoraDesdeListaPrecios()));  //Para ordenar las listas en orden ASC por el FDesde
                 lpGrilla.sort((lp1, lp2) -> {
                     if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
                         return 1;
@@ -253,10 +190,6 @@ public class UIABCListaPreciosLista implements Serializable {
         return lpGrilla;
     }
 
-    public boolean habilitarBtnBaja(ListaPreciosGrillaUI listaEnviada) {
-
-        if (listaEnviada.getFechaHoraBajaListaPrecios() == null) {
-            ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaLista();
 //    RENDERIZA EL BOTON DARDEBAJA SI ES LA ULTIMA LISTA DE PRECIOS, NO ESTA VIGENTE Y NO ES UNA LISTA PRECIOS PASADA
     public boolean habilitarBtnBaja(ListaPreciosGrillaUI listaEnviada) {
         Timestamp hoy = new Timestamp(System.currentTimeMillis());
@@ -267,15 +200,6 @@ public class UIABCListaPreciosLista implements Serializable {
         return false;
     }
 
-    public boolean isLaActiva(ListaPreciosGrillaUI listaEnviada) {
-        if (listaEnviada != null) {
-
-            Timestamp fd = listaEnviada.getFechaHoraDesdeListaPrecios();
-            Timestamp fh = listaEnviada.getFechaHoraHastaListaPrecios();
-            Timestamp fb = listaEnviada.getFechaHoraBajaListaPrecios();
-            if (fd == null || fh == null || fb != null) {
-                return false;
-            } else {
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES LA VIGENTE 
     public boolean isLaActiva(ListaPreciosGrillaUI listaEnviada) {
         if (listaEnviada != null) {
@@ -300,10 +224,6 @@ public class UIABCListaPreciosLista implements Serializable {
             return false;
         }
     }
-    
-    public boolean isFutura(ListaPreciosGrillaUI listaEnviada) {
-        Timestamp hoy = new Timestamp(System.currentTimeMillis());
-        if (listaEnviada.getFechaHoraDesdeListaPrecios().after(hoy)) {
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES A FUTURO
 
     public boolean isPasada(ListaPreciosGrillaUI listaEnviada) {
@@ -314,5 +234,5 @@ public class UIABCListaPreciosLista implements Serializable {
             return false;
         }
     }
-    
+
 }

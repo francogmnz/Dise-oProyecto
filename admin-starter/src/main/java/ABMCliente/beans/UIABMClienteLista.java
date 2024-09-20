@@ -89,7 +89,6 @@ public class UIABMClienteLista implements Serializable {
             Messages.create("Anulado").detail("Anulado").add();;
                     
         } catch (ClienteException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
             Messages.create("Error!").error().detail("No se puede dar de baja, el cliente tiene asignado al menos un tramite.").add();
         }
     }

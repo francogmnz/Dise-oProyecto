@@ -16,16 +16,6 @@ public class ControladorABCListaPrecios {
         expertoABCListaPrecios.agregarListaPrecios(nuevaListaPreciosDTO);
     }
 
-    public List<ListaPreciosDTO> buscarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
-        return expertoABCListaPrecios.buscarListasPrecios(fechaHoraHastaListaPreciosFiltro);
-    }
-
-    public List<ListaPrecios> buscarListasPreciosSinBaja() {
-        return expertoABCListaPrecios.buscarListasPreciosSinBaja();
-    }
-    
-    public ListaPrecios buscarUltimaLista(){
-        return expertoABCListaPrecios.buscarUltimaLista();
     public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
         return expertoABCListaPrecios.mostrarListasPrecios(fechaHoraHastaListaPreciosFiltro);
     }

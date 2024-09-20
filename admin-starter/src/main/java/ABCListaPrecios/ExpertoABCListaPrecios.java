@@ -5,7 +5,6 @@ import ABCListaPrecios.dtos.DetalleListaPreciosDTO;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
-import Excel.beans.ExcelFileUI;
 import entidades.ListaPrecios;
 import entidades.TipoTramite;
 import entidades.TipoTramiteListaPrecios;
@@ -33,9 +32,7 @@ import utils.FachadaPersistencia;
 public class ExpertoABCListaPrecios {
 
     private StreamedContent fileD;
-    
 
-    public List<ListaPreciosDTO> buscarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
     public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
         if (fechaHoraHastaListaPreciosFiltro != null) {
@@ -56,30 +53,6 @@ public class ExpertoABCListaPrecios {
             listaPreciosDTO.setFechaHoraBajaListaPrecios(listaPrecios.getFechaHoraBajaListaPrecios());
             listasPreciosResultado.add(listaPreciosDTO);
         }
-
-        return listasPreciosResultado;
-    }
-
-    public List<ListaPrecios> buscarListasPreciosSinBaja() {
-        List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
-
-        DTOCriterio unCriterio = new DTOCriterio();
-        unCriterio.setAtributo("fechaHoraBajaListaPrecios");
-        unCriterio.setOperacion("isNull");
-        lCriterio.add(unCriterio);
-
-        List listasPreciosResultado = FachadaPersistencia.getInstance().buscar("ListaPrecios", lCriterio);
-
-        return listasPreciosResultado;
-    }
-
-    public ListaPrecios buscarUltimaLista() {
-        List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
-
-        DTOCriterio unCriterio = new DTOCriterio();
-        unCriterio.setAtributo("fechaHoraBajaListaPrecios");
-        unCriterio.setOperacion("isNull");
-        lCriterio.add(unCriterio);
         return listasPreciosResultado;
     }
 
@@ -125,7 +98,6 @@ public class ExpertoABCListaPrecios {
                 ultimaListaPrecios = listaPrecios;
             }
         }
-
         Timestamp ultimaFechaHoraDesde = ultimaListaPrecios.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraDesde = nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraHasta = nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios();
@@ -134,7 +106,6 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("La fecha hasta ingresada una fecha hasta menor a una fecha desde. Intente nuevamente.");
         }
         if (nuevaFechaHoraDesde.before(new Date())) {
-            throw new ListaPreciosException("Las fecha desde ingresada es menor a la actual. Intentelo nuevamente.");
             throw new ListaPreciosException("Las fecha desde ingresada es menor a la fecha actual. Intentelo nuevamente.");
         }
         if (nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
@@ -159,7 +130,6 @@ public class ExpertoABCListaPrecios {
         List lListaPrecios = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
 
         if (lListaPrecios.size() > 0) {
-            throw new ListaPreciosException("El código de estado ya existe");
             throw new ListaPreciosException("El código ya existe");
         } else {
             ListaPrecios nuevaListaPrecios = new ListaPrecios();
@@ -208,44 +178,6 @@ public class ExpertoABCListaPrecios {
                 FachadaPersistencia.getInstance().guardar(nuevoTipoTramiteListaPrecios);
                 nuevaListaPrecios.addTipoTramiteListaPrecios(nuevoTipoTramiteListaPrecios);
             }
-
-            FachadaPersistencia.getInstance().guardar(nuevaListaPrecios);
-            FachadaPersistencia.getInstance().finalizarTransaccion();
-
-        }
-
-    }
-
-    public void darDeBajaListaPrecios(int codigo) {
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
-
-        dto.setAtributo("codListaPrecios");
-        dto.setOperacion("=");
-        dto.setValor(codigo);
-
-        criterioList.add(dto);
-
-        ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
-        ListaPrecios ultiLP = buscarUltimaLista();
-        System.out.println(ultiLP.getCodListaPrecios());
-        if (codigo == ultiLP.getCodListaPrecios()) {
-            listaPreciosEncontrada.setFechaHoraBajaListaPrecios(new Timestamp(System.currentTimeMillis()));
-        }
-        Timestamp fd = listaPreciosEncontrada.getFechaHoraDesdeListaPrecios();
-        Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-        FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
-
-        ListaPrecios ultiLP2 = buscarUltimaLista();
-        System.out.println(ultiLP2.getCodListaPrecios());
-
-        ultiLP2.setFechaHoraHastaListaPrecios(fh);
-        FachadaPersistencia.getInstance().guardar(ultiLP2);
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-
             FachadaPersistencia.getInstance().guardar(nuevaListaPrecios);
             FachadaPersistencia.getInstance().finalizarTransaccion();
         }
@@ -255,7 +187,6 @@ public class ExpertoABCListaPrecios {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-
 //    BUSCA LA LISTA DE PRECIOS POR EL CODIGO EN PARAMETRO
         dto.setAtributo("codListaPrecios");
         dto.setOperacion("=");
@@ -311,7 +242,6 @@ public class ExpertoABCListaPrecios {
                     .build();
 
         } catch (IOException ex) {
-            Logger.getLogger(ExcelFileUI.class
             Logger.getLogger(UIABCListaPreciosLista.class
                     .getName()).log(Level.SEVERE, null, ex);
             Messages.create(ex.getMessage()).error().add();

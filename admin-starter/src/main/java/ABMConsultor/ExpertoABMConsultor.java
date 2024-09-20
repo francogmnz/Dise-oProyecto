@@ -48,8 +48,6 @@ public class ExpertoABMConsultor {
             dtoConsultor.setLegajoConsultor(consultor.getLegajoConsultor());
             dtoConsultor.setNombreConsultor(consultor.getNombreConsultor());
             dtoConsultor.setNumMaximoTramites(consultor.getNumMaximoTramites());
-            dtoConsultor.setFechaBajaConsultor(consultor.getFechaBajaConsultor());
-            dtoConsultor.setFechaAltaConsultor(consultor.getFechaAltaConsultor());
             dtoConsultor.setFechaHoraBajaConsultor(consultor.getFechaHoraBajaConsultor());
             consultoresResultado.add(dtoConsultor);
         }
@@ -75,7 +73,6 @@ public class ExpertoABMConsultor {
             Consultor consultor = new Consultor();
             consultor.setLegajoConsultor(nuevoConsultorDTO.getLegajoConsultor());
             consultor.setNombreConsultor(nuevoConsultorDTO.getNombreConsultor());
-            consultor.setFechaAltaConsultor(new Timestamp(System.currentTimeMillis()));
             consultor.setNumMaximoTramites(nuevoConsultorDTO.getNumMaximoTramites());
 
             FachadaPersistencia.getInstance().guardar(consultor);
@@ -138,7 +135,6 @@ public class ExpertoABMConsultor {
         criterioList.add(dto);
         DTOCriterio dto2 = new DTOCriterio();
 
-        dto2.setAtributo("fechaBajaConsultor");
         dto2.setAtributo("fechaHoraBajaConsultor");
         dto2.setOperacion("=");
         dto2.setValor(null);
@@ -171,7 +167,6 @@ public class ExpertoABMConsultor {
 
         }
 
-        consultorEncontrado.setFechaBajaConsultor(new Timestamp(System.currentTimeMillis()));
         consultorEncontrado.setFechaHoraBajaConsultor(new Timestamp(System.currentTimeMillis()));
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);

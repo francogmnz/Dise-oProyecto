@@ -25,13 +25,11 @@
             }
             .laActiva {
                 background-color: #7bff9a;
-            }
-            .futura{
-                background-color: #ffff8f;
                 font-weight: bolder;
             }
             .pasada{
-                background-color: #d9d9d9;
+                background-color: #a5a3a3;
+                color: whitesmoke;
             }
         </style>
         <h:form>
@@ -67,15 +65,12 @@
                                         <f:selectItem itemLabel="Fecha Desde Lista Precio (Descendente)" itemValue="fDDsc"/>
                                         <f:selectItem itemLabel="Fecha Hasta Lista Precio (Ascendente)" itemValue="fHAsc"/>
                                         <f:selectItem itemLabel="Fecha Hasta Lista Precio (Descendente)" itemValue="fHDsc"/>
-                                        <p:ajax event="change" listener="#{uiabmListaPreciosLista.buscarListasPrecios()}" update="grid1" />
                                         <p:ajax event="change" listener="#{uiabmListaPreciosLista.mostrarListasPrecios()}" update="grid1" />
                                     </p:selectOneMenu>
                                     <p:outputLabel for="select" value="Ordenar por:"/>
                                     <p:message for="select"/>
                                 </div>
                             </div>
-                            <!--                           FIN COMBOBOX PARA ORDENAR-->
-
 
                             <div class="ui-g-12 ui-md-1"/>  <!--                            //Rellenador-->
 
@@ -86,8 +81,6 @@
                     </div>
                 </div>
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.buscarListasPrecios()}" var="listaPrecios" 
-                             rowStyleClass="#{uiabmListaPreciosLista.isLaActiva(listaPrecios) ? 'laActiva' : uiabmListaPreciosLista.isAnulada(listaPrecios) ? 'deBaja' : uiabmListaPreciosLista.isFutura(listaPrecios) ? 'futura' : 'pasada'}">
                 <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.mostrarListasPrecios()}" var="listaPrecios" 
                              rowStyleClass="#{uiabmListaPreciosLista.isLaActiva(listaPrecios) ? 'laActiva' : uiabmListaPreciosLista.isAnulada(listaPrecios) ? 'deBaja' : uiabmListaPreciosLista.isPasada(listaPrecios) ? 'pasada':''}">
 

@@ -13,7 +13,7 @@ public class ListaPrecios extends Entidad {
     private Timestamp fechaHoraBajaListaPrecios;
     private Timestamp fechaHoraDesdeListaPrecios;
     private Timestamp fechaHoraHastaListaPrecios;
-    private List<TipoTramiteListaPrecios> tipoTramiteListaPrecios;  // Relación OneToMany con TipoTramiteListaPrecios
+    private List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = new ArrayList<>();  // Relación OneToMany con TipoTramiteListaPrecios
 
     public ListaPrecios() {
     }

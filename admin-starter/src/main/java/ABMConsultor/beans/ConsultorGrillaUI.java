@@ -1,16 +1,7 @@
-
 package ABMConsultor.beans;
 
 import java.sql.Timestamp;
 
-
-public class ConsultorGrillaUI {
-    private int legajoConsultor;
-    private String nombreConsultor;
-    private int numMaximoTramites;
-    private Timestamp fechaAltaConsultor;
-    private Timestamp fechaBajaConsultor;
-    
 public class ConsultorGrillaUI {
 
     private int legajoConsultor;
@@ -41,23 +32,6 @@ public class ConsultorGrillaUI {
     public void setNumMaximoTramites(int numMaximoTramites) {
         this.numMaximoTramites = numMaximoTramites;
     }
-
-    public Timestamp getFechaAltaConsultor() {
-        return fechaAltaConsultor;
-    }
-
-    public void setFechaAltaConsultor(Timestamp fechaAltaConsultor) {
-        this.fechaAltaConsultor = fechaAltaConsultor;
-    }
-
-    public Timestamp getFechaBajaConsultor() {
-        return fechaBajaConsultor;
-    }
-
-    public void setFechaBajaConsultor(Timestamp fechaBajaConsultor) {
-        this.fechaBajaConsultor = fechaBajaConsultor;
-    }
-
 
     public Timestamp getFechaHoraBajaConsultor() {
         return fechaHoraBajaConsultor;
