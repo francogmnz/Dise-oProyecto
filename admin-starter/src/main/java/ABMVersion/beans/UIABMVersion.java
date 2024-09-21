@@ -57,6 +57,14 @@ public class UIABMVersion implements Serializable {
     private boolean editable;
     private String nodosPosibles = "";
 
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+    
     // Constructor
     public UIABMVersion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -97,23 +105,60 @@ public class UIABMVersion implements Serializable {
     // Método para preparar los nodos del diagrama
     public void prepararNodos() {
      
+        List<NodoIU> lestados = new ArrayList<NodoIU>();
 
-        // Convertir a JSON
+        //Nodos Ejemplo
+        NodoIU unE = new NodoIU();
+        unE.setCodigo(1);
+        unE.setNombre("ESTADO INICIAL");
+        unE.setXpos(80);
+        unE.setYpos(80);
+        unE.addDestino(2);
+        unE.addDestino(3);
+        lestados.add(unE);
+
+        unE = new NodoIU();
+        unE.setCodigo(2);
+        unE.setNombre("ESTADO DOS");
+        unE.setXpos(391);
+        unE.setYpos(39);
+        unE.addDestino(3);
+        lestados.add(unE);
+
+        unE = new NodoIU();
+        unE.setCodigo(3);
+        unE.setNombre("ESTADO TRES");
+        unE.setXpos(522);
+        unE.setYpos(170);
+        lestados.add(unE);
+        //
         Gson gson = new Gson();
-
-        // Actualizar título y estado editable
-        titulo = "Versión Dinámica";
+        cargarJSON = gson.toJson(lestados);
+        titulo = "Versión 1";
         editable = true;
 
-        // Estados posibles dinámicos (menú)
-        List<NodoMenuIU> lestadosP = listaEstadosTramite.stream()
-                .map(estado -> {
-                    NodoMenuIU nodoMenu = new NodoMenuIU();
-                    nodoMenu.setCodigo(estado.getCodEstadoTramite());
-                    nodoMenu.setNombre(estado.getNombreEstadoTramite());
-                    return nodoMenu;
-                })
-                .collect(Collectors.toList());
+        //Estados Posibles
+        //Ejemplo
+        List<NodoMenuIU> lestadosP = new ArrayList<NodoMenuIU>();
+        NodoMenuIU unEP = new NodoMenuIU();
+        unEP.setCodigo(1);
+        unEP.setNombre("ESTADO INICIAL");
+        lestadosP.add(unEP);
+
+        unEP = new NodoMenuIU();
+        unEP.setCodigo(2);
+        unEP.setNombre("ESTADO DOS");
+        lestadosP.add(unEP);
+
+        unEP = new NodoMenuIU();
+        unEP.setCodigo(3);
+        unEP.setNombre("ESTADO TRES");
+        lestadosP.add(unEP);
+
+        unEP = new NodoMenuIU();
+        unEP.setCodigo(4);
+        unEP.setNombre("ESTADO CUATRO");
+        lestadosP.add(unEP);
 
         nodosPosibles = gson.toJson(lestadosP);
     }

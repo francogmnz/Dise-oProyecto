@@ -2,7 +2,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
-                template="#{layoutMB.template}">
+             >
+
 
     <ui:define name="metadata">
         <f:metadata>
@@ -14,8 +15,9 @@
         Versión 
     </ui:define>
     <ui:define name="body">
-        
+        <h:outputScript name="jscolor/jscolor.js" />
     <h:form id="form" prependId="false">
+        
         <p:panel styleClass="box-primary card">
       <div class="ui-g ui-fluid">
                     <!-- Número de Versión -->
@@ -76,11 +78,41 @@
             </p:panel>
         <p:panel styleClass="box-primary card" >
         <!-- Campo de entrada para el código del artículo -->
-        <div class="ui-g ui-fluid" style="height:70vh">
-            <iframe height="100%" width="100%" src="drawGIU.xhtml" style="border-color: #cacaca;border-width: 1px;" />
-       </div>
-        </p:panel>
 
+        
+        <div class="wrapper" style="height:100vh">
+
+
+           <div class="col" id="seleccion" >
+
+
+           </div>
+           <div class="col-right">
+             <div class="menu">
+               <ul>
+                   <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">#{uiabmVersion.titulo}</li>
+               </ul>
+             </div>
+             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+                 <div id="btn-export" class="btn-export" onclick="guardar()">Guardar</div>
+
+               <div class="bar-zoom">
+                 <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+                 <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+                 <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+               </div>
+             </div>
+           </div>
+         </div>
+        <h:outputText id="eposibles" value="#{uiabmVersion.nodosPosibles}" style="visibility: hidden"/>
+        <h:outputText id="editable" value="#{uiabmVersion.editable}" style="visibility: hidden"/>
+        <h:outputText id="ecargarJson" value="#{uiabmVersion.cargarJSON}" style="visibility: hidden"/>
+
+        <h:inputHidden id="jsonGuardar" value="#{uiabmVersion.guardarJSON}"/>
+        <p:commandButton ajax="true" id="guardarBean" action="#{uiabmVersion.guardar()}" style="visibility: hidden"/>
+         <h:outputScript library="js" name="draw.js"/>
+         </p:panel>
     </h:form>
 
     </ui:define>

@@ -106,11 +106,7 @@
                     <f:ajax render="@form"/>
                 </p:commandButton>
                 <p:spacer width="5"/>
-               <p:commandButton value="Agregar Versión" styleClass="btn-info" 
-                 action="#{uiabmVersion.irAgregarVersion()}" 
-                 update="@none">
-    <f:ajax execute="@this" render="@none"/>
-</p:commandButton>
+
 
 
                 <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmTipoTramiteLista.darDeBajaTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
@@ -125,6 +121,11 @@
                         <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
                                          icon="fa fa-close"/>
                     </p:confirmDialog>
+                 <p:spacer width="5"/>
+               <p:commandButton value="Configurar" styleClass="btn-info" action="#{uiabmTipoTramiteLista.irConfigurarTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
+                    <f:ajax render="@form"/>
+                </p:commandButton>
+               
             </p:column>
 
         </p:dataTable>
