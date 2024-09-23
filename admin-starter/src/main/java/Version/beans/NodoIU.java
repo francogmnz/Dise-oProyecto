@@ -9,6 +9,14 @@ public class NodoIU {
    double xpos=0;
    double ypos=0;
 
+    public List<Integer> getDestinos() {
+        return destinos;
+    }
+
+    public void setDestinos(List<Integer> destinos) {
+        this.destinos = destinos;
+    }
+
    List<Integer> destinos= new ArrayList<Integer>();
 
     public int getCodigo() {

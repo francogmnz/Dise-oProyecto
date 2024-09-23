@@ -22,14 +22,17 @@
         des=editor.getNodesFromName("e"+d)[0]
         editor.addConnection(ori,des,'output_1','input_1')
     }
+
     var isSelE1=false;
     var nameE1="";
-    var eposibles = document.getElementById("eposibles");
+    var eposibles = window.parent.document.getElementById("eposibles");
     j=eposibles.getHTML();
+    var titulo = window.parent.document.getElementById("titulo").getHTML();
+    document.getElementById('liTitulo').innerText=titulo
     console.log(j);
     const obj = JSON.parse(j);
     var seleccion=document.getElementById("seleccion");
-    var editable=document.getElementById("editable").getHTML();
+    var editable=window.parent.document.getElementById("editable").getHTML();
     var html="";
     
 
@@ -61,17 +64,17 @@
 
 
         }
-        editor.editor_mode='edit'
+        editor.editor_mode='edit';
     }
     else{
         
         document.getElementById("btn-export").remove();
         seleccion.remove()
-        document.getElementById("drawflow").style.width="100vw";
+        //document.getElementById("drawflow").style.width="100vw";
         editor.editor_mode='view'
     }
     seleccion.innerHTML=html;
-    var eCargarJson = document.getElementById("ecargarJson");
+    var eCargarJson = window.parent.document.getElementById("ecargarJson");
     var eCargar=JSON.parse(eCargarJson.getHTML());
     for(no in eCargar)
     {
@@ -312,8 +315,7 @@
              lnodos.push(unodo)
         }
         console.log(JSON.stringify(lnodos))
-        document.getElementById("jsonGuardar").value = JSON.stringify(lnodos);
-        document.getElementById("guardarBean").click()
-
+        window.parent.document.getElementById("jsonGuardar").value = JSON.stringify(lnodos);
+        
     }
     

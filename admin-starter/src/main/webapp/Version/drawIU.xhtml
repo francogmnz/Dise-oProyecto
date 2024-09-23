@@ -2,7 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
-             >
+              template="#{layoutMB.template}">
 
 
     <ui:define name="metadata">
@@ -15,11 +15,14 @@
         Versión 
     </ui:define>
     <ui:define name="body">
-        <h:outputScript name="jscolor/jscolor.js" />
-    <h:form id="form" prependId="false">
+
         
+   
+  
         <p:panel styleClass="box-primary card">
-      <div class="ui-g ui-fluid">
+            
+            <h:form id="form" prependId="false">
+                    <div class="ui-g ui-fluid">
                     <!-- Número de Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
@@ -63,58 +66,48 @@
                             <p:message id="fechaHastaVersionMSG" for="fechaHastaVersion"/>
                         </div>
                     </div>
-
+                    <div style="visibility: collapse" >
                     <!-- Botón de Guardar -->
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
-                        <div class="ui-sm-12 ui-g-4">
-                            <p:commandButton value="Agregar nueva versión" 
-                                             action="#{uiabmVersion.agregarVersion()}" 
+
+
+                            <p:commandButton id="guardarBean2" value="Agregar nueva versión 2" 
+                                             action="#{uiabmVersion.confirmar()}" 
+
                                              icon="fa fa-check"
-                                             styleClass="btn-primary" /> 
-                        </div>
-                    </div>
-                </div>
+                                             styleClass="btn-primary"  update="@form" style="visibility: hidden">                            
+                                                      <f:ajax render="@form"/>
+                                             </p:commandButton>
+            
                
-            </p:panel>
-        <p:panel styleClass="box-primary card" >
+               
+           
+      
         <!-- Campo de entrada para el código del artículo -->
 
-        
-        <div class="wrapper" style="height:100vh">
 
-
-           <div class="col" id="seleccion" >
-
-
-           </div>
-           <div class="col-right">
-             <div class="menu">
-               <ul>
-                   <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">#{uiabmVersion.titulo}</li>
-               </ul>
-             </div>
-             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-                 <div id="btn-export" class="btn-export" onclick="guardar()">Guardar</div>
-
-               <div class="bar-zoom">
-                 <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
-                 <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
-                 <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
-               </div>
-             </div>
-           </div>
-         </div>
-        <h:outputText id="eposibles" value="#{uiabmVersion.nodosPosibles}" style="visibility: hidden"/>
+        <!-- Campo de entrada para el código del artículo -->
+         <h:outputText id="eposibles" value="#{uiabmVersion.nodosPosibles}" style="visibility: hidden"/>
         <h:outputText id="editable" value="#{uiabmVersion.editable}" style="visibility: hidden"/>
         <h:outputText id="ecargarJson" value="#{uiabmVersion.cargarJSON}" style="visibility: hidden"/>
-
-        <h:inputHidden id="jsonGuardar" value="#{uiabmVersion.guardarJSON}"/>
-        <p:commandButton ajax="true" id="guardarBean" action="#{uiabmVersion.guardar()}" style="visibility: hidden"/>
-         <h:outputScript library="js" name="draw.js"/>
-         </p:panel>
+        <h:outputText id="titulo" value="#{uiabmVersion.titulo}" style="visibility: hidden"/>    
+        <h:inputHidden id="jsonGuardar" value="#{uiabmVersion.guardarJSON}"/>  
+              
+       </div>
+                    </div>
     </h:form>
+ 
+        <div style="height:70vh">
+            <iframe id="idraw" height="100%" width="100%" src="drawGIU.xhtml" style="border-color: #cacaca;border-width: 1px;" />
+       </div>
+                 <p:separator/>
+            <div class="" style="height: 40px"> 
 
-    </ui:define>
+                <button id="g2" name="g2" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left btn-primary" aria-label="" onclick="idraw.contentWindow.guardar();window.document.getElementById('guardarBean2').click();" type="submit"><span class="ui-button-icon-left ui-icon ui-c fa fa-check"></span><span class="ui-button-text ui-c">Agregar nueva versión 2</span></button>
+      
+                    </div> 
+    
+        </p:panel><!-- comment -->
+        
+            </ui:define>
 
     </ui:composition >

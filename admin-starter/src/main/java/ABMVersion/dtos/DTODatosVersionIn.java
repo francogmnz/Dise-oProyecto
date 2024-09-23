@@ -4,7 +4,9 @@
  */
 package ABMVersion.dtos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -12,8 +14,24 @@ import java.util.Date;
  */
 public class DTODatosVersionIn {
     private int codTipoTramite;
-    private String descripionVersion;
+    private String descripcionVersion;
     private Date fechaDesdeVersion;
+    List<DTOEstadoOrigenIN> dtoEstadoOrigenList=new ArrayList<>();  
+    private Date fechaHastaVersion;
+    
+    
+    public List<DTOEstadoOrigenIN> getDtoEstadoOrigenList() {
+        return dtoEstadoOrigenList;
+    }
+
+    public void setDtoEstadoOrigenList(List<DTOEstadoOrigenIN> dtoEstadoOrigenList) {
+        this.dtoEstadoOrigenList = dtoEstadoOrigenList;
+    }
+    
+
+     public void addDtoEstadoOrigenList(DTOEstadoOrigenIN dtoEstadoOrigen) {
+        this.dtoEstadoOrigenList.add(dtoEstadoOrigen);
+    }
 
     public int getCodTipoTramite() {
         return codTipoTramite;
@@ -23,12 +41,12 @@ public class DTODatosVersionIn {
         this.codTipoTramite = codTipoTramite;
     }
 
-    public String getDescripionVersion() {
-        return descripionVersion;
+    public String getDescripcionVersion() {
+        return descripcionVersion;
     }
 
-    public void setDescripionVersion(String descripionVersion) {
-        this.descripionVersion = descripionVersion;
+    public void setDescripcionVersion(String descripcionVersion) {
+        this.descripcionVersion = descripcionVersion;
     }
 
     public Date getFechaDesdeVersion() {
@@ -46,5 +64,5 @@ public class DTODatosVersionIn {
     public void setFechaHastaVersion(Date fechaHastaVersion) {
         this.fechaHastaVersion = fechaHastaVersion;
     }
-    private Date fechaHastaVersion;
+
 }

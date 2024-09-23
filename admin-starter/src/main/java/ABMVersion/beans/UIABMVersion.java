@@ -4,9 +4,16 @@ import ABMVersion.ControladorABMVersion;
 import ABMVersion.dtos.ModificarVersionDTO;
 import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.DTODatosVersion;
+import ABMVersion.dtos.DTODatosVersionIn;
+import ABMVersion.dtos.DTOEstadoDestinoIN;
+import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.exceptions.VersionException;
 import Version.beans.NodoIU;
 import Version.beans.NodoMenuIU;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
@@ -26,6 +33,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Named("uiabmVersion")
@@ -70,8 +79,10 @@ public class UIABMVersion implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-
-        try {
+         codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite"));    
+         
+         /*
+         try {
             String nroVersionParam = request.getParameter("nroVersion");
             if (nroVersionParam != null) {
                 int nroVersion = Integer.parseInt(nroVersionParam);
@@ -88,6 +99,36 @@ public class UIABMVersion implements Serializable {
                 insert = true; // Agregar nueva versión
             }
 
+            // Cargar los estados de trámite y tipos de trámite
+            actualizarEstadosTramite();
+            actualizarTiposTramite();
+
+            // Preparar nodos después de cargar los datos
+            prepararNodos();
+
+        } catch (NumberFormatException e) {
+            Messages.create("Error al obtener el número de versión.").fatal().add();
+        } catch (Exception e) {
+            Messages.create("Error inesperado: " + e.getMessage()).fatal().add();
+        }*/
+        try {
+            /*
+            String nroVersionParam = request.getParameter("nroVersion");
+            if (nroVersionParam != null) {
+                int nroVersion = Integer.parseInt(nroVersionParam);
+                this.nroVersion = nroVersion;
+                insert = true;
+                if (nroVersion > 0) {
+                    ModificarVersionDTO modificarVersionDTO = controladorABMVersion.buscarVersionAModificar(nroVersion);
+                    if (modificarVersionDTO != null) {
+                        setDescripcionVersion(modificarVersionDTO.getDescripcionVersion());
+                        setCodTipoTramite(modificarVersionDTO.getCodTipoTramite());
+                    }
+                }
+            } else {
+                insert = true; // Agregar nueva versión
+            }
+            */
             // Cargar los estados de trámite y tipos de trámite
             actualizarEstadosTramite();
             actualizarTiposTramite();
@@ -349,5 +390,57 @@ public class UIABMVersion implements Serializable {
     public void setNodosPosibles(String nodosPosibles) {
         this.nodosPosibles = nodosPosibles;
     }
+      public void confirmar() {
+          
+          
+        DTODatosVersionIn dto= new DTODatosVersionIn();
+        dto.setCodTipoTramite(codTipoTramite);
+        dto.setDescripcionVersion(descripcionVersion);
+        dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
+        dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
+   
 
+        
+        System.out.println(this.guardarJSON);
+        Messages.create("Guardar").detail(this.guardarJSON).add();
+        ObjectMapper objectMapper = new ObjectMapper();
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<NodoIU> listaNodo = new ArrayList();
+        try {
+            listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class, NodoIU.class));
+            System.out.println(listaNodo.toString());
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
+            Messages.create(ex.getMessage()).error().add();
+        }
+        for(NodoIU unNodo:listaNodo)
+        {
+            DTOEstadoOrigenIN ori=new DTOEstadoOrigenIN();
+            ori.setCodigoEstadoTramite(unNodo.getCodigo());
+            for(Integer i : unNodo.getDestinos())
+            {
+                DTOEstadoDestinoIN des=new DTOEstadoDestinoIN();
+                des.setCodigoEstadoTramite(i.intValue());
+                ori.addDtoEstadoDeastinoList(des);
+                        
+            }
+            dto.addDtoEstadoOrigenList(ori);
+        }
+        Gson gson = new Gson();
+        cargarJSON = gson.toJson(dto);
+        System.out.println(cargarJSON);
+         Messages.create("Guardar 2").detail(cargarJSON).add();
+
+  /*
+        //listaNodo tiene los nodos
+        //para comprobar
+        String jsonArray = "";
+
+        Gson gson = new Gson();
+        cargarJSON = gson.toJson(listaNodo);
+        System.out.println(jsonArray);
+        Messages.create("Guardar 2").detail(this.guardarJSON).add();
+*/
+    }
 }
