@@ -1,5 +1,6 @@
 package utils;
 
+import RegistrarTramite.dtos.TramiteDTO;
 import java.util.List;
 
 public class FachadaPersistencia {

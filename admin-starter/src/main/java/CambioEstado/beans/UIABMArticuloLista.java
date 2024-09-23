@@ -1,7 +1,9 @@
+ /*
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+  /*
 package ABMArticulo.beans;
 
 import ABMArticulo.ControladorABMArticulo;
@@ -19,11 +21,14 @@ import utils.BeansUtils;
  *
  * @author matis
  */
+  /*
 @Named("uiabmArticuloLista")
+
 @ViewScoped
 public class UIABMArticuloLista implements Serializable {
 
-    private ControladorABMArticulo controladorABMArticulo = new ControladorABMArticulo();
+ 
+   private ControladorABMArticulo controladorABMArticulo = new ControladorABMArticulo();
     private int codigoFiltro = 0;
     private String nombreFiltro = "";
 
@@ -94,3 +99,4 @@ public class UIABMArticuloLista implements Serializable {
         }
     }
 }
+*/

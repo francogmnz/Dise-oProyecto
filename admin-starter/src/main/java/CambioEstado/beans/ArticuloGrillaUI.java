@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ABMArticulo.dtos;
+  /*
+package ABMArticulo.beans;
 
 import entidades.Estado;
 import java.sql.Timestamp;
@@ -11,13 +12,16 @@ import java.sql.Timestamp;
  *
  * @author matis
  */
-public class ArticuloDTO {
 
+// Clase que se usa para mostrar los articulos en la grilla al iniciar el CU ABMArticulo
+  /*
+public class ArticuloGrillaUI {
+    
     private int codigo;
     private String nombre;
-    private Estado estado;
     private Timestamp fechaAlta;
     private Timestamp fechaBaja;
+    private Estado estado;
 
     public int getCodigo() {
         return codigo;
@@ -33,14 +37,6 @@ public class ArticuloDTO {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
     }
 
     public Timestamp getFechaAlta() {
@@ -59,4 +55,17 @@ public class ArticuloDTO {
         this.fechaBaja = fechaBaja;
     }
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    
+    
+    
+    
 }
+*/

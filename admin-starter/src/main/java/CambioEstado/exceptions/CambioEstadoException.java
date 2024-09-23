@@ -8,9 +8,9 @@ package ABMArticulo.exceptions;
  *
  * @author matis
  */
-public class ArticuloException extends Exception{
+public class CambioEstadoException extends Exception{
 
-    public ArticuloException(String mensaje) {
+    public CambioEstadoException(String mensaje) {
         super(mensaje);
     }
     

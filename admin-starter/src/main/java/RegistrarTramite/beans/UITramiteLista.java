@@ -1,5 +1,6 @@
 package RegistrarTramite.beans;
 
+
 import RegistrarTramite.ControladorRegistrarTramite;
 import RegistrarTramite.dtos.TipoTramiteResumenDTO;
 import RegistrarTramite.dtos.TramiteDTO;
