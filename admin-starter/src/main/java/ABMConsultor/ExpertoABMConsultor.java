@@ -31,15 +31,7 @@ public class ExpertoABMConsultor {
             unCriterio.setValor(nombreConsultor);
             lCriterio.add(unCriterio);
         }
-        //if (numMaximoTramites > 0) {
 
-          //  DTOCriterio unCriterio = new DTOCriterio();
-            //unCriterio.setAtributo("numMaximoTramites");
-            //unCriterio.setOperacion("=");
-            //unCriterio.setValor(numMaximoTramites);
-            //lCriterio.add(unCriterio);
-
-        //}
         List objetoList = FachadaPersistencia.getInstance().buscar("Consultor", lCriterio);
         List<DTOConsultor> consultoresResultado = new ArrayList<>();
         for (Object x : objetoList) {

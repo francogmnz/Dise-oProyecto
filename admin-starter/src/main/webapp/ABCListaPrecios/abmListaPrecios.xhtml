@@ -50,17 +50,126 @@
 
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="fileUpload" value="Archivo:" />
+
+
+
+                            <p:outputLabel for="chips" value="Archivo:" styleClass="no-focus" tabindex="-1"  
+                                           style="display: inline-flex; justify-content: center; align-items: baseline; border: none">
+                                <p:chips id="chips" placeholder="" value="#{uiabmListaPrecios.tags}" 
+                                         styleClass="no-focus" max="1" disabled="true"/>
+                            </p:outputLabel>
+
+                            <div id="dropZone">
+                                <p:fileUpload id="fileUpload" listener="#{uiabmListaPrecios.handleFileUpload}" 
+                                              style="margin-top: 10px; text-align: center; border: 2px dashed #ccc; text-align: center; margin-top: 20px;"
+                                              auto="true"  
+                                              label="Subir"
+                                              onstart="showBar()" oncomplete="hideBar()"
+                                              mode="advanced" multiple="false" 
+                                              update="messages chips" sizeLimit="100000000"
+                                              allowTypes="/(\.|\/)(xlsx)$/"
+                                              dragDropSupport="true"
+                                              widgetVar="fileUploadWidget"
+                                              chooseIcon="fa fa-upload"
+                                              chooseButtonStyleClass="btn_upload">
+
+                                    <p:message id="fileUploadMSG" for="fileUpload" style="border: none;" />
+                                    <p:outputLabel id="dropZoneLabel" value="O arrastre su archivo aquí" style="margin-top: 10px; text-align: center; padding: 20px; text-align: center; margin-top: 10px;" />
+                                </p:fileUpload>
+                            </div>
+
                         </div>
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:fileUpload id="fileUpload" listener="#{uiabmListaPrecios.handleFileUpload}" 
-                                          dragDropSupport="false" auto="true" 
-                                          onstart="showBar()" oncomplete="hideBar()" 
-                                          mode="advanced" multiple="false" 
-                                          update="messages" sizeLimit="100000000"
-                                          allowTypes="/(\.|\/)(xlsx)$/"/>
-                            <p:message id="fileUploadMSG" for="fileUpload" />
-                        </div>
+
+                        <style>
+                            .ui-fileupload-close {
+                                display: none !important; /* Oculta el botón de cerrar */
+                            }
+                            #chips body .ui-fluid .ui-chips .ui-chips-container, body .ui-fluid .ui-chips .ui-inputfield {
+                                opacity: inherit;
+                                pointer-events: none; /* Evita la interacción con el chip */
+                            }
+                            .no-focus {
+                                outline: none; /* Quita el contorno al recibir foco */
+                                box-shadow: 0 0 5px #fff
+
+                            }
+
+                            .no-focus:focus {
+                                outline: none; /* Asegura que no haya contorno en el foco */
+                                box-shadow: 0 0 5px #fff
+
+                            }
+
+                            .btn_upload .fa-upload {
+                                color: whitesmoke !important;
+                            }
+                            #chips {
+                                
+                                width: 100%;
+                                margin-left: 25px;
+                                outline: none !important;
+                            }
+                            .ui-chips-container{
+                                border: none !important;
+                                outline: none !important;
+                            }
+
+
+                            .ui-chips-token {
+                                display: inline-block;
+                                padding: 0 12px;
+                                height: 32px;
+                                font-size: 14px;
+                                line-height: 32px;
+                                border-radius: 10px;
+                                margin: 4px;
+                                z-index: 1000;
+                            }
+
+                            .ui-chips-token .ui-chips-token-icon {
+                                cursor: pointer;
+                                font-size: 16px;
+                                color: #000;
+                                visibility: visible; /* Muestra la cruz siempre */
+                                opacity: 1;
+                                display: none !important; /* Oculta el botón de cerrar */
+                            }
+
+                            .ui-chips-token .ui-chips-token-icon:hover {
+                                color: #ff0000c9; /* Cambia el color de la cruz al pasar el mouse */
+                                display: none !important; /* Oculta el botón de cerrar */
+                            }
+                        </style>
+                        <script>
+                            const dropZone = document.getElementById('dropZone');
+                            const dropZoneLabel = document.getElementById('dropZoneLabel');
+                            const fileUploadWidget = PF('fileUploadWidget'); // widget
+
+                            dropZone.addEventListener('dragover', function (event) {
+                                event.preventDefault();
+                                dropZoneLabel.innerText = 'Suelta el archivo aquí';
+                            });
+
+                            dropZone.addEventListener('dragleave', function () {
+                                dropZoneLabel.innerText = 'Aarrastre su archivo aquí';
+                            });
+
+                            dropZone.addEventListener('drop', function (event) {
+                                event.preventDefault();
+                                dropZoneLabel.innerText = 'Archivo listo para subir';
+                                // Agregar el archivo y disparar el listener
+                                const files = event.dataTransfer.files;
+                                if (files.length > 0) {
+                                    // Agregar el archivo al fileUpload
+                                    fileUploadWidget.addFiles(files); // Método para agregar archivos al componente
+                                    fileUploadWidget.upload();
+                                }
+
+                            });
+                        </script>
+
+                        <!--ABAJO ORIGINAL-->
+
                     </div>
 
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">

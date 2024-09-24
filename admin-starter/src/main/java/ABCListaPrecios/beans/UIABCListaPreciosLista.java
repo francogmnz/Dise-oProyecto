@@ -4,8 +4,10 @@ import ABCListaPrecios.ControladorABCListaPrecios;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
 import entidades.ListaPrecios;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -82,18 +84,18 @@ public class UIABCListaPreciosLista implements Serializable {
     }
 
 //    NOS REDIRECCIONA A LA IMPORTACION DE LA NUEVA LISTA
-    public String irAgregarListaPrecios() {
+    public String irAgregarListaPrecios() throws IOException {
         BeansUtils.guardarUrlAnterior();
         ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaLista("");
         String newCod = Integer.toString(ultimaLP.getCodListaPrecios() + 1);
         Timestamp newFDesde = sumarMinuto(ultimaLP.getFechaHoraHastaListaPrecios());
 
-//        SI LA ULTIMA LP ES NULA MANDA LOS VALORES DE FECHADESDE AHORA Y CODIGO 1
+        // Si la última lista de precios es nula, mandar valores por defecto
         if (ultimaLP == null) {
             newCod = Integer.toString(1);
             newFDesde = sumarMinuto(Timestamp.from(Instant.now()));
         }
-        return "abmListaPrecios?faces-redirect=true&codLP=" + newCod + "&fDesde=" + newFDesde + "";
+        return "abmListaPrecios?faces-redirect=true&codLP=" + newCod + "&fDesde=" + newFDesde;
 
     }
 

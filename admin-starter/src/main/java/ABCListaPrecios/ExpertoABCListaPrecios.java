@@ -101,15 +101,17 @@ public class ExpertoABCListaPrecios {
         Timestamp ultimaFechaHoraDesde = ultimaListaPrecios.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraDesde = nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraHasta = nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios();
+        
+//        VALIDACIONES
 
         if (nuevaFechaHoraHasta.before(nuevaFechaHoraDesde)) {
-            throw new ListaPreciosException("La fecha hasta ingresada una fecha hasta menor a una fecha desde. Intente nuevamente.");
+            throw new ListaPreciosException("La FechaHasta ingresada es una fecha menor a la FechaDesde. Intente nuevamente.");
         }
         if (nuevaFechaHoraDesde.before(new Date())) {
-            throw new ListaPreciosException("Las fecha desde ingresada es menor a la fecha actual. Intentelo nuevamente.");
+            throw new ListaPreciosException("Las FechaDesde ingresada es menor a la FechaActual. Intentelo nuevamente.");
         }
         if (nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
-            throw new ListaPreciosException("Las fecha desde ingresada es menor a la ultima fecha desde. Intentelo nuevamente.");
+            throw new ListaPreciosException("Las FechaDesde ingresada es menor a la ultima FechaDesde. Intentelo nuevamente.");
         }
 
         Timestamp FechaHoraHasta = ultimaListaPrecios.getFechaHoraHastaListaPrecios();
