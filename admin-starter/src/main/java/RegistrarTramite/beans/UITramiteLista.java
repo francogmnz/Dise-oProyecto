@@ -182,7 +182,7 @@ public class UITramiteLista implements Serializable {
 
     public String mostrarResumenTramite(int nroTramite) {
     // Redirigir a la página de resumen con el número de trámite como parámetro
-    return "/Tramite/ResumenTramite.xml?faces-redirect=true&codigo=" + nroTramite;
+    return "ResumenTramite?faces-redirect=true&codigo=" + nroTramite;
     }
     
     public void anularTramite(int nroTramite) {

@@ -188,8 +188,8 @@ public class ExpertoRegistrarTramite {
 
             criterioList.add(dto1);
         }
-
-        Tramite tramiteEncontrado = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+        
+        Tramite tramiteEncontrado = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
         DTOTramiteElegido resumenDTO = new DTOTramiteElegido();
         resumenDTO.setNroTramite(tramiteEncontrado.getNroTramite());
         resumenDTO.setFechaRecepcionTramite(tramiteEncontrado.getFechaRecepcionTramite());
