@@ -18,7 +18,7 @@ public class DTOTramiteElegido {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
-    private List<DTODocumentacion> resumenDoc = new ArrayList<>(); //para agregar la documentacion al resumen
+    private List<DTODocumentacion> resumenDoc = new ArrayList<DTODocumentacion>(); //para agregar la documentacion al resumen
 
 
     public int getNroTramite() {

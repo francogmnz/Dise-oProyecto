@@ -1,6 +1,7 @@
 package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
+import RegistrarTramite.dtos.DTODocumentacion;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import jakarta.annotation.PostConstruct;
@@ -9,6 +10,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import org.omnifaces.util.Messages;
 
@@ -27,6 +29,9 @@ public class UIResumen implements Serializable{
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
+    private String nombreDocumentacion;
+    private Timestamp fechaEntregaDoc;
+    private List<DTODocumentacion> resumenDoc;
     
     @PostConstruct
     public void init() {
@@ -54,6 +59,13 @@ public class UIResumen implements Serializable{
                     this.nombreCliente = tramiteElegido.getNombreCliente();
                     this.apellidoCliente = tramiteElegido.getApellidoCliente();
                     this.mailCliente = tramiteElegido.getMailCliente();
+                    
+                    this.resumenDoc = tramiteElegido.getResumenDoc();
+                    
+                    for(DTODocumentacion doc:resumenDoc){
+                        this.nombreDocumentacion = doc.getNombreDocumentacion();
+                        this.fechaEntregaDoc = doc.getFechaEntregaDoc();
+                    }
                 }
             } catch (NumberFormatException e) {
                 // Manejar error de conversión de número
@@ -147,9 +159,36 @@ public class UIResumen implements Serializable{
         return mailCliente;
     }
 
+    public String getNombreDocumentacion() {
+        return nombreDocumentacion;
+    }
+
+    public void setNombreDocumentacion(String nombreDocumentacion) {
+        this.nombreDocumentacion = nombreDocumentacion;
+    }
+
+    public Timestamp getFechaEntregaDoc() {
+        return fechaEntregaDoc;
+    }
+
+    public void setFechaEntregaDoc(Timestamp fechaEntregaDoc) {
+        this.fechaEntregaDoc = fechaEntregaDoc;
+    }
+    
+
     public void setMailCliente(String mailCliente) {
         this.mailCliente = mailCliente;
     }
+
+    public List<DTODocumentacion> getResumenDoc() {
+        return resumenDoc;
+    }
+
+    public void setResumenDoc(List<DTODocumentacion> resumenDoc) {
+        this.resumenDoc = resumenDoc;
+    }
+    
+    
     
     ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
     

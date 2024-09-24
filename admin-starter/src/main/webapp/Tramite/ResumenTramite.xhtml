@@ -1,30 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
 
     <ui:define name="metadata">
         <ui:param name="title" value="Resumen Tramite"/>
-        <style type="text/css">
-            .ui-datatable .ui-datatable-header {
-                text-align: right !important;
-            }
-        </style>
-    </ui:define>
-
-    <ui:define name="description">
-        Gestión de Trámites
     </ui:define>
 
     <ui:define name="body">
 
         <h:form id="tramiteForm">
 
-            <!-- Pestañas Datos Tramite y Datos Cliente -->
+            <!-- Pestaña Datos Tramite -->
             <p:panel header="Datos Tramite" toggleable="true" collapsed="true">
                 <h:panelGrid columns="2">
                     <h:outputLabel value="Número Tramite:" />
@@ -50,6 +38,7 @@
                 </h:panelGrid>
             </p:panel>
 
+            <!-- Pestaña Datos Cliente -->
             <p:panel header="Datos Cliente" toggleable="true" collapsed="true">
                 <h:panelGrid columns="2">
                     <h:outputLabel value="Nombre:" />
@@ -66,10 +55,29 @@
                 </h:panelGrid>
             </p:panel>
 
-            <!-- Botón para redirigir a Documentos -->
-            <h:panelGroup>
-                <p:commandButton value="Documentos" action="#{uiresumen.irADocumentos}" />
-            </h:panelGroup>
+            <!-- Pestaña Documentación -->
+            <p:panel header="Documentación" toggleable="true" collapsed="true">
+                <h:panelGrid columns="3" styleClass="tableStyle">
+                    <h:outputLabel value="Nombre Documento" styleClass="headerCell" />
+                    <h:outputLabel value="Estado Entrega" styleClass="headerCell" />
+                    <h:outputLabel value="Agregar/Editar Entrega" styleClass="headerCell" />
+
+                   <ui:repeat var="doc" value="#{uiresumen.resumenDoc}">
+                        <tr>
+                            <td><h:outputText value="#{doc.nombreDocumentacion}" /></td>
+                            <td>
+                                <h:outputText value="#{doc.fechaEntregaDoc != null ? 'ENTREGADO' : 'PENDIENTE'}" 
+                                              style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'};" />
+                            </td>
+                            <td>
+                                <h:commandLink action="#{uiresumen.editarEntrega(doc)}">
+                                    <p:graphicImage name="resources/icons/edit_icon.png" alt="Editar" style="cursor: pointer;" />
+                                </h:commandLink>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                </h:panelGrid>
+            </p:panel>
 
             <!-- Botón de Anular -->
             <h:panelGroup>
