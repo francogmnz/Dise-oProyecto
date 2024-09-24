@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Confirmar Datos del Cliente</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+</h:head>
+<h:body>
+    <h:form class="formulario-confirmacion">
+        <h1>Confirmación de Datos del Cliente</h1>
+
+        <h:panelGrid columns="2" styleClass="panel-grid-confirmacion">
+            <h:outputLabel value="Nombre:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.nombreCliente}" styleClass="text" />
+
+            <h:outputLabel value="Apellido:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.apellidoCliente}" styleClass="text" />
+
+            <h:outputLabel value="DNI:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}" styleClass="text" />
+
+            <h:outputLabel value="Email:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.mailCliente}" styleClass="text" />
+        </h:panelGrid>
+
+        <h:panelGroup styleClass="botones-confirmacion">
+            <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.confirmarCliente}" styleClass="btn-continuar" />
+            <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
+        </h:panelGroup>
+    </h:form>
+</h:body>
+</html>
+
+
+
+

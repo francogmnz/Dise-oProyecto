@@ -6,58 +6,40 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-    <title>Seleccionar Trámite</title>
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estilosTipoTramite.css" />
+    <title>Seleccionar Tipo de Trámite</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
 </h:head>
 <h:body>
-    <h:form>
-        <div class="container">
-            <!-- Título -->
-            <h1 class="titulo">Gestión de Trámites</h1>
+    <h:form class="formulario-tipo-tramite">
+        <h1>Seleccione un Tipo de Trámite</h1>
 
-            <!-- Barra de progreso -->
-            <div class="barra-progreso">
-                <ul class="progreso">
-                    <li class="paso completado">Acceder</li>
-                    <li class="paso completado">Categoría</li>
-                    <li class="paso activo">Trámite</li>
-                    <li class="paso">Confirmar</li>
-                </ul>
+        <ui:repeat value="#{uiRegistrarTramiteWeb.listaTiposTramite}" var="tipoTramite">
+            <div class="tipo-tramite-card">
+                <h2>#{tipoTramite.nombreTipoTramite}</h2>
+                <p><strong>Descripción:</strong> #{tipoTramite.descripcionTipoTramite}</p>
+                <p><strong>Descripción Web:</strong> #{tipoTramite.descripcionWebTipoTramite}</p>
+
+                <div class="documentacion">
+                    <h3>Documentación Requerida:</h3>
+                    <ul>
+                        <ui:repeat value="#{tipoTramite.documentaciones}" var="doc">
+                            <li>#{doc.nombreDocumentacion}</li>
+                        </ui:repeat>
+                    </ul>
+                </div>
+
+                <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarTipoTramite}" styleClass="btn-seleccionar">
+                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codTipoTramiteSeleccionado}" value="#{tipoTramite.codTipoTramite}" />
+                </h:commandButton>
             </div>
+        </ui:repeat>
 
-            <!-- Instrucción -->
-            <p class="subtitulo">Seleccione el trámite que desea realizar:</p>
+        <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
 
-            <!-- Grid de Trámites -->
-            <div class="tramites-grid">
-                <ui:repeat value="#{seleccionarTipoTramite.listarTipoTramites()}" var="tipoTramite">
-                    <div class="tramite-item">
-                        <div class="tramite-header">
-                            <h2>#{tipoTramite.nombreTipoTramite}</h2>
-                        </div>
-                        <div class="tramite-body">
-                            <p>#{tipoTramite.descripcionTipoTramite}</p>
-                            <p>#{tipoTramite.descripcionWebTipoTramite}</p>
-                            <!-- Documentaciones -->
-                            <div class="documentacion">
-                                <h3>Documentación Requerida:</h3>
-                                <ul>
-                                    <ui:repeat value="#{tipoTramite.documentaciones}" var="doc">
-                                        <li>#{doc.nombreDocumentacion}</li>
-                                    </ui:repeat>
-                                </ul>
-                            </div>
-                        </div>
-                        <h:commandButton value="Seleccionar" action="#{seleccionarTipoTramite.seleccionarTipoTramite(tipoTramite)}" styleClass="btn-seleccionar"/>
-                    </div>
-                </ui:repeat>
-            </div>
-
-            <!-- Botón Cancelar -->
-            <h:commandButton value="Cancelar" action="#{seleccionarTipoTramite.cancelar}" styleClass="btn-cancelar"/>
-        </div>
+        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
     </h:form>
 </h:body>
 </html>

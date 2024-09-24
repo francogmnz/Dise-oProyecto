@@ -37,6 +37,7 @@ import utils.FachadaPersistencia;
 public class ExpertoRegistrarTramiteWeb {
     
     private Cliente cliente;
+    private Tramite tramiteEnProceso;
     
     public DTOCliente buscarClienteIngresado(int dniCliente)  throws RegistrarTramiteWebException{
         List<DTOCriterio> criterioBuscarClienteList = new ArrayList<>();
@@ -107,7 +108,7 @@ public class ExpertoRegistrarTramiteWeb {
         
     }
 
-    public List<DTOTipoTramite> listarTipoTramites(int codCategoriaTipoTramite){
+    public List<DTOTipoTramite> listarTipoTramites(int codCategoriaTipoTramite) throws RegistrarTramiteWebException {
     
         List<DTOCriterio> criterioCategoriaTTRelacionadaList = new ArrayList<>();
         DTOCriterio criterioCodigoCTT = new DTOCriterio();
@@ -126,7 +127,15 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioCategoriaTTRelacionadaList.add(criterioFechaHoraBajaCTT);
         
-        CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaTTRelacionadaList).get(0);
+        //CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaTTRelacionadaList).get(0);
+        
+        List<Object> categorias = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaTTRelacionadaList);
+
+        if (categorias == null || categorias.isEmpty()) {
+            throw new RegistrarTramiteWebException("No se encontró la categoría seleccionada.");
+        }
+
+    CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) categorias.get(0);
         
         List<DTOCriterio> criterioTipoTramitesList = new ArrayList<>();
         DTOCriterio criterioFechaHoraBajaTT = new DTOCriterio();
@@ -179,6 +188,13 @@ public class ExpertoRegistrarTramiteWeb {
         return tipoTramitesAListar;
 
     }
+       
+public static int generarNroTramite(int codTipoTramite) {
+    return (int) (System.currentTimeMillis() + codTipoTramite);
+}
+
+
+
     
     public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
         
@@ -239,6 +255,8 @@ public class ExpertoRegistrarTramiteWeb {
         
         Tramite nuevoTramite = new Tramite();
         
+        int nroTramite = generarNroTramite(codTipoTramite);
+        nuevoTramite.setNroTramite(nroTramite);
         nuevoTramite.setCliente(cliente);
         nuevoTramite.setTipoTramite(tipoTramiteRelacionado);
         nuevoTramite.setEstadoTramite(estadoTramite);
@@ -366,7 +384,9 @@ public class ExpertoRegistrarTramiteWeb {
         dtoResumen.setDescripcionTipoTramite(tipoTramiteRelacionado.getDescripcionTipoTramite());
         dtoResumen.setPlazoEntregaDocumentacionTT(tipoTramiteRelacionado.getPlazoEntregaDocumentacionTT());
         
-        dtoResumen.setPrecioTramite(nuevoTramite.getPrecioTramite());
+        dtoResumen.setPrecioTramite(nuevoTramite.getPrecioTramite()); 
+        
+        tramiteEnProceso = nuevoTramite;
         
         return dtoResumen;
         
@@ -375,6 +395,46 @@ public class ExpertoRegistrarTramiteWeb {
        
     }
     
+    public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException {
+        if (tramiteEnProceso == null) {
+            throw new RegistrarTramiteWebException("No hay un trámite en proceso para registrar.");
+        }
+
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+
+
+        for (TramiteEstadoTramite tramiteEstadoTramite : tramiteEnProceso.getTramiteEstadoTramite()) {
+            FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
+        } 
+
+        for (TramiteDocumentacion tramiteDocumentacion : tramiteEnProceso.getTramiteDocumentacion()) {
+            FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
+        }        
+
+        FachadaPersistencia.getInstance().guardar(tramiteEnProceso);
+        
+        
+        int numeroTramiteObtenido = tramiteEnProceso.getNroTramite();
+        DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();
+        dtoNumeroTramite.setNumeroTramite(numeroTramiteObtenido);
+
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+
+        // Reset 'tramiteEnProceso' after saving
+        tramiteEnProceso = null;
+
+        return dtoNumeroTramite;
+    }
+
+    
+        public void resetearEstado() {
+        this.cliente = null;
+        this.tramiteEnProceso = null;
+        
+    }
+
+}
+/*
     public DTONumeroTramite registrarTramite(Tramite nuevoTramite) throws RegistrarTramiteWebException {
         
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -399,3 +459,4 @@ public class ExpertoRegistrarTramiteWeb {
         
     }
 }
+*/

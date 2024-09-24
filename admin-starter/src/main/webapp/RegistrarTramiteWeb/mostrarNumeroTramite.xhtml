@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Trámite Registrado</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+</h:head>
+<h:body>
+    <h:form class="formulario-numero-tramite">
+        <h1>Trámite Registrado Exitosamente</h1>
+
+        <h:panelGroup styleClass="panel-numero-tramite">
+            <p>Su número de trámite es:</p>
+            <h2>#{uiRegistrarTramiteWeb.numeroTramite}</h2>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="botones">
+            <h:commandButton value="Volver al Inicio" action="#{uiRegistrarTramiteWeb.irAlInicio}" styleClass="btn-inicio" />
+        </h:panelGroup>
+    </h:form>
+</h:body>
+</html>
+

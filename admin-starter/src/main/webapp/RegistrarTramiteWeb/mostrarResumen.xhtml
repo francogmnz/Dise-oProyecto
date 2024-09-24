@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Resumen del Trámite</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+</h:head>
+<h:body>
+    <h:form class="formulario-resumen">
+        <h1>Resumen del Trámite</h1>
+
+        <h2>Datos del Cliente</h2>
+        <h:panelGrid columns="2" styleClass="panel-grid-resumen">
+            <h:outputLabel value="Nombre:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.nombreCliente}" styleClass="text" />
+
+            <h:outputLabel value="Apellido:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.apellidoCliente}" styleClass="text" />
+
+            <h:outputLabel value="DNI:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.dniCliente}" styleClass="text" />
+
+            <h:outputLabel value="Email:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.mailCliente}" styleClass="text" />
+        </h:panelGrid>
+
+        <h2>Detalles del Trámite</h2>
+        <h:panelGrid columns="2" styleClass="panel-grid-resumen">
+            <h:outputLabel value="Tipo de Trámite:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.nombreTipoTramite}" styleClass="text" />
+
+            <h:outputLabel value="Descripción:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.descripcionTipoTramite}" styleClass="text" />
+
+            <h:outputLabel value="Precio:" styleClass="label" />
+            <h:outputText value="$ #{uiRegistrarTramiteWeb.dtoResumen.precioTramite}" styleClass="text" />
+
+            <h:outputLabel value="Plazo de Entrega:" styleClass="label" />
+            <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.plazoEntregaDocumentacionTT} días" styleClass="text" />
+        </h:panelGrid>
+
+        <h:panelGroup styleClass="botones">
+            <h:commandButton value="Confirmar Trámite" action="#{uiRegistrarTramiteWeb.confirmarTramite}" styleClass="btn-confirmar" />
+            <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
+        </h:panelGroup>
+
+        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+    </h:form>
+</h:body>
+</html>

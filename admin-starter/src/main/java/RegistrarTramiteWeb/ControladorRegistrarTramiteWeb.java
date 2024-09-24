@@ -11,21 +11,22 @@ import RegistrarTramiteWeb.dtos.DTOResumen;
 import RegistrarTramiteWeb.dtos.DTOTipoTramite;
 import RegistrarTramiteWeb.exceptions.RegistrarTramiteWebException;
 import entidades.Tramite;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author licciardi
  */
-public class ControladorRegistrarTramiteWeb {
+@Named
+@SessionScoped
+public class ControladorRegistrarTramiteWeb implements Serializable{
     
     private ExpertoRegistrarTramiteWeb expertoRegistrarTramiteWeb = new ExpertoRegistrarTramiteWeb();
 
-/*    
-    public DTOCliente buscarClienteIngresado(int dniCliente) {
-        return expertoRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
-    }
-*/
+
     public DTOCliente buscarClienteIngresado(int dniCliente) throws RegistrarTramiteWebException {
         return expertoRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
     }
@@ -35,16 +36,19 @@ public class ControladorRegistrarTramiteWeb {
         return expertoRegistrarTramiteWeb.listarCategoriasTipoTramtite();
     }
 
-    public List<DTOTipoTramite> listarTipoTramites(int codCategoriaTipoTramite) {
+    public List<DTOTipoTramite> listarTipoTramites(int codCategoriaTipoTramite) throws RegistrarTramiteWebException {
         return expertoRegistrarTramiteWeb.listarTipoTramites(codCategoriaTipoTramite);
     }
 
     public DTOResumen mostrarResumenTipoTramite(int codTipoTramite) throws RegistrarTramiteWebException {
         return expertoRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramite);
     }
-
-    public DTONumeroTramite registrarTramite(Tramite nuevoTramite) throws RegistrarTramiteWebException {
-        return expertoRegistrarTramiteWeb.registrarTramite(nuevoTramite);
-    }
+ 
+    public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException {
+        return expertoRegistrarTramiteWeb.registrarTramite();
+    }   
     
+    public void resetearEstado() {
+        expertoRegistrarTramiteWeb.resetearEstado();
+    }
 }
