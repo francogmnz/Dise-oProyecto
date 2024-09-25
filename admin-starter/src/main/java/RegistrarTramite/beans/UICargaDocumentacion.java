@@ -12,8 +12,10 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
+import utils.BeansUtils;
 
-@Model
+@Named("cargadocumentacion") // Nombre explícito
+@ViewScoped
 public class UICargaDocumentacion implements Serializable{
     
     private UploadedFile file;
@@ -26,8 +28,9 @@ public class UICargaDocumentacion implements Serializable{
         this.file = file;
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
-        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): "+ event.getFile().getSize()/1024f);
+    public String handleFileUpload(FileUploadEvent event) {
+        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize()/1024f);
         FacesContext.getCurrentInstance().addMessage(null, message);
+        return BeansUtils.redirectToPreviousPage();
     }
 }

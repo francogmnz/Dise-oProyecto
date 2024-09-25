@@ -223,6 +223,7 @@ public class UIResumen implements Serializable {
     }
 
     public String registrarDocumentacion(int codTD){
+        BeansUtils.guardarUrlAnterior();
         return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD;
     }
 }

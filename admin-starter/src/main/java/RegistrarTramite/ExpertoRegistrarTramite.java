@@ -501,11 +501,13 @@ public class ExpertoRegistrarTramite {
         
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
-        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
+        //se buscan todas las documentaciones relacionada al tramite
+        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion(); 
         
+        //se busca la documentacion a ingresar
         for(TramiteDocumentacion td: tdList){
              if(td.getCodTD() == codTD){ 
-                 td.setArchivoTD(archivoTD);
+                 td.setArchivoTD(archivoTD); //se le setea el archivo (preguntar al profe como lo podemos hacer) 
                  td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
                  FachadaPersistencia.getInstance().guardar(td);
              }
@@ -516,6 +518,7 @@ public class ExpertoRegistrarTramite {
         
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
+        //verifico que todas las documentaciones tenga fechaEntrega != null
         List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
         
         boolean todasPresentadas = false;
