@@ -1,23 +1,16 @@
 package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
-import RegistrarTramite.dtos.DTOEstadoTramite;
-import RegistrarTramite.dtos.TipoTramiteResumenDTO;
+import RegistrarTramite.dtos.DTOTipoTramite;
 import RegistrarTramite.dtos.DTOTramite;
-import RegistrarTramite.exceptions.RegistrarTramiteException;
-import entidades.EstadoTramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.omnifaces.util.Messages;
 import utils.BeansUtils;
-import utils.FachadaPersistencia;
 
 @Named("uitramiteLista")
 @ViewScoped
@@ -25,12 +18,13 @@ public class UITramiteLista implements Serializable {
 
     private ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
 
+    // filtros de la lista de tramites
     private int nroTramiteFiltro = 0;
     private int dniFiltro = 0;
     private Date fechaRecepcionTramiteFiltro = null;
     private String nombreEstadoFiltro = "";
 
-    // parte del TipoTramite
+    // filtros del TipoTramite
     private int codTipoTramiteFiltro = 0;
     private String nombreTipoTramiteFiltro = "";
     private String nombreCategoriaTipoTramiteFiltro = "";
@@ -76,7 +70,7 @@ public class UITramiteLista implements Serializable {
         this.nombreEstadoFiltro = nombreEstadoFiltro;
     }
 
-    // parte TipoTramite
+    // filtros TipoTramite
     public int getCodTipoTramiteFiltro() {
         return codTipoTramiteFiltro;
     }
@@ -112,9 +106,7 @@ public class UITramiteLista implements Serializable {
     public void filtrar() {
     }
 
-    // get desde la UI a DTOTramite para los filtros
-    /* mostrarTramites(nroTramite, fechaRecepcionTramite, dniCliente, codTipoTramite, 
-    nombreEstadoTramite): List<DTOTramite> */
+    // loop por cada DTOTramite desde la UI para mostrar los Tramites filtrados
     public List<TramiteGrillaUI> mostrarTramites() {
 
         System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
@@ -149,6 +141,21 @@ public class UITramiteLista implements Serializable {
         return tramiteGrilla;
     }
 
+    // Boton agregar Tramite
+    public String irRegistrarTramite() {
+        BeansUtils.guardarUrlAnterior();
+        return "Tramite?faces-redirect=true&nroTramite=0";
+    }
+
+    // Redirigir a la página de resumen con el número de trámite como parámetro
+    public String mostrarResumenTramite(int nroTramite) {
+        return "ResumenTramite?faces-redirect=true&codigo=" + nroTramite;
+    }
+
+    public void anularTramite(int nroTramite) {
+    }
+
+    // loop por cada DTOTipoTramite desde la UI para mostrar los TipoTramite filtrados
     public List<FiltrosTipoTramiteGrillaUI> buscarTipoTramite() {
         System.out.println(codTipoTramiteFiltro);
         System.out.println(nombreTipoTramiteFiltro);
@@ -156,38 +163,23 @@ public class UITramiteLista implements Serializable {
         System.out.println(descripcionTipoTramiteFiltro);
 
         List<FiltrosTipoTramiteGrillaUI> ttGrilla = new ArrayList<FiltrosTipoTramiteGrillaUI>();
-        List<TipoTramiteResumenDTO> ttDTOList = controladorRegistrarTramite.buscarTipoTramite(codTipoTramiteFiltro, nombreTipoTramiteFiltro, nombreCategoriaTipoTramiteFiltro, descripcionTipoTramiteFiltro);
+        List<DTOTipoTramite> DTOttList = controladorRegistrarTramite.buscarTipoTramite(codTipoTramiteFiltro, nombreTipoTramiteFiltro, nombreCategoriaTipoTramiteFiltro, descripcionTipoTramiteFiltro);
 
-        for (TipoTramiteResumenDTO tipoTramiteResumenDTO : ttDTOList) {
+        // loop por cada DTOTipoTramite
+        for (DTOTipoTramite dtoTT : DTOttList) {
             FiltrosTipoTramiteGrillaUI ttGrillaUI = new FiltrosTipoTramiteGrillaUI();
-            ttGrillaUI.setCodTipoTramite(tipoTramiteResumenDTO.getCodTipoTramite());
-            ttGrillaUI.setNombreTipoTramite(tipoTramiteResumenDTO.getNombreTipoTramite());
-            ttGrillaUI.setNombreCategoriaTipoTramite(tipoTramiteResumenDTO.getNombreCategoriaTipoTramite());
-            ttGrillaUI.setDescripcionTipoTramite(tipoTramiteResumenDTO.getDescripcionTipoTramite());
+            ttGrillaUI.setCodTipoTramite(dtoTT.getCodTipoTramite());
+            ttGrillaUI.setNombreTipoTramite(dtoTT.getNombreTipoTramite());
+            ttGrillaUI.setNombreCategoriaTipoTramite(dtoTT.getNombreCategoriaTipoTramite());
+            ttGrillaUI.setDescripcionTipoTramite(dtoTT.getDescripcionTipoTramite());
             ttGrilla.add(ttGrillaUI);
-
         }
         return ttGrilla;
-    }
-
-    public String irRegistrarTramite() {
-        BeansUtils.guardarUrlAnterior();
-        return "Tramite?faces-redirect=true&nroTramite=0";
     }
 
     public String irModificarTramite(int nroTramite) {
         BeansUtils.guardarUrlAnterior();
         return "tramite?faces-redirect=true&codigo=" + nroTramite;
-    }
-
-    public String mostrarResumenTramite(int nroTramite) {
-    // Redirigir a la página de resumen con el número de trámite como parámetro
-    return "ResumenTramite?faces-redirect=true&codigo=" + nroTramite;
-    }
-    
-    public void anularTramite(int nroTramite) {
-        controladorRegistrarTramite.anularTramite(nroTramite);
-        Messages.create("Anulado").detail("Anulado").add();
     }
 
 }

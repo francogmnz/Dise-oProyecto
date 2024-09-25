@@ -5,21 +5,26 @@ import RegistrarTramite.dtos.DTODocumentacion;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import jakarta.servlet.http.Part;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import org.omnifaces.util.Messages;
+import org.primefaces.event.FileUploadEvent;
+import utils.BeansUtils;
 
 @Named("uiresumen")
 @ViewScoped
-public class UIResumen implements Serializable{
-    
+public class UIResumen implements Serializable {
+
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
+    private Timestamp fechaAnulacionTramite;
     private int plazoDocumentacion;
     private int codTipoTramite;
     private String nombreTipoTramite;
@@ -32,7 +37,7 @@ public class UIResumen implements Serializable{
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
     private List<DTODocumentacion> resumenDoc;
-    
+
     @PostConstruct
     public void init() {
         // Obtener el parámetro de la URL
@@ -50,6 +55,7 @@ public class UIResumen implements Serializable{
                 if (tramiteElegido != null) {
                     this.nroTramite = tramiteElegido.getNroTramite();
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
+                    this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
                     this.precioTramite = tramiteElegido.getPrecioTramite();
                     this.codTipoTramite = tramiteElegido.getCodTipoTramite();
@@ -59,10 +65,10 @@ public class UIResumen implements Serializable{
                     this.nombreCliente = tramiteElegido.getNombreCliente();
                     this.apellidoCliente = tramiteElegido.getApellidoCliente();
                     this.mailCliente = tramiteElegido.getMailCliente();
-                    
+
                     this.resumenDoc = tramiteElegido.getResumenDoc();
-                    
-                    for(DTODocumentacion doc:resumenDoc){
+
+                    for (DTODocumentacion doc : resumenDoc) {
                         this.nombreDocumentacion = doc.getNombreDocumentacion();
                         this.fechaEntregaDoc = doc.getFechaEntregaDoc();
                     }
@@ -73,7 +79,6 @@ public class UIResumen implements Serializable{
             }
         }
     }
-
 
     public int getNroTramite() {
         return nroTramite;
@@ -174,10 +179,17 @@ public class UIResumen implements Serializable{
     public void setFechaEntregaDoc(Timestamp fechaEntregaDoc) {
         this.fechaEntregaDoc = fechaEntregaDoc;
     }
-    
 
     public void setMailCliente(String mailCliente) {
         this.mailCliente = mailCliente;
+    }
+
+    public Timestamp getFechaAnulacionTramite() {
+        return fechaAnulacionTramite;
+    }
+
+    public void setFechaAnulacionTramite(Timestamp fechaAnulacionTramite) {
+        this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
     public List<DTODocumentacion> getResumenDoc() {
@@ -187,14 +199,20 @@ public class UIResumen implements Serializable{
     public void setResumenDoc(List<DTODocumentacion> resumenDoc) {
         this.resumenDoc = resumenDoc;
     }
-    
-    
-    
+
     ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
-    
-    public void anularTramite(int nroTramite){
-        controladorRegistrarTramite.anularTramite(nroTramite);
-        Messages.create("Anulado").detail("Anulado").add();   
+
+    // anularTramite()
+    public void anularTramite(int nroTramite) throws RegistrarTramiteException {
+        try {
+            controladorRegistrarTramite.anularTramite(nroTramite);
+            Messages.create("Trámite Anulado").add();
+        } catch (RegistrarTramiteException e) {
+            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+        }
     }
-    
+
+    public void registrarDocumentacion(int codTD){
+        
+    }
 }
