@@ -32,7 +32,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </div>
 
                 <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarTipoTramite}" styleClass="btn-seleccionar">
-                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codTipoTramiteSeleccionado}" value="#{tipoTramite.codTipoTramite}" />
+                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.tipoTramiteSeleccionado.codTipoTramite}" value="#{tipoTramite.codTipoTramite}" />
                 </h:commandButton>
             </div>
         </ui:repeat>

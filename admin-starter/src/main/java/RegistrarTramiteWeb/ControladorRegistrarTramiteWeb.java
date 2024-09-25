@@ -32,7 +32,7 @@ public class ControladorRegistrarTramiteWeb implements Serializable{
     }
     
     
-    public List<DTOCategoriaTipoTramite> listarCategoriasTipoTramite() {
+    public List<DTOCategoriaTipoTramite> listarCategoriasTipoTramite() throws RegistrarTramiteWebException {
         return expertoRegistrarTramiteWeb.listarCategoriasTipoTramtite();
     }
 

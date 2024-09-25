@@ -29,33 +29,25 @@ import org.omnifaces.util.Messages;
 public class RegistrarTramiteWebUI implements Serializable {
     
     private ControladorRegistrarTramiteWeb controladorRegistrarTramiteWeb = new ControladorRegistrarTramiteWeb();
-    private int dniCliente;
-    private DTOCliente dtoCliente;
-       
+    private DTOCliente dtoCliente = new DTOCliente();
+    private DTOCategoriaTipoTramite categoriaSeleccionada = new DTOCategoriaTipoTramite();
+    private DTOTipoTramite tipoTramiteSeleccionado = new DTOTipoTramite();
+    private DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();
+        
     private List<DTOCategoriaTipoTramite> listaCategorias;
-    private int codCategoriaTipoTramiteSeleccionada;
-    
+   
     private List<DTOTipoTramite> listaTiposTramite;
-    private int codTipoTramiteSeleccionado;
-    
+  
     private DTOResumen dtoResumen;  
-    private int numeroTramite;
     
     private String mensajeError;
+    
     public ControladorRegistrarTramiteWeb getControladorRegistrarTramiteWeb() {
         return controladorRegistrarTramiteWeb;
     }
 
     public void setControladorRegistrarTramiteWeb(ControladorRegistrarTramiteWeb controladorRegistrarTramiteWeb) {
         this.controladorRegistrarTramiteWeb = controladorRegistrarTramiteWeb;
-    }
-
-    public int getDniCliente() {
-        return dniCliente;
-    }
-
-    public void setDniCliente(int dniCliente) {
-        this.dniCliente = dniCliente;
     }
 
     public DTOCliente getDtoCliente() {
@@ -67,9 +59,6 @@ public class RegistrarTramiteWebUI implements Serializable {
     }
 
     public List<DTOCategoriaTipoTramite> getListaCategorias() {
-        if (listaCategorias == null) {
-            listaCategorias = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
-        }
         return listaCategorias;
     }
 
@@ -77,25 +66,15 @@ public class RegistrarTramiteWebUI implements Serializable {
         this.listaCategorias = listaCategorias;
     }
 
-    public int getCodCategoriaTipoTramiteSeleccionada() {
-        return codCategoriaTipoTramiteSeleccionada;
+    public DTOCategoriaTipoTramite getCategoriaSeleccionada() {
+        return categoriaSeleccionada;
     }
 
-    public void setCodCategoriaTipoTramiteSeleccionada(int codCategoriaTipoTramiteSeleccionada) {
-        this.codCategoriaTipoTramiteSeleccionada = codCategoriaTipoTramiteSeleccionada;
+    public void setCategoriaSeleccionada(DTOCategoriaTipoTramite categoriaSeleccionada) {
+        this.categoriaSeleccionada = categoriaSeleccionada;
     }
 
     public List<DTOTipoTramite> getListaTiposTramite() {
-        if (listaTiposTramite == null) {
-            try{
-                listaTiposTramite = controladorRegistrarTramiteWeb.listarTipoTramites(codCategoriaTipoTramiteSeleccionada);
-            } catch (RegistrarTramiteWebException e) {
-                mensajeError = e.getMessage();
-                // Manejar el error, por ejemplo, redirigir a una página de error o mostrar un mensaje en la vista
-                // Aquí puedes decidir cómo manejarlo, por ahora retornamos null
-                return null;
-            }
-        }
         return listaTiposTramite;
     }
 
@@ -103,29 +82,30 @@ public class RegistrarTramiteWebUI implements Serializable {
         this.listaTiposTramite = listaTiposTramite;
     }
 
-    public int getCodTipoTramiteSeleccionado() {
-        return codTipoTramiteSeleccionado;
+    public DTOTipoTramite getTipoTramiteSeleccionado() {
+        return tipoTramiteSeleccionado;
     }
 
-    public void setCodTipoTramiteSeleccionado(int codTipoTramiteSeleccionado) {
-        this.codTipoTramiteSeleccionado = codTipoTramiteSeleccionado;
+    public void setTipoTramiteSeleccionado(DTOTipoTramite tipoTramiteSeleccionado) {
+        this.tipoTramiteSeleccionado = tipoTramiteSeleccionado;
     }
 
+    public DTOResumen getDtoResumen() {
+        return dtoResumen;
+    }
 
     public void setDtoResumen(DTOResumen dtoResumen) {
         this.dtoResumen = dtoResumen;
     }
 
-    public int getNumeroTramite() {
-        return numeroTramite;
+    public DTONumeroTramite getDtoNumeroTramite() {
+        return dtoNumeroTramite;
     }
 
-    public void setNumeroTramite(int numeroTramite) {
-        this.numeroTramite = numeroTramite;
+    public void setDtoNumeroTramite(DTONumeroTramite dtoNumeroTramite) {
+        this.dtoNumeroTramite = dtoNumeroTramite;
     }
-    
-    
-    
+
     public String getMensajeError() {
         return mensajeError;
     }
@@ -133,32 +113,62 @@ public class RegistrarTramiteWebUI implements Serializable {
     public void setMensajeError(String mensajeError) {
         this.mensajeError = mensajeError;
     }
+
     
     public String ingresarDNI() {
         try {
-            dtoCliente = controladorRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
-            return "confirmarCliente?faces-redirect=true"; //
+            // Busca el cliente por DNI
+            DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dtoCliente.getDniCliente());
+            if (clienteBuscado != null) {
+                // Actualiza el DTOCliente con los datos encontrados
+                this.dtoCliente = clienteBuscado;
+                return "confirmarCliente?faces-redirect=true";
+            } else {
+                mensajeError = "Cliente no encontrado.";
+                return null; // Permanecer en la misma página
+            }
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
             return null; // Permanecer en la misma página
         }
-    } 
+    }  
     
     public String confirmarCliente() {
+        listarCategoriasTipoTramite();
         return "seleccionarCategoria?faces-redirect=true"; //?faces-redirect=true
     }
 
+    public void listarCategoriasTipoTramite() {
+        try {
+            listaCategorias = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
+        } catch (RegistrarTramiteWebException e) {
+            mensajeError = e.getMessage();
+            listaCategorias = null;
+        }
+    }
+    
     public String seleccionarCategoria() {
-        if (codCategoriaTipoTramiteSeleccionada != 0) {
+        if (categoriaSeleccionada.getCodCategoriaTipoTramite() != 0) {
+            listarTipoTramites();
             return "seleccionarTipoTramite?faces-redirect=true"; //?faces-redirect=true
         } else {
             mensajeError = "Debe seleccionar una categoría.";
             return null;
         }
-    }    
+    }  
+    
+    public void listarTipoTramites() {
+        try {
+            listaTiposTramite = controladorRegistrarTramiteWeb.listarTipoTramites(categoriaSeleccionada.getCodCategoriaTipoTramite());
+        } catch (RegistrarTramiteWebException e) {
+            mensajeError = e.getMessage();
+            listaTiposTramite = null;
+        }
+    }
     
     public String seleccionarTipoTramite() {
-        if (codTipoTramiteSeleccionado != 0) {
+        if (tipoTramiteSeleccionado.getCodTipoTramite() != 0) {
+            irAResumen();
             return "mostrarResumen?faces-redirect=true"; //?faces-redirect=true
         } else {
             mensajeError = "Debe seleccionar un tipo de trámite.";
@@ -166,27 +176,21 @@ public class RegistrarTramiteWebUI implements Serializable {
         }
     }
     
-    public DTOResumen getDtoResumen() {
-        if (dtoResumen == null && codTipoTramiteSeleccionado != 0) {
-            try {
-                dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramiteSeleccionado);
-            } catch (RegistrarTramiteWebException e) {
-                mensajeError = e.getMessage();
-                // Manejar el error, por ejemplo, redirigir a una página de error o mostrar un mensaje en la vista
-                // Aquí puedes decidir cómo manejarlo, por ahora retornamos null
-                return null;
-            }
+        public void irAResumen() {
+        try {
+            dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(tipoTramiteSeleccionado.getCodTipoTramite());
+        } catch (RegistrarTramiteWebException e) {
+            mensajeError = e.getMessage();
+            dtoResumen = null;
         }
-        return dtoResumen;
     }
     
+
     
     public String confirmarTramite() {
         try {
-            DTONumeroTramite dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
-            numeroTramite = dtoNumeroTramite.getNumeroTramite();
-            // Guardar el número de trámite en un atributo si es necesario
-            // Redirigir al siguiente paso (mostrar número de trámite)
+            dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
+    
             return "mostrarNumeroTramite?faces-redirect=true"; //?faces-redirect=true
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
@@ -214,14 +218,13 @@ public class RegistrarTramiteWebUI implements Serializable {
     }  
     
     public void resetearEstado() {
-    dniCliente = 0;
-    dtoCliente = null;
-    mensajeError = null;
-    listaCategorias = null;
-    codCategoriaTipoTramiteSeleccionada = 0;
-    listaTiposTramite = null;
-    codTipoTramiteSeleccionado = 0;
-    dtoResumen = null;
-    numeroTramite = 0;
-    }   
+        dtoCliente = new DTOCliente();
+        categoriaSeleccionada = new DTOCategoriaTipoTramite();
+        tipoTramiteSeleccionado = new DTOTipoTramite();
+        dtoNumeroTramite = new DTONumeroTramite();
+        mensajeError = null;
+        listaCategorias = null;
+        listaTiposTramite = null;
+        dtoResumen = null;
+    }     
 }

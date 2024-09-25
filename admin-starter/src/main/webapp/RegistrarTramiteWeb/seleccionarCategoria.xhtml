@@ -22,7 +22,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <p><strong>Descripción:</strong> #{categoria.descripcionCategoriaTipoTramite}</p>
                 <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
                 <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
-                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codCategoriaTipoTramiteSeleccionada}" value="#{categoria.codCategoriaTipoTramite}" />
+                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.categoriaSeleccionada.codCategoriaTipoTramite}" value="#{categoria.codCategoriaTipoTramite}" />
                 </h:commandButton>
             </div>
         </ui:repeat>

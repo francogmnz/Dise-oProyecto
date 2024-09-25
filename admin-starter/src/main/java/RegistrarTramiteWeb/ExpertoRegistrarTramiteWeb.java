@@ -189,20 +189,20 @@ public class ExpertoRegistrarTramiteWeb {
 
     }
        
-public static int generarNroTramite(int codTipoTramite) {
-    return (int) (System.currentTimeMillis() + codTipoTramite);
+    public static int generarNroTramite(int codTipoTramite) {
+        return (int) (System.currentTimeMillis() + codTipoTramite);
 }
 
 
 
-    
+  
     public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
         
         TipoTramite tipoTramiteRelacionado = null;
         EstadoTramite estadoTramite = null;
         Version version = null;
         ListaPrecios listaPrecios = null;
-    
+ 
         List<DTOCriterio> criterioTipoTramiteRelacionadoList = new ArrayList<>();
         DTOCriterio criterioCodigoTT = new DTOCriterio();
         
@@ -225,7 +225,7 @@ public static int generarNroTramite(int codTipoTramite) {
             tipoTramiteRelacionado = (TipoTramite) tipoTramiteList.get(0);
         } else {
             System.out.println("Error: No se encontró un TipoTramite con los criterios especificados.");
-            return null;  // O maneja el error de forma adecuada
+            //return null;  // ver si meto un cartelito de error
         }
         
         List<DTOCriterio> criterioEstadoTramiteList = new ArrayList<>();
@@ -250,7 +250,7 @@ public static int generarNroTramite(int codTipoTramite) {
             estadoTramite = (EstadoTramite) estadoTramiteList.get(0);
         } else {
             System.out.println("Error: No se encontró un EstadoTramite con los criterios especificados.");
-            return null;  // O maneja el error de forma adecuada
+            //return null;  // ver si meto un cartelito de error
         }
         
         Tramite nuevoTramite = new Tramite();
@@ -295,7 +295,7 @@ public static int generarNroTramite(int codTipoTramite) {
             version = (Version) versionList.get(0);
         } else {
             System.out.println("Error: No se encontró una Versión con los criterios especificados.");
-            return null;  // O maneja el error de forma adecuada
+            //return null;  // ver si meto un cartelito de error
         }
         
         nuevoTramite.setVersion(version);
@@ -327,7 +327,7 @@ public static int generarNroTramite(int codTipoTramite) {
             
         
         }
-        
+
         List<DTOCriterio> criterioListaPreciosList = new ArrayList<>();
         DTOCriterio criterioFechaHoraBajaLP = new DTOCriterio();
         
@@ -358,7 +358,7 @@ public static int generarNroTramite(int codTipoTramite) {
             listaPrecios = (ListaPrecios) listaPreciosList.get(0);
         } else {
             System.out.println("Error: No se encontró una ListaPrecios con los criterios especificados.");
-            return null;  // O maneja el error de forma adecuada
+            //return null;  ver si meto un cartelito de error
         }
         
         List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = listaPrecios.getTipoTramiteListaPrecios();
@@ -370,7 +370,7 @@ public static int generarNroTramite(int codTipoTramite) {
             }
         
         }
-        
+
         
         DTOResumen dtoResumen = new DTOResumen();
         
@@ -389,12 +389,12 @@ public static int generarNroTramite(int codTipoTramite) {
         tramiteEnProceso = nuevoTramite;
         
         return dtoResumen;
-        
+
         
         
        
     }
-    
+     
     public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException {
         if (tramiteEnProceso == null) {
             throw new RegistrarTramiteWebException("No hay un trámite en proceso para registrar.");
