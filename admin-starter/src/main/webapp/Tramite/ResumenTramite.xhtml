@@ -124,8 +124,11 @@
 
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
-                                <p:commandButton id="codTD" icon="fa fa-edit" type="button" styleClass="btn-default" disabled="#{uiresumen.fechaAnulacionTramite != null}"/>
+                                <p:commandButton id="codTD" icon="fa fa-edit" styleClass="btn-default"
+                                                 disabled="#{uiresumen.fechaAnulacionTramite != null}" 
+                                                 action="#{uiresumen.registrarDocumentacion(doc.codTD)}"/>
                             </p:column>
+
                         </p:dataTable>
                     </p:panel>
                 </p:tab>

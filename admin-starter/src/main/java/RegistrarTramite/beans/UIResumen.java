@@ -34,6 +34,7 @@ public class UIResumen implements Serializable {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
+    private int codTD;
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
     private List<DTODocumentacion> resumenDoc;
@@ -69,6 +70,7 @@ public class UIResumen implements Serializable {
                     this.resumenDoc = tramiteElegido.getResumenDoc();
 
                     for (DTODocumentacion doc : resumenDoc) {
+                        this.codTD = doc.getCodTD();
                         this.nombreDocumentacion = doc.getNombreDocumentacion();
                         this.fechaEntregaDoc = doc.getFechaEntregaDoc();
                     }
@@ -192,6 +194,14 @@ public class UIResumen implements Serializable {
         this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
+    public int getCodTD() {
+        return codTD;
+    }
+
+    public void setCodTD(int codTD) {
+        this.codTD = codTD;
+    }
+
     public List<DTODocumentacion> getResumenDoc() {
         return resumenDoc;
     }
@@ -212,7 +222,7 @@ public class UIResumen implements Serializable {
         }
     }
 
-    public void registrarDocumentacion(int codTD){
-        
+    public String registrarDocumentacion(int codTD){
+        return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD;
     }
 }

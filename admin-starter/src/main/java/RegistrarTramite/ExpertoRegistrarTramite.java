@@ -7,8 +7,10 @@ import RegistrarTramite.dtos.DTOTipoTramite;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
+import entidades.AgendaConsultor;
 import entidades.CategoriaTipoTramite;
 import entidades.Cliente;
+import entidades.Consultor;
 import entidades.Documentacion;
 import entidades.EstadoTramite;
 import entidades.ListaPrecios;
@@ -360,7 +362,8 @@ public class ExpertoRegistrarTramite {
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
     }
-
+    
+    Tramite tramiteElegido = new Tramite();
     // mostrarDatosTramite(): DTOTramiteElegido
     public DTOTramiteElegido mostrarResumenTramite(int nroTramite) {
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
@@ -375,27 +378,28 @@ public class ExpertoRegistrarTramite {
             criterioList.add(dto1);
         }
 
-        Tramite tramiteEncontrado = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
+        tramiteElegido = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
         DTOTramiteElegido resumenDTO = new DTOTramiteElegido(); // :create() DTOTramiteElegido 
 
         // seteamos en DTOTramiteElegido los atributos del tramite seleccionado
-        resumenDTO.setNroTramite(tramiteEncontrado.getNroTramite());
-        resumenDTO.setFechaRecepcionTramite(tramiteEncontrado.getFechaRecepcionTramite());
-        resumenDTO.setFechaAnulacionTramite(tramiteEncontrado.getFechaAnulacionTramite());
-        resumenDTO.setPlazoDocumentacion(tramiteEncontrado.getTipoTramite().getPlazoEntregaDocumentacionTT());
-        resumenDTO.setCodTipoTramite(tramiteEncontrado.getTipoTramite().getCodTipoTramite());
-        resumenDTO.setNombreTipoTramite(tramiteEncontrado.getTipoTramite().getNombreTipoTramite());
-        resumenDTO.setNombreEstado(tramiteEncontrado.getEstadoTramite().getNombreEstadoTramite());
-        resumenDTO.setPrecioTramite(tramiteEncontrado.getPrecioTramite());
-        resumenDTO.setDniCliente(tramiteEncontrado.getCliente().getDniCliente());
-        resumenDTO.setNombreCliente(tramiteEncontrado.getCliente().getNombreCliente());
-        resumenDTO.setApellidoCliente(tramiteEncontrado.getCliente().getApellidoCliente());
-        resumenDTO.setMailCliente(tramiteEncontrado.getCliente().getMailCliente());
+        resumenDTO.setNroTramite(tramiteElegido.getNroTramite());
+        resumenDTO.setFechaRecepcionTramite(tramiteElegido.getFechaRecepcionTramite());
+        resumenDTO.setFechaAnulacionTramite(tramiteElegido.getFechaAnulacionTramite());
+        resumenDTO.setPlazoDocumentacion(tramiteElegido.getTipoTramite().getPlazoEntregaDocumentacionTT());
+        resumenDTO.setCodTipoTramite(tramiteElegido.getTipoTramite().getCodTipoTramite());
+        resumenDTO.setNombreTipoTramite(tramiteElegido.getTipoTramite().getNombreTipoTramite());
+        resumenDTO.setNombreEstado(tramiteElegido.getEstadoTramite().getNombreEstadoTramite());
+        resumenDTO.setPrecioTramite(tramiteElegido.getPrecioTramite());
+        resumenDTO.setDniCliente(tramiteElegido.getCliente().getDniCliente());
+        resumenDTO.setNombreCliente(tramiteElegido.getCliente().getNombreCliente());
+        resumenDTO.setApellidoCliente(tramiteElegido.getCliente().getApellidoCliente());
+        resumenDTO.setMailCliente(tramiteElegido.getCliente().getMailCliente());
 
         List<DTODocumentacion> resumenDocList = new ArrayList<>(); // :create() DTODocumentacion
         // loop por cada TramiteDocumentacion para setear atributos
-        for (TramiteDocumentacion doc : tramiteEncontrado.getTramiteDocumentacion()) {
+        for (TramiteDocumentacion doc : tramiteElegido.getTramiteDocumentacion()) {
             DTODocumentacion resumenDoc = new DTODocumentacion();
+            resumenDoc.setCodTD(doc.getCodTD());
             resumenDoc.setNombreDocumentacion(doc.getDocumentacion().getNombreDocumentacion());
             resumenDoc.setFechaEntregaDoc(doc.getFechaEntregaTD());
             resumenDocList.add(resumenDoc);
@@ -490,6 +494,99 @@ public class ExpertoRegistrarTramite {
         }
 
         return tipoTramiteResultados;
+
+    }
+    
+    public void registrarDocumentacion(int codTD, String archivoTD){
+        
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+        
+        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
+        
+        for(TramiteDocumentacion td: tdList){
+             if(td.getCodTD() == codTD){ 
+                 td.setArchivoTD(archivoTD);
+                 td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
+                 FachadaPersistencia.getInstance().guardar(td);
+             }
+        }  
+    }
+    
+    public void asignarConsultor(){
+        
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+        
+        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
+        
+        boolean todasPresentadas = false;
+        for(TramiteDocumentacion td: tdList){
+            if(td.getFechaEntregaTD() != null){
+                todasPresentadas = true;
+                break;
+            }
+        }
+        
+        if(todasPresentadas == true){
+            tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
+        }
+        
+        List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
+        
+        DTOCriterio agendaCriterio1 = new DTOCriterio();
+        agendaCriterio1.setAtributo("fechaAgenda");
+        agendaCriterio1.setOperacion("<");
+        agendaCriterio1.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioList.add(agendaCriterio1);
+        
+        DTOCriterio agendaCriterio2 = new DTOCriterio();
+        agendaCriterio2.setAtributo("fechaBajaAgenda");
+        agendaCriterio2.setOperacion("=");
+        agendaCriterio2.setValor(null);
+        criterioList.add(agendaCriterio2);
+        
+        
+        AgendaConsultor agenda = (AgendaConsultor) FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioList).get(0);
+        
+        List<Consultor> consultorList = agenda.getConsultores();
+        
+        Consultor consultorSeleccionado = null;  // Consultor con menor cantidad de trámites
+        int menorCantidadTramites = Integer.MAX_VALUE;  // Para inicializar la búsqueda
+
+        for (Consultor consultor : consultorList) {
+            int nroMaximoTramites = consultor.getNroMaximoTramites();  // Obtener el máximo de trámites que puede tener
+            int tramitesAsignados = 0;
+
+            // Construir los criterios de búsqueda
+            criterioList.clear();
+            DTOCriterio consuCriterio = new DTOCriterio();
+            consuCriterio.setAtributo("consultor");
+            consuCriterio.setOperacion("=");
+            consuCriterio.setValor(consultor);
+            criterioList.add(consuCriterio);
+
+            // Buscar trámites asociados a este consultor
+            List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+            for (Object o : objectList) {
+                tramitesAsignados += 1;  // Contar los trámites asignados
+            }
+
+            // Verificar que el número de trámites asignados no supere el máximo permitido
+            if (tramitesAsignados < nroMaximoTramites) {
+                // Si este consultor tiene menos trámites asignados que el seleccionado hasta ahora
+                if (tramitesAsignados < menorCantidadTramites) {
+                    menorCantidadTramites = tramitesAsignados;
+                    consultorSeleccionado = consultor;  
+                }
+            }
+        }
+        
+        tramiteElegido.setConsultor(consultorSeleccionado);
+        tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
+        
+        FachadaPersistencia.getInstance().guardar(tramiteElegido);
+        
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+
 
     }
 
