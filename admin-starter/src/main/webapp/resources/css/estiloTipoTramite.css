@@ -1,0 +1,231 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 26, 2024, 1:09:38 AM
+    Author     : licciardi
+*/
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container-tipo-tramite {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.titulo-tipo-tramite {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Barra de progreso */
+.barra-progreso-tipo {
+    margin-bottom: 30px;
+}
+
+.barra-progreso-tipo .progreso-tipo {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.barra-progreso-tipo .progreso-tipo .paso-tipo {
+    width: 24%;
+    text-align: center;
+    position: relative;
+    color: #999;
+}
+
+.barra-progreso-tipo .progreso-tipo .paso-tipo::before {
+    content: '';
+    width: 100%;
+    height: 4px;
+    background-color: #e0e0e0;
+    position: absolute;
+    top: 20px;
+    left: -50%;
+    z-index: -1;
+}
+
+.barra-progreso-tipo .progreso-tipo .paso-tipo:first-child::before {
+    content: none;
+}
+
+.barra-progreso-tipo .progreso-tipo .paso-tipo.completado-tipo,
+.barra-progreso-tipo .progreso-tipo .paso-tipo.activo-tipo {
+    color: #2196F3; /* Azul celeste */
+}
+
+.barra-progreso-tipo .progreso-tipo .paso-tipo.completado-tipo::before,
+.barra-progreso-tipo .progreso-tipo .paso-tipo.activo-tipo::before {
+    background-color: #2196F3; /* Azul celeste */
+}
+
+/* Subtítulo */
+.subtitulo-lindo-tipo {
+    text-align: center;
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    font-weight: bold;
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Grid de Tipos de Trámite */
+.tipos-tramite-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.tipo-tramite-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: calc(33.333% - 20px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Estilo del encabezado */
+.tipo-tramite-header {
+    background-color: #d1d5db; /* Gris más oscuro */
+    color: #495057; /* Negro más fuerte */
+    padding: 15px;
+    text-align: center;
+}
+
+.tipo-tramite-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.tipo-tramite-body {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.tipo-tramite-body p {
+    margin: 10px 0;
+    color: #666;
+}
+
+/* Línea divisoria */
+.divisoria-tipo {
+    border: 0;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 15px 0;
+}
+
+/* Estilo para la documentación requerida */
+.documentacion-tipo {
+    margin-top: 15px;
+}
+
+.documentacion-tipo h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.documentacion-tipo ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.documentacion-tipo li {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Botón Seleccionar */
+.btn-seleccionar-tipo {
+    margin: 15px;
+    align-self: center;
+    background-color: #0069d9 !important; /* Azul botón Seleccionar */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+}
+
+.btn-seleccionar-tipo:hover {
+    background-color: #0288D1 !important; /* Azul más oscuro */
+}
+
+/* Botón Cancelar con gris más visible (#c0c0c0) */
+.btn-cancelar-tipo {
+    margin-top: 30px;
+    display: block;
+    background-color: #c0c0c0 !important; /* Gris más oscuro */
+    color: #212529 !important; /* Texto más oscuro */
+    border: 1px solid #999 !important;
+    padding: 10px 20px !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+    width: 150px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-cancelar-tipo:hover {
+    background-color: #a9a9a9 !important; /* Fondo más oscuro en hover */
+}
+
+/* Mensaje de error */
+.error-message-tipo {
+    color: red;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Responsividad */
+@media screen and (max-width: 992px) {
+    .tipo-tramite-item {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .tipo-tramite-item {
+        width: 100%;
+    }
+
+    .barra-progreso-tipo .progreso-tipo .paso-tipo::before {
+        display: none;
+    }
+
+    .barra-progreso-tipo .progreso-tipo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barra-progreso-tipo .progreso-tipo .paso-tipo {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

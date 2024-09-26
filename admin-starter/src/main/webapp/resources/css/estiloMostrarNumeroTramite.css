@@ -1,0 +1,86 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 26, 2024, 1:51:20 AM
+    Author     : licciardi
+*/
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container-numero-tramite {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.titulo-numero-tramite {
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+/* Mensaje de confirmación */
+.mensaje-confirmacion {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.mensaje-confirmacion p {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.numero-tramite {
+    font-size: 2.5em;
+    color: #2196F3; /* Azul celeste */
+    margin-top: 10px;
+}
+
+/* Botón Volver al Inicio */
+.botones {
+    text-align: center;
+}
+
+.btn-inicio {
+    background-color: #0069d9 !important; /* Azul botón */
+    color: white !important;
+    border: none !important;
+    padding: 12px 25px !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+}
+
+.btn-inicio:hover {
+    background-color: #0288D1 !important; /* Azul más oscuro */
+}
+
+/* Responsividad */
+@media screen and (max-width: 600px) {
+    .titulo-numero-tramite {
+        font-size: 1.5em;
+    }
+
+    .mensaje-confirmacion p {
+        font-size: 1em;
+    }
+
+    .numero-tramite {
+        font-size: 2em;
+    }
+
+    .btn-inicio {
+        width: 100%;
+        padding: 12px !important;
+    }
+}

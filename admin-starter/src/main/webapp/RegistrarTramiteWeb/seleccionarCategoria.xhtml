@@ -10,26 +10,50 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Seleccionar Categoría</title>
-    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloCategoria.css" />
 </h:head>
 <h:body>
-    <h:form class="formulario-categoria">
-        <h1>Seleccione una Categoría</h1>
+    <h:form>
+    <div class="container">
+        <!-- Título -->
+        <h1 class="titulo">Gestión de Trámites</h1>
 
-        <ui:repeat value="#{uiRegistrarTramiteWeb.listaCategorias}" var="categoria">
-            <div class="categoria-card">
-                <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
-                <p><strong>Descripción:</strong> #{categoria.descripcionCategoriaTipoTramite}</p>
-                <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
-                <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
-                    <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.categoriaSeleccionada.codCategoriaTipoTramite}" value="#{categoria.codCategoriaTipoTramite}" />
-                </h:commandButton>
-            </div>
-        </ui:repeat>
+        <!-- Barra de progreso -->
+        <div class="barra-progreso">
+            <ul class="progreso">
+                <li class="paso completado">Acceder</li>
+                <li class="paso activo">Categoría</li>
+                <li class="paso">Trámite</li>
+                <li class="paso">Confirmar</li>
+            </ul>
+        </div>
 
+        <!-- Instrucción con nuevo estilo -->
+        <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
+
+        <!-- Grid de Categorías -->
+        <div class="categorias-grid">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.listaCategorias}" var="categoria">
+                <div class="categoria-item">
+                    <div class="categoria-header">
+                        <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
+                    </div>
+                    <div class="categoria-body">
+                        <p><strong>Descripción:</strong> #{categoria.descripcionCategoriaTipoTramite}</p>
+                        <hr class="divisoria" />
+                        <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
+                    </div>
+                    <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
+                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.categoriaSeleccionada.codCategoriaTipoTramite}" value="#{categoria.codCategoriaTipoTramite}" />
+                    </h:commandButton>
+                </div>
+            </ui:repeat>
+        </div>
+
+        <!-- Botón Cancelar -->
         <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
-
         <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+    </div>
     </h:form>
 </h:body>
 </html>

@@ -3,39 +3,64 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
 -->
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 <h:head>
-    <title>Confirmar Datos del Cliente</title>
-    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+    <title>Gestión de Trámites - Confirmar Cliente</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloConfirmarCliente.css" />
 </h:head>
 <h:body>
-    <h:form class="formulario-confirmacion">
-        <h1>Confirmación de Datos del Cliente</h1>
+    <h:form>
+        <div class="container-centralizado">
+            <h:panelGrid columns="1" styleClass="panel-principal">
 
-        <h:panelGrid columns="2" styleClass="panel-grid-confirmacion">
-            <h:outputLabel value="Nombre:" styleClass="label" />
-            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.nombreCliente}" styleClass="text" />
+                <!-- Título -->
+                <h1 class="titulo">Gestión de Trámites</h1>
 
-            <h:outputLabel value="Apellido:" styleClass="label" />
-            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.apellidoCliente}" styleClass="text" />
+                <!-- Barra de progreso -->
+                <div class="barra-progreso-cliente">
+                    <ul class="progreso-cliente">
+                        <li class="paso-cliente activo-cliente">Acceder</li>
+                        <li class="paso-cliente">Categoría</li>
+                        <li class="paso-cliente">Trámite</li>
+                        <li class="paso-cliente">Confirmar</li>
+                    </ul>
+                </div>
 
-            <h:outputLabel value="DNI:" styleClass="label" />
-            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}" styleClass="text" />
+                <!-- Bienvenida y datos del cliente -->
+                <h2 class="subtitulo">BIENVENIDO:</h2>
 
-            <h:outputLabel value="Email:" styleClass="label" />
-            <h:outputText value="#{uiRegistrarTramiteWeb.dtoCliente.mailCliente}" styleClass="text" />
-        </h:panelGrid>
+                <div class="info-cliente">
+                    <div class="info-item">
+                        <span class="label-cliente">Nombre:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.dtoCliente.nombreCliente}</span>
+                    </div>
 
-        <h:panelGroup styleClass="botones-confirmacion">
-            <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.confirmarCliente}" styleClass="btn-continuar" />
-            <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
-        </h:panelGroup>
+                    <div class="info-item">
+                        <span class="label-cliente">Apellido:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.dtoCliente.apellidoCliente}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="label-cliente">DNI:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="label-cliente">Mail:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.dtoCliente.mailCliente}</span>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="botones-accion">
+                    <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.confirmarCliente}" styleClass="btn-confirmar" />
+                    <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
+                </div>
+            </h:panelGrid>
+        </div>
     </h:form>
 </h:body>
 </html>
-
-
-
-

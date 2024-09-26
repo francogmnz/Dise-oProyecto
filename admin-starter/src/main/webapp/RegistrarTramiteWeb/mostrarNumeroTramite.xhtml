@@ -9,21 +9,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Trámite Registrado</title>
-    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estiloMostrarNumeroTramite.css']}" />
 </h:head>
 <h:body>
-    <h:form class="formulario-numero-tramite">
-        <h1>Trámite Registrado Exitosamente</h1>
+    <h:form>
+        <div class="container-numero-tramite">
+            <!-- Título -->
+            <h1 class="titulo-numero-tramite">Trámite Registrado Exitosamente</h1>
 
-        <h:panelGroup styleClass="panel-numero-tramite">
-            <p>Su número de trámite es:</p>
-            <h2>#{uiRegistrarTramiteWeb.dtoNumeroTramite.numeroTramite}</h2>
-        </h:panelGroup>
+            <!-- Mensaje de confirmación -->
+            <div class="mensaje-confirmacion">
+                <p>Su número de trámite es:</p>
+                <h2 class="numero-tramite">#{uiRegistrarTramiteWeb.dtoNumeroTramite.numeroTramite}</h2>
+            </div>
 
-        <h:panelGroup styleClass="botones">
-            <h:commandButton value="Volver al Inicio" action="#{uiRegistrarTramiteWeb.irAlInicio}" styleClass="btn-inicio" />
-        </h:panelGroup>
+            <!-- Botón Volver al Inicio -->
+            <div class="botones">
+                <h:commandButton value="Volver al Inicio" action="#{uiRegistrarTramiteWeb.irAlInicio}" styleClass="btn-inicio" />
+            </div>
+        </div>
     </h:form>
 </h:body>
 </html>
+
 

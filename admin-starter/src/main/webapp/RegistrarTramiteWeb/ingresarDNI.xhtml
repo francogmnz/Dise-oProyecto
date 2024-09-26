@@ -10,25 +10,38 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Registrar Trámite Web - Ingreso de DNI</title>
-    <link rel="stylesheet" type="text/css" href="#{resource['css/estilos.css']}" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloIngresarDNI.css" />
 </h:head>
 <h:body>
-    <h:form class="formulario-dni">
-        <h1>Registro de Trámite Web</h1>
+    <div class="container">
+        <h:form class="formulario-dni">
+            <h1>Gestión de Trámites</h1>
 
-        <h:panelGrid columns="1" styleClass="panel-grid">
-            <h:outputLabel for="dni" value="Ingrese su DNI:" styleClass="label-dni" />
-            <h:inputText id="dni" value="#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}" required="true" requiredMessage="El DNI es obligatorio." styleClass="input-dni" />
-            <h:message for="dni" styleClass="error-message" />
+            <h:panelGrid columns="1" styleClass="panel-grid">
+                <!-- Caja de información actualizada con el texto dentro -->
+                <div class="info-box">
+                    <p>Esta guía te informa sobre los trámites del municipio, dónde realizarlos, requisitos, costos y otra información relevante de cada trámite.</p>
+                </div>
 
-            <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.ingresarDNI}" styleClass="btn-continuar" />
-            <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" styleClass="btn-cancelar"/>
-        </h:panelGrid>
+                <h:outputLabel for="dni" value="Para acceder a la guía, ingrese su número de documento:" styleClass="label-dni" />
+                <h:inputText id="dni" value="#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}" required="true" requiredMessage="El DNI es obligatorio." styleClass="input-dni" />
+                <h:message for="dni" styleClass="error-message" />
 
-        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
-    </h:form>
+                <!-- Contenedor para los botones, con el margen ajustado -->
+                <div class="button-container">
+                    <h:commandButton value="Confirmar" action="#{uiRegistrarTramiteWeb.ingresarDNI}" styleClass="btn-confirmar" />
+                    <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" styleClass="btn-cancelar"/>
+                </div>
+            </h:panelGrid>
+
+            <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+        </h:form>
+    </div>
 </h:body>
 </html>
+
+
+
 
 
 

@@ -1,0 +1,211 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 25, 2024, 8:02:06 PM
+    Author     : licciardi
+*/
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.titulo {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Barra de progreso */
+.barra-progreso {
+    margin-bottom: 30px;
+}
+
+.barra-progreso .progreso {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.barra-progreso .progreso .paso {
+    width: 24%;
+    text-align: center;
+    position: relative;
+    color: #999;
+}
+
+.barra-progreso .progreso .paso::before {
+    content: '';
+    width: 100%;
+    height: 4px;
+    background-color: #e0e0e0;
+    position: absolute;
+    top: 20px;
+    left: -50%;
+    z-index: -1;
+}
+
+.barra-progreso .progreso .paso:first-child::before {
+    content: none;
+}
+
+.barra-progreso .progreso .paso.completado,
+.barra-progreso .progreso .paso.activo {
+    color: #2196F3; /* Azul celeste */
+}
+
+.barra-progreso .progreso .paso.completado::before,
+.barra-progreso .progreso .paso.activo::before {
+    background-color: #2196F3; /* Azul celeste */
+}
+
+/* Subtítulo */
+.subtitulo-lindo {
+    text-align: center;
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    font-weight: bold;
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Grid de Categorías */
+.categorias-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.categoria-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: calc(33.333% - 20px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Cambiar el fondo de la cabecera a un gris más oscuro (#d1d5db) y la letra a un negro más fuerte */
+.categoria-header {
+    background-color: #d1d5db; /* Gris más oscuro */
+    color: #495057; /* Negro más fuerte */
+    padding: 15px;
+    text-align: center;
+}
+
+.categoria-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.categoria-body {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.categoria-body p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.divisoria {
+    border: 0;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 15px 0;
+}
+
+/* Botón Seleccionar */
+.btn-seleccionar {
+    margin: 15px;
+    align-self: center;
+    background-color: #0069d9 !important; /* Azul botón Seleccionar */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+}
+
+.btn-seleccionar:hover {
+    background-color: #0288D1 !important; /* Azul más oscuro */
+}
+
+/* Botón Cancelar con gris más visible (#c0c0c0) */
+.btn-cancelar {
+    margin-top: 30px;
+    display: block;
+    background-color: #c0c0c0 !important; /* Gris más oscuro */
+    color: #212529 !important; /* Texto más oscuro */
+    border: 1px solid #999 !important;
+    padding: 10px 20px !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+    width: 150px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-cancelar:hover {
+    background-color: #a9a9a9 !important; /* Fondo más oscuro en hover */
+}
+
+
+/* Mensaje de error */
+.error-message {
+    color: red;
+    font-size: 16px; /* Aumento del tamaño de la fuente */
+    margin-bottom: 10px;
+}
+
+/* Responsividad */
+@media screen and (max-width: 992px) {
+    .categoria-item {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .categoria-item {
+        width: 100%;
+    }
+
+    .barra-progreso .progreso .paso::before {
+        display: none;
+    }
+
+    .barra-progreso .progreso {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barra-progreso .progreso .paso {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
