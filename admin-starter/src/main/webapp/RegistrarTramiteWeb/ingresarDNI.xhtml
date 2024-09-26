@@ -18,7 +18,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <h1>Gestión de Trámites</h1>
 
             <h:panelGrid columns="1" styleClass="panel-grid">
-                <!-- Caja de información actualizada con el texto dentro -->
                 <div class="info-box">
                     <p>Esta guía te informa sobre los trámites del municipio, dónde realizarlos, requisitos, costos y otra información relevante de cada trámite.</p>
                 </div>
@@ -27,7 +26,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <h:inputText id="dni" value="#{uiRegistrarTramiteWeb.dtoCliente.dniCliente}" required="true" requiredMessage="El DNI es obligatorio." styleClass="input-dni" />
                 <h:message for="dni" styleClass="error-message" />
 
-                <!-- Contenedor para los botones, con el margen ajustado -->
                 <div class="button-container">
                     <h:commandButton value="Confirmar" action="#{uiRegistrarTramiteWeb.ingresarDNI}" styleClass="btn-confirmar" />
                     <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" styleClass="btn-cancelar"/>

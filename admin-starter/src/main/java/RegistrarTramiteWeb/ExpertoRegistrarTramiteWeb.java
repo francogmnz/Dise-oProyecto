@@ -59,15 +59,15 @@ public class ExpertoRegistrarTramiteWeb {
         
         //Cliente clienteIngresado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
         try {
-            // Intentar obtener el cliente
+            
             cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
 
-            // Validar si el DNI coincide
+            
             if (dniCliente != cliente.getDniCliente()) {
                 throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
             }
         } catch (IndexOutOfBoundsException e) {
-            // Capturar cuando la búsqueda no arroja resultados
+            
             throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
         }
         DTOCliente dtoCliente = new DTOCliente();
@@ -420,7 +420,7 @@ public class ExpertoRegistrarTramiteWeb {
 
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
-        // Reset 'tramiteEnProceso' after saving
+        // termino y vuelvo a null el tramite en proceso
         tramiteEnProceso = null;
 
         return dtoNumeroTramite;

@@ -14,16 +14,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <h:body>
     <h:form>
         <div class="container-numero-tramite">
-            <!-- Título -->
             <h1 class="titulo-numero-tramite">Trámite Registrado Exitosamente</h1>
 
-            <!-- Mensaje de confirmación -->
             <div class="mensaje-confirmacion">
                 <p>Su número de trámite es:</p>
                 <h2 class="numero-tramite">#{uiRegistrarTramiteWeb.dtoNumeroTramite.numeroTramite}</h2>
             </div>
 
-            <!-- Botón Volver al Inicio -->
             <div class="botones">
                 <h:commandButton value="Volver al Inicio" action="#{uiRegistrarTramiteWeb.irAlInicio}" styleClass="btn-inicio" />
             </div>

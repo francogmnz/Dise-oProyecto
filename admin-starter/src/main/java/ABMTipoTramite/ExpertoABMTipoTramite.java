@@ -4,8 +4,9 @@
  */
 package ABMTipoTramite;
 
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
-import ABMDocumentacion.dtos.DocumentacionDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.*;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
@@ -389,6 +390,32 @@ public class ExpertoABMTipoTramite {
 
         
         List<TipoTramiteDocumentacion> tipoTramiteDocumentacionRelacionada = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
+        
+        /*
+        List<Integer> codDocumentacionesExistentes = new ArrayList<>();
+        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                codDocumentacionesExistentes.add(ttd.getDocumentacion().getCodDocumentacion());
+            }
+        }
+        
+        List<Integer> codDocumentacionesSeleccionadas = new ArrayList<>();
+        for(DocumentacionDTO docDTO: documentacionesSeleccionadasDTO){
+            codDocumentacionesSeleccionadas.add(docDTO.getCodDocumentacion());
+        }
+        
+        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                Integer codDocExistente = ttd.getDocumentacion().getCodDocumentacion();
+                if(!codDocumentacionesSeleccionadas.contains(codDocExistente)){
+                    ttd.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+                    FachadaPersistencia.getInstance().guardar(ttd);
+                }
+            }
+        
+        }
+        */
+        
         for(TipoTramiteDocumentacion ttdr: tipoTramiteDocumentacionRelacionada){
             ttdr.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
             FachadaPersistencia.getInstance().guardar(ttdr);

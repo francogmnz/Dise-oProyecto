@@ -4,8 +4,9 @@
  */
 package ABMTipoTramite.dtos;
 
-import ABMDocumentacion.dtos.DocumentacionDTO;
+//import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.dtos.*;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import entidades.CategoriaTipoTramite;
 import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;

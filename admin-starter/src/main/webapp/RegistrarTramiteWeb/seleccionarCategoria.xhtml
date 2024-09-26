@@ -14,11 +14,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 </h:head>
 <h:body>
     <h:form>
-    <div class="container">
-        <!-- Título -->
+    <div class="container">      
         <h1 class="titulo">Gestión de Trámites</h1>
 
-        <!-- Barra de progreso -->
         <div class="barra-progreso">
             <ul class="progreso">
                 <li class="paso completado">Acceder</li>
@@ -27,11 +25,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <li class="paso">Confirmar</li>
             </ul>
         </div>
-
-        <!-- Instrucción con nuevo estilo -->
+       
         <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
-
-        <!-- Grid de Categorías -->
+      
         <div class="categorias-grid">
             <ui:repeat value="#{uiRegistrarTramiteWeb.listaCategorias}" var="categoria">
                 <div class="categoria-item">
@@ -50,7 +46,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             </ui:repeat>
         </div>
 
-        <!-- Botón Cancelar -->
         <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
         <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
     </div>

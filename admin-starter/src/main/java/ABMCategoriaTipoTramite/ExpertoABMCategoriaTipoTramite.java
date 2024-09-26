@@ -30,7 +30,7 @@ public class ExpertoABMCategoriaTipoTramite {
             DTOCriterio criterio1 = new DTOCriterio();
             criterio1.setAtributo("codCategoriaTipoTramite");
             criterio1.setOperacion("=");
-            criterio1.setValor(codCategoriaTipoTramite); // valor es un objeto en DTOCritero..
+            criterio1.setValor(codCategoriaTipoTramite); 
             primerCriterio.add(criterio1);
         }
 

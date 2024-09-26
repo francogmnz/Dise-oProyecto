@@ -4,7 +4,7 @@
  */
 package ABMTipoTramite.dtos;
 
-import ABMDocumentacion.dtos.DocumentacionDTO;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import java.util.List;
 
 /**

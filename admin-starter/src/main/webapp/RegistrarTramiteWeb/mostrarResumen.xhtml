@@ -13,10 +13,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <h:body>
     <h:form>
         <div class="container-resumen">
-            <!-- Título -->
+
             <h1 class="titulo-resumen">Resumen del Trámite</h1>
 
-            <!-- Barra de progreso -->
             <div class="barra-progreso">
                 <ul class="progreso">
                     <li class="paso completado">Acceder</li>
@@ -26,7 +25,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </ul>
             </div>
 
-            <!-- Datos del Cliente -->
             <h2 class="subtitulo-resumen">Datos del Cliente</h2>
             <h:panelGrid columns="2" styleClass="datos-cliente-grid">
                 <h:outputLabel value="Nombre:" />
@@ -42,7 +40,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.mailCliente}" />
             </h:panelGrid>
 
-            <!-- Detalles del Trámite -->
             <h2 class="subtitulo-resumen">Detalles del Trámite</h2>
             <h:panelGrid columns="2" styleClass="detalles-tramite-grid">
                 <h:outputLabel value="Tipo de Trámite:" />
@@ -58,13 +55,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.plazoEntregaDocumentacionTT} días" />
             </h:panelGrid>
 
-            <!-- Botones -->
             <h:panelGroup styleClass="botones">
                 <h:commandButton value="Confirmar Trámite" action="#{uiRegistrarTramiteWeb.confirmarTramite}" styleClass="btn-confirmar" />
                 <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
             </h:panelGroup>
 
-            <!-- Mensaje de error -->
             <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
         </div>
     </h:form>

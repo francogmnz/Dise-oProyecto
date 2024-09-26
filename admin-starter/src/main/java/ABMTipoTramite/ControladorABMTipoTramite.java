@@ -4,9 +4,11 @@
  */
 package ABMTipoTramite;
 
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
-import ABMDocumentacion.dtos.DocumentacionDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.*;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTOIn;

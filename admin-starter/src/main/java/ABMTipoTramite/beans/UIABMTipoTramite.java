@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ABMTipoTramite.beans;
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
-import ABMDocumentacion.dtos.DocumentacionDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMDocumentacion.dtos.DocumentacionDTO;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.beans.*;
 import utils.BeansUtils;
 import ABMTipoTramite.ControladorABMTipoTramite;

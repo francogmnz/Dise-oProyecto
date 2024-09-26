@@ -15,10 +15,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <h:body>
     <h:form>
     <div class="container-tipo-tramite">
-        <!-- Título -->
+
         <h1 class="titulo-tipo-tramite">Gestión de Trámites</h1>
 
-        <!-- Barra de progreso -->
         <div class="barra-progreso-tipo">
             <ul class="progreso-tipo">
                 <li class="paso-tipo completado-tipo">Acceder</li>
@@ -28,10 +27,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             </ul>
         </div>
 
-        <!-- Instrucción con nuevo estilo -->
         <p class="subtitulo-lindo-tipo">Seleccione el tipo de trámite que desea realizar:</p>
 
-        <!-- Grid de Tipos de Trámite -->
         <div class="tipos-tramite-grid">
             <ui:repeat value="#{uiRegistrarTramiteWeb.listaTiposTramite}" var="tipoTramite">
                 <div class="tipo-tramite-item">
@@ -43,7 +40,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <hr class="divisoria-tipo" />
                         <p><strong>Descripción Web:</strong> #{tipoTramite.descripcionWebTipoTramite}</p>
 
-                        <!-- Documentación requerida -->
                         <div class="documentacion-tipo">
                             <h3>Documentación Requerida:</h3>
                             <ul>
@@ -60,7 +56,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             </ui:repeat>
         </div>
 
-        <!-- Botón Cancelar -->
         <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar-tipo" />
         <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message-tipo" />
     </div>

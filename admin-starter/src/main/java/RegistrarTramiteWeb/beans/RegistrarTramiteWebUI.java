@@ -120,16 +120,16 @@ public class RegistrarTramiteWebUI implements Serializable {
             // Busca el cliente por DNI
             DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dtoCliente.getDniCliente());
             if (clienteBuscado != null) {
-                // Actualiza el DTOCliente con los datos encontrados
+                
                 this.dtoCliente = clienteBuscado;
                 return "confirmarCliente?faces-redirect=true";
             } else {
                 mensajeError = "Cliente no encontrado.";
-                return null; // Permanecer en la misma página
+                return null; 
             }
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
-            return null; // Permanecer en la misma página
+            return null; 
         }
     }  
     
