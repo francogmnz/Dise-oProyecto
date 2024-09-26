@@ -18,14 +18,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <h1 class="titulo-tipo-tramite">Gestión de Trámites</h1>
 
-        <div class="barra-progreso-tipo">
-            <ul class="progreso-tipo">
-                <li class="paso-tipo completado-tipo">Acceder</li>
-                <li class="paso-tipo completado-tipo">Categoría</li>
-                <li class="paso-tipo activo-tipo">Trámite</li>
-                <li class="paso-tipo">Confirmar</li>
-            </ul>
-        </div>
+
+        <div class="stepper-wrapper">
+                    <div class="stepper-item completed">
+                      <div class="step-counter">1</div>
+                      <div class="step-name">Acceder</div>
+                    </div>
+                    <div class="stepper-item completed">
+                      <div class="step-counter">2</div>
+                      <div class="step-name">Categoria</div>
+                    </div>
+                    <div class="stepper-item active">
+                      <div class="step-counter">3</div>
+                      <div class="step-name">Trámite</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">4</div>
+                      <div class="step-name">Confirmar</div>
+                    </div>
+                  </div>
 
         <p class="subtitulo-lindo-tipo">Seleccione el tipo de trámite que desea realizar:</p>
 

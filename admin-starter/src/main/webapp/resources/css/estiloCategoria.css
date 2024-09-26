@@ -28,47 +28,78 @@ body {
 }
 
 /* Barra de progreso */
-.barra-progreso {
-    margin-bottom: 30px;
+.stepper-wrapper {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1; 
 }
 
-.barra-progreso .progreso {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
+.stepper-item::before {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: -50%;
+  z-index: 2;
 }
 
-.barra-progreso .progreso .paso {
-    width: 24%;
-    text-align: center;
-    position: relative;
-    color: #999;
+.stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
 }
 
-.barra-progreso .progreso .paso::before {
-    content: '';
-    width: 100%;
-    height: 4px;
-    background-color: #e0e0e0;
-    position: absolute;
-    top: 20px;
-    left: -50%;
-    z-index: -1;
+.stepper-item .step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-bottom: 6px;
+}
+.stepper-item.active {
+  font-weight: bold;
+}
+.stepper-item.active .step-counter {
+  background-color: #2196F3;
 }
 
-.barra-progreso .progreso .paso:first-child::before {
-    content: none;
+.stepper-item.completed .step-counter {
+  background-color: #2196F3;
 }
 
-.barra-progreso .progreso .paso.completado,
-.barra-progreso .progreso .paso.activo {
-    color: #2196F3; /* Azul celeste */
+.stepper-item.completed::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #2196F3;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 3;
 }
 
-.barra-progreso .progreso .paso.completado::before,
-.barra-progreso .progreso .paso.activo::before {
-    background-color: #2196F3; /* Azul celeste */
+.stepper-item:first-child::before {
+  content: none;
+}
+.stepper-item:last-child::after {
+  content: none;
 }
 
 /* Subtítulo */
