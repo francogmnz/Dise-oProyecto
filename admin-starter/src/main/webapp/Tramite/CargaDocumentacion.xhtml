@@ -6,32 +6,36 @@
                 template="#{layoutMB.template}">
 
     <ui:define name="title">
-        Fileupload
+        Carga de documentación
     </ui:define>
 
 
     <ui:define name="body">
-        <h:form >
-        <adm:breadcrumb title="Upload"/>
+        <h:form enctype="multipart/form-data">
+            <h:messages id="messages" globalOnly="true" />
+            <adm:breadcrumb title="Upload"/>
 
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h:form>
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <!-- Subida de archivo -->
                     <p:fileUpload listener="#{cargadocumentacion.handleFileUpload}" 
-              mode="advanced" dragDropSupport="true" auto="false"
-              onstart="showBar()" oncomplete="hideBar()" 
-              multiple="true" update="messages" sizeLimit="1000000" 
-              fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-                </h:form>
-                
+                                  mode="advanced" dragDropSupport="true" auto="false"
+                                  onstart="showBar()" oncomplete="hideBar()" 
+                                  multiple="true" update="messages" sizeLimit="1000000" 
+                                  fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"/>
+
+                </div>
             </div>
-        </div>
-            <h:outputText value="#{cargadocumentacion.codTD}"/>
-                                  <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
-                         icon="pi pi-arrow-down"  styleClass="btn-success">
-                            <p:fileDownload value="#{cargadocumentacion.fileD}"/> 
-                     </p:commandButton>
-            </h:form>
+            <!-- Mostrar el código del TramiteDocumentacion -->
+            <h:outputText value="Código del trámite: #{cargadocumentacion.codTD}" />
+
+            <!-- Botón de descarga del archivo -->
+            <p:commandButton value="Descargar archivo" ajax="false"
+                             onclick="PrimeFaces.monitorDownload(start, stop);"
+                             icon="pi pi-arrow-down"  styleClass="btn-success">
+                <p:fileDownload value="#{cargadocumentacion.fileD}"/> 
+            </p:commandButton>
+        </h:form>
     </ui:define>
 
 </ui:composition>

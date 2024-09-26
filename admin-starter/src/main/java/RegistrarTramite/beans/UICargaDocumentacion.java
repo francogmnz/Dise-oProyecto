@@ -12,6 +12,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,14 +31,22 @@ import org.primefaces.model.file.UploadedFile;
 import org.primefaces.shaded.commons.io.IOUtils;
 import utils.BeansUtils;
 
-@Named("cargadocumentacion") // Nombre explícito
+@Named("cargadocumentacion")
 @ViewScoped
 public class UICargaDocumentacion implements Serializable {
 
-    private UploadedFile file;
-    private int codTD = 0;
-    private DTOFile fileEjemplo = null;
-    private DefaultStreamedContent fileD;
+    private UploadedFile file; // para manejar la subida de archivos
+    private int codTD = 0; // codTD para identificar el TD
+    private DTOFile fileEjemplo = new DTOFile();
+    private DefaultStreamedContent fileD; // para manejar la descarga de archivos
+
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
 
     public int getCodTD() {
         return codTD;
@@ -45,6 +54,14 @@ public class UICargaDocumentacion implements Serializable {
 
     public void setCodTD(int codTD) {
         this.codTD = codTD;
+    }
+
+    public DTOFile getFileEjemplo() {
+        return fileEjemplo;
+    }
+
+    public void setFileEjemplo(DTOFile fileEjemplo) {
+        this.fileEjemplo = fileEjemplo;
     }
 
     public UICargaDocumentacion() {
@@ -57,55 +74,39 @@ public class UICargaDocumentacion implements Serializable {
         System.out.println("codigo " + codigo);
     }
 
-    public UploadedFile getFile() {
-        return file;
-    }
-
-    public void setFile(UploadedFile file) {
-        this.file = file;
-    }
-
-    public String handleFileUpload(FileUploadEvent event) {
+    // Método para manejar la subida del archivo
+    public void handleFileUpload(FileUploadEvent event) {
         try {
-            FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded. Size (KB): " + event.getFile().getSize() / 1024f);
+            FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
-
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
-            System.out.println(encodedString);
-            DTOFile dto = new DTOFile();
-            dto.setContenidoB64(encodedString);
-            dto.setNombre(event.getFile().getFileName());
-            fileEjemplo = dto;
+
+            // Usar DTOFile para almacenar el archivo subido
+            fileEjemplo.setNombre(event.getFile().getFileName());
+            fileEjemplo.setContenidoB64(encodedString);
 
         } catch (IOException ex) {
             Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "";//BeansUtils.redirectToPreviousPage();
     }
 
+    // Método para manejar la descarga del archivo
     public StreamedContent getFileD() {
+        if (fileEjemplo != null && fileEjemplo.getContenidoB64() != null) {
+            try {
+                byte[] data = Base64.getDecoder().decode(fileEjemplo.getContenidoB64());
+                InputStream inputStream = new ByteArrayInputStream(data);
 
-        byte[] data = Base64.getDecoder().decode(fileEjemplo.getContenidoB64());
-        String path = "./" + fileEjemplo.getNombre().trim();
-        File file = new File(path);
-        OutputStream outputStream = null;
-        try {
-            outputStream = new BufferedOutputStream(new FileOutputStream(file));
-
-            outputStream.write(data);
-
-            InputStream ie = new FileInputStream(path);
-
-            fileD = DefaultStreamedContent.builder()
-                    .name(fileEjemplo.getNombre())
-                    .contentType("application/force-download")
-                    .stream(() -> ie)
-                    .build();
-        } catch (IOException ex) {
-            Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
-            Messages.create(ex.getMessage()).error().add();
+                fileD = DefaultStreamedContent.builder()
+                        .name(fileEjemplo.getNombre()) // Nombre del archivo descargado
+                        .contentType("application/octet-stream")
+                        .stream(() -> inputStream)
+                        .build();
+            } catch (Exception ex) {
+                Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return fileD;
     }
