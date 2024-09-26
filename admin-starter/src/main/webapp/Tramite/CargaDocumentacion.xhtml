@@ -11,6 +11,7 @@
 
 
     <ui:define name="body">
+        <h:form >
         <adm:breadcrumb title="Upload"/>
 
         <div class="box box-info">
@@ -20,30 +21,17 @@
               mode="advanced" dragDropSupport="true" auto="false"
               onstart="showBar()" oncomplete="hideBar()" 
               multiple="true" update="messages" sizeLimit="1000000" 
-              fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+              fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                 </h:form>
+                
             </div>
         </div>
+            <h:outputText value="#{cargadocumentacion.codTD}"/>
+                                  <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+                         icon="pi pi-arrow-down"  styleClass="btn-success">
+                            <p:fileDownload value="#{cargadocumentacion.fileD}"/> 
+                     </p:commandButton>
+            </h:form>
     </ui:define>
 
-    <ui:define name="code">
-        <p:tabView>
-            <p:tab title="upload.xhtml">
-           <pre>
-               <code class="language-html">
-                   <h:outputText value="#{sourceCodeMB.getPageSource()}" escape="true"/>
-               </code>
-           </pre>
-            </p:tab>
-
-            <p:tab title="FileuploadMB.java">
-              <pre>
-               <code class="language-java">
-                   <h:outputText value="#{sourceCodeMB.getJavaSource('com.github.adminfaces.showcase.bean.FileuploadMB')}"
-                                 escape="false"/>
-               </code>
-             </pre>
-            </p:tab>
-        </p:tabView>
-    </ui:define>
 </ui:composition>

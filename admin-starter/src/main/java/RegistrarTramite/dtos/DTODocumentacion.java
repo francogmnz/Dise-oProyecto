@@ -7,6 +7,7 @@ public class DTODocumentacion {
     private int codTD;
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
+  
 
     public int getCodTD() {
         return codTD;
