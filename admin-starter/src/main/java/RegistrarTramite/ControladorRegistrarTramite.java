@@ -2,6 +2,7 @@ package RegistrarTramite;
 
 import RegistrarTramite.dtos.DTOCliente;
 import RegistrarTramite.dtos.DTOEstadoTramite;
+import RegistrarTramite.dtos.DTOFile;
 import RegistrarTramite.dtos.DTOTipoTramite;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.dtos.DTOTramite;
@@ -43,6 +44,10 @@ public class ControladorRegistrarTramite {
 
     public List<DTOTipoTramite> buscarTipoTramite(int codTipoTramite, String nombreTipoTramite, String nombreCategoria, String descTipoTramite) {
         return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nombreTipoTramite, nombreCategoria, descTipoTramite);
+    }
+    
+    public void registrarDocumentacion(int codTD, DTOFile archivoTD){
+        expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD);
     }
 
 }

@@ -4,6 +4,7 @@
  */
 package RegistrarTramite.beans;
 
+import RegistrarTramite.ControladorRegistrarTramite;
 import RegistrarTramite.dtos.DTOFile;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
@@ -39,6 +40,7 @@ public class UICargaDocumentacion implements Serializable {
     private int codTD = 0; // codTD para identificar el TD
     private DTOFile fileEjemplo = new DTOFile();
     private DefaultStreamedContent fileD; // para manejar la descarga de archivos
+    ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
 
     public UploadedFile getFile() {
         return file;
@@ -80,34 +82,49 @@ public class UICargaDocumentacion implements Serializable {
             FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
+            //Convierto el archivo subido en Base64
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
 
-            // Usar DTOFile para almacenar el archivo subido
+            //Usar DTOFile para almacenar el archivo subido
             fileEjemplo.setNombre(event.getFile().getFileName());
             fileEjemplo.setContenidoB64(encodedString);
-
+            
+            //System.out.println("encriptado =" + fileEjemplo.getContenidoB64());
+            
+            //llamo a la funcion registrarDocumentacion una vez cargado el archivo
+            controladorRegistrarTramite.registrarDocumentacion(codTD, fileEjemplo);
+            
         } catch (IOException ex) {
             Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 
     // Método para manejar la descarga del archivo
     public StreamedContent getFileD() {
+        // Verifica si el archivo (fileEjemplo) no es nulo y tiene contenido en Base64
         if (fileEjemplo != null && fileEjemplo.getContenidoB64() != null) {
             try {
+                // Decodifica el contenido Base64 a un arreglo de bytes
                 byte[] data = Base64.getDecoder().decode(fileEjemplo.getContenidoB64());
+
+                // Crea un InputStream a partir del arreglo de bytes decodificado
                 InputStream inputStream = new ByteArrayInputStream(data);
 
+                // Construye el StreamedContent, asignando nombre, tipo de contenido y flujo
                 fileD = DefaultStreamedContent.builder()
-                        .name(fileEjemplo.getNombre()) // Nombre del archivo descargado
-                        .contentType("application/octet-stream")
-                        .stream(() -> inputStream)
+                        .name(fileEjemplo.getNombre()) // Asigna el nombre del archivo descargado
+                        .contentType("application/octet-stream") // Tipo genérico para archivos binarios
+                        .stream(() -> inputStream) // Proporciona el flujo de datos del archivo
                         .build();
             } catch (Exception ex) {
                 Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        //Retorna el archivo listo para ser descargado
         return fileD;
     }
+
 }
