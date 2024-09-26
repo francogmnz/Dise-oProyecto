@@ -1,30 +1,17 @@
 package ABMVersion.dtos;
 
+import Version.beans.NodoIU;
 import java.sql.Timestamp;
+import java.util.List;
 
-public class ModificarVersionDTO {    
-    private int nroVersion;
+public class ModificarVersionDTO {
     private String descripcionVersion;
+    private int codTipoTramite;
+    private List<NodoIU> nodos;
+    private int numVersion;
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    private int codTipoTramite;  // Nuevo atributo para el código del tipo de trámite
-
-    public int getNroVersion() {
-        return nroVersion;
-    }
-
-    public void setNroVersion(int nroVersion) {
-        this.nroVersion = nroVersion;
-    }
-
-    public String getDescripcionVersion() {
-        return descripcionVersion;
-    }
-
-    public void setDescripcionVersion(String descripcionVersion) {
-        this.descripcionVersion = descripcionVersion;
-    }
 
     public Timestamp getFechaBajaVersion() {
         return fechaBajaVersion;
@@ -50,11 +37,36 @@ public class ModificarVersionDTO {
         this.fechaHastaVersion = fechaHastaVersion;
     }
 
+    public int getNumVersion() {
+        return numVersion;
+    }
+
+    public void setNumVersion(int numVersion) {
+        this.numVersion = numVersion;
+    }
+
+    // Getters y Setters
+    public String getDescripcionVersion() {
+        return descripcionVersion;
+    }
+
+    public void setDescripcionVersion(String descripcionVersion) {
+        this.descripcionVersion = descripcionVersion;
+    }
+
     public int getCodTipoTramite() {
         return codTipoTramite;
     }
 
     public void setCodTipoTramite(int codTipoTramite) {
         this.codTipoTramite = codTipoTramite;
+    }
+
+    public List<NodoIU> getNodos() {
+        return nodos;
+    }
+
+    public void setNodos(List<NodoIU> nodos) {
+        this.nodos = nodos;
     }
 }

@@ -14,8 +14,7 @@ public class DTODatosVersion {
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    private int codTipoTramite;  // Attribute for the code of the type of trámite
-
+    private int codTipoTramite;  // Attribute for the code of the type of 
     public int getNroVersion() {
         return nroVersion;
     }

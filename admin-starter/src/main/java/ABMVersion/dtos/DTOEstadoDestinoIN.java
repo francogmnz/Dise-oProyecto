@@ -9,13 +9,13 @@ package ABMVersion.dtos;
  * @author Franco
  */
 public class DTOEstadoDestinoIN {
-    int codigoEstadoTramite;
+    int codEstadoTramite;
 
-    public int getCodigoEstadoTramite() {
-        return codigoEstadoTramite;
+      public int getCodEstadoTramite() {
+        return codEstadoTramite;
     }
 
-    public void setCodigoEstadoTramite(int codigoEstadoTramite) {
-        this.codigoEstadoTramite = codigoEstadoTramite;
+    public void setCodEstadoTramite(int codigoEstadoTramite) {
+        this.codEstadoTramite = codigoEstadoTramite;
     }
 }

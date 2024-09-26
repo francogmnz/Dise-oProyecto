@@ -336,6 +336,15 @@ public class EjemplosPersistencia {
     tramiteDoc1.setDocumentacion(doc1);
 
 
+Version version3 = new Version();
+version3.setNroVersion(3);
+version3.setDescripcionVersion("Versión para fin de año");
+version3.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis()));
+version3.setFechaHastaVersion(new Timestamp(System.currentTimeMillis() + 100000000));  // Fecha futura
+version3.setFechaBajaVersion(null);  // Activa
+
+version3.setTipoTramite(tipoTramiteB);  // Asociada a otro tipo de trámite
+FachadaPersistencia.getInstance().guardar(version3);
 
     FachadaPersistencia.getInstance().guardar(tramiteDoc1);
 
@@ -376,7 +385,7 @@ public class EjemplosPersistencia {
     conf1.setEtapaDestino(2);  // Etapa 2 como destino
     
     conf1.addEstadoTramiteDestino(etapaDos);
-    conf1.addEstadoTramiteOrigen(etapaUno);
+//    conf1.addEstadoTramiteOrigen(etapaUno);
 
 
     FachadaPersistencia.getInstance().guardar(conf1);
@@ -389,7 +398,7 @@ public class EjemplosPersistencia {
     conf2.setEtapaDestino(3);  // Etapa 3 como destino
     
     conf2.addEstadoTramiteDestino(etapaDos);
-    conf2.addEstadoTramiteOrigen(etapaUno);
+    //conf2.addEstadoTramiteOrigen(etapaUno);
 
 
     FachadaPersistencia.getInstance().guardar(conf2);

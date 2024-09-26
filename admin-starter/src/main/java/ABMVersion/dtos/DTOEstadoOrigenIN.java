@@ -12,27 +12,28 @@ import java.util.List;
  * @author Franco
  */
 public class DTOEstadoOrigenIN {
-    private int codigoEstadoTramite;
-    private List<DTOEstadoDestinoIN> dtoEstadoDeastinoList= new ArrayList<>();
+    private int codEstadoTramite;
+    private List<DTOEstadoDestinoIN> dtoEstadoDestinoList= new ArrayList<>();
 
-    public int getCodigoEstadoTramite() {
-        return codigoEstadoTramite;
+    public int getCodEstadoTramite() {
+        return codEstadoTramite;
     }
 
-    public void setCodigoEstadoTramite(int codigoEstadoTramite) {
-        this.codigoEstadoTramite = codigoEstadoTramite;
+    public void setCodEstadoTramite(int codigoEstadoTramite) {
+        this.codEstadoTramite = codigoEstadoTramite;
     }
 
     public List<DTOEstadoDestinoIN> getDtoEstadoDeastinoList() {
-        return dtoEstadoDeastinoList;
+        return dtoEstadoDestinoList;
     }
 
     public void setDtoEstadoDeastinoList(List<DTOEstadoDestinoIN> dtoEstadoDeastinoList) {
-        this.dtoEstadoDeastinoList = dtoEstadoDeastinoList;
+        this.dtoEstadoDestinoList = dtoEstadoDeastinoList;
     }
    
     public void addDtoEstadoDeastinoList(DTOEstadoDestinoIN dtoEstadoDeastino) {
-        this.dtoEstadoDeastinoList.add(dtoEstadoDeastino);
+        this.dtoEstadoDestinoList.add(dtoEstadoDeastino);
     } 
+    
            
 }

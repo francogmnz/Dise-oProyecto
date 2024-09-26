@@ -162,7 +162,7 @@ public class ExpertoABMEstadoTramite {
             for(ConfTipoTramiteEstadoTramite confTTET : confTTETList){
                 
                 //verifico si el EstadoTramite no se encuentra en alguna version activa.
-               verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), estadoTramiteEncontrado);
+//               verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), estadoTramiteEncontrado);
                verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), estadoTramiteEncontrado);
             }
         }
@@ -219,8 +219,8 @@ public class ExpertoABMEstadoTramite {
             for(ConfTipoTramiteEstadoTramite confTTET : confTTETList){
                 
                 //verifico si el EstadoTramite no se encuentra en alguna version activa.
-               verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), codEstadoTramite);
-               verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), codEstadoTramite);
+              // verificarEstadoTramite(confTTET.getEstadoTramiteOrigen(), codEstadoTramite);
+             //  verificarEstadoTramite(confTTET.getEstadoTramiteDestino(), codEstadoTramite);
             }
         }
     

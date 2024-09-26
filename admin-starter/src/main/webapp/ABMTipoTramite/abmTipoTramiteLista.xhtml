@@ -99,6 +99,11 @@
                 <f:facet name="header">Fecha Hora Baja</f:facet>
                 #{tipoTramite.fechaHoraBajaTipoTramite}
             </p:column>
+                 <p:column>
+                <f:facet name="header">Numero de version</f:facet>
+                #{version.numVersion}
+            </p:column>
+
 
             <p:column>
                 <f:facet name="header">Acciones</f:facet>
@@ -123,6 +128,7 @@
                     </p:confirmDialog>
                  <p:spacer width="5"/>
                <p:commandButton value="Configurar" styleClass="btn-info" action="#{uiabmTipoTramiteLista.irConfigurarTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
+                   
                     <f:ajax render="@form"/>
                 </p:commandButton>
                

@@ -95,6 +95,10 @@ public class UIABMTipoTramiteLista implements Serializable {
         BeansUtils.guardarUrlAnterior();
         return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
     }
+  public String irAModificarConfigurarTipoTramite(int codTipoTramite) {
+        BeansUtils.guardarUrlAnterior();
+        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
+    }
 
     public void darDeBajaTipoTramite(int codTipoTramite){
         try {

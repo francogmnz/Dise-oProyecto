@@ -17,7 +17,16 @@ public class DTODatosVersionIn {
     private String descripcionVersion;
     private Date fechaDesdeVersion;
     List<DTOEstadoOrigenIN> dtoEstadoOrigenList=new ArrayList<>();  
+     List<DTOEstadoDestinoIN> dtoEstadoDestinoList=new ArrayList<>();  
     private Date fechaHastaVersion;
+
+    public List<DTOEstadoDestinoIN> getDtoEstadoDestinoList() {
+        return dtoEstadoDestinoList;
+    }
+
+    public void setDtoEstadoDestinoList(List<DTOEstadoDestinoIN> dtoEstadoDestinoList) {
+        this.dtoEstadoDestinoList = dtoEstadoDestinoList;
+    }
     
     
     public List<DTOEstadoOrigenIN> getDtoEstadoOrigenList() {

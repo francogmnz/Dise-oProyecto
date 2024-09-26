@@ -2,11 +2,11 @@ package ABMVersion.beans;
 
 import ABMVersion.ControladorABMVersion;
 import ABMVersion.dtos.ModificarVersionDTO;
-import ABMVersion.dtos.ModificarVersionDTOIn;
 import ABMVersion.dtos.DTODatosVersion;
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
+import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.exceptions.VersionException;
 import Version.beans.NodoIU;
 import Version.beans.NodoMenuIU;
@@ -76,72 +76,51 @@ public class UIABMVersion implements Serializable {
     
     // Constructor
     public UIABMVersion() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-         codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite"));    
-         
-         /*
-         try {
-            String nroVersionParam = request.getParameter("nroVersion");
-            if (nroVersionParam != null) {
-                int nroVersion = Integer.parseInt(nroVersionParam);
-                this.nroVersion = nroVersion;
-                insert = true;
-                if (nroVersion > 0) {
-                    ModificarVersionDTO modificarVersionDTO = controladorABMVersion.buscarVersionAModificar(nroVersion);
-                    if (modificarVersionDTO != null) {
-                        setDescripcionVersion(modificarVersionDTO.getDescripcionVersion());
-                        setCodTipoTramite(modificarVersionDTO.getCodTipoTramite());
-                    }
+    FacesContext facesContext = FacesContext.getCurrentInstance();
+    ExternalContext externalContext = facesContext.getExternalContext();
+    HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+    
+    // Obtener el código del tipo de trámite desde la solicitud
+    codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite"));
+
+    try {
+        String nroVersionParam = request.getParameter("nroVersion");
+        if (nroVersionParam != null) {
+            int nroVersion = Integer.parseInt(nroVersionParam);
+            this.nroVersion = nroVersion;
+            insert = true; // Determina que se va a insertar una nueva versión
+
+            if (nroVersion > 0) {
+                // Llama al método del controlador para obtener la versión por número
+                ModificarVersionDTO modificarVersionDTO = controladorABMVersion.obtenerVersionPorNumero(nroVersion);
+                if (modificarVersionDTO != null) {
+                    // Establecer los valores de la versión obtenida
+                    setDescripcionVersion(modificarVersionDTO.getDescripcionVersion());
+                    setCodTipoTramite(modificarVersionDTO.getCodTipoTramite());
+                    setFechaDesdeVersion(modificarVersionDTO.getFechaDesdeVersion()); // Asegúrate de tener este método
+                    setFechaHastaVersion(modificarVersionDTO.getFechaHastaVersion()); // Asegúrate de tener este método
+                    
                 }
-            } else {
-                insert = true; // Agregar nueva versión
             }
-
-            // Cargar los estados de trámite y tipos de trámite
-            actualizarEstadosTramite();
-            actualizarTiposTramite();
-
-            // Preparar nodos después de cargar los datos
-            prepararNodos();
-
-        } catch (NumberFormatException e) {
-            Messages.create("Error al obtener el número de versión.").fatal().add();
-        } catch (Exception e) {
-            Messages.create("Error inesperado: " + e.getMessage()).fatal().add();
-        }*/
-        try {
-            /*
-            String nroVersionParam = request.getParameter("nroVersion");
-            if (nroVersionParam != null) {
-                int nroVersion = Integer.parseInt(nroVersionParam);
-                this.nroVersion = nroVersion;
-                insert = true;
-                if (nroVersion > 0) {
-                    ModificarVersionDTO modificarVersionDTO = controladorABMVersion.buscarVersionAModificar(nroVersion);
-                    if (modificarVersionDTO != null) {
-                        setDescripcionVersion(modificarVersionDTO.getDescripcionVersion());
-                        setCodTipoTramite(modificarVersionDTO.getCodTipoTramite());
-                    }
-                }
-            } else {
-                insert = true; // Agregar nueva versión
-            }
-            */
-            // Cargar los estados de trámite y tipos de trámite
-            actualizarEstadosTramite();
-            actualizarTiposTramite();
-
-            // Preparar nodos después de cargar los datos
-            prepararNodos();
-
-        } catch (NumberFormatException e) {
-            Messages.create("Error al obtener el número de versión.").fatal().add();
-        } catch (Exception e) {
-            Messages.create("Error inesperado: " + e.getMessage()).fatal().add();
+        } else {
+            insert = true; // Agregar nueva versión si no hay número de versión
         }
+
+        // Cargar los estados de trámite y tipos de trámite
+       // actualizarEstadosTramite();
+      //  actualizarTiposTramite();
+
+        // Preparar nodos después de cargar los datos
+        prepararNodos();
+        
+    } catch (NumberFormatException e) {
+        // Manejo de errores en caso de que el formato del número no sea válido
+        e.printStackTrace(); // O maneja el error como desees
+    } catch (Exception e) {
+        // Manejo de errores generales
+        e.printStackTrace(); // O maneja el error como desees
     }
+}
 
     // Método para preparar los nodos del diagrama
     public void prepararNodos() {
@@ -319,23 +298,22 @@ public class UIABMVersion implements Serializable {
     }
 
     // Método para agregar o modificar una versión
-    public String agregarVersion() {
+    public String modificarVersion() {
         try {
             if (!insert) {
-                ModificarVersionDTOIn modificarVersionDTOIn = new ModificarVersionDTOIn();
-                modificarVersionDTOIn.setNroVersion(getNroVersion());
-                modificarVersionDTOIn.setDescripcionVersion(getDescripcionVersion());
-                modificarVersionDTOIn.setCodTipoTramite(getCodTipoTramite());
-                controladorABMVersion.modificarVersion(modificarVersionDTOIn);
+                DTOVersionM dtoVersionM = new DTOVersionM();
+                dtoVersionM.setCodTipoTramite(getCodTipoTramite());
+                dtoVersionM.setDescripcionVersion(getDescripcionVersion());
+             
+                controladorABMVersion.modificarVersion(dtoVersionM);
             } else {
-                DTODatosVersion nuevaVersionDTO = new DTODatosVersion();
-                nuevaVersionDTO.setNroVersion(getNroVersion());
-                nuevaVersionDTO.setDescripcionVersion(getDescripcionVersion());
-                nuevaVersionDTO.setCodTipoTramite(getCodTipoTramite());
-                nuevaVersionDTO.setFechaDesdeVersion(new Timestamp(getFechaDesdeVersion().getTime()));
-                nuevaVersionDTO.setFechaHastaVersion(new Timestamp(getFechaHastaVersion().getTime()));
-                nuevaVersionDTO.setFechaBajaVersion(null);
-                controladorABMVersion.agregarVersion(nuevaVersionDTO);
+                DTOVersionM dtoVersionM = new DTOVersionM();
+                dtoVersionM.setNroVersion(getNroVersion());
+                dtoVersionM.setDescripcionVersion(getDescripcionVersion());
+                dtoVersionM.setCodTipoTramite(getCodTipoTramite());
+                dtoVersionM.setFechaDesdeVersion(new Timestamp(getFechaDesdeVersion().getTime()));
+                dtoVersionM.setFechaHastaVersion(new Timestamp(getFechaHastaVersion().getTime()));
+                controladorABMVersion.modificarVersion(dtoVersionM);
             }
             return BeansUtils.redirectToPreviousPage();
         } catch (VersionException e) {
@@ -400,7 +378,7 @@ public class UIABMVersion implements Serializable {
         dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
    
 
-        
+       
         System.out.println(this.guardarJSON);
         Messages.create("Guardar").detail(this.guardarJSON).add();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -417,11 +395,11 @@ public class UIABMVersion implements Serializable {
         for(NodoIU unNodo:listaNodo)
         {
             DTOEstadoOrigenIN ori=new DTOEstadoOrigenIN();
-            ori.setCodigoEstadoTramite(unNodo.getCodigo());
+            ori.setCodEstadoTramite(unNodo.getCodigo());
             for(Integer i : unNodo.getDestinos())
             {
                 DTOEstadoDestinoIN des=new DTOEstadoDestinoIN();
-                des.setCodigoEstadoTramite(i.intValue());
+                des.setCodEstadoTramite(i.intValue());
                 ori.addDtoEstadoDeastinoList(des);
                         
             }
@@ -431,7 +409,8 @@ public class UIABMVersion implements Serializable {
         cargarJSON = gson.toJson(dto);
         System.out.println(cargarJSON);
          Messages.create("Guardar 2").detail(cargarJSON).add();
-
+         controladorABMVersion.confirmacion(dto);
+         
   /*
         //listaNodo tiene los nodos
         //para comprobar
@@ -441,6 +420,7 @@ public class UIABMVersion implements Serializable {
         cargarJSON = gson.toJson(listaNodo);
         System.out.println(jsonArray);
         Messages.create("Guardar 2").detail(this.guardarJSON).add();
-*/
+*/  
     }
+     
 }

@@ -1,13 +1,13 @@
 package ABMVersion;
 
-import ABMEstadoTramite.dtos.EstadoTramiteDTO;
-import ABMEstadoTramite.dtos.ModificarEstadoTramiteDTOIn;
-import ABMEstadoTramite.exceptions.EstadoTramiteException;
 import ABMVersion.dtos.ModificarVersionDTO;
-import ABMVersion.dtos.ModificarVersionDTOIn;
-import ABMVersion.dtos.DTODatosVersion;
+import ABMVersion.dtos.DTODatosVersionIn;
+import ABMVersion.dtos.DTOEstadoDestinoIN;
+import ABMVersion.dtos.DTOEstadoOrigenIN;
+import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
+import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
 import entidades.Version;
@@ -18,7 +18,7 @@ import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
 public class ExpertoABMVersion {
-    
+
     // Método para buscar versiones
     public List<VersionDTO> buscarVersion(int nroVersion, int codTipoTramite, String nombreTipoTramite) {
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -63,11 +63,11 @@ public class ExpertoABMVersion {
                 versionResultado.add(versionDTO);
             }
         }
- FachadaPersistencia.getInstance().finalizarTransaccion();
+        FachadaPersistencia.getInstance().finalizarTransaccion();
         return versionResultado;
     }
 
-    public void agregarVersion(DTODatosVersion nuevaVersionDTO) throws VersionException {
+    public void modificarVersion(DTOVersionM dtoVersionM) throws VersionException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         try {
@@ -84,14 +84,14 @@ public class ExpertoABMVersion {
             }
 
             // Incrementar el número de versión
-            nuevaVersionDTO.setNroVersion(maxNroVersion + 1);
+            dtoVersionM.setNroVersion(maxNroVersion + 1);
 
             // Crear nueva versión
             Version nuevaVersion = new Version();
-            nuevaVersion.setNroVersion(nuevaVersionDTO.getNroVersion());
-            nuevaVersion.setDescripcionVersion(nuevaVersionDTO.getDescripcionVersion());
-            nuevaVersion.setFechaDesdeVersion(new Timestamp(nuevaVersionDTO.getFechaDesdeVersion().getTime()));
-            nuevaVersion.setFechaHastaVersion(new Timestamp(nuevaVersionDTO.getFechaHastaVersion().getTime()));
+            nuevaVersion.setNroVersion(dtoVersionM.getNroVersion());
+            nuevaVersion.setDescripcionVersion(dtoVersionM.getDescripcionVersion());
+            nuevaVersion.setFechaDesdeVersion(new Timestamp(dtoVersionM.getFechaDesdeVersion().getTime()));
+            nuevaVersion.setFechaHastaVersion(new Timestamp(dtoVersionM.getFechaHastaVersion().getTime()));
 
             // Guardar la nueva versión
             FachadaPersistencia.getInstance().guardar(nuevaVersion);
@@ -100,7 +100,7 @@ public class ExpertoABMVersion {
             FachadaPersistencia.getInstance().finalizarTransaccion();
 
         } catch (Exception e) {
-       
+
         }
     }
 
@@ -124,16 +124,15 @@ public class ExpertoABMVersion {
         Version versionEncontrada = (Version) lVersion.get(0);
 
         ModificarVersionDTO modificarVersionDTO = new ModificarVersionDTO();
-        modificarVersionDTO.setNroVersion(versionEncontrada.getNroVersion());
         modificarVersionDTO.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
-        modificarVersionDTO.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
-        modificarVersionDTO.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
+        //modificarVersionDTO.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
+        // modificarVersionDTO.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
 
         return modificarVersionDTO;
     }
 
     // Método para modificar una versión
-    public void modificarVersion(ModificarVersionDTOIn modificarVersionDTOIn) {
+    public void modificarVersion(ModificarVersionDTO modificarVersionDTO) {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -141,7 +140,7 @@ public class ExpertoABMVersion {
 
         dto.setAtributo("nroVersion");
         dto.setOperacion("=");
-        dto.setValor(modificarVersionDTOIn.getNroVersion());
+        dto.setValor(modificarVersionDTO.getNumVersion());
 
         criterioList.add(dto);
 
@@ -155,9 +154,9 @@ public class ExpertoABMVersion {
 
         Version versionEncontrada = (Version) lVersion.get(0);
 
-        versionEncontrada.setDescripcionVersion(modificarVersionDTOIn.getDescripcionVersion());
-        versionEncontrada.setFechaDesdeVersion(modificarVersionDTOIn.getFechaDesdeVersion());
-        versionEncontrada.setFechaHastaVersion(modificarVersionDTOIn.getFechaHastaVersion());
+        versionEncontrada.setDescripcionVersion(modificarVersionDTO.getDescripcionVersion());
+        versionEncontrada.setFechaDesdeVersion(modificarVersionDTO.getFechaDesdeVersion());
+        versionEncontrada.setFechaHastaVersion(modificarVersionDTO.getFechaHastaVersion());
 
         FachadaPersistencia.getInstance().guardar(versionEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -215,6 +214,7 @@ public class ExpertoABMVersion {
 
         return estadosTramiteActivos;
     }
+
     public List<TipoTramite> obtenerTiposTramitesActivos() {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -236,6 +236,96 @@ public class ExpertoABMVersion {
 
         return tiposTramitesActivos;
     }
-   
 
+    public ModificarVersionDTO obtenerVersionPorNumero(int nroVersion) {
+        // Criterios de búsqueda para encontrar la versión por número
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
+        // Establece el atributo y el valor para la búsqueda
+        dto.setAtributo("nroVersion");
+        dto.setOperacion("=");
+        dto.setValor(nroVersion);
+        criterioList.add(dto);
+
+        // Realiza la búsqueda en la base de datos usando FachadaPersistencia
+        List<Object> objetoList = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+        ModificarVersionDTO modificarVersionDTO = null;
+
+        // Si se encuentra una versión, la convertimos a ModificarVersionDTO
+        if (!objetoList.isEmpty()) {
+            // Suponiendo que el primer resultado es el que buscamos
+            Object versionObject = objetoList.get(0);
+            modificarVersionDTO = (ModificarVersionDTO) versionObject;
+        }
+
+        return modificarVersionDTO; // Retorna el objeto encontrado o null si no se encontró
+    }
+
+    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
+        FachadaPersistencia f = FachadaPersistencia.getInstance();
+        Version nueva = new Version();
+        nueva.setNroVersion(1);//Cambiar despues
+        int codTipoTramite = dtoDatosVersion.getCodTipoTramite();
+        List<DTOCriterio> lc = new ArrayList<>();
+        DTOCriterio c = new DTOCriterio();
+        c.setAtributo("codTipoTramite");
+        c.setOperacion("=");
+        c.setValor(codTipoTramite);
+        lc.add(c);
+        List o = f.buscar("TipoTramite", lc);
+        if (o.size() > 0) {
+            TipoTramite t = (TipoTramite) o.get(0);
+            nueva.setTipoTramite(t);
+            System.out.println(t.getNombreTipoTramite());
+        } else {
+            //Hacer excepcion no existe el tipo tramite
+            return false;
+        }
+        for (DTOEstadoOrigenIN dtoO : dtoDatosVersion.getDtoEstadoOrigenList()) {
+            lc = new ArrayList<>();
+            c = new DTOCriterio();
+            c.setAtributo("codEstadoTramite");
+            c.setOperacion("=");
+            c.setValor(dtoO.getCodEstadoTramite());
+            EstadoTramite eO = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
+
+            System.out.println("Nombre Estado" + eO.getNombreEstadoTramite());
+
+            ConfTipoTramiteEstadoTramite cttet = new ConfTipoTramiteEstadoTramite();
+            cttet.setEtapaOrigen(codTipoTramite);
+
+            List<EstadoTramite> listaEstadoTramiteDestino = new ArrayList<>();
+            // Crear un nuevo criterio de búsqueda basado en el código de estado trámite
+            c.setAtributo("codEstadoTramite");
+            c.setOperacion("=");
+            c.setValor(dtoO.getDtoEstadoDeastinoList());
+            EstadoTramite eDestino = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
+
+            System.out.println("Nombre Estado" + eDestino.getNombreEstadoTramite());
+
+            for (DTOEstadoDestinoIN dtoD : dtoDatosVersion.getDtoEstadoDestinoList()) {
+                lc = new ArrayList<>();
+                c = new DTOCriterio();
+                c.setAtributo("codEstadoTramite");
+                c.setOperacion("=");
+                c.setValor(dtoD.getCodEstadoTramite());
+
+                EstadoTramite eD = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
+
+                System.out.println("Nombre Estado" + eD.getNombreEstadoTramite());
+
+                listaEstadoTramiteDestino.add(eD);
+
+                cttet.setEstadoTramiteDestino(listaEstadoTramiteDestino);
+
+                f.guardar(cttet);
+
+            }
+
+            f.finalizarTransaccion();
+        }
+                return true;
+
+    }
 }
