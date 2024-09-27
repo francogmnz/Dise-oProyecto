@@ -11,6 +11,8 @@
         </id>
 
         <property name="archivoTD" column="archivo_td" type="string"/>
+        
+        <property name="nombreTD" column="nombre_td" type="string"/>
 
         <property name="codTD" column="cod_td" type="int"/>
 

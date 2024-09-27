@@ -83,7 +83,7 @@ public class UIABMEstadoLista implements Serializable {
             controladorABMEstado.darDeBajaEstado(codigo);
             Messages.create("Anulado").detail("Anulado").add();;
                     
-        } catch (EstadoException e) {
+        } catch(EstadoException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
         }
     }

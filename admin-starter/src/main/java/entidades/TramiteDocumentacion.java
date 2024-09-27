@@ -15,12 +15,21 @@ public class TramiteDocumentacion extends Entidad {
     
     
     private String archivoTD; // ver xq es tipo file 
+    private String nombreTD;
     private int codTD;
     private Timestamp fechaEntregaTD;
     private Documentacion documentacion;
 
     public TramiteDocumentacion() {
     }
+
+    public String getNombreTD() {
+        return nombreTD;
+    }
+
+    public void setNombreTD(String nombreTD) {
+        this.nombreTD = nombreTD;
+    }    
 
     public String getArchivoTD() {
         return archivoTD;

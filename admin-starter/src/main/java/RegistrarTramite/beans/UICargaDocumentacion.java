@@ -6,6 +6,7 @@ package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
 import RegistrarTramite.dtos.DTOFile;
+import entidades.TramiteDocumentacion;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -21,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omnifaces.util.Messages;
@@ -31,6 +34,8 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.file.UploadedFile;
 import org.primefaces.shaded.commons.io.IOUtils;
 import utils.BeansUtils;
+import utils.DTOCriterio;
+import utils.FachadaPersistencia;
 
 @Named("cargadocumentacion")
 @ViewScoped
@@ -103,6 +108,7 @@ public class UICargaDocumentacion implements Serializable {
 
     // Método para manejar la descarga del archivo
     public StreamedContent getFileD() {
+        
         // Verifica si el archivo (fileEjemplo) no es nulo y tiene contenido en Base64
         if (fileEjemplo != null && fileEjemplo.getContenidoB64() != null) {
             try {

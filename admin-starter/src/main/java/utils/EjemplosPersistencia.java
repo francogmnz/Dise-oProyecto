@@ -33,7 +33,7 @@ public class EjemplosPersistencia {
      * Crea un estado, un articulo con dicho estado, una reposicion con dicho
      * estado y un detalle para esa reposicion.
      */
-    public void crearElementos() {
+    /*public void crearElementos() {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         Estado creada = new Estado();
@@ -92,7 +92,7 @@ public class EjemplosPersistencia {
 
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
-    }
+    }*/
 
     public void crearElementos2() {
 

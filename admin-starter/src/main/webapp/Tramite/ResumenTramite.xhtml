@@ -131,7 +131,7 @@
                                 <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
                                                  icon="pi pi-arrow-down"  styleClass="btn-success">
-                                                 <p:fileDownload value="#{cargadocumentacion.fileD}"/> 
+                                    <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>
                             </p:column>
 

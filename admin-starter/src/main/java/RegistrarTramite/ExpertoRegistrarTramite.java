@@ -515,6 +515,7 @@ public class ExpertoRegistrarTramite {
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioList).get(0);
         
         td.setArchivoTD(archivoTD.getContenidoB64()); //se le setea el archivo en base 64
+        td.setNombreTD(archivoTD.getNombre());
         td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis())); //se cambia la fecha de entrega a la fecha actual
         
         FachadaPersistencia.getInstance().guardar(td);
