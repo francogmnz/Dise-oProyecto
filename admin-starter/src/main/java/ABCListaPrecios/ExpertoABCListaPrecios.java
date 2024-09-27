@@ -33,14 +33,17 @@ public class ExpertoABCListaPrecios {
 
     private StreamedContent fileD;
 
-    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
+    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) throws ListaPreciosException {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
+        System.out.println(fechaHoraHastaListaPreciosFiltro.toString());
         if (fechaHoraHastaListaPreciosFiltro != null) {
             DTOCriterio unCriterio = new DTOCriterio();
             unCriterio.setAtributo("fechaHoraHastaListaPrecios");
             unCriterio.setOperacion(">=");
             unCriterio.setValor(fechaHoraHastaListaPreciosFiltro);
             lCriterio.add(unCriterio);
+        }else{
+            throw new ListaPreciosException("La FechaHasta ingresada no es correcta intente nuevamente.");
         }
         List objetoList = FachadaPersistencia.getInstance().buscar("ListaPrecios", lCriterio);
         List<ListaPreciosDTO> listasPreciosResultado = new ArrayList<>();

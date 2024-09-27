@@ -60,17 +60,19 @@ public class UIABCListaPreciosLista implements Serializable {
     public void filtrar() {
     }
 
-    public List<ListaPreciosGrillaUI> mostrarListasPrecios() {
+    public List<ListaPreciosGrillaUI> mostrarListasPrecios() throws ListaPreciosException {
 
         List<ListaPreciosGrillaUI> listasPreciosGrilla = new ArrayList<>();
-        List<ListaPreciosDTO> listasPreciosDTO = controladorABCListaPrecios.mostrarListasPrecios(new Timestamp(fechaHoraHastaListaPreciosFiltro.getTime()));
-        for (ListaPreciosDTO listaPreciosDTO : listasPreciosDTO) {
-            ListaPreciosGrillaUI listaPreciosGrilla = new ListaPreciosGrillaUI();
-            listaPreciosGrilla.setCodListaPrecios(listaPreciosDTO.getCodListaPrecios());
-            listaPreciosGrilla.setFechaHoraDesdeListaPrecios(listaPreciosDTO.getFechaHoraDesdeListaPrecios());
-            listaPreciosGrilla.setFechaHoraHastaListaPrecios(listaPreciosDTO.getFechaHoraHastaListaPrecios());
-            listaPreciosGrilla.setFechaHoraBajaListaPrecios(listaPreciosDTO.getFechaHoraBajaListaPrecios());
-            listasPreciosGrilla.add(listaPreciosGrilla);
+        if (fechaHoraHastaListaPreciosFiltro != null) {
+            List<ListaPreciosDTO> listasPreciosDTO = controladorABCListaPrecios.mostrarListasPrecios(new Timestamp(fechaHoraHastaListaPreciosFiltro.getTime()));
+            for (ListaPreciosDTO listaPreciosDTO : listasPreciosDTO) {
+                ListaPreciosGrillaUI listaPreciosGrilla = new ListaPreciosGrillaUI();
+                listaPreciosGrilla.setCodListaPrecios(listaPreciosDTO.getCodListaPrecios());
+                listaPreciosGrilla.setFechaHoraDesdeListaPrecios(listaPreciosDTO.getFechaHoraDesdeListaPrecios());
+                listaPreciosGrilla.setFechaHoraHastaListaPrecios(listaPreciosDTO.getFechaHoraHastaListaPrecios());
+                listaPreciosGrilla.setFechaHoraBajaListaPrecios(listaPreciosDTO.getFechaHoraBajaListaPrecios());
+                listasPreciosGrilla.add(listaPreciosGrilla);
+            }
         }
         return ordenarListaPrecios(listasPreciosGrilla);
     }

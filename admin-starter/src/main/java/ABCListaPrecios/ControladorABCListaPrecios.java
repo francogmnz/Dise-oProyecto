@@ -16,7 +16,7 @@ public class ControladorABCListaPrecios {
         expertoABCListaPrecios.agregarListaPrecios(nuevaListaPreciosDTO);
     }
 
-    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) {
+    public List<ListaPreciosDTO> mostrarListasPrecios(Timestamp fechaHoraHastaListaPreciosFiltro) throws ListaPreciosException {
         return expertoABCListaPrecios.mostrarListasPrecios(fechaHoraHastaListaPreciosFiltro);
     }
     
