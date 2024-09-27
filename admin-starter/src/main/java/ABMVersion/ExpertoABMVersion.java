@@ -262,70 +262,128 @@ public class ExpertoABMVersion {
         return modificarVersionDTO; // Retorna el objeto encontrado o null si no se encontró
     }
 
-    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
-        FachadaPersistencia f = FachadaPersistencia.getInstance();
-        Version nueva = new Version();
-        nueva.setNroVersion(1);//Cambiar despues
-        int codTipoTramite = dtoDatosVersion.getCodTipoTramite();
-        List<DTOCriterio> lc = new ArrayList<>();
-        DTOCriterio c = new DTOCriterio();
-        c.setAtributo("codTipoTramite");
-        c.setOperacion("=");
-        c.setValor(codTipoTramite);
-        lc.add(c);
-        List o = f.buscar("TipoTramite", lc);
-        if (o.size() > 0) {
-            TipoTramite t = (TipoTramite) o.get(0);
-            nueva.setTipoTramite(t);
-            System.out.println(t.getNombreTipoTramite());
-        } else {
-            //Hacer excepcion no existe el tipo tramite
-            return false;
-        }
+public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
+    
+    FachadaPersistencia f = FachadaPersistencia.getInstance();
+    Version nueva = new Version();
+    // Buscar si ya existe una versión
+    List<DTOCriterio> criterioList = new ArrayList<>();
+    DTOCriterio criterio = new DTOCriterio();
+    criterio.setAtributo("descripcionVersion"); // O cualquier otro campo que identifique la versión
+    criterio.setOperacion("=");
+    criterio.setValor(dtoDatosVersion.getDescripcionVersion());
+    criterioList.add(criterio);
+
+    List<Object> versionesExistentes = f.buscar("Version", criterioList);
+
+    if (!versionesExistentes.isEmpty()) {
+    // Establecer la versión de forma autoincremental
+    int nuevoNumeroVersion = obtenerUltimoNumeroVersion(f) + 1; // Asegúrate de tener este método
+    nueva.setNroVersion(nuevoNumeroVersion);
+    
+    // Configurar los demás atributos de la versión
+    nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
+    nueva.setFechaDesdeVersion(new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()));
+    nueva.setFechaHastaVersion(new Timestamp(dtoDatosVersion.getFechaHastaVersion().getTime()));
+    int codTipoTramite = dtoDatosVersion.getCodTipoTramite();
+
+    // Búsqueda del TipoTramite
+    List<DTOCriterio> lc = new ArrayList<>();
+    DTOCriterio c = new DTOCriterio();
+    c.setAtributo("codTipoTramite");
+    c.setOperacion("=");
+    c.setValor(codTipoTramite);
+    lc.add(c);
+
+    List<Object> o = f.buscar("TipoTramite", lc);
+    
+    if (!o.isEmpty()) {
+        TipoTramite t = (TipoTramite) o.get(0);
+        nueva.setTipoTramite(t);
+    } else {
+        System.out.println("TipoTramite no encontrado.");
+        return false;
+    }
+
+    try {
+        // Procesar Estados de Origen
         for (DTOEstadoOrigenIN dtoO : dtoDatosVersion.getDtoEstadoOrigenList()) {
-            lc = new ArrayList<>();
-            c = new DTOCriterio();
-            c.setAtributo("codEstadoTramite");
-            c.setOperacion("=");
-            c.setValor(dtoO.getCodEstadoTramite());
-            EstadoTramite eO = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
+            // Búsqueda del Estado de Origen
+            List<DTOCriterio> lcEstado = new ArrayList<>();
+            DTOCriterio criterioEstado = new DTOCriterio();
+            criterioEstado.setAtributo("codEstadoTramite");
+            criterioEstado.setOperacion("=");
+            criterioEstado.setValor(dtoO.getCodEstadoTramite());
+            lcEstado.add(criterioEstado);
 
-            System.out.println("Nombre Estado" + eO.getNombreEstadoTramite());
+            List<Object> resultadoEstado = f.buscar("EstadoTramite", lcEstado);
+            if (!resultadoEstado.isEmpty()) {
+                EstadoTramite eO = (EstadoTramite) resultadoEstado.get(0);
+                System.out.println("Nombre Estado Origen: " + eO.getNombreEstadoTramite());
 
-            ConfTipoTramiteEstadoTramite cttet = new ConfTipoTramiteEstadoTramite();
-            cttet.setEtapaOrigen(codTipoTramite);
+                ConfTipoTramiteEstadoTramite cttet = new ConfTipoTramiteEstadoTramite();
+                cttet.setEtapaOrigen(codTipoTramite);
+                cttet.setEstadoTramiteOrigen(eO);
 
-            List<EstadoTramite> listaEstadoTramiteDestino = new ArrayList<>();
-            // Crear un nuevo criterio de búsqueda basado en el código de estado trámite
-            c.setAtributo("codEstadoTramite");
-            c.setOperacion("=");
-            c.setValor(dtoO.getDtoEstadoDeastinoList());
-            EstadoTramite eDestino = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
+                List<EstadoTramite> listaEstadoTramiteDestino = new ArrayList<>();
+                for (DTOEstadoDestinoIN dtoD : dtoDatosVersion.getDtoEstadoDestinoList()) {
+                    // Búsqueda del Estado de Destino
+                    List<DTOCriterio> lcDestino = new ArrayList<>();
+                    DTOCriterio criterioDestino = new DTOCriterio();
+                    criterioDestino.setAtributo("codEstadoTramite");
+                    criterioDestino.setOperacion("=");
+                    criterioDestino.setValor(dtoD.getCodEstadoTramite());
+                    lcDestino.add(criterioDestino);
 
-            System.out.println("Nombre Estado" + eDestino.getNombreEstadoTramite());
-
-            for (DTOEstadoDestinoIN dtoD : dtoDatosVersion.getDtoEstadoDestinoList()) {
-                lc = new ArrayList<>();
-                c = new DTOCriterio();
-                c.setAtributo("codEstadoTramite");
-                c.setOperacion("=");
-                c.setValor(dtoD.getCodEstadoTramite());
-
-                EstadoTramite eD = (EstadoTramite) f.buscar("EstadoTramite", lc).get(0);
-
-                System.out.println("Nombre Estado" + eD.getNombreEstadoTramite());
-
-                listaEstadoTramiteDestino.add(eD);
+                    List<Object> resultadoDestino = f.buscar("EstadoTramite", lcDestino);
+                    if (!resultadoDestino.isEmpty()) {
+                        EstadoTramite eD = (EstadoTramite) resultadoDestino.get(0);
+                        System.out.println("Nombre Estado Destino: " + eD.getNombreEstadoTramite());
+                        listaEstadoTramiteDestino.add(eD);
+                    } else {
+                        System.out.println("Estado de Destino no encontrado: " + dtoD.getCodEstadoTramite());
+                    }
+                }
 
                 cttet.setEstadoTramiteDestino(listaEstadoTramiteDestino);
-
+                nueva.addConfTipoTramiteEstadoTramite(cttet);
+                
+                // Guardar cada configuración de estado
                 f.guardar(cttet);
-
+            } else {
+                System.out.println("Estado de Origen no encontrado: " + dtoO.getCodEstadoTramite());
             }
-
-            f.finalizarTransaccion();
         }
-                return true;
 
+        // Guardar la versión
+        f.guardar(nueva);
+        f.finalizarTransaccion();
+        
+        System.out.println("Versión guardada correctamente.");
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
 }
+
+private int obtenerUltimoNumeroVersion(FachadaPersistencia f) {
+    // Método para obtener el último número de versión
+    List<DTOCriterio> lc = new ArrayList<>();
+    DTOCriterio c = new DTOCriterio();
+    c.setAtributo("nroVersion");
+    c.setOperacion("ORDER BY");
+    lc.add(c);
+
+    List<Object> versiones = f.buscar("Version", lc);
+    if (!versiones.isEmpty()) {
+        Version ultimaVersion = (Version) versiones.get(0);
+        return ultimaVersion.getNroVersion();
+    }
+    return 0; // Si no hay versiones, retornar 0
+}
+
+}
+
+
+

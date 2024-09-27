@@ -80,5 +80,5 @@ public class Version extends Entidad {
     public void addConfTipoTramiteEstadoTramite(ConfTipoTramiteEstadoTramite cttet) {
         confTipoTramiteEstadoTramite.add(cttet);   
 }  
-    
+     
 }
