@@ -7,29 +7,35 @@ import java.util.List;
 @Entity
 //@Table(name = "conf_tipo_tramite_estado_tramite")
 public class ConfTipoTramiteEstadoTramite extends Entidad {
-    
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // ID de la configuración
-
+   
     private int contadorConfigTTET;
     private int etapaOrigen;  
     private int etapaDestino;  
+    private int Xpos;
+    private int Ypos;
 
-//    @ManyToOne
-    //@JoinColumn(name = "estado_tramite_origen_id") // Cambia el nombre según tu base de datos
     private EstadoTramite estadoTramiteOrigen; 
-/*
-    @ManyToMany
-    @JoinTable(
-        name = "conf_estado_tramite_destino", // Cambia según tu base de datos
-        joinColumns = @JoinColumn(name = "conf_tipo_tramite_estado_tramite_id"),
-        inverseJoinColumns = @JoinColumn(name = "estado_tramite_id")
-    )*/
+
     private List<EstadoTramite> estadoTramiteDestino = new ArrayList<>(); 
 
     public ConfTipoTramiteEstadoTramite() {
-        // Constructor vacío
+  
+    }
+
+    public int getXpos() {
+        return Xpos;
+    }
+
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
+    }
+
+    public int getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
     }
 
     public int getContadorConfigTTET() {

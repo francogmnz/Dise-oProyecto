@@ -102,6 +102,8 @@ public class UIABMVersion implements Serializable {
             NodoMenuIU unEP = new NodoMenuIU();
             unEP.setCodigo(de.getCodEstadoTramite());
             unEP.setNombre(de.getNombreEstadoTramite());
+            unEP.setXpos(de.getXpos());
+            unEP.setYpos(de.getYpos()); //con esto me traigo las posiciones en el dibujo :D
             lestadosP.add(unEP);
         }
         
@@ -120,7 +122,7 @@ public class UIABMVersion implements Serializable {
                     NodoIU unE = new NodoIU();
                     unE.setCodigo(de.getCodEstadoTramite());
                     unE.setNombre(de.getNombreEstadoTramite());
-                    unE.setXpos(80);
+                    unE.setXpos(2);
                     unE.setYpos(80);
                     lestados.add(unE);
                     }
