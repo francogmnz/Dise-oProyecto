@@ -1,6 +1,5 @@
 package ABMCliente;
 
-import ABMCliente.*;
 import ABMCliente.dtos.DTOCliente;
 import ABMCliente.dtos.DTOIngresoDatos;
 import ABMCliente.dtos.DTOModificacionDatos;
@@ -8,6 +7,9 @@ import ABMCliente.dtos.DTOModificacionDatosIn;
 import ABMCliente.exceptions.ClienteException;
 import entidades.Cliente;
 import entidades.Tramite;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import utils.FachadaPersistencia;
 
 public class ExpertoABMCliente {
 
-    public List<DTOCliente> buscarClientes(int dniCliente, String apellidoCliente) {
+    public List<DTOCliente> buscarClientes(int dniCliente, String nombreCliente, String apellidoCliente, String mailCliente) {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
         if (dniCliente > 0) {
             DTOCriterio unCriterio = new DTOCriterio();
@@ -25,22 +27,28 @@ public class ExpertoABMCliente {
             unCriterio.setValor(dniCliente);
             lCriterio.add(unCriterio);
         }
-        if (apellidoCliente.trim().length() > 0) {
+        if (nombreCliente.trim().length() > 0) {
             DTOCriterio unCriterio = new DTOCriterio();
             unCriterio.setAtributo("nombreCliente");
+            unCriterio.setOperacion("like");
+            unCriterio.setValor(nombreCliente);
+            lCriterio.add(unCriterio);
+        }
+        if (apellidoCliente.trim().length() > 0) {
+            DTOCriterio unCriterio = new DTOCriterio();
+            unCriterio.setAtributo("apellidoCliente");
             unCriterio.setOperacion("like");
             unCriterio.setValor(apellidoCliente);
             lCriterio.add(unCriterio);
         }
-        //if (numMaximoTramites > 0) {
+        if (mailCliente.trim().length() > 0) {
+            DTOCriterio unCriterio = new DTOCriterio();
+            unCriterio.setAtributo("mailCliente");
+            unCriterio.setOperacion("like");
+            unCriterio.setValor(mailCliente);
+            lCriterio.add(unCriterio);
+        }
 
-          //  DTOCriterio unCriterio = new DTOCriterio();
-            //unCriterio.setAtributo("numMaximoTramites");
-            //unCriterio.setOperacion("=");
-            //unCriterio.setValor(numMaximoTramites);
-            //lCriterio.add(unCriterio);
-
-        //}
         List objetoList = FachadaPersistencia.getInstance().buscar("Cliente", lCriterio);
         List<DTOCliente> clientesResultado = new ArrayList<>();
         for (Object x : objetoList) {
@@ -83,28 +91,38 @@ public class ExpertoABMCliente {
         }
     }
 
-    public DTOModificacionDatos buscarClienteAModificar(int dniCliente) {
+    public DTOModificacionDatos buscarClienteAModificar(int dniCliente) throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
         dto.setAtributo("dniCliente");
         dto.setOperacion("=");
         dto.setValor(dniCliente);
-        
 
         criterioList.add(dto);
-
-        Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
-
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
-        dtoModificacionDatos.setNombreCliente(clienteEncontrado.getNombreCliente());
-        dtoModificacionDatos.setDniCliente(clienteEncontrado.getDniCliente());
-        dtoModificacionDatos.setApellidoCliente(clienteEncontrado.getApellidoCliente());
-        dtoModificacionDatos.setMailCliente(clienteEncontrado.getMailCliente());
+        try {
+
+            Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+            if (clienteEncontrado == null) {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            }
+            dtoModificacionDatos.setNombreCliente(clienteEncontrado.getNombreCliente());
+            dtoModificacionDatos.setDniCliente(clienteEncontrado.getDniCliente());
+            dtoModificacionDatos.setApellidoCliente(clienteEncontrado.getApellidoCliente());
+            dtoModificacionDatos.setMailCliente(clienteEncontrado.getMailCliente());
+            return dtoModificacionDatos;
+        } catch (Exception e) {
+            // Maneja la excepción
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+        }
         return dtoModificacionDatos;
     }
 
-    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) {
+    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -115,9 +133,7 @@ public class ExpertoABMCliente {
         dto.setValor(dtoModificacionDatosIn.getDniCliente());
 
         criterioList.add(dto);
-
         Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
-
         clienteEncontrado.setDniCliente(dtoModificacionDatosIn.getDniCliente());
         clienteEncontrado.setNombreCliente(dtoModificacionDatosIn.getNombreCliente());
         clienteEncontrado.setApellidoCliente(dtoModificacionDatosIn.getApellidoCliente());

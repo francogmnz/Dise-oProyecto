@@ -194,7 +194,7 @@ public class EjemplosPersistencia {
     
 
     Consultor consultor1 = new Consultor();
-    consultor1.setLegajoConsultor(1001);
+    consultor1.setLegajoConsultor("1001");
     consultor1.setNombreConsultor("Carlos Fernández");
     consultor1.setNumMaximoTramites(5);
     consultor1.setFechaHoraBajaConsultor(null);
@@ -206,7 +206,7 @@ public class EjemplosPersistencia {
 
 
     Consultor consultor2 = new Consultor();
-    consultor2.setLegajoConsultor(1002);
+    consultor2.setLegajoConsultor("1002");
     consultor2.setNombreConsultor("Ana López");
     consultor2.setNumMaximoTramites(3);
     consultor2.setFechaHoraBajaConsultor(null);

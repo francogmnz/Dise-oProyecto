@@ -1,11 +1,9 @@
 package ABCListaPrecios.beans;
 
 import ABCListaPrecios.ControladorABCListaPrecios;
-import static ABCListaPrecios.beans.UIABCListaPreciosLista.sumarMinuto;
 import ABCListaPrecios.dtos.DetalleListaPreciosDTO;
 import ABCListaPrecios.dtos.NuevaListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
-import entidades.ListaPrecios;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +29,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
 import utils.BeansUtils;
+import utils.Errores;
 
 @Named("uiabmListaPrecios")
 @ViewScoped
@@ -44,6 +42,7 @@ public class UIABCListaPrecios implements Serializable {
     private Date fechaHoraHastaListaPrecios;
     private List<DetalleListaPreciosDTO> detalles = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
+    private Errores err = new Errores();
 
 // GETTERS y SETTERS
     public ControladorABCListaPrecios getControladorABCListaPrecios() {
@@ -125,7 +124,7 @@ public class UIABCListaPrecios implements Serializable {
 //        VALIDACION CODIGO NUEVA LP
         int cod = 0;
         // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
-        if (request.getParameter("codLP") == null || !(request.getParameter("codLP").matches("\\d+")) || Integer.parseInt(request.getParameter("codLP")) <= 0) {
+        if (request.getParameter("codLP") == null || !(request.getParameter("codLP").matches("\\d+")) || Integer.parseInt(request.getParameter("codLP")) < 0) {
             // Redirigir a la URL anterior si el código no es válido
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABCListaPrecios/abmListaPreciosLista.jsf");
             return;
@@ -134,12 +133,10 @@ public class UIABCListaPrecios implements Serializable {
             cod = Integer.parseInt(request.getParameter("codLP"));
         }
 
-        String fd = request.getParameter("fDesde");
-
 //        SETEAR POR DEFECTO LOS VALORES EN LOS CAMPOS
-        if (cod > 0) {
+        if (cod >= 0) {
             setCodListaPrecios(cod);
-            setFechaHoraDesdeListaPrecios(StringToTimestamp(fd));
+            setFechaHoraDesdeListaPrecios(Timestamp.from(Instant.now()));
             setFechaHoraHastaListaPrecios(null);
         }
     }
@@ -198,14 +195,25 @@ public class UIABCListaPrecios implements Serializable {
     }
 
     public String agregarListaPrecios() {
-        if (tags == null || tags.isEmpty() || tags.size() == 0) {
-            Messages.create("Error!").error().detail("Debe subir una Lista Precios para confirmar la accion.").add();
-            return "";
+        //        VALIDACIONES
+        if (tags == null || tags.isEmpty()) {
+            err.agregarError("Debe subir una Lista Precios.");
         }
+
         if (getFechaHoraHastaListaPrecios() == null || getFechaHoraDesdeListaPrecios() == null) {
-            Messages.create("Error!").error().detail("FechaDesde y/o FechaHasta esta/n vacía/s. Por favor complete los datos para confirmar la accion.").add();
-            return "";
-        } else {
+            err.agregarError("FechaDesde y/o FechaHasta esta/n vacía/s. Por favor complete los datos.");
+        }
+        if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() < 0) {
+            err.agregarError("El Código debe ser un entero mayor o igual a 0.");
+        }
+        if (getFechaHoraHastaListaPrecios() != null && getFechaHoraDesdeListaPrecios() != null && getFechaHoraHastaListaPrecios().before(getFechaHoraDesdeListaPrecios())) {
+            err.agregarError("La FechaHasta ingresada es menor a la FechaDesde. Intente nuevamente.");
+        }
+        if (getFechaHoraHastaListaPrecios() != null && getFechaHoraDesdeListaPrecios() != null && getFechaHoraDesdeListaPrecios().before(new Date())) {
+            err.agregarError("La FechaDesde ingresada es menor a la FechaActual. Intentelo nuevamente.");
+        }
+        if (err.getErrores().isEmpty() || err.getErrores().size() == 0) {
+
             try {
                 NuevaListaPreciosDTO nuevaListaPrecios = new NuevaListaPreciosDTO();
                 nuevaListaPrecios.setCodListaPrecios(getCodListaPrecios());
@@ -218,24 +226,10 @@ public class UIABCListaPrecios implements Serializable {
                 Messages.create(e.getMessage()).fatal().add();
                 return "";
             }
+        } else {
+            err.mostrarErrores();
         }
-    }
-
-//        SIRVE PARA CONVERTIR UN STRING A TIMESTAMP
-    public static Timestamp StringToTimestamp(String s) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp t = null;
-
-        try {
-            // Convertir String a Date
-            Date date = dateFormat.parse(s);
-            // Convertir Date a Timestamp
-            t = new Timestamp(date.getTime());
-            return t;
-        } catch (Exception e) {
-            e.printStackTrace(); // Manejar el caso en que el formato es incorrecto
-        }
-        return t;
+        return "";
     }
 
 }

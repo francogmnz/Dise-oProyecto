@@ -10,7 +10,7 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="legajoConsultor" type="int">
+        <property name="legajoConsultor" type="string">
             <column name="legajo_consultor"/>
         </property>
 

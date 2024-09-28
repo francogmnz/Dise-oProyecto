@@ -22,6 +22,7 @@ public class UIABMConsultorLista implements Serializable {
     private int legajoFiltro=0;
     private String nombreFiltro="";
     private int numMaximoTramitesFiltro=0;
+    
 
     public ControladorABMConsultor getControladorABMConsultor() {
         return controladorABMConsultor;
@@ -61,9 +62,7 @@ public class UIABMConsultorLista implements Serializable {
     }
 
     public List<ConsultorGrillaUI> buscarConsultores(){
-        System.out.println(legajoFiltro);
-        System.out.println(nombreFiltro);
-        System.out.println(numMaximoTramitesFiltro);
+
         List<ConsultorGrillaUI> consultorsGrilla = new ArrayList<>();
         List<DTOConsultor> consultoresDTO = controladorABMConsultor.buscarConsultores(legajoFiltro,nombreFiltro, numMaximoTramitesFiltro);
         for (DTOConsultor consultorDTO : consultoresDTO) {
@@ -95,6 +94,14 @@ public class UIABMConsultorLista implements Serializable {
                     
         } catch (ConsultorException e) {
             Messages.create("Error!").error().detail("No se puede dar de baja, el consultor tiene asignado al menos un tramite.").add();
+        }
+    }
+    //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
+    public boolean isAnulada(ConsultorGrillaUI consultorEnviado) {
+        if (consultorEnviado.getFechaHoraBajaConsultor()!= null) {
+            return true;
+        } else {
+            return false;
         }
     }
     

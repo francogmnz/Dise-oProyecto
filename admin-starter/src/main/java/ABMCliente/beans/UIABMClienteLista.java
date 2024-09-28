@@ -22,7 +22,8 @@ public class UIABMClienteLista implements Serializable {
     private ControladorABMCliente controladorABMCliente = new ControladorABMCliente();
     private int dniFiltro=0;
     private String nombreFiltro="";
-   
+    private String apellidoFiltro="";
+    private String mailFiltro="";
 
     public ControladorABMCliente getControladorABMCliente() {
         return controladorABMCliente;
@@ -44,10 +45,28 @@ public class UIABMClienteLista implements Serializable {
         return nombreFiltro;
     }
 
-    public void setNombreFiltro(String descripcionFiltro) {
-        this.nombreFiltro = descripcionFiltro;
-    } 
+    public void setNombreFiltro(String nombreFiltro) {
+        this.nombreFiltro = nombreFiltro;
+    }
 
+    public String getApellidoFiltro() {
+        return apellidoFiltro;
+    }
+
+    public void setApellidoFiltro(String apellidoFiltro) {
+        this.apellidoFiltro = apellidoFiltro;
+    }
+
+    public String getMailFiltro() {
+        return mailFiltro;
+    }
+
+    public void setMailFiltro(String mailFiltro) {
+        this.mailFiltro = mailFiltro;
+    }
+   
+
+ 
     
      public void filtrar()
     {
@@ -55,10 +74,8 @@ public class UIABMClienteLista implements Serializable {
     }
 
     public List<ClienteGrillaUI> buscarClientes(){
-        System.out.println(dniFiltro);
-        System.out.println(nombreFiltro);
         List<ClienteGrillaUI> clientesGrilla = new ArrayList<>();
-        List<DTOCliente> clientesDTO = controladorABMCliente.buscarClientes(dniFiltro,nombreFiltro);
+        List<DTOCliente> clientesDTO = controladorABMCliente.buscarClientes(dniFiltro, nombreFiltro, apellidoFiltro, mailFiltro);
         for (DTOCliente clienteDTO : clientesDTO) {
             ClienteGrillaUI clienteGrillaUI = new ClienteGrillaUI();
             clienteGrillaUI.setDniCliente(clienteDTO.getDniCliente());
@@ -93,4 +110,12 @@ public class UIABMClienteLista implements Serializable {
         }
     }
     
+    //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
+    public boolean isAnulada(ClienteGrillaUI clienteEnviado) {
+        if (clienteEnviado.getFechaHoraBajaCliente() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

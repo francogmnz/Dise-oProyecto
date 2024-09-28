@@ -1,4 +1,3 @@
-
 package ABMConsultor.beans;
 
 import ABMConsultor.ControladorABMConsultor;
@@ -6,26 +5,38 @@ import ABMConsultor.dtos.DTOIngresoDatos;
 import ABMConsultor.dtos.DTOModificacionDatos;
 import ABMConsultor.dtos.DTOModificacionDatosIn;
 import ABMConsultor.exceptions.ConsultorException;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
+import utils.Errores;
 
 @Named("uiabmConsultor")
 @ViewScoped
 
-public class UIABMConsultor implements Serializable{
-    
+public class UIABMConsultor implements Serializable {
+
     private ControladorABMConsultor controladorABMConsultor = new ControladorABMConsultor();
     private boolean insert;
     private String nombreConsultor;
-    private int legajoConsultor;
+    private String legajoConsultor;
     private int numMaximoTramites;
-    
+    private Errores err = new Errores();
+
+    public ControladorABMConsultor getControladorABMConsultor() {
+        return controladorABMConsultor;
+    }
+
+    public void setControladorABMConsultor(ControladorABMConsultor controladorABMConsultor) {
+        this.controladorABMConsultor = controladorABMConsultor;
+    }
+
     public boolean isInsert() {
         return insert;
     }
@@ -42,11 +53,11 @@ public class UIABMConsultor implements Serializable{
         this.nombreConsultor = nombreConsultor;
     }
 
-    public int getLegajoConsultor() {
+    public String getLegajoConsultor() {
         return legajoConsultor;
     }
 
-    public void setLegajoConsultor(int legajoConsultor) {
+    public void setLegajoConsultor(String legajoConsultor) {
         this.legajoConsultor = legajoConsultor;
     }
 
@@ -57,53 +68,71 @@ public class UIABMConsultor implements Serializable{
     public void setNumMaximoTramites(int numMaximoTramites) {
         this.numMaximoTramites = numMaximoTramites;
     }
-    
-    public UIABMConsultor() {
+
+    public UIABMConsultor() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        
-        int legajo = Integer.parseInt(request.getParameter("legajo"));
-        insert=true;
-        if(legajo > 0)
-        {
-            insert=false;
+        String legajo = "0";
+        // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
+        if (request.getParameter("legajo") == null || !(request.getParameter("legajo").matches("\\d+")) || Integer.parseInt(request.getParameter("legajo")) < 0) {
+            // Redirigir a la URL anterior si el código no es válido
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            return;
+        } else {
+            legajo = request.getParameter("legajo");
+        }
+
+        insert = true;
+        if (Integer.valueOf(legajo) > 0) {
+            insert = false;
             DTOModificacionDatos dtoModificacionDatos = controladorABMConsultor.buscarConsultorAModificar(legajo);
             setNombreConsultor(dtoModificacionDatos.getNombreConsultor());
             setLegajoConsultor(dtoModificacionDatos.getLegajoConsultor());
             setNumMaximoTramites(dtoModificacionDatos.getNumMaximoTramites());
         }
-        
-    }
-    public String agregarConsultor(){
-        try {
-
-        
-            if(!insert)
-            {
-
-                DTOModificacionDatosIn dtoModificacionDatosIn = new DTOModificacionDatosIn();
-                dtoModificacionDatosIn.setNombreConsultor(getNombreConsultor());
-                dtoModificacionDatosIn.setLegajoConsultor(getLegajoConsultor());
-                dtoModificacionDatosIn.setNumMaximoTramites(getNumMaximoTramites());
-                controladorABMConsultor.modificarConsultor(dtoModificacionDatosIn);
-                return BeansUtils.redirectToPreviousPage();
-            }
-            else
-            {
-                DTOIngresoDatos nuevoConsultorDTO = new DTOIngresoDatos();
-                nuevoConsultorDTO.setNombreConsultor(getNombreConsultor());
-                nuevoConsultorDTO.setLegajoConsultor(getLegajoConsultor());
-                nuevoConsultorDTO.setNumMaximoTramites(getNumMaximoTramites());
-                controladorABMConsultor.agregarConsultor(nuevoConsultorDTO);
-
-            }
-            return BeansUtils.redirectToPreviousPage();
+        if (Integer.valueOf(legajo) == 0) {
+            setNombreConsultor("");
+            setLegajoConsultor("0");
+            setNumMaximoTramites(0);
         }
-        
-        catch (ConsultorException e) {
-                Messages.create(e.getMessage()).fatal().add();
-                return "";
-         }
+
     }
+
+    public void agregarConsultor() throws ConsultorException {
+
+        if (getLegajoConsultor().isEmpty() || Integer.parseInt(getLegajoConsultor()) < 0) {
+            err.agregarError("El Legajo debe ser un entero mayor a 0.");
+        }
+        if (getNombreConsultor().isEmpty()) {
+            err.agregarError("El Nombre no puede quedar vacío.");
+        }
+        if (err.getErrores().isEmpty() || err.getErrores().size() == 0) {
+            try {
+                if (!insert) {
+
+                    DTOModificacionDatosIn dtoModificacionDatosIn = new DTOModificacionDatosIn();
+                    dtoModificacionDatosIn.setNombreConsultor(getNombreConsultor());
+                    dtoModificacionDatosIn.setLegajoConsultor(getLegajoConsultor());
+                    dtoModificacionDatosIn.setNumMaximoTramites(getNumMaximoTramites());
+                    controladorABMConsultor.modificarConsultor(dtoModificacionDatosIn);
+                    BeansUtils.redirectToPreviousPage();
+                } else {
+
+                    DTOIngresoDatos nuevoConsultorDTO = new DTOIngresoDatos();
+                    nuevoConsultorDTO.setNombreConsultor(getNombreConsultor());
+                    nuevoConsultorDTO.setLegajoConsultor(getLegajoConsultor());
+                    nuevoConsultorDTO.setNumMaximoTramites(getNumMaximoTramites());
+                    controladorABMConsultor.agregarConsultor(nuevoConsultorDTO);
+                }
+                BeansUtils.redirectToPreviousPage();
+            } catch (ConsultorException e) {
+                err.agregarError(e.toString().split(": ")[1]);
+            }
+        } else {
+            err.mostrarErrores();
+        }
+        err.mostrarErrores();
+    }
+
 }

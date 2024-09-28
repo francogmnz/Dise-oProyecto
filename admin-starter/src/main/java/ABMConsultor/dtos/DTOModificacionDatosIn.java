@@ -3,18 +3,17 @@ package ABMConsultor.dtos;
 
 public class DTOModificacionDatosIn {
     
-   private int legajoConsultor;
+   private String legajoConsultor;
     private String nombreConsultor;
     private int numMaximoTramites;
 
-    public int getLegajoConsultor() {
+    public String getLegajoConsultor() {
         return legajoConsultor;
     }
 
-    public void setLegajoConsultor(int legajoConsultor) {
+    public void setLegajoConsultor(String legajoConsultor) {
         this.legajoConsultor = legajoConsultor;
     }
-
     public String getNombreConsultor() {
         return nombreConsultor;
     }

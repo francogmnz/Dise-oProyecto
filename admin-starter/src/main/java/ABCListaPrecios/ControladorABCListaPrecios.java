@@ -20,8 +20,8 @@ public class ControladorABCListaPrecios {
         return expertoABCListaPrecios.mostrarListasPrecios(fechaHoraHastaListaPreciosFiltro);
     }
     
-    public ListaPrecios buscarUltimaLista(String s){
-        return expertoABCListaPrecios.buscarUltimaLista(s);
+    public ListaPrecios buscarUltimaListaNoNula(){
+        return expertoABCListaPrecios.buscarUltimaListaNoNula();
     }
 
     public void darDeBajaListaPrecios(int codigo) throws ListaPreciosException {

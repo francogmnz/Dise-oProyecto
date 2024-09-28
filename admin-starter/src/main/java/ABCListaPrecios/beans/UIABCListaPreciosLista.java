@@ -4,16 +4,12 @@ import ABCListaPrecios.ControladorABCListaPrecios;
 import ABCListaPrecios.dtos.ListaPreciosDTO;
 import ABCListaPrecios.exceptions.ListaPreciosException;
 import entidades.ListaPrecios;
-import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.omnifaces.util.Messages;
@@ -77,28 +73,10 @@ public class UIABCListaPreciosLista implements Serializable {
         return ordenarListaPrecios(listasPreciosGrilla);
     }
 
-//    SUMA UN MINUTO AL TIMESTAMP EN PARAMETRO, PARA CUANDO SE CREA LA NUEVA LP SE PONGA ESTA FHASTAVIEJA EN FDESDENUEVA
-    public static Timestamp sumarMinuto(Timestamp t) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(t.getTime());
-        calendar.add(Calendar.MINUTE, 1); // Suma un minuto
-        return new Timestamp(calendar.getTimeInMillis());
-    }
-
 //    NOS REDIRECCIONA A LA IMPORTACION DE LA NUEVA LISTA
     public String irAgregarListaPrecios() throws IOException {
         BeansUtils.guardarUrlAnterior();
-        ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaLista("");
-        String newCod = Integer.toString(ultimaLP.getCodListaPrecios() + 1);
-        Timestamp newFDesde = sumarMinuto(ultimaLP.getFechaHoraHastaListaPrecios());
-
-        // Si la última lista de precios es nula, mandar valores por defecto
-        if (ultimaLP == null) {
-            newCod = Integer.toString(1);
-            newFDesde = sumarMinuto(Timestamp.from(Instant.now()));
-        }
-        return "abmListaPrecios?faces-redirect=true&codLP=" + newCod + "&fDesde=" + newFDesde;
-
+        return "abmListaPrecios?faces-redirect=true&codLP=0";
     }
 
     public void darDeBajaListaPrecios(int codigo) {
@@ -198,11 +176,12 @@ public class UIABCListaPreciosLista implements Serializable {
     public boolean habilitarBtnBaja(ListaPreciosGrillaUI listaEnviada) {
         Timestamp hoy = new Timestamp(System.currentTimeMillis());
         if (listaEnviada.getFechaHoraBajaListaPrecios() == null && listaEnviada.getFechaHoraHastaListaPrecios().after(hoy) && !isLaActiva(listaEnviada)) {
-            ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaLista("noNulas");
+            ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaListaNoNula();
             return ultimaLP.getCodListaPrecios() == listaEnviada.getCodListaPrecios();
         }
         return false;
     }
+    
 
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES LA VIGENTE 
     public boolean isLaActiva(ListaPreciosGrillaUI listaEnviada) {
@@ -219,8 +198,9 @@ public class UIABCListaPreciosLista implements Serializable {
         }
         return false;
     }
+    
+    
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
-
     public boolean isAnulada(ListaPreciosGrillaUI listaEnviada) {
         if (listaEnviada.getFechaHoraBajaListaPrecios() != null) {
             return true;
@@ -228,8 +208,9 @@ public class UIABCListaPreciosLista implements Serializable {
             return false;
         }
     }
-//    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES A FUTURO
-
+    
+    
+//    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES PASADA
     public boolean isPasada(ListaPreciosGrillaUI listaEnviada) {
         Timestamp hoy = new Timestamp(System.currentTimeMillis());
         if (listaEnviada.getFechaHoraDesdeListaPrecios().before(hoy)) {

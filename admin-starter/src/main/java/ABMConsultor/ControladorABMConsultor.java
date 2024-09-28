@@ -6,6 +6,7 @@ import ABMConsultor.dtos.DTOIngresoDatos;
 import ABMConsultor.dtos.DTOModificacionDatos;
 import ABMConsultor.dtos.DTOModificacionDatosIn;
 import ABMConsultor.exceptions.ConsultorException;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class ControladorABMConsultor {
         expertoABMConsultor.modificarConsultor(dtoModificacionDatosIn);
     }
 
-    public DTOModificacionDatos buscarConsultorAModificar(int legajo){
+    public DTOModificacionDatos buscarConsultorAModificar(String legajo) throws IOException{
         return expertoABMConsultor.buscarConsultorAModificar(legajo);
     }
 

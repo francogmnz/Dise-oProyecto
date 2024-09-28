@@ -1,27 +1,43 @@
 package ABMConsultor;
 
+import ABMCliente.exceptions.ClienteException;
 import ABMConsultor.dtos.DTOConsultor;
 import ABMConsultor.dtos.DTOIngresoDatos;
 import ABMConsultor.dtos.DTOModificacionDatos;
 import ABMConsultor.dtos.DTOModificacionDatosIn;
 import ABMConsultor.exceptions.ConsultorException;
+import entidades.Cliente;
 import entidades.Consultor;
 import entidades.Tramite;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
+import utils.Errores;
 import utils.FachadaPersistencia;
 
 public class ExpertoABMConsultor {
 
+    private Errores err = new Errores();
+
     public List<DTOConsultor> buscarConsultores(int legajoConsultor, String nombreConsultor, int numMaximoTramites) {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
         if (legajoConsultor > 0) {
+
             DTOCriterio unCriterio = new DTOCriterio();
             unCriterio.setAtributo("legajoConsultor");
-            unCriterio.setOperacion("=");
-            unCriterio.setValor(legajoConsultor);
+            unCriterio.setOperacion("like");
+            unCriterio.setValor(String.valueOf(legajoConsultor) + "%");
+            lCriterio.add(unCriterio);
+        } else {
+            DTOCriterio unCriterio = new DTOCriterio();
+            unCriterio.setAtributo("legajoConsultor");
+            unCriterio.setOperacion("like");
+            unCriterio.setValor("%");
             lCriterio.add(unCriterio);
         }
         if (nombreConsultor.trim().length() > 0) {
@@ -42,6 +58,7 @@ public class ExpertoABMConsultor {
             dtoConsultor.setNumMaximoTramites(consultor.getNumMaximoTramites());
             dtoConsultor.setFechaHoraBajaConsultor(consultor.getFechaHoraBajaConsultor());
             consultoresResultado.add(dtoConsultor);
+
         }
         return consultoresResultado;
     }
@@ -60,7 +77,7 @@ public class ExpertoABMConsultor {
         List lConsultor = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
 
         if (lConsultor.size() > 0) {
-            throw new ConsultorException("El código de consultor ya existe");
+            throw new ConsultorException("El código ingresado corresponde a un consultor existente");
         } else {
             Consultor consultor = new Consultor();
             consultor.setLegajoConsultor(nuevoConsultorDTO.getLegajoConsultor());
@@ -72,23 +89,33 @@ public class ExpertoABMConsultor {
         }
     }
 
-    public DTOModificacionDatos buscarConsultorAModificar(int legajoConsultor) {
+    public DTOModificacionDatos buscarConsultorAModificar(String legajoConsultor) throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
         dto.setAtributo("legajoConsultor");
         dto.setOperacion("=");
         dto.setValor(legajoConsultor);
-        
 
         criterioList.add(dto);
-
-        Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
-
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
-        dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
-        dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
-        dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
+
+        try {
+            Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
+
+            if (consultorEncontrado == null) {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            }
+            dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
+            dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
+            dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
+            return dtoModificacionDatos;
+        } catch (Exception e) {
+            // Maneja la excepción
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+        }
         return dtoModificacionDatos;
     }
 
@@ -122,7 +149,7 @@ public class ExpertoABMConsultor {
 
         dto.setAtributo("legajoConsultor");
         dto.setOperacion("=");
-        dto.setValor(legajoConsultor);
+        dto.setValor(String.valueOf(legajoConsultor));
 
         criterioList.add(dto);
         DTOCriterio dto2 = new DTOCriterio();
@@ -133,7 +160,7 @@ public class ExpertoABMConsultor {
 
         criterioList.add(dto2);
         Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
-        int legajoEncontrado = consultorEncontrado.getLegajoConsultor();
+        String legajoEncontrado = consultorEncontrado.getLegajoConsultor();
 
         criterioList.clear();
 
@@ -151,7 +178,7 @@ public class ExpertoABMConsultor {
 
             Tramite tramite = (Tramite) x;
             Consultor consultor = tramite.getConsultor();
-            int legajo = consultor.getLegajoConsultor();
+            String legajo = consultor.getLegajoConsultor();
 
             if (legajoEncontrado == legajo) {
                 throw new ConsultorException("Consultor no puede darse de baja por estar asignado en al menos a un tramite");

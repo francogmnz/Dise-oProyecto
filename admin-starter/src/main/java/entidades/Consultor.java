@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Consultor extends Entidad {
 
-    private int legajoConsultor;
+    private String legajoConsultor;
     private String nombreConsultor;
     private int numMaximoTramites;
     private Timestamp fechaHoraBajaConsultor;
@@ -22,11 +22,11 @@ public class Consultor extends Entidad {
     public Consultor() {
     }
 
-    public int getLegajoConsultor() {
+    public String getLegajoConsultor() {
         return legajoConsultor;
     }
 
-    public void setLegajoConsultor(int legajoConsultor) {
+    public void setLegajoConsultor(String legajoConsultor) {
         this.legajoConsultor = legajoConsultor;
     }
 
@@ -61,5 +61,7 @@ public class Consultor extends Entidad {
     public void setAgendas(List<AgendaConsultor> agendas) {
         this.agendas = agendas;
     }
+
+
 
 }
