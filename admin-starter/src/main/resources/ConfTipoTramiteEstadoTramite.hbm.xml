@@ -23,15 +23,12 @@
         </property>
 
         <!-- Relación OneToMany con EstadoTramite (origen) -->
-        <bag name="estadoTramiteOrigen" table="estado_tramite" cascade="none" > <!-- inverse="true" -->
-            <key column="OIDConfTipoTramiteEstadoTramiteOrigen" not-null="false"/> <!--Seteo en false para probar dsp cambiar -->
-            <one-to-many class="entidades.EstadoTramite"/>
-        </bag>
-
+  
+        <many-to-one name="estadoTramiteOrigen" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false"/>
         <!-- Relación OneToMany con EstadoTramite (destino)  -->
-        <bag name="estadoTramiteDestino" table="estado_tramite" cascade="none">
+        <bag name="estadoTramiteDestino" table="config_estado_tramite" cascade="none">
             <key column="OIDConfTipoTramiteEstadoTramiteDestino" not-null="false"/> <!--Seteo en false para probar dsp cambiar -->
-            <one-to-many class="entidades.EstadoTramite"/>
+            <many-to-many class="entidades.EstadoTramite"/>
         </bag>
         
         

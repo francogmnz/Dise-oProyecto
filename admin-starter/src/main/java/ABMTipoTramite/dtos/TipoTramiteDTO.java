@@ -23,6 +23,7 @@ public class TipoTramiteDTO {
     private CategoriaTipoTramite categoriaTipoTramite;
 
 
+
     public int getCodTipoTramite() {
         return codTipoTramite;
     }

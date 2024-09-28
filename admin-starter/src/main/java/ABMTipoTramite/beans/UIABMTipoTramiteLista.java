@@ -27,6 +27,7 @@ public class UIABMTipoTramiteLista implements Serializable {
     private ControladorABMTipoTramite controladorABMTipoTramite = new ControladorABMTipoTramite();
     private int codTipoTramiteFiltro=0;
     private String nombreTipoTramiteFiltro="";
+ 
 
     public ControladorABMTipoTramite getControladorABMTipoTramite() {
         return controladorABMTipoTramite;
@@ -74,7 +75,7 @@ public class UIABMTipoTramiteLista implements Serializable {
             tipoTramiteGrillaUI.setFechaHoraBajaTipoTramite(tipoTramiteDTO.getFechaHoraBajaTipoTramite());
             tipoTramiteGrillaUI.setPlazoEntregaDocumentacionTT(tipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             tipoTramiteGrillaUI.setNombreCategoriaTipoTramite(tipoTramiteDTO.getCategoriaTipoTramite().getNombreCategoriaTipoTramite());
-            
+
 
             tipoTramitesGrilla.add(tipoTramiteGrillaUI);
         }
@@ -91,14 +92,10 @@ public class UIABMTipoTramiteLista implements Serializable {
         BeansUtils.guardarUrlAnterior();
         return "abmTipoTramite?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
     }
-    public String irConfigurarTipoTramite(int codTipoTramite) {
-        BeansUtils.guardarUrlAnterior();
-        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
-    }
-  public String irAModificarConfigurarTipoTramite(int codTipoTramite) {
-        BeansUtils.guardarUrlAnterior();
-        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
-    }
+   public String irConfigurarTipoTramite(int codTipoTramite, int nroVersion) {
+    BeansUtils.guardarUrlAnterior();
+    return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion;
+}
 
     public void darDeBajaTipoTramite(int codTipoTramite){
         try {

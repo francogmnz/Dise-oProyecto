@@ -1,6 +1,7 @@
 package ABMVersion.dtos;
 import ABMVersion.dtos.DTOConfiguracionTETT;
 import ABMVersion.dtos.DTOEstado;
+import ABMVersion.dtos.DTOEstadoOrigenOUT;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,19 @@ public class DTOVersionM {
     private int nroVersion;
     private Timestamp fechaHastaVersion;
     private Timestamp fechaDesdeVersion;
+    private List<DTOEstadoOrigenOUT> dtoEstadoOrigenOut = new ArrayList<>();
+    private List<DTOEstado> dtoEstado = new ArrayList<>();
+
+
+    public List<DTOEstado> getDtoEstado() {
+        return dtoEstado;
+    }
+
+    public void setDtoEstado(List<DTOEstado> dtoEstado) {
+        this.dtoEstado = dtoEstado;
+    }
 
     // Listas para manejar los DTOs
-    private List<DTOConfiguracionTETT> dtoConfiguracionTETT = new ArrayList<>();
-    private List<DTOEstado> dtoEstado = new ArrayList<>();
 
     // Métodos Getter y Setter...
 
@@ -59,10 +69,19 @@ public class DTOVersionM {
     }
 
     // Métodos para agregar DTOs a las listas
-   public void addDtoConfiguracionTETT(DTOConfiguracionTETT dtoEstadoDeastino) {
-        this.dtoConfiguracionTETT.add(dtoEstadoDeastino);
-    } 
+
     public void addDTOEstado(DTOEstado dtoEstado) {
         this.dtoEstado.add(dtoEstado);
     } 
+
+    public List<DTOEstadoOrigenOUT> getDtoEstadoOrigenOut() {
+        return dtoEstadoOrigenOut;
+    }
+
+    public void setDtoEstadoOrigenOut(List<DTOEstadoOrigenOUT> dtoEstadoOrigenOut) {
+        this.dtoEstadoOrigenOut = dtoEstadoOrigenOut;
+    }
+    public void addDtoEstadoOrigenOut(DTOEstadoOrigenOUT dtoEstadoOrigenOut) {
+        this.dtoEstadoOrigenOut.add(dtoEstadoOrigenOut);
+    }
 }

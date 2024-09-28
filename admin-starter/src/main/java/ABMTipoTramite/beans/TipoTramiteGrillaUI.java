@@ -78,5 +78,8 @@ public class TipoTramiteGrillaUI {
     public void setNombreCategoriaTipoTramite(String nombreCategoriaTipoTramite) {
         this.nombreCategoriaTipoTramite = nombreCategoriaTipoTramite;
     }
+
+ 
+
     
 }

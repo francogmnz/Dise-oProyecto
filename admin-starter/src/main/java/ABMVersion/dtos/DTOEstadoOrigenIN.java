@@ -23,7 +23,7 @@ public class DTOEstadoOrigenIN {
         this.codEstadoTramite = codigoEstadoTramite;
     }
 
-    public List<DTOEstadoDestinoIN> getDtoEstadoDeastinoList() {
+    public List<DTOEstadoDestinoIN> getDtoEstadoDestinoList() {
         return dtoEstadoDestinoList;
     }
 
