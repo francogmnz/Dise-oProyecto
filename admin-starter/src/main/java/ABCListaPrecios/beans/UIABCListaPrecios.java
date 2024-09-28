@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +30,7 @@ import org.primefaces.event.FileUploadEvent;
 import utils.BeansUtils;
 import utils.Errores;
 
+
 @Named("uiabmListaPrecios")
 @ViewScoped
 public class UIABCListaPrecios implements Serializable {
@@ -43,6 +43,7 @@ public class UIABCListaPrecios implements Serializable {
     private List<DetalleListaPreciosDTO> detalles = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     private Errores err = new Errores();
+    
 
 // GETTERS y SETTERS
     public ControladorABCListaPrecios getControladorABCListaPrecios() {
@@ -123,21 +124,26 @@ public class UIABCListaPrecios implements Serializable {
 
 //        VALIDACION CODIGO NUEVA LP
         int cod = 0;
-        // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
-        if (request.getParameter("codLP") == null || !(request.getParameter("codLP").matches("\\d+")) || Integer.parseInt(request.getParameter("codLP")) < 0) {
-            // Redirigir a la URL anterior si el código no es válido
+        try {
+            cod = Integer.parseInt(request.getParameter("codLP"));
+        } catch (NumberFormatException e) {
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABCListaPrecios/abmListaPreciosLista.jsf");
             return;
-        } else {
-
-            cod = Integer.parseInt(request.getParameter("codLP"));
         }
+        try {
+            // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
+            if (request.getParameter("codLP") == null || !(request.getParameter("codLP").matches("\\d+")) || Integer.parseInt(request.getParameter("codLP")) < 0 || Integer.parseInt(request.getParameter("codLP")) != 0) {
 
-//        SETEAR POR DEFECTO LOS VALORES EN LOS CAMPOS
-        if (cod >= 0) {
-            setCodListaPrecios(cod);
-            setFechaHoraDesdeListaPrecios(Timestamp.from(Instant.now()));
-            setFechaHoraHastaListaPrecios(null);
+                throw new ListaPreciosException("Codigo no valido");
+            } else {
+                setCodListaPrecios(cod);
+                setFechaHoraDesdeListaPrecios(new Date());
+                setFechaHoraHastaListaPrecios(null);
+            }
+        } catch (ListaPreciosException e) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABCListaPrecios/abmListaPreciosLista.jsf");
+            return;
+
         }
     }
 
@@ -195,38 +201,40 @@ public class UIABCListaPrecios implements Serializable {
     }
 
     public String agregarListaPrecios() {
-        //        VALIDACIONES
+        // VALIDACIONES
         if (tags == null || tags.isEmpty()) {
             err.agregarError("Debe subir una Lista Precios.");
-        }
-
-        if (getFechaHoraHastaListaPrecios() == null || getFechaHoraDesdeListaPrecios() == null) {
-            err.agregarError("FechaDesde y/o FechaHasta esta/n vacía/s. Por favor complete los datos.");
         }
         if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() < 0) {
             err.agregarError("El Código debe ser un entero mayor o igual a 0.");
         }
-        if (getFechaHoraHastaListaPrecios() != null && getFechaHoraDesdeListaPrecios() != null && getFechaHoraHastaListaPrecios().before(getFechaHoraDesdeListaPrecios())) {
-            err.agregarError("La FechaHasta ingresada es menor a la FechaDesde. Intente nuevamente.");
+        if (getFechaHoraDesdeListaPrecios().before(new Date())) {
+            err.agregarError("FechaDesde no puede ser menor a la Fecha Actual. Intente nuevamente.");
         }
-        if (getFechaHoraHastaListaPrecios() != null && getFechaHoraDesdeListaPrecios() != null && getFechaHoraDesdeListaPrecios().before(new Date())) {
-            err.agregarError("La FechaDesde ingresada es menor a la FechaActual. Intentelo nuevamente.");
+        // Verificamos si hay errores antes de continuar
+        if (!err.getErrores().isEmpty()) {
+            err.mostrarErrores();
+            return ""; // Salimos si ya hay errores
         }
-        if (err.getErrores().isEmpty() || err.getErrores().size() == 0) {
 
-            try {
-                NuevaListaPreciosDTO nuevaListaPrecios = new NuevaListaPreciosDTO();
-                nuevaListaPrecios.setCodListaPrecios(getCodListaPrecios());
-                nuevaListaPrecios.setFechaHoraDesdeListaPrecios(new Timestamp(getFechaHoraDesdeListaPrecios().getTime()));
-                nuevaListaPrecios.setFechaHoraHastaListaPrecios(new Timestamp(getFechaHoraHastaListaPrecios().getTime()));
-                nuevaListaPrecios.setDetalles(getDetalles());
-                controladorABCListaPrecios.agregarListaPrecios(nuevaListaPrecios);
-                return BeansUtils.redirectToPreviousPage();
-            } catch (ListaPreciosException e) {
-                Messages.create(e.getMessage()).fatal().add();
-                return "";
-            }
-        } else {
+        try {
+
+            // Si no hay errores, procedemos a crear la nueva lista de precios
+            NuevaListaPreciosDTO nuevaListaPrecios = new NuevaListaPreciosDTO();
+            nuevaListaPrecios.setCodListaPrecios(getCodListaPrecios());
+            nuevaListaPrecios.setFechaHoraDesdeListaPrecios(new Timestamp(getFechaHoraDesdeListaPrecios().getTime()));
+            nuevaListaPrecios.setFechaHoraHastaListaPrecios(new Timestamp(getFechaHoraHastaListaPrecios().getTime()));
+            nuevaListaPrecios.setDetalles(getDetalles());
+            controladorABCListaPrecios.agregarListaPrecios(nuevaListaPrecios);
+            return BeansUtils.redirectToPreviousPage();
+
+        } catch (ListaPreciosException e) {
+            Messages.create(e.getMessage()).fatal().add();
+        }
+        // MANEJO DE EXCEPCIÓN DE FORMATO DE FECHA
+
+        // Mostramos errores si existen
+        if (!err.getErrores().isEmpty()) {
             err.mostrarErrores();
         }
         return "";

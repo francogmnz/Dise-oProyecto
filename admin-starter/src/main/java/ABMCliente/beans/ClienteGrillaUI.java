@@ -1,7 +1,6 @@
 
 package ABMCliente.beans;
 
-import ABMCliente.beans.*;
 import java.sql.Timestamp;
 
 

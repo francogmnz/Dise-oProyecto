@@ -2,7 +2,6 @@ package ABMCliente.beans;
 
 import ABMCliente.ControladorABMCliente;
 import ABMCliente.dtos.DTOIngresoDatos;
-import ABMCliente.dtos.DTOModificacionDatos;
 import ABMCliente.dtos.DTOModificacionDatosIn;
 import ABMCliente.exceptions.ClienteException;
 import jakarta.faces.context.ExternalContext;
@@ -74,16 +73,42 @@ public class UIABMCliente implements Serializable {
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
-        int dni = Integer.parseInt(request.getParameter("dni"));
+        int dni = 0;
+
+        // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
+        if (request.getParameter("dni") == null || !(request.getParameter("dni").matches("-?\\d+")) || Integer.parseInt(request.getParameter("dni")) < 0) {
+            // Redirigir a la URL anterior si el código no es válido
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            return;
+        }
+        try {
+            dni = Integer.parseInt(request.getParameter("dni"));
+        } catch (NumberFormatException e) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            return;
+        }
+
         insert = true;
         if (dni > 0) {
             insert = false;
-            DTOModificacionDatos dtoModificacionDatos = controladorABMCliente.buscarClienteAModificar(dni);
-
+            ABMCliente.dtos.DTOModificacionDatos dtoModificacionDatos = controladorABMCliente.buscarClienteAModificar(dni);
             setNombreCliente(dtoModificacionDatos.getNombreCliente());
-            setDniCliente(dtoModificacionDatos.getDniCliente());
             setApellidoCliente(dtoModificacionDatos.getApellidoCliente());
+            setDniCliente(dtoModificacionDatos.getDniCliente());
             setMailCliente(dtoModificacionDatos.getMailCliente());
+        }
+        if (dni == 0) {
+            setNombreCliente("");
+            setApellidoCliente("");
+            setDniCliente(0);
+            setMailCliente("");
+        }
+
+        try {
+            dni = Integer.parseInt(request.getParameter("dni"));
+        } catch (NumberFormatException e) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            return;
         }
 
     }

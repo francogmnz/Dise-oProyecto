@@ -1,15 +1,12 @@
 package ABMConsultor;
 
-import ABMCliente.exceptions.ClienteException;
 import ABMConsultor.dtos.DTOConsultor;
 import ABMConsultor.dtos.DTOIngresoDatos;
 import ABMConsultor.dtos.DTOModificacionDatos;
 import ABMConsultor.dtos.DTOModificacionDatosIn;
 import ABMConsultor.exceptions.ConsultorException;
-import entidades.Cliente;
 import entidades.Consultor;
 import entidades.Tramite;
-import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import java.io.IOException;
@@ -94,12 +91,19 @@ public class ExpertoABMConsultor {
         ExternalContext externalContext = facesContext.getExternalContext();
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dto2 = new DTOCriterio();
 
         dto.setAtributo("legajoConsultor");
         dto.setOperacion("=");
         dto.setValor(legajoConsultor);
 
         criterioList.add(dto);
+        
+        dto2.setAtributo("fechaHoraBajaConsultor");
+        dto2.setOperacion("=");
+        dto2.setValor(null);
+
+        criterioList.add(dto2);
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
 
         try {
@@ -114,7 +118,7 @@ public class ExpertoABMConsultor {
             return dtoModificacionDatos;
         } catch (Exception e) {
             // Maneja la excepción
-            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
         }
         return dtoModificacionDatos;
     }

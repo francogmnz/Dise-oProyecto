@@ -2,7 +2,6 @@
 package ABMCliente.beans;
 
 
-import ABMCliente.beans.*;
 import ABMCliente.ControladorABMCliente;
 import ABMCliente.dtos.DTOCliente;
 import ABMCliente.exceptions.ClienteException;

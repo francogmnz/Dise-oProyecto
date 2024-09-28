@@ -97,12 +97,19 @@ public class ExpertoABMCliente {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dto2 = new DTOCriterio();
 
         dto.setAtributo("dniCliente");
         dto.setOperacion("=");
         dto.setValor(dniCliente);
 
         criterioList.add(dto);
+        
+        dto2.setAtributo("fechaHoraBajaCliente");
+        dto2.setOperacion("=");
+        dto2.setValor(null);
+
+        criterioList.add(dto2);
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
         try {
 
@@ -116,7 +123,6 @@ public class ExpertoABMCliente {
             dtoModificacionDatos.setMailCliente(clienteEncontrado.getMailCliente());
             return dtoModificacionDatos;
         } catch (Exception e) {
-            // Maneja la excepción
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
         }
         return dtoModificacionDatos;

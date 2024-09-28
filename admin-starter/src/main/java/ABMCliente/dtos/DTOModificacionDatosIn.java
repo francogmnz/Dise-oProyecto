@@ -1,8 +1,6 @@
 
 package ABMCliente.dtos;
 
-import ABMConsultor.dtos.*;
-
 public class DTOModificacionDatosIn {
     
    private int dniCliente;

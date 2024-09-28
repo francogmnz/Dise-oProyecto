@@ -25,7 +25,7 @@
                             <p:outputLabel for="codigo" value="Código: " />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
+                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" />
                             <p:message id="codigoMSG" for="codigo" />
                         </div>
                     </div>
@@ -35,7 +35,10 @@
                             <p:outputLabel for="fechaDesde" value="Fecha Desde:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:datePicker id="fechaDesde" value="#{uiabmListaPrecios.fechaHoraDesdeListaPrecios}" showTime="true" />
+                            <p:datePicker id="fechaDesde" value="#{uiabmListaPrecios.fechaHoraDesdeListaPrecios}" showTime="true" onkeydown="return false;" 
+                                          onpaste="return false;"
+                                          oncopy="return false;"
+                                          oncut="return false;"/>
                         </div>
                     </div>
 
@@ -44,7 +47,10 @@
                             <p:outputLabel for="fechaHasta" value="Fecha Hasta:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:datePicker id="fechaHasta" value="#{uiabmListaPrecios.fechaHoraHastaListaPrecios}" showTime="true" />
+                            <p:datePicker id="fechaHasta" value="#{uiabmListaPrecios.fechaHoraHastaListaPrecios}" showTime="true" onkeydown="return false;" 
+                                          onpaste="return false;"
+                                          oncopy="return false;"
+                                          oncut="return false;"/>
                         </div>
                     </div>
 
@@ -86,16 +92,16 @@
                             }
                             #chips body .ui-fluid .ui-chips .ui-chips-container, body .ui-fluid .ui-chips .ui-inputfield {
                                 opacity: inherit;
-                                pointer-events: none;
+                                pointer-events: none; /* Evita la interacción con el chip */
                             }
                             .no-focus {
-                                outline: none;
+                                outline: none; /* Quita el contorno al recibir foco */
                                 box-shadow: 0 0 5px #fff
 
                             }
 
                             .no-focus:focus {
-                                outline: none;
+                                outline: none; /* Asegura que no haya contorno en el foco */
                                 box-shadow: 0 0 5px #fff
 
                             }
@@ -130,11 +136,15 @@
                                 cursor: pointer;
                                 font-size: 16px;
                                 color: #000;
-
+                                visibility: visible; /* Muestra la cruz siempre */
                                 opacity: 1;
                                 display: none !important; /* Oculta el botón de cerrar */
                             }
 
+                            .ui-chips-token .ui-chips-token-icon:hover {
+                                color: #ff0000c9; /* Cambia el color de la cruz al pasar el mouse */
+                                display: none !important; /* Oculta el botón de cerrar */
+                            }
                         </style>
                         <script>
                             const dropZone = document.getElementById('dropZone');
@@ -153,15 +163,18 @@
                             dropZone.addEventListener('drop', function (event) {
                                 event.preventDefault();
                                 dropZoneLabel.innerText = 'Archivo listo para subir';
-
+                                // Agregar el archivo y disparar el listener
                                 const files = event.dataTransfer.files;
                                 if (files.length > 0) {
-                                    fileUploadWidget.addFiles(files);
+                                    // Agregar el archivo al fileUpload
+                                    fileUploadWidget.addFiles(files); // Método para agregar archivos al componente
                                     fileUploadWidget.upload();
                                 }
 
                             });
                         </script>
+
+                        <!--ABAJO ORIGINAL-->
 
                     </div>
 

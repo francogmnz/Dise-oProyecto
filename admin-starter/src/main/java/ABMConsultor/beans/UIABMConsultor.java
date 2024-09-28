@@ -5,7 +5,6 @@ import ABMConsultor.dtos.DTOIngresoDatos;
 import ABMConsultor.dtos.DTOModificacionDatos;
 import ABMConsultor.dtos.DTOModificacionDatosIn;
 import ABMConsultor.exceptions.ConsultorException;
-import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -13,7 +12,6 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
-import org.omnifaces.util.Messages;
 import utils.BeansUtils;
 import utils.Errores;
 
@@ -116,7 +114,6 @@ public class UIABMConsultor implements Serializable {
                     dtoModificacionDatosIn.setLegajoConsultor(getLegajoConsultor());
                     dtoModificacionDatosIn.setNumMaximoTramites(getNumMaximoTramites());
                     controladorABMConsultor.modificarConsultor(dtoModificacionDatosIn);
-                    BeansUtils.redirectToPreviousPage();
                 } else {
 
                     DTOIngresoDatos nuevoConsultorDTO = new DTOIngresoDatos();

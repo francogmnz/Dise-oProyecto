@@ -1,7 +1,6 @@
 
 package ABMCliente;
 
-import ABMCliente.*;
 import ABMCliente.dtos.DTOCliente;
 import ABMCliente.dtos.DTOIngresoDatos;
 import ABMCliente.dtos.DTOModificacionDatos;

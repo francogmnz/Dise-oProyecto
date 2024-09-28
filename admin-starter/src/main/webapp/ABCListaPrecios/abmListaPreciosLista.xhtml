@@ -45,10 +45,14 @@
                                     <p:spacer height="10"/>
                                     <p:datePicker id="fechaHastaFilter"
                                                   value="#{uiabmListaPreciosLista.fechaHoraHastaListaPreciosFiltro}"
-                                                  showTime="true">
-                                        <p:ajax event="dateSelect" 
-                                                listener="#{uiabmListaPreciosLista.filtrar()}" 
-                                                update="@form:grid1" />
+                                                  showTime="true"
+                                                  onkeydown="return false;" 
+                                                  onpaste="return false;"
+                                                  oncopy="return false;"
+                                                  oncut="return false;">
+                                    <p:ajax event="dateSelect" 
+                                            listener="#{uiabmListaPreciosLista.filtrar()}" 
+                                            update="@form:grid1" />
                                     </p:datePicker>
                                 </p:outputPanel>
                             </div>
