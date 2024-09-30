@@ -49,5 +49,5 @@ public class ControladorRegistrarTramite {
     public void registrarDocumentacion(int codTD, DTOFile archivoTD){
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD);
     }
-
+    
 }

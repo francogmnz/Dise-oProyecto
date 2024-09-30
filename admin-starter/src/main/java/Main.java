@@ -22,7 +22,7 @@ public class Main {
 
         /*DTOFile file = new DTOFile();
          file.setContenidoB64("asdaskldjklj12jkl3e980saxczmxcm,m12lñjsadas112312123");
-         expertoRegistrarTramite.registrarDocumentacion(11, file);/*/
+         expertoRegistrarTramite.registrarDocumentacion(11, file);/
         ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
 
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
@@ -37,7 +37,7 @@ public class Main {
         
         Tramite tramiteEncontrado = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
 
-        expertoRegistrarTramite.asignarConsultor(tramiteEncontrado);
+        expertoRegistrarTramite.asignarConsultor(tramiteEncontrado);*/
     }
 
 }

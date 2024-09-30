@@ -99,7 +99,7 @@ public class UICargaDocumentacion implements Serializable {
             
             //llamo a la funcion registrarDocumentacion una vez cargado el archivo
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileEjemplo);
-            
+                      
         } catch (IOException ex) {
             Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
         }

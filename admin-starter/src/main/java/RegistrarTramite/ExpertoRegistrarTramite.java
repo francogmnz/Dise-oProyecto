@@ -396,9 +396,15 @@ public class ExpertoRegistrarTramite {
         resumenDTO.setNombreCliente(tramiteElegido.getCliente().getNombreCliente());
         resumenDTO.setApellidoCliente(tramiteElegido.getCliente().getApellidoCliente());
         resumenDTO.setMailCliente(tramiteElegido.getCliente().getMailCliente());
-        resumenDTO.setNombreConsultor(tramiteElegido.getConsultor().getNombreConsultor());
-        resumenDTO.setLegajoConsultor(tramiteElegido.getConsultor().getLegajoConsultor());
-
+        
+        if(tramiteElegido.getConsultor() != null){
+            resumenDTO.setNombreConsultor(tramiteElegido.getConsultor().getNombreConsultor());
+            resumenDTO.setLegajoConsultor(tramiteElegido.getConsultor().getLegajoConsultor());
+        }
+        else{
+            resumenDTO.setNombreConsultor("");
+            resumenDTO.setLegajoConsultor(0);            
+        }
         List<DTODocumentacion> resumenDocList = new ArrayList<>(); // :create() DTODocumentacion
         // loop por cada TramiteDocumentacion para setear atributos
         for (TramiteDocumentacion doc : tramiteElegido.getTramiteDocumentacion()) {
@@ -521,28 +527,31 @@ public class ExpertoRegistrarTramite {
         td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis())); //se cambia la fecha de entrega a la fecha actual
         
         FachadaPersistencia.getInstance().guardar(td);
-             
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-    }
-    
-    
-        public void asignarConsultor(Tramite tramite){
-        
-        FachadaPersistencia.getInstance().iniciarTransaccion();
         
         //verifico que todas las documentaciones tenga fechaEntrega != null
-        List<TramiteDocumentacion> tdList = tramite.getTramiteDocumentacion();
+        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
         
-        boolean todasPresentadas = false;
-        for(TramiteDocumentacion td: tdList){
-            if(td.getFechaEntregaTD() != null){
-                todasPresentadas = true;
+        boolean todasPresentadas = true;
+        for(TramiteDocumentacion tds: tdList){
+            if(tds.getFechaEntregaTD() == null){
+                todasPresentadas = false;
                 break;
             }
         }
         
         if(todasPresentadas == true){
-            tramite.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
+            asignarConsultor();
+        }
+             
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+    }
+    
+    
+        public void asignarConsultor(){
+        
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+        
+            tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
             
             List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
@@ -594,12 +603,10 @@ public class ExpertoRegistrarTramite {
                 }
             }
 
-            tramite.setConsultor(consultorSeleccionado);
-            tramite.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
+            tramiteElegido.setConsultor(consultorSeleccionado);
+            tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
 
-            FachadaPersistencia.getInstance().guardar(tramite);
-
-            FachadaPersistencia.getInstance().finalizarTransaccion();            
-        }
+            FachadaPersistencia.getInstance().guardar(tramiteElegido);
+             
     }
 }
