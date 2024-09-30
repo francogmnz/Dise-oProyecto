@@ -46,6 +46,8 @@ public class UIResumen implements Serializable {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
+    private int legajoConsultor;
+    private String nombreConsultor;
     private int codTD;
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
@@ -78,6 +80,8 @@ public class UIResumen implements Serializable {
                     this.nombreCliente = tramiteElegido.getNombreCliente();
                     this.apellidoCliente = tramiteElegido.getApellidoCliente();
                     this.mailCliente = tramiteElegido.getMailCliente();
+                    this.nombreConsultor = tramiteElegido.getNombreConsultor();
+                    this.legajoConsultor = tramiteElegido.getLegajoConsultor();
 
                     this.resumenDoc = tramiteElegido.getResumenDoc();
 
@@ -178,6 +182,22 @@ public class UIResumen implements Serializable {
         return mailCliente;
     }
 
+    public int getLegajoConsultor() {
+        return legajoConsultor;
+    }
+
+    public void setLegajoConsultor(int legajoConsultor) {
+        this.legajoConsultor = legajoConsultor;
+    }
+
+    public String getNombreConsultor() {
+        return nombreConsultor;
+    }
+
+    public void setNombreConsultor(String nombreConsultor) {
+        this.nombreConsultor = nombreConsultor;
+    }
+
     public String getNombreDocumentacion() {
         return nombreDocumentacion;
     }
@@ -234,15 +254,14 @@ public class UIResumen implements Serializable {
         }
     }
 
-   
-    public String registrarDocumentacion(int codTD){
+    public String registrarDocumentacion(int codTD) {
         BeansUtils.guardarUrlAnterior();
         return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD;
     }
-    
+
     private DefaultStreamedContent fileD;
-    
-    public StreamedContent getFileD(int codTD){
+
+    public StreamedContent getFileD(int codTD) {
 
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 

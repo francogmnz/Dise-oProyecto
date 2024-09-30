@@ -4,9 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DTOTramiteElegido {
-   
+
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacionTramite;
@@ -19,8 +18,9 @@ public class DTOTramiteElegido {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
+    private int legajoConsultor;
+    private String nombreConsultor;
     private List<DTODocumentacion> resumenDoc = new ArrayList<DTODocumentacion>(); //para agregar la documentacion al resumen
-
 
     public int getNroTramite() {
         return nroTramite;
@@ -118,6 +118,22 @@ public class DTOTramiteElegido {
         this.mailCliente = mailCliente;
     }
 
+    public int getLegajoConsultor() {
+        return legajoConsultor;
+    }
+
+    public void setLegajoConsultor(int legajoConsultor) {
+        this.legajoConsultor = legajoConsultor;
+    }
+
+    public String getNombreConsultor() {
+        return nombreConsultor;
+    }
+
+    public void setNombreConsultor(String nombreConsultor) {
+        this.nombreConsultor = nombreConsultor;
+    }
+
     public List<DTODocumentacion> getResumenDoc() {
         return resumenDoc;
     }
@@ -126,10 +142,8 @@ public class DTOTramiteElegido {
         this.resumenDoc = resumenDoc;
     }
 
-    public void addResumenDoc(DTODocumentacion doc){
+    public void addResumenDoc(DTODocumentacion doc) {
         resumenDoc.add(doc);
     }
-    
-    
-            
+
 }

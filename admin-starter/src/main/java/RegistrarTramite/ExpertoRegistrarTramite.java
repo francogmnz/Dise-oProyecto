@@ -396,6 +396,8 @@ public class ExpertoRegistrarTramite {
         resumenDTO.setNombreCliente(tramiteElegido.getCliente().getNombreCliente());
         resumenDTO.setApellidoCliente(tramiteElegido.getCliente().getApellidoCliente());
         resumenDTO.setMailCliente(tramiteElegido.getCliente().getMailCliente());
+        resumenDTO.setNombreConsultor(tramiteElegido.getConsultor().getNombreConsultor());
+        resumenDTO.setLegajoConsultor(tramiteElegido.getConsultor().getLegajoConsultor());
 
         List<DTODocumentacion> resumenDocList = new ArrayList<>(); // :create() DTODocumentacion
         // loop por cada TramiteDocumentacion para setear atributos
@@ -524,12 +526,12 @@ public class ExpertoRegistrarTramite {
     }
     
     
-        public void asignarConsultor(){
+        public void asignarConsultor(Tramite tramite){
         
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
         //verifico que todas las documentaciones tenga fechaEntrega != null
-        List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
+        List<TramiteDocumentacion> tdList = tramite.getTramiteDocumentacion();
         
         boolean todasPresentadas = false;
         for(TramiteDocumentacion td: tdList){
@@ -540,7 +542,7 @@ public class ExpertoRegistrarTramite {
         }
         
         if(todasPresentadas == true){
-            tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
+            tramite.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
             
             List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
 
@@ -551,7 +553,7 @@ public class ExpertoRegistrarTramite {
             criterioList.add(agendaCriterio1);
 
             DTOCriterio agendaCriterio2 = new DTOCriterio();
-            agendaCriterio2.setAtributo("fechaBajaAgenda");
+            agendaCriterio2.setAtributo("fechaBajaAgendaConsultor");
             agendaCriterio2.setOperacion("=");
             agendaCriterio2.setValor(null);
             criterioList.add(agendaCriterio2);
@@ -592,10 +594,10 @@ public class ExpertoRegistrarTramite {
                 }
             }
 
-            tramiteElegido.setConsultor(consultorSeleccionado);
-            tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
+            tramite.setConsultor(consultorSeleccionado);
+            tramite.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
 
-            FachadaPersistencia.getInstance().guardar(tramiteElegido);
+            FachadaPersistencia.getInstance().guardar(tramite);
 
             FachadaPersistencia.getInstance().finalizarTransaccion();            
         }

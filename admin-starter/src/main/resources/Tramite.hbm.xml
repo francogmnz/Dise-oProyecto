@@ -48,7 +48,7 @@
         </bag>
 
         <!-- Relación OneToMany con TramiteDocumentacion -->
-        <bag name="tramiteDocumentacion" table="tramite_documentacion" cascade="none">
+        <bag name="tramiteDocumentacion" table="tramite_documentacion" cascade="none" lazy="false">
             <key column="OIDTramite" not-null="false"/>
             <one-to-many class="entidades.TramiteDocumentacion"/>
         </bag>
