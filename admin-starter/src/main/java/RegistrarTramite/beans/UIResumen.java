@@ -13,6 +13,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.Part;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -26,6 +27,7 @@ import org.omnifaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.shaded.commons.io.IOUtils;
 import utils.BeansUtils;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
@@ -259,9 +261,33 @@ public class UIResumen implements Serializable {
         return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD + "&nroTramite=" + nroTramite;
     }
     
+        
+    
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
 
+            //Convierto el archivo subido en Base64
+            byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
+            String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
+
+            DTOFile fileU = new DTOFile();
+            
+            //Usar DTOFile para almacenar el archivo subido
+            fileU.setNombre(event.getFile().getFileName());
+            fileU.setContenidoB64(encodedString);
+
+            //System.out.println("encriptado =" + fileEjemplo.getContenidoB64());
+            //llamo a la funcion registrarDocumentacion una vez cargado el archivo
+            controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
+
+         } catch (IOException ex) {
+            Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
+           }
+    }
+    
     private DefaultStreamedContent fileD;
-
     public StreamedContent getFileD(int codTD) {
 
         List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();

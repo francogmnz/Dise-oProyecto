@@ -146,20 +146,23 @@
                             <!-- Columna: Botón Agregar/Editar Entrega -->
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
-                                <p:commandButton id="codTD" icon="fa fa-edit" styleClass="btn-default"
-                                                 action="#{uiresumen.registrarDocumentacion(doc.codTD)}"
-                                                 disabled="#{uiresumen.fechaAnulacionTramite != null}"/>
+                                <div class="card">
+                                    <h:form id="frmSingle">
+                                    <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
+                                                  mode="advanced" dragDropSupport="true" auto="false"
+                                                  onstart="showBar()" oncomplete="hideBar()" 
+                                                  multiple="true" update="messages" sizeLimit="1000000" 
+                                                  fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
 
+                                    </h:form>
+                                </div>
                                 <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
                                                  icon="pi pi-arrow-down"  styleClass="btn-success">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>
                             </p:column>
-
-
                         </p:dataTable>
-
                     </p:panel>
                 </p:tab>
             </p:tabView>
