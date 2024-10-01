@@ -22,7 +22,7 @@
 
         <property name="nroTramite" column="nro_tramite" type="int"/>
        
-        <property name="precioTramite" column="precio_tramite" type="int"/>
+        <property name="precioTramite" column="precio_tramite" type="double"/>
 
 
 

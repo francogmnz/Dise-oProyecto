@@ -23,7 +23,7 @@ public class Tramite extends Entidad {
     private Timestamp fechaPresentacionTotalDocumentacion;
     private Timestamp fechaRecepcionTramite;
     private int nroTramite;
-    private int precioTramite; // double.. respete DC..
+    private double precioTramite; // double.. respete DC..
     private Cliente cliente;  // Relación ManyToOne
     private List<TramiteEstadoTramite> tramiteEstadoTramite = new ArrayList<>(); // Relacion ManyToOne
     private EstadoTramite estadoTramite; //Relacion ManyToOne
@@ -85,11 +85,11 @@ public class Tramite extends Entidad {
         this.nroTramite = nroTramite;
     }
 
-    public int getPrecioTramite() {
+    public double getPrecioTramite() {
         return precioTramite;
     }
 
-    public void setPrecioTramite(int precioTramite) {
+    public void setPrecioTramite(double precioTramite) {
         this.precioTramite = precioTramite;
     }
 

@@ -43,7 +43,7 @@ public class UIResumen implements Serializable {
     private int codTipoTramite;
     private String nombreTipoTramite;
     private String nombreEstado;
-    private int precioTramite;
+    private double precioTramite;
     private int dniCliente;
     private String nombreCliente;
     private String apellidoCliente;
@@ -148,11 +148,11 @@ public class UIResumen implements Serializable {
         this.nombreEstado = nombreEstado;
     }
 
-    public int getPrecioTramite() {
+    public double getPrecioTramite() {
         return precioTramite;
     }
 
-    public void setPrecioTramite(int precioTramite) {
+    public void setPrecioTramite(double precioTramite) {
         this.precioTramite = precioTramite;
     }
 
