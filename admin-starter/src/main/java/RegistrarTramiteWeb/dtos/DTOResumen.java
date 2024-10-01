@@ -17,7 +17,7 @@ public class DTOResumen {
     private String nombreTipoTramite;
     private String descripcionTipoTramite;
     private int plazoEntregaDocumentacionTT;
-    private int precioTramite;
+    private double precioTramite;
 
     public String getNombreCliente() {
         return nombreCliente;
@@ -75,11 +75,11 @@ public class DTOResumen {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
 
-    public int getPrecioTramite() {
+    public double getPrecioTramite() {
         return precioTramite;
     }
 
-    public void setPrecioTramite(int precioTramite) {
+    public void setPrecioTramite(double precioTramite) {
         this.precioTramite = precioTramite;
     }
     

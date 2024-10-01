@@ -45,7 +45,7 @@ public class RegistrarTramiteWebUI implements Serializable {
     private String nombreTipoTramite;
     private String descripcionTipoTramite;
     private int plazoEntregaDocumentacionTT;
-    private int precioTramite;
+    private double precioTramite;
 
     
     private int numeroTramite;
@@ -142,11 +142,11 @@ public class RegistrarTramiteWebUI implements Serializable {
         this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
     }
 
-    public int getPrecioTramite() {
+    public double getPrecioTramite() {
         return precioTramite;
     }
 
-    public void setPrecioTramite(int precioTramite) {
+    public void setPrecioTramite(double precioTramite) {
         this.precioTramite = precioTramite;
     }
 
@@ -195,7 +195,7 @@ public class RegistrarTramiteWebUI implements Serializable {
             return null; 
         }
     }  
-
+ 
     public String volverIngresarDNI() {
         resetearIngresarDNI();
         return "ingresarDNI?faces-redirect=true";
@@ -367,9 +367,9 @@ public class RegistrarTramiteWebUI implements Serializable {
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
-        precioTramite = 0;
+        precioTramite = 0.0;
         numeroTramite = 0;
-        documentaciones = null;
+        documentaciones.clear();
         confirmaCliente = false;
         mensajeError = null;
     }
@@ -391,7 +391,7 @@ public class RegistrarTramiteWebUI implements Serializable {
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
-        precioTramite = 0;
+        precioTramite = 0.0;
     }
 
     private void resetearSeleccionarCategoria() {
@@ -399,16 +399,16 @@ public class RegistrarTramiteWebUI implements Serializable {
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
-        precioTramite = 0;
+        precioTramite = 0.0;
         mensajeError = null;
-        documentaciones = null; 
+        documentaciones.clear();
     }
 
     private void resetearSeleccionarTipoTramite() {
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
-        precioTramite = 0;
+        precioTramite = 0.0;
         mensajeError = null;
     }
 
