@@ -6,6 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : Sep 25, 2024, 8:02:06 PM
     Author     : licciardi
 */
+
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
@@ -174,7 +175,7 @@ body {
     color: white !important;
     border: none !important;
     padding: 10px 20px !important;
-    font-size: 1em !important;
+    font-size: 1.4em !important;
     cursor: pointer !important;
     border-radius: 5px !important;
     text-decoration: none !important;
@@ -185,14 +186,14 @@ body {
 }
 
 /* Botón Cancelar con gris más visible (#c0c0c0) */
-.btn-cancelar {
+.btn-volver {
     margin-top: 30px;
     display: block;
     background-color: #c0c0c0 !important; /* Gris más oscuro */
     color: #212529 !important; /* Texto más oscuro */
     border: 1px solid #999 !important;
     padding: 10px 20px !important;
-    font-size: 1em !important;
+    font-size: 1.4em !important;
     cursor: pointer !important;
     border-radius: 5px !important;
     text-decoration: none !important;
@@ -202,7 +203,7 @@ body {
     margin-right: auto;
 }
 
-.btn-cancelar:hover {
+.btn-volver:hover {
     background-color: #a9a9a9 !important; /* Fondo más oscuro en hover */
 }
 

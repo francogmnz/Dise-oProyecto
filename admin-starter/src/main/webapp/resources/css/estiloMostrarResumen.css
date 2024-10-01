@@ -154,7 +154,7 @@ body {
     color: white !important;
     border: none !important;
     padding: 10px 20px !important;
-    font-size: 1em !important;
+    font-size: 1.4em !important;
     cursor: pointer !important;
     border-radius: 5px !important;
     margin-right: 10px;
@@ -164,17 +164,17 @@ body {
     background-color: #0288D1 !important; /* Azul más oscuro */
 }
 
-.btn-cancelar {
+.btn-volver {
     background-color: #c0c0c0 !important; /* Gris más oscuro */
     color: #212529 !important; /* Texto más oscuro */
     border: 1px solid #999 !important;
     padding: 10px 20px !important;
-    font-size: 1em !important;
+    font-size: 1.4em !important;
     cursor: pointer !important;
     border-radius: 5px !important;
 }
 
-.btn-cancelar:hover {
+.btn-volver:hover {
     background-color: #a9a9a9 !important; /* Fondo más oscuro en hover */
 }
 

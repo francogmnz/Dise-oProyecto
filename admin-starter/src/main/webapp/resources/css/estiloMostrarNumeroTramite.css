@@ -17,21 +17,25 @@ body {
 
 .container-numero-tramite {
     width: 90%;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 600px;
+    margin: 50px auto; /* Añadí margen superior para centrar verticalmente */
     padding: 20px;
+    background-color: #fff; /* Fondo blanco para destacar el contenido */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
 .titulo-numero-tramite {
     text-align: center;
     color: #333;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    font-size: 2em;
 }
 
 /* Mensaje de confirmación */
 .mensaje-confirmacion {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .mensaje-confirmacion p {
@@ -45,6 +49,36 @@ body {
     margin-top: 10px;
 }
 
+.informacion-tramite {
+    margin-bottom: 30px;
+}
+
+.titulo-seccion {
+    font-size: 1.5em;
+    color: #333;
+    border-bottom: 2px solid #2196F3; /* Línea debajo del título */
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.informacion-tramite p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.lista-documentacion {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.lista-documentacion li {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
 /* Botón Volver al Inicio */
 .botones {
     text-align: center;
@@ -55,20 +89,25 @@ body {
     color: white !important;
     border: none !important;
     padding: 12px 25px !important;
-    font-size: 1em !important;
+    font-size: 1.4em !important;
     cursor: pointer !important;
     border-radius: 5px !important;
     text-decoration: none !important;
+    transition: background-color 0.3s ease; /* Animación suave al pasar el ratón */
 }
 
 .btn-inicio:hover {
-    background-color: #0288D1 !important; /* Azul más oscuro */
+    background-color: #0053ba !important; /* Azul más oscuro */
 }
 
 /* Responsividad */
 @media screen and (max-width: 600px) {
+    .container-numero-tramite {
+        padding: 15px;
+    }
+
     .titulo-numero-tramite {
-        font-size: 1.5em;
+        font-size: 1.8em;
     }
 
     .mensaje-confirmacion p {
@@ -77,6 +116,14 @@ body {
 
     .numero-tramite {
         font-size: 2em;
+    }
+
+    .titulo-seccion {
+        font-size: 1.3em;
+    }
+
+    .informacion-tramite p, .lista-documentacion li {
+        font-size: 1em;
     }
 
     .btn-inicio {

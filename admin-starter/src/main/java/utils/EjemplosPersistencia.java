@@ -107,7 +107,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaUno = new EstadoTramite();
         etapaUno.setCodEstadoTramite(1);
-        etapaUno.setNombreEstadoTramite("Nombre1");
+        etapaUno.setNombreEstadoTramite("Pendiente Documentacion");
         etapaUno.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaUno.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaUno.setFechaHoraBajaEstadoTramite(null);
@@ -117,7 +117,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaDos = new EstadoTramite();
         etapaDos.setCodEstadoTramite(2);
-        etapaDos.setNombreEstadoTramite("Nombre2");
+        etapaDos.setNombreEstadoTramite("Pendiente Documentacion");
         etapaDos.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaDos.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaDos.setFechaHoraBajaEstadoTramite(null);
@@ -332,13 +332,14 @@ public class EjemplosPersistencia {
     listaPrecios1.setFechaHoraBajaListaPrecios(null);
     
     listaPrecios1.addTipoTramiteListaPrecios(tipoTramiteListaPrecios1);
+    listaPrecios1.addTipoTramiteListaPrecios(tipoTramiteListaPrecios2);
 
 
 
     FachadaPersistencia.getInstance().guardar(listaPrecios1);
 
 
-
+    /*
     ListaPrecios listaPrecios2 = new ListaPrecios();
     listaPrecios2.setCodListaPrecios(2);
     listaPrecios2.setFechaHoraDesdeListaPrecios(fechaDesde2022);
@@ -349,7 +350,7 @@ public class EjemplosPersistencia {
     
 
     FachadaPersistencia.getInstance().guardar(listaPrecios2);
-    
+    */
     TramiteDocumentacion tramiteDoc1 = new TramiteDocumentacion();
     tramiteDoc1.setCodTD(1);
     tramiteDoc1.setFechaEntregaTD(null);

@@ -7,16 +7,17 @@ package RegistrarTramiteWeb.beans;
 import RegistrarTramiteWeb.ControladorRegistrarTramiteWeb;
 import RegistrarTramiteWeb.dtos.DTOCategoriaTipoTramite;
 import RegistrarTramiteWeb.dtos.DTOCliente;
+import RegistrarTramiteWeb.dtos.DTODocumentacion;
 import RegistrarTramiteWeb.dtos.DTONumeroTramite;
 import RegistrarTramiteWeb.dtos.DTOResumen;
 import RegistrarTramiteWeb.dtos.DTOTipoTramite;
 import RegistrarTramiteWeb.exceptions.RegistrarTramiteWebException;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
 
@@ -29,17 +30,28 @@ import org.omnifaces.util.Messages;
 public class RegistrarTramiteWebUI implements Serializable {
     
     private ControladorRegistrarTramiteWeb controladorRegistrarTramiteWeb = new ControladorRegistrarTramiteWeb();
-    private DTOCliente dtoCliente = new DTOCliente();
-    private DTOCategoriaTipoTramite categoriaSeleccionada = new DTOCategoriaTipoTramite();
-    private DTOTipoTramite tipoTramiteSeleccionado = new DTOTipoTramite();
-    private DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();
-        
-    private List<DTOCategoriaTipoTramite> listaCategorias;
-   
-    private List<DTOTipoTramite> listaTiposTramite;
-  
-    private DTOResumen dtoResumen;  
     
+    private int dniCliente;
+    private String nombreCliente;
+    private String apellidoCliente;
+    private String mailCliente;
+
+    private boolean confirmaCliente;
+    
+    private int codCategoriaSeleccionada;
+    
+    private int codTipoTramiteSeleccionado;
+   
+    private String nombreTipoTramite;
+    private String descripcionTipoTramite;
+    private int plazoEntregaDocumentacionTT;
+    private int precioTramite;
+
+    
+    private int numeroTramite;
+    private List<DTODocumentacion> documentaciones = new ArrayList<>();
+
+     
     private String mensajeError;
     
     public ControladorRegistrarTramiteWeb getControladorRegistrarTramiteWeb() {
@@ -50,62 +62,110 @@ public class RegistrarTramiteWebUI implements Serializable {
         this.controladorRegistrarTramiteWeb = controladorRegistrarTramiteWeb;
     }
 
-    public DTOCliente getDtoCliente() {
-        return dtoCliente;
+    public int getDniCliente() {
+        return dniCliente;
     }
 
-    public void setDtoCliente(DTOCliente dtoCliente) {
-        this.dtoCliente = dtoCliente;
+    public void setDniCliente(int dniCliente) {
+        this.dniCliente = dniCliente;
     }
 
-    public List<DTOCategoriaTipoTramite> getListaCategorias() {
-        return listaCategorias;
+    public String getNombreCliente() {
+        return nombreCliente;
     }
 
-    public void setListaCategorias(List<DTOCategoriaTipoTramite> listaCategorias) {
-        this.listaCategorias = listaCategorias;
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
-    public DTOCategoriaTipoTramite getCategoriaSeleccionada() {
-        return categoriaSeleccionada;
+    public String getApellidoCliente() {
+        return apellidoCliente;
     }
 
-    public void setCategoriaSeleccionada(DTOCategoriaTipoTramite categoriaSeleccionada) {
-        this.categoriaSeleccionada = categoriaSeleccionada;
+    public void setApellidoCliente(String apellidoCliente) {
+        this.apellidoCliente = apellidoCliente;
     }
 
-    public List<DTOTipoTramite> getListaTiposTramite() {
-        return listaTiposTramite;
+    public String getMailCliente() {
+        return mailCliente;
     }
 
-    public void setListaTiposTramite(List<DTOTipoTramite> listaTiposTramite) {
-        this.listaTiposTramite = listaTiposTramite;
+    public void setMailCliente(String mailCliente) {
+        this.mailCliente = mailCliente;
     }
 
-    public DTOTipoTramite getTipoTramiteSeleccionado() {
-        return tipoTramiteSeleccionado;
+    public boolean isConfirmaCliente() {
+        return confirmaCliente;
     }
 
-    public void setTipoTramiteSeleccionado(DTOTipoTramite tipoTramiteSeleccionado) {
-        this.tipoTramiteSeleccionado = tipoTramiteSeleccionado;
+    public void setConfirmaCliente(boolean confirmaCliente) {
+        this.confirmaCliente = confirmaCliente;
     }
 
-    public DTOResumen getDtoResumen() {
-        return dtoResumen;
+    public int getCodCategoriaSeleccionada() {
+        return codCategoriaSeleccionada;
     }
 
-    public void setDtoResumen(DTOResumen dtoResumen) {
-        this.dtoResumen = dtoResumen;
+    public void setCodCategoriaSeleccionada(int codCategoriaSeleccionada) {
+        this.codCategoriaSeleccionada = codCategoriaSeleccionada;
     }
 
-    public DTONumeroTramite getDtoNumeroTramite() {
-        return dtoNumeroTramite;
+    public int getCodTipoTramiteSeleccionado() {
+        return codTipoTramiteSeleccionado;
     }
 
-    public void setDtoNumeroTramite(DTONumeroTramite dtoNumeroTramite) {
-        this.dtoNumeroTramite = dtoNumeroTramite;
+    public void setCodTipoTramiteSeleccionado(int codTipoTramiteSeleccionado) {
+        this.codTipoTramiteSeleccionado = codTipoTramiteSeleccionado;
     }
 
+    public String getNombreTipoTramite() {
+        return nombreTipoTramite;
+    }
+
+    public void setNombreTipoTramite(String nombreTipoTramite) {
+        this.nombreTipoTramite = nombreTipoTramite;
+    }
+
+    public String getDescripcionTipoTramite() {
+        return descripcionTipoTramite;
+    }
+
+    public void setDescripcionTipoTramite(String descripcionTipoTramite) {
+        this.descripcionTipoTramite = descripcionTipoTramite;
+    }
+
+    public int getPlazoEntregaDocumentacionTT() {
+        return plazoEntregaDocumentacionTT;
+    }
+
+    public void setPlazoEntregaDocumentacionTT(int plazoEntregaDocumentacionTT) {
+        this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
+    }
+
+    public int getPrecioTramite() {
+        return precioTramite;
+    }
+
+    public void setPrecioTramite(int precioTramite) {
+        this.precioTramite = precioTramite;
+    }
+
+    public int getNumeroTramite() {
+        return numeroTramite;
+    }
+
+    public void setNumeroTramite(int numeroTramite) {
+        this.numeroTramite = numeroTramite;
+    }
+
+    public List<DTODocumentacion> getDocumentaciones() {
+        return documentaciones;
+    }
+
+    public void setDocumentaciones(List<DTODocumentacion> documentaciones) {
+        this.documentaciones = documentaciones;
+    }
+ 
     public String getMensajeError() {
         return mensajeError;
     }
@@ -117,12 +177,14 @@ public class RegistrarTramiteWebUI implements Serializable {
     
     public String ingresarDNI() {
         try {
-            // Busca el cliente por DNI
-            DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dtoCliente.getDniCliente());
+            DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
             mensajeError = null;
             if (clienteBuscado != null) {
-                
-                this.dtoCliente = clienteBuscado;
+                dniCliente = clienteBuscado.getDniCliente();
+                nombreCliente = clienteBuscado.getNombreCliente();
+                apellidoCliente = clienteBuscado.getApellidoCliente();
+                mailCliente = clienteBuscado.getMailCliente();
+                                       
                 return "confirmarCliente?faces-redirect=true";
             } else {
                 mensajeError = "Cliente no encontrado.";
@@ -133,23 +195,53 @@ public class RegistrarTramiteWebUI implements Serializable {
             return null; 
         }
     }  
+
+    public String volverIngresarDNI() {
+        resetearIngresarDNI();
+        return "ingresarDNI?faces-redirect=true";
+    }    
     
     public String confirmarCliente() {
+        if (!confirmaCliente){
+            mensajeError = "Debe confirmar que usted es el cliente mostrado.";
+            return null;    
+        }
+        mensajeError = null;
         listarCategoriasTipoTramite();
         return "seleccionarCategoria?faces-redirect=true"; //?faces-redirect=true
     }
 
-    public void listarCategoriasTipoTramite() {
+    public String volverConfirmarCliente() {
+        resetearConfirmarCliente();
+        return "confirmarCliente?faces-redirect=true";
+    }    
+    
+
+    
+    public List<CategoriaGrillaUI> listarCategoriasTipoTramite() {
+        List<CategoriaGrillaUI> categoriasGrilla = new ArrayList<>();
         try {
-            listaCategorias = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
+            List<DTOCategoriaTipoTramite> categoriasTipoTramiteDTO = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
+            for (DTOCategoriaTipoTramite DTOCategoriaTT : categoriasTipoTramiteDTO) {
+                
+                CategoriaGrillaUI categoriaUI = new CategoriaGrillaUI();
+                categoriaUI.setCodCategoriaTipoTramite(DTOCategoriaTT.getCodCategoriaTipoTramite());
+                categoriaUI.setNombreCategoriaTipoTramite(DTOCategoriaTT.getNombreCategoriaTipoTramite());
+                categoriaUI.setDescripcionCategoriaTipoTramite(DTOCategoriaTT.getDescripcionCategoriaTipoTramite());
+                categoriaUI.setDescripcionWebCategoriaTipoTramite(DTOCategoriaTT.getDescripcionWebCategoriaTipoTramite());
+
+                categoriasGrilla.add(categoriaUI);
+            }
+            mensajeError = null;
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
-            listaCategorias = null;
+            categoriasGrilla = new ArrayList<>();
         }
+        return categoriasGrilla;
     }
     
     public String seleccionarCategoria() {
-        if (categoriaSeleccionada.getCodCategoriaTipoTramite() != 0) {
+        if (codCategoriaSeleccionada != 0) {
             listarTipoTramites();
             return "seleccionarTipoTramite?faces-redirect=true"; //?faces-redirect=true
         } else {
@@ -158,17 +250,38 @@ public class RegistrarTramiteWebUI implements Serializable {
         }
     }  
     
-    public void listarTipoTramites() {
+    public String volverSeleccionarCategoria() {
+        resetearSeleccionarCategoria();
+        return "seleccionarCategoria?faces-redirect=true";
+    }    
+    
+
+    
+    
+    public List<TipoTramiteGrillaUI> listarTipoTramites() {
+        List<TipoTramiteGrillaUI> tiposTramiteGrilla = new ArrayList<>();
         try {
-            listaTiposTramite = controladorRegistrarTramiteWeb.listarTipoTramites(categoriaSeleccionada.getCodCategoriaTipoTramite());
+            List<DTOTipoTramite> tipoTramitesDTO = controladorRegistrarTramiteWeb.listarTipoTramites(codCategoriaSeleccionada);
+            for (DTOTipoTramite tipoTramiteDTO : tipoTramitesDTO) {
+                TipoTramiteGrillaUI tipoTramiteGrilla = new TipoTramiteGrillaUI();
+                tipoTramiteGrilla.setCodTipoTramite(tipoTramiteDTO.getCodTipoTramite());
+                tipoTramiteGrilla.setNombreTipoTramite(tipoTramiteDTO.getNombreTipoTramite());
+                tipoTramiteGrilla.setDescripcionTipoTramite(tipoTramiteDTO.getDescripcionTipoTramite());
+                tipoTramiteGrilla.setDescripcionWebTipoTramite(tipoTramiteDTO.getDescripcionWebTipoTramite());
+                tipoTramiteGrilla.setDocumentaciones(tipoTramiteDTO.getDocumentaciones());
+
+                tiposTramiteGrilla.add(tipoTramiteGrilla);
+                
+            }
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
-            listaTiposTramite = null;
+            tiposTramiteGrilla = null;
         }
+        return tiposTramiteGrilla;
     }
     
     public String seleccionarTipoTramite() {
-        if (tipoTramiteSeleccionado.getCodTipoTramite() != 0) {
+        if (codTipoTramiteSeleccionado != 0) {
             irAResumen();
             return "mostrarResumen?faces-redirect=true"; //?faces-redirect=true
         } else {
@@ -177,27 +290,53 @@ public class RegistrarTramiteWebUI implements Serializable {
         }
     }
     
-        public void irAResumen() {
+    public String volverSeleccionarTipoTramite() {
+        resetearSeleccionarTipoTramite();
+        return "seleccionarTipoTramite?faces-redirect=true";
+    }   
+    
+ 
+    public void irAResumen() {
         try {
-            dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(tipoTramiteSeleccionado.getCodTipoTramite());
+            DTOResumen dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramiteSeleccionado);
+            
+            dniCliente = dtoResumen.getDniCliente();
+            nombreCliente = dtoResumen.getNombreCliente();
+            apellidoCliente = dtoResumen.getApellidoCliente();
+            mailCliente = dtoResumen.getMailCliente();
+            
+            nombreTipoTramite = dtoResumen.getNombreTipoTramite();
+            descripcionTipoTramite = dtoResumen.getDescripcionTipoTramite();
+            plazoEntregaDocumentacionTT = dtoResumen.getPlazoEntregaDocumentacionTT();
+            
+            precioTramite = dtoResumen.getPrecioTramite();
+            
+
+            
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
-            dtoResumen = null;
+            //resumenUI = null;
         }
-    }
-    
+    }    
 
+
+    
     
     public String confirmarTramite() {
         try {
-            dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
-    
+            DTONumeroTramite dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
+
+            numeroTramite = dtoNumeroTramite.getNumeroTramite();
+            plazoEntregaDocumentacionTT = dtoNumeroTramite.getPlazoEntregaDocumentacionTT();
+            documentaciones =dtoNumeroTramite.getDocumentaciones();
+ 
             return "mostrarNumeroTramite?faces-redirect=true"; //?faces-redirect=true
         } catch (RegistrarTramiteWebException e) {
             mensajeError = e.getMessage();
             return null;
         }
     }
+    
     public void cancelar() throws IOException { 
         try {
             controladorRegistrarTramiteWeb.resetearEstado();
@@ -219,13 +358,58 @@ public class RegistrarTramiteWebUI implements Serializable {
     }  
     
     public void resetearEstado() {
-        dtoCliente = new DTOCliente();
-        categoriaSeleccionada = new DTOCategoriaTipoTramite();
-        tipoTramiteSeleccionado = new DTOTipoTramite();
-        dtoNumeroTramite = new DTONumeroTramite();
+        dniCliente = 0;
+        nombreCliente = null;
+        apellidoCliente = null;
+        mailCliente = null;
+        codCategoriaSeleccionada = 0;
+        codTipoTramiteSeleccionado = 0;
+        nombreTipoTramite = null;
+        descripcionTipoTramite = null;
+        plazoEntregaDocumentacionTT = 0;
+        precioTramite = 0;
+        numeroTramite = 0;
+        documentaciones = null;
+        confirmaCliente = false;
         mensajeError = null;
-        listaCategorias = null;
-        listaTiposTramite = null;
-        dtoResumen = null;
-    }     
+    }
+
+    private void resetearIngresarDNI() {
+        dniCliente = 0;
+        nombreCliente = null;
+        apellidoCliente = null;
+        mailCliente = null;
+        mensajeError = null;
+    }
+
+    private void resetearConfirmarCliente() {
+        confirmaCliente = false;
+        codCategoriaSeleccionada = 0;
+        codTipoTramiteSeleccionado = 0;
+        mensajeError = null;
+
+        nombreTipoTramite = null;
+        descripcionTipoTramite = null;
+        plazoEntregaDocumentacionTT = 0;
+        precioTramite = 0;
+    }
+
+    private void resetearSeleccionarCategoria() {
+        codTipoTramiteSeleccionado = 0;
+        nombreTipoTramite = null;
+        descripcionTipoTramite = null;
+        plazoEntregaDocumentacionTT = 0;
+        precioTramite = 0;
+        mensajeError = null;
+        documentaciones = null; 
+    }
+
+    private void resetearSeleccionarTipoTramite() {
+        nombreTipoTramite = null;
+        descripcionTipoTramite = null;
+        plazoEntregaDocumentacionTT = 0;
+        precioTramite = 0;
+        mensajeError = null;
+    }
+
 }

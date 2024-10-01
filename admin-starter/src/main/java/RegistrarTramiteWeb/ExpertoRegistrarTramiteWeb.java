@@ -365,6 +365,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         for(TipoTramiteListaPrecios ttlp: tipoTramiteListaPrecios){
             TipoTramite tipoTramite = ttlp.getTipoTramite();
+            System.out.println("el codigo del tramite es:" + tipoTramite.getCodTipoTramite());
             if(tipoTramite.getCodTipoTramite() == tipoTramiteRelacionado.getCodTipoTramite()){
                 nuevoTramite.setPrecioTramite(ttlp.getPrecioTipoTramite());
             }
@@ -401,8 +402,8 @@ public class ExpertoRegistrarTramiteWeb {
         }
 
         FachadaPersistencia.getInstance().iniciarTransaccion();
-
-
+        //TipoTramite tipoTramiteRelacionado = tramiteEnProceso.getTipoTramite();
+        //tipoTramiteRelacionado.getTipoTramiteDocumentacion().size();
         for (TramiteEstadoTramite tramiteEstadoTramite : tramiteEnProceso.getTramiteEstadoTramite()) {
             FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
         } 
@@ -412,12 +413,77 @@ public class ExpertoRegistrarTramiteWeb {
         }        
 
         FachadaPersistencia.getInstance().guardar(tramiteEnProceso);
-        
-        
-        int numeroTramiteObtenido = tramiteEnProceso.getNroTramite();
         DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();
-        dtoNumeroTramite.setNumeroTramite(numeroTramiteObtenido);
 
+        //List<DTODocumentacion> DTODocumentacionList = new ArrayList<>();    
+        int numeroTramiteObtenido = tramiteEnProceso.getNroTramite();
+        
+        
+        List<DTOCriterio> criterioTipoTramiteParaEvitarLazy = new ArrayList<>();
+        DTOCriterio criterioFechaHoraBajaTT = new DTOCriterio();
+        
+        criterioFechaHoraBajaTT.setAtributo("fechaHoraBajaTipoTramite");
+        criterioFechaHoraBajaTT.setOperacion("=");
+        criterioFechaHoraBajaTT.setValor(null);
+        
+        criterioTipoTramiteParaEvitarLazy.add(criterioFechaHoraBajaTT);
+        
+        DTOCriterio criterioCodigoTT = new DTOCriterio();
+        
+        criterioCodigoTT.setAtributo("codTipoTramite");
+        criterioCodigoTT.setOperacion("=");
+        criterioCodigoTT.setValor(tramiteEnProceso.getTipoTramite().getCodTipoTramite());
+        
+        criterioTipoTramiteParaEvitarLazy.add(criterioCodigoTT);
+        
+        TipoTramite tipoTramiteEvitandoLazy = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramiteParaEvitarLazy).get(0);
+        
+        
+        /*
+        List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = tramiteEnProceso.getTipoTramite().getTipoTramiteDocumentacion();
+        for(TipoTramiteDocumentacion ttd : tipoTramiteDocumentacion){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                Documentacion documentacion = ttd.getDocumentacion();
+                if(documentacion.getFechaHoraBajaDocumentacion() == null){
+                    DTODocumentacion dtoDocumentacion = new DTODocumentacion();    
+                    dtoDocumentacion.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+                    
+                    DTODocumentacionList.add(dtoDocumentacion);
+                }
+            }
+        }  
+        */
+        
+        
+        
+        List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = tipoTramiteEvitandoLazy.getTipoTramiteDocumentacion();
+        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacion){
+            if (ttd.getFechaHoraBajaTTD() == null){
+                Documentacion documentacion = ttd.getDocumentacion();
+                if (documentacion.getFechaHoraBajaDocumentacion() == null) {
+                DTODocumentacion dtoDocumentacion = new DTODocumentacion();    
+                dtoDocumentacion.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+                
+                dtoNumeroTramite.addDTODocumentacion(dtoDocumentacion);
+                
+                    }
+                }
+            }        
+        
+        
+        
+        
+        int plazoEntregaDocumentacionTT = tipoTramiteEvitandoLazy.getPlazoEntregaDocumentacionTT();
+        
+        
+
+        
+        
+        //DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();      
+        dtoNumeroTramite.setNumeroTramite(numeroTramiteObtenido);
+        dtoNumeroTramite.setPlazoEntregaDocumentacionTT(plazoEntregaDocumentacionTT);
+        //dtoNumeroTramite.setDocumentaciones(DTODocumentacionList);
+        
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
         // termino y vuelvo a null el tramite en proceso

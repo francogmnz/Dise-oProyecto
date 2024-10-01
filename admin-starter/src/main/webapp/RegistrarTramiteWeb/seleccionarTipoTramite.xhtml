@@ -10,7 +10,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Seleccionar Tipo de Trámite</title>
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloTipoTramite.css" /> <!-- Enlace al nuevo CSS -->
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloTipoTramite.css" /> 
 </h:head>
 <h:body>
     <h:form>
@@ -20,29 +20,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 
         <div class="stepper-wrapper">
-                    <div class="stepper-item completed">
-                      <div class="step-counter">1</div>
-                      <div class="step-name">Acceder</div>
-                    </div>
-                    <div class="stepper-item completed">
-                      <div class="step-counter">2</div>
-                      <div class="step-name">Categoria</div>
-                    </div>
-                    <div class="stepper-item active">
-                      <div class="step-counter">3</div>
-                      <div class="step-name">Trámite</div>
-                    </div>
-                    <div class="stepper-item">
-                      <div class="step-counter">4</div>
-                      <div class="step-name">Confirmar</div>
-                    </div>
-                  </div>
+            <div class="stepper-item completed">
+                <div class="step-counter">1</div>
+                <div class="step-name">Acceder</div>
+            </div>
+            <div class="stepper-item completed">
+                <div class="step-counter">2</div>
+                <div class="step-name">Categoria</div>
+            </div>
+            <div class="stepper-item active">
+                <div class="step-counter">3</div>
+                <div class="step-name">Trámite</div>
+            </div>
+            <div class="stepper-item">
+                <div class="step-counter">4</div>
+                <div class="step-name">Confirmar</div>
+            </div>
+        </div>
 
         <p class="subtitulo-lindo-tipo">Seleccione el tipo de trámite que desea realizar:</p>
 
-        <div class="tipos-tramite-grid">
-            <ui:repeat value="#{uiRegistrarTramiteWeb.listaTiposTramite}" var="tipoTramite">
-                <div class="tipo-tramite-item">
+        <div class="tipos-tramite-lista">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.listarTipoTramites()}" var="tipoTramite">
+                <div class="tipo-tramite-fila">
                     <div class="tipo-tramite-header">
                         <h2>#{tipoTramite.nombreTipoTramite}</h2>
                     </div>
@@ -61,13 +61,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         </div>
                     </div>
                     <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarTipoTramite}" styleClass="btn-seleccionar-tipo">
-                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.tipoTramiteSeleccionado.codTipoTramite}" value="#{tipoTramite.codTipoTramite}" />
+                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codTipoTramiteSeleccionado}" value="#{tipoTramite.codTipoTramite}" />
                     </h:commandButton>
                 </div>
             </ui:repeat>
         </div>
 
-        <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar-tipo" />
+        <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverSeleccionarCategoria}" styleClass="btn-volver" />
         <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message-tipo" />
     </div>
     </h:form>

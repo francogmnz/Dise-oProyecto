@@ -159,6 +159,32 @@ body {
     color: #555;
 }
 
+.checkbox-confirmar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.checkbox-confirmar h\:selectBooleanCheckbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.checkbox-confirmar h\:outputLabel {
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+
 /* Botones de acción */
 .botones-accion {
     display: flex;
@@ -185,7 +211,7 @@ body {
 }
 
 /* Botón cancelar */
-.btn-cancelar {
+.btn-volver {
     background-color: #c0c0c0 !important;
     color: #212529 !important;
     padding: 12px 25px !important;
@@ -197,7 +223,7 @@ body {
     margin-bottom: 15px;
 }
 
-.btn-cancelar:hover {
+.btn-volver:hover {
     background-color: #a9a9a9 !important;
 }
 
@@ -237,7 +263,7 @@ body {
     }
 
     .btn-confirmar,
-    .btn-cancelar {
+    .btn-volver {
         width: 100%;
         font-size: 16px !important;
     }

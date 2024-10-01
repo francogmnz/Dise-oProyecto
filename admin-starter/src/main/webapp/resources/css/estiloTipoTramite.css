@@ -25,88 +25,89 @@ body {
     text-align: center;
     color: #333;
     margin-bottom: 30px;
+    font-size: 1.8em; 
 }
 
 /* Barra de progreso */
 .stepper-wrapper {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 .stepper-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1; 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1; 
 }
 
 .stepper-item::before {
-  position: absolute;
-  content: "";
-  border-bottom: 2px solid #ccc;
-  width: 100%;
-  top: 20px;
-  left: -50%;
-  z-index: 2;
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: -50%;
+    z-index: 2;
 }
 
 .stepper-item::after {
-  position: absolute;
-  content: "";
-  border-bottom: 2px solid #ccc;
-  width: 100%;
-  top: 20px;
-  left: 50%;
-  z-index: 2;
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 2;
 }
 
 .stepper-item .step-counter {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #ccc;
-  margin-bottom: 6px;
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
 }
 .stepper-item.active {
-  font-weight: bold;
+    font-weight: bold;
 }
 .stepper-item.active .step-counter {
-  background-color: #2196F3;
+    background-color: #2196F3;
 }
 
 .stepper-item.completed .step-counter {
-  background-color: #2196F3;
+    background-color: #2196F3;
 }
 
 .stepper-item.completed::after {
-  position: absolute;
-  content: "";
-  border-bottom: 2px solid #2196F3;
-  width: 100%;
-  top: 20px;
-  left: 50%;
-  z-index: 3;
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #2196F3;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
 }
 
 .stepper-item:first-child::before {
-  content: none;
+    content: none;
 }
 .stepper-item:last-child::after {
-  content: none;
+    content: none;
 }
 
 /* Subtítulo */
 .subtitulo-lindo-tipo {
     text-align: center;
     color: #333;
-    font-size: 1.3em;
+    font-size: 1.5em; 
     margin-bottom: 25px;
     font-weight: bold;
     border-bottom: 2px solid #2196F3;
@@ -116,115 +117,119 @@ body {
     margin-right: auto;
 }
 
-/* Grid de Tipos de Trámite */
-.tipos-tramite-grid {
+/* Lista de Tipos de Trámite */
+.tipos-tramite-lista {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
-.tipo-tramite-item {
+/* Estilo de cada fila de Tipo de Trámite */
+.tipo-tramite-fila {
+    display: flex;
+    flex-direction: column;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: calc(33.333% - 20px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    padding: 20px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+    overflow: hidden; 
 }
 
-/* Estilo del encabezado */
+/* Sombra más visible */
+.tipo-tramite-fila:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  /* Sombra en hover */
+}
+
 .tipo-tramite-header {
-    background-color: #d1d5db; /* Gris más oscuro */
-    color: #495057; /* Negro más fuerte */
-    padding: 15px;
-    text-align: center;
+    background-color: #d1d5db;
+    color: #495057;
+    padding: 10px;
+    text-align: center; /* Centrar el título */
+    font-weight: bold;
+    font-size: 1.5em; /* Tamaño ajustado */
+    margin: -20px -20px 0 -20px; /* Márgenes negativos para ajustar los bordes */
+    border-top-left-radius: 8px; /* Esquinas superiores redondeadas */
+    border-top-right-radius: 8px;
 }
 
 .tipo-tramite-header h2 {
     margin: 0;
-    font-size: 1.5em;
-    font-weight: bold;
+    font-size: 1.3em;
 }
 
+/* Estilo del cuerpo de la fila */
 .tipo-tramite-body {
-    padding: 15px;
-    flex-grow: 1;
+    margin-top: 10px;
+    padding: 10px 0;
 }
 
-.tipo-tramite-body p {
-    margin: 10px 0;
-    color: #666;
-}
-
-/* Línea divisoria */
+/* Línea divisoria gris */
 .divisoria-tipo {
     border: 0;
     height: 1px;
     background-color: #e0e0e0;
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
-/* Estilo para la documentación requerida */
-.documentacion-tipo {
-    margin-top: 15px;
+.tipo-tramite-body p {
+    margin: 5px 0;
+    color: #666;
 }
 
+/* Estilo de la documentación requerida */
 .documentacion-tipo h3 {
-    margin-bottom: 10px;
     color: #333;
+    font-size: 1.2em;
 }
 
 .documentacion-tipo ul {
-    list-style-type: disc;
     padding-left: 20px;
 }
 
 .documentacion-tipo li {
-    margin-bottom: 5px;
     color: #555;
 }
 
 /* Botón Seleccionar */
 .btn-seleccionar-tipo {
-    margin: 15px;
-    align-self: center;
-    background-color: #0069d9 !important; /* Azul botón Seleccionar */
+    margin: 0px 0 0px 0; /* Márgenes ajustados para más espacio alrededor del botón  20px 0 10px 0*/
+    background-color: #0069d9 !important;
     color: white !important;
-    border: none !important;
-    padding: 10px 20px !important;
-    font-size: 1em !important;
-    cursor: pointer !important;
-    border-radius: 5px !important;
-    text-decoration: none !important;
+    padding: 10px 20px;
+    font-size: 1.4em; /* Tamaño ajustado */
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 200px; 
+    text-align: center; 
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .btn-seleccionar-tipo:hover {
-    background-color: #0288D1 !important; /* Azul más oscuro */
+    background-color: #0288D1 !important;
 }
 
-/* Botón Cancelar con gris más visible (#c0c0c0) */
-.btn-cancelar-tipo {
-    margin-top: 30px;
+.btn-volver {
+    margin-top: 15px;
     display: block;
-    background-color: #c0c0c0 !important; /* Gris más oscuro */
-    color: #212529 !important; /* Texto más oscuro */
-    border: 1px solid #999 !important;
-    padding: 10px 20px !important;
-    font-size: 1em !important;
-    cursor: pointer !important;
-    border-radius: 5px !important;
-    text-decoration: none !important;
+    background-color: #c0c0c0;
+    color: #212529;
+    padding: 10px 20px;
+    font-size: 1.4em;
+    cursor: pointer;
+    border-radius: 5px;
     width: 150px;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
 
-.btn-cancelar-tipo:hover {
-    background-color: #a9a9a9 !important; /* Fondo más oscuro en hover */
+.btn-volver:hover {
+    background-color: #a9a9a9;
 }
 
 /* Mensaje de error */
@@ -236,27 +241,7 @@ body {
 
 /* Responsividad */
 @media screen and (max-width: 992px) {
-    .tipo-tramite-item {
-        width: calc(50% - 20px);
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .tipo-tramite-item {
+    .tipo-tramite-fila {
         width: 100%;
-    }
-
-    .barra-progreso-tipo .progreso-tipo .paso-tipo::before {
-        display: none;
-    }
-
-    .barra-progreso-tipo .progreso-tipo {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .barra-progreso-tipo .progreso-tipo .paso-tipo {
-        width: 100%;
-        margin-bottom: 10px;
     }
 }

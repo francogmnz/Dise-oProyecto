@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Tramite extends Entidad {
     
-    //Ver si usar Date o Timestamp como en el resto 
+ 
    
     private Timestamp fechaAnulacionTramite;
     private Timestamp fechaFinTramite;
@@ -24,12 +24,12 @@ public class Tramite extends Entidad {
     private Timestamp fechaRecepcionTramite;
     private int nroTramite;
     private int precioTramite; // double.. respete DC..
-    private Cliente cliente;  // Relación ManyToOne
-    private List<TramiteEstadoTramite> tramiteEstadoTramite = new ArrayList<>(); // Relacion ManyToOne
-    private EstadoTramite estadoTramite; //Relacion ManyToOne
-    private Consultor consultor; //Relacion ManyToOne
-    private Version version; //Relacion ManyToOne
-    private TipoTramite tipoTramite; // Relacion ManyToOne
+    private Cliente cliente;  
+    private List<TramiteEstadoTramite> tramiteEstadoTramite = new ArrayList<>(); 
+    private EstadoTramite estadoTramite; 
+    private Consultor consultor; 
+    private Version version; 
+    private TipoTramite tipoTramite; 
     private List<TramiteDocumentacion> tramiteDocumentacion = new ArrayList<>();
     
     

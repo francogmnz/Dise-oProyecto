@@ -39,7 +39,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
 
         <div class="categorias-grid">
-            <ui:repeat value="#{uiRegistrarTramiteWeb.listaCategorias}" var="categoria">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.listarCategoriasTipoTramite()}" var="categoria">
                 <div class="categoria-item">
                     <div class="categoria-header">
                         <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
@@ -50,13 +50,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
                     </div>
                     <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
-                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.categoriaSeleccionada.codCategoriaTipoTramite}" value="#{categoria.codCategoriaTipoTramite}" />
+                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codCategoriaSeleccionada}" value="#{categoria.codCategoriaTipoTramite}" />
                     </h:commandButton>
                 </div>
             </ui:repeat>
         </div>
 
-        <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
+        <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverConfirmarCliente}" styleClass="btn-volver" />
         <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
     </div>
     </h:form>

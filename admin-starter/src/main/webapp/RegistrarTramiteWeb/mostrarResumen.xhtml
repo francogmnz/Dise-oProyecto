@@ -39,36 +39,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <h2 class="subtitulo-resumen">Datos del Cliente</h2>
             <h:panelGrid columns="2" styleClass="datos-cliente-grid">
                 <h:outputLabel value="Nombre:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.nombreCliente}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.nombreCliente}" />
 
                 <h:outputLabel value="Apellido:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.apellidoCliente}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.apellidoCliente}" />
 
                 <h:outputLabel value="DNI:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.dniCliente}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.dniCliente}" />
 
                 <h:outputLabel value="Email:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.mailCliente}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.mailCliente}" />
             </h:panelGrid>
 
             <h2 class="subtitulo-resumen">Detalles del Trámite</h2>
             <h:panelGrid columns="2" styleClass="detalles-tramite-grid">
                 <h:outputLabel value="Tipo de Trámite:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.nombreTipoTramite}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.nombreTipoTramite}" />
 
                 <h:outputLabel value="Descripción:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.descripcionTipoTramite}" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.descripcionTipoTramite}" />
 
                 <h:outputLabel value="Precio:" />
-                <h:outputText value="$ #{uiRegistrarTramiteWeb.dtoResumen.precioTramite}" />
+                <h:outputText value="$ #{uiRegistrarTramiteWeb.precioTramite}" />
 
                 <h:outputLabel value="Plazo de Entrega:" />
-                <h:outputText value="#{uiRegistrarTramiteWeb.dtoResumen.plazoEntregaDocumentacionTT} días" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.plazoEntregaDocumentacionTT} días" />
             </h:panelGrid>
 
             <h:panelGroup styleClass="botones">
                 <h:commandButton value="Confirmar Trámite" action="#{uiRegistrarTramiteWeb.confirmarTramite}" styleClass="btn-confirmar" />
-                <h:commandButton value="Cancelar" action="#{uiRegistrarTramiteWeb.cancelar}" immediate="true" styleClass="btn-cancelar" />
+                <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverSeleccionarTipoTramite}" styleClass="btn-volver" />
             </h:panelGroup>
 
             <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />

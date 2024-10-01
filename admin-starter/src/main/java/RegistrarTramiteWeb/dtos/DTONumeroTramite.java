@@ -4,6 +4,9 @@
  */
 package RegistrarTramiteWeb.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author licciardi
@@ -11,6 +14,8 @@ package RegistrarTramiteWeb.dtos;
 public class DTONumeroTramite {
     
     private int numeroTramite;
+    private List<DTODocumentacion> documentaciones = new ArrayList<>();
+    private int plazoEntregaDocumentacionTT;
 
     public int getNumeroTramite() {
         return numeroTramite;
@@ -19,6 +24,24 @@ public class DTONumeroTramite {
     public void setNumeroTramite(int numeroTramite) {
         this.numeroTramite = numeroTramite;
     }
-    
-    
+
+    public List<DTODocumentacion> getDocumentaciones() {
+        return documentaciones;
+    }
+
+    public void setDocumentaciones(List<DTODocumentacion> documentaciones) {
+        this.documentaciones = documentaciones;
+    }
+
+    public int getPlazoEntregaDocumentacionTT() {
+        return plazoEntregaDocumentacionTT;
+    }
+
+    public void setPlazoEntregaDocumentacionTT(int plazoEntregaDocumentacionTT) {
+        this.plazoEntregaDocumentacionTT = plazoEntregaDocumentacionTT;
+    }
+      
+    public void addDTODocumentacion(DTODocumentacion dtoDocumentacion) {
+        documentaciones.add(dtoDocumentacion);
+    }
 }
