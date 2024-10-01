@@ -114,10 +114,6 @@ public class DTOTramiteElegido {
         return mailCliente;
     }
 
-    public void setMailCliente(String mailCliente) {
-        this.mailCliente = mailCliente;
-    }
-
     public int getLegajoConsultor() {
         return legajoConsultor;
     }
@@ -132,6 +128,10 @@ public class DTOTramiteElegido {
 
     public void setNombreConsultor(String nombreConsultor) {
         this.nombreConsultor = nombreConsultor;
+    }
+
+    public void setMailCliente(String mailCliente) {
+        this.mailCliente = mailCliente;
     }
 
     public List<DTODocumentacion> getResumenDoc() {

@@ -27,15 +27,9 @@
                 </div>
             </div>
             <!-- Mostrar el código del TramiteDocumentacion -->
-            <h:outputText value="Código del trámite: #{cargadocumentacion.codTD}" />
+            <h:outputText value="Código del trámite documentacion: #{cargadocumentacion.codTD}" />
+            <h:outputText value="Código del trámite: #{cargadocumentacion.nroTramite}" />
 
-            <!-- Botón de descarga del archivo -->
-            <p:commandButton value="Descargar archivo" ajax="false"
-                             onclick="PrimeFaces.monitorDownload(start, stop);"
-                             icon="pi pi-arrow-down"  styleClass="btn-success">
-                <p:fileDownload value="#{cargadocumentacion.fileD}"/> 
-            </p:commandButton>
         </h:form>
     </ui:define>
-
 </ui:composition>

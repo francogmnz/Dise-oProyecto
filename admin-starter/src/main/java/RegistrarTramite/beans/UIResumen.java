@@ -57,7 +57,7 @@ public class UIResumen implements Serializable {
     public void init() {
         // Obtener el parámetro de la URL
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String codigoTramite = params.get("codigo");
+        String codigoTramite = params.get("nroTramite");
 
         if (codigoTramite != null) {
             try {
@@ -256,8 +256,9 @@ public class UIResumen implements Serializable {
 
     public String registrarDocumentacion(int codTD) {
         BeansUtils.guardarUrlAnterior();
-        return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD;
+        return "CargaDocumentacion?faces-redirect=true&codTD=" + codTD + "&nroTramite=" + nroTramite;
     }
+    
 
     private DefaultStreamedContent fileD;
 

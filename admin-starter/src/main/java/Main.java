@@ -14,8 +14,8 @@ import utils.FachadaPersistencia;
 public class Main {
 
     public static void main(String[] args) {
-        //EjemplosPersistencia ejemplos = new EjemplosPersistencia();
-        //ejemplos.crearElementos2();
+//        EjemplosPersistencia ejemplos = new EjemplosPersistencia();
+//        ejemplos.crearElementos2();
 
 //       ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
 //       expertoRegistrarTramite.registrarTramite(12345678, 1);

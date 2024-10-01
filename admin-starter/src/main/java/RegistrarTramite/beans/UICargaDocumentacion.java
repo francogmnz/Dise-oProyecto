@@ -6,6 +6,7 @@ package RegistrarTramite.beans;
 
 import RegistrarTramite.ControladorRegistrarTramite;
 import RegistrarTramite.dtos.DTOFile;
+import entidades.Tramite;
 import entidades.TramiteDocumentacion;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
@@ -43,6 +44,7 @@ public class UICargaDocumentacion implements Serializable {
 
     private UploadedFile file; // para manejar la subida de archivos
     private int codTD = 0; // codTD para identificar el TD
+    private int nroTramite = 0;
     private DTOFile fileEjemplo = new DTOFile();
     private DefaultStreamedContent fileD; // para manejar la descarga de archivos
     ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
@@ -63,6 +65,14 @@ public class UICargaDocumentacion implements Serializable {
         this.codTD = codTD;
     }
 
+    public int getNroTramite() {
+        return nroTramite;
+    }
+
+    public void setNroTramite(int nroTramite) {
+        this.nroTramite = nroTramite;
+    }
+
     public DTOFile getFileEjemplo() {
         return fileEjemplo;
     }
@@ -77,10 +87,21 @@ public class UICargaDocumentacion implements Serializable {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
         int codigo = Integer.parseInt(request.getParameter("codTD"));
+        int numTramite = Integer.parseInt(request.getParameter("nroTramite"));
         codTD = codigo;
+        nroTramite = numTramite;
         System.out.println("codigo " + codigo);
+        System.out.println("nroTramite" + numTramite);
+
+    }
+    private List<DTOFile> archivosSubidos = new ArrayList<>(); // Lista para almacenar archivos subidos
+    // Getter para archivosSubidos
+
+    public List<DTOFile> getArchivosSubidos() {
+        return archivosSubidos;
     }
 
+    
     // Método para manejar la subida del archivo
     public void handleFileUpload(FileUploadEvent event) {
         try {
@@ -94,22 +115,19 @@ public class UICargaDocumentacion implements Serializable {
             //Usar DTOFile para almacenar el archivo subido
             fileEjemplo.setNombre(event.getFile().getFileName());
             fileEjemplo.setContenidoB64(encodedString);
-            
+
             //System.out.println("encriptado =" + fileEjemplo.getContenidoB64());
-            
             //llamo a la funcion registrarDocumentacion una vez cargado el archivo
-            controladorRegistrarTramite.registrarDocumentacion(codTD, fileEjemplo);
-                      
+            controladorRegistrarTramite.registrarDocumentacion(codTD, fileEjemplo, nroTramite);
+
         } catch (IOException ex) {
             Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     // Método para manejar la descarga del archivo
     public StreamedContent getFileD() {
-        
-        // Verifica si el archivo (fileEjemplo) no es nulo y tiene contenido en Base64
+        // Verifica si el archivo no es nulo y tiene contenido en Base64
         if (fileEjemplo != null && fileEjemplo.getContenidoB64() != null) {
             try {
                 // Decodifica el contenido Base64 a un arreglo de bytes
@@ -128,8 +146,6 @@ public class UICargaDocumentacion implements Serializable {
                 Logger.getLogger(UICargaDocumentacion.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        //Retorna el archivo listo para ser descargado
         return fileD;
     }
 

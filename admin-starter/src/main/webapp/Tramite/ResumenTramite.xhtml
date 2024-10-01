@@ -101,12 +101,12 @@
                         <h:panelGrid columns="1">
                             <h:panelGroup>
                                 <h:outputLabel value="Nombre:" style="font-weight:700;"/>
-                                <h:outputText value=" #{uiresumen.nombreConsultor}" />
+                                <h:outputText value=" #{uiresumen.nombreConsultor}"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <h:outputLabel value="Legajo:" style="font-weight:700;"/>
-                                <h:outputText value=" #{uiresumen.legajoConsultor}" />
+                                <h:outputText value=" #{uiresumen.legajoConsultor != 0 ? uiresumen.legajoConsultor : 'Sin asignar'}" />
                             </h:panelGroup>
                         </h:panelGrid>
                     </p:panel>
@@ -130,22 +130,25 @@
                             <h4><b>Documentación</b></h4>
                         </f:facet>
                         <p:dataTable id="tablaDoc" var="doc" value="#{uiresumen.resumenDoc}">
+                            <!-- Columna: Nombre documento -->
                             <p:column style="text-align: center">
                                 <f:facet name="header">Nombre documento</f:facet>
                                     #{doc.nombreDocumentacion}
                             </p:column>
 
+                            <!-- Columna: Estado Entrega -->
                             <p:column style="text-align: center">
                                 <f:facet name="header">Estado Entrega</f:facet>
                                 <h:outputText value="#{doc.fechaEntregaDoc != null ? 'ENTREGADO' : 'PENDIENTE'}" 
                                               style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
                             </p:column>
 
+                            <!-- Columna: Botón Agregar/Editar Entrega -->
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
                                 <p:commandButton id="codTD" icon="fa fa-edit" styleClass="btn-default"
-                                                 disabled="#{uiresumen.fechaAnulacionTramite != null}" 
-                                                 action="#{uiresumen.registrarDocumentacion(doc.codTD)}"/>
+                                                 action="#{uiresumen.registrarDocumentacion(doc.codTD)}"
+                                                 disabled="#{uiresumen.fechaAnulacionTramite != null}"/>
 
                                 <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
@@ -154,7 +157,9 @@
                                 </p:commandButton>
                             </p:column>
 
+
                         </p:dataTable>
+
                     </p:panel>
                 </p:tab>
             </p:tabView>
