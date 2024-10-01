@@ -5,7 +5,9 @@
 package ABMTipoTramite.beans;
 
 import ABMTipoTramite.beans.*;
+import ABMVersion.dtos.VersionDTO;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
@@ -22,7 +24,15 @@ public class TipoTramiteGrillaUI {
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
     private String nombreCategoriaTipoTramite;
+   private  List<VersionDTO> versiones;
 
+    public List<VersionDTO> getVersiones() {
+        return versiones;
+    }
+
+    public void setVersiones(List<VersionDTO> versiones) {
+        this.versiones = versiones;
+    }
     public int getCodTipoTramite() {
         return codTipoTramite;
     }

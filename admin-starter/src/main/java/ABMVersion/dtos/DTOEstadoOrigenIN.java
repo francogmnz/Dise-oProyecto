@@ -13,7 +13,11 @@ import java.util.List;
  */
 public class DTOEstadoOrigenIN {
     private int codEstadoTramite;
-    private List<DTOEstadoDestinoIN> dtoEstadoDestinoList= new ArrayList<>();
+    private List<DTOEstadoDestinoIN> dtoEstadoDestinoList = new ArrayList<>();
+
+    // Nuevos campos para las posiciones X e Y
+    private int Xpos; // Nueva posición X
+    private int Ypos;
 
     public int getCodEstadoTramite() {
         return codEstadoTramite;
@@ -27,13 +31,29 @@ public class DTOEstadoOrigenIN {
         return dtoEstadoDestinoList;
     }
 
-    public void setDtoEstadoDeastinoList(List<DTOEstadoDestinoIN> dtoEstadoDeastinoList) {
-        this.dtoEstadoDestinoList = dtoEstadoDeastinoList;
+    public void setDtoEstadoDestinoList(List<DTOEstadoDestinoIN> dtoEstadoDestinoList) {
+        this.dtoEstadoDestinoList = dtoEstadoDestinoList;
     }
-   
-    public void addDtoEstadoDeastinoList(DTOEstadoDestinoIN dtoEstadoDeastino) {
-        this.dtoEstadoDestinoList.add(dtoEstadoDeastino);
-    } 
-    
-           
+
+    public void addDtoEstadoDestinoList(DTOEstadoDestinoIN dtoEstadoDestino) {
+        this.dtoEstadoDestinoList.add(dtoEstadoDestino);
+    }
+
+    public int getXpos() {
+        return Xpos;
+    }
+
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
+    }
+
+    public int getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
+    }
+
+  
 }

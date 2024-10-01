@@ -28,10 +28,16 @@
                             <p:outputLabel for="nroVersion" value="Número de Versión:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:inputText id="nroVersion" value="#{uiabmVersion.nroVersion}" style="width: 150px;" required="true" />
-                            <p:message id="nroVersionMSG" for="nroVersion"/>
+                            <h:inputText id="nroVersion" 
+                                         value="#{uiabmVersion.nroVersion}" 
+                                         style="width: 100px;" 
+                                         disabled="#{not uiabmVersion.insert}" 
+                                         required="true">
+                            </h:inputText>
+                            <p:message id="nroVersionMSG" for="nroVersion" />
                         </div>
                     </div>
+
 
                     <!-- Descripción de la Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">

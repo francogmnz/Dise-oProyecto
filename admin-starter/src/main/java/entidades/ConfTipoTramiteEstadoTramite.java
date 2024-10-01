@@ -3,8 +3,6 @@ package entidades;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-@Entity
 //@Table(name = "conf_tipo_tramite_estado_tramite")
 public class ConfTipoTramiteEstadoTramite extends Entidad {
    

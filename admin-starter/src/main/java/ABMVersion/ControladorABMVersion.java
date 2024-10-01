@@ -1,4 +1,5 @@
 package ABMVersion;
+
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
@@ -7,40 +8,47 @@ import entidades.EstadoTramite;
 import entidades.TipoTramite;
 import java.util.List;
 import org.omnifaces.util.Messages;
+import utils.FachadaPersistencia;
 
 public class ControladorABMVersion {
     
     private ExpertoABMVersion expertoABMVersion = new ExpertoABMVersion();
+
+    // Buscar versiones basadas en el número, nombre y código del tipo de trámite
     public List<VersionDTO> buscarVersion(int nroVersion, String nombreTipoTramite, int codTipoTramite) {
         return expertoABMVersion.buscarVersion(nroVersion, codTipoTramite, nombreTipoTramite);
-    }    
+    }
 
+   /* public void modificarVersion(int codTipoTramite, DTOVersionM dtoVersionm) throws VersionException {
+       expertoABMVersion.modificarVersion(codTipoTramite, dtoVersionm);
+    } */
+
+    // Buscar una versión específica para modificar
     public DTOVersionM buscarVersionAModificar(int nroVersion) {
         return (DTOVersionM) expertoABMVersion.buscarVersionAModificar(nroVersion);
     }
-  public DTOVersionM modificar(int codTipoTramite) {
-    try {
-        return expertoABMVersion.modificar(codTipoTramite);
-    } catch (Exception e) {
-        Messages.addGlobalError("Error al modificar la versión: " + e.getMessage());
-    }
-    return null;
-  }
-    public void darDeBajaVersion(int nroVersion) throws VersionException {
-        expertoABMVersion.darDeBajaVersion(nroVersion);
-    }
 
-    public List<EstadoTramite> obtenerEstadosTramiteActivos() {
-        return expertoABMVersion.obtenerEstadosTramiteActivos();
+    /*  public void modificarVersion(int codTipoTramite, DTOVersionM dtoVersionm) throws VersionException {
+        expertoABMVersion.modificarVersion(codTipoTramite, dtoVersionm);
+    }*/
+    // Dar de baja una versión
+    public void darDeBajaVersion(int nroVersion) {
+        try {
+            expertoABMVersion.darDeBajaVersion(nroVersion);
+            Messages.addGlobalInfo("La versión se ha dado de baja exitosamente.");
+        } catch (VersionException e) {
+            Messages.addGlobalError("Error al dar de baja la versión: " + e.getMessage());
+        }
     }
-
-    public List<TipoTramite> obtenerTiposTramitesActivos() {
-        return expertoABMVersion.obtenerTiposTramitesActivos();
-    }
-
-    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion){
-    return expertoABMVersion.confirmacion(dtoDatosVersion);
     
-            } 
+    public DTOVersionM modificarVersion(int codTipoTramite) {
+        
+        return expertoABMVersion.modificarVersion(codTipoTramite);
+    }
+
+    // Confirmar datos de versión
+    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
+        return expertoABMVersion.confirmacion(dtoDatosVersion);
+    }
     
 }

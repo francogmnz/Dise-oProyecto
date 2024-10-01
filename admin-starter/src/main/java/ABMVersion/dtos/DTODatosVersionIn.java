@@ -13,12 +13,31 @@ import java.util.List;
  * @author Franco
  */
 public class DTODatosVersionIn {
+
     private int codTipoTramite;
     private String descripcionVersion;
     private Date fechaDesdeVersion;
-    List<DTOEstadoOrigenIN> dtoEstadoOrigenList=new ArrayList<>();  
-     List<DTOEstadoDestinoIN> dtoEstadoDestinoList=new ArrayList<>();  
+    List<DTOEstadoOrigenIN> dtoEstadoOrigenList = new ArrayList<>();
+    List<DTOEstadoDestinoIN> dtoEstadoDestinoList = new ArrayList<>();
     private Date fechaHastaVersion;
+    private int Xpos; 
+    private int Ypos;
+
+    public int getXpos() {
+        return Xpos;
+    }
+
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
+    }
+
+    public int getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
+    }
 
     public List<DTOEstadoDestinoIN> getDtoEstadoDestinoList() {
         return dtoEstadoDestinoList;
@@ -27,8 +46,7 @@ public class DTODatosVersionIn {
     public void setDtoEstadoDestinoList(List<DTOEstadoDestinoIN> dtoEstadoDestinoList) {
         this.dtoEstadoDestinoList = dtoEstadoDestinoList;
     }
-    
-    
+
     public List<DTOEstadoOrigenIN> getDtoEstadoOrigenList() {
         return dtoEstadoOrigenList;
     }
@@ -36,9 +54,8 @@ public class DTODatosVersionIn {
     public void setDtoEstadoOrigenList(List<DTOEstadoOrigenIN> dtoEstadoOrigenList) {
         this.dtoEstadoOrigenList = dtoEstadoOrigenList;
     }
-    
 
-     public void addDtoEstadoOrigenList(DTOEstadoOrigenIN dtoEstadoOrigen) {
+    public void addDtoEstadoOrigenList(DTOEstadoOrigenIN dtoEstadoOrigen) {
         this.dtoEstadoOrigenList.add(dtoEstadoOrigen);
     }
 

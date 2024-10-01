@@ -21,7 +21,7 @@ public class TipoTramiteDTO {
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
     private CategoriaTipoTramite categoriaTipoTramite;
-
+    private int nroVersion;
 
 
     public int getCodTipoTramite() {

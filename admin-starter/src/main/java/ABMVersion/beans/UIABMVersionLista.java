@@ -69,22 +69,15 @@ public class UIABMVersionLista implements Serializable {
         return versionesGrilla;
     }
 
-    public String irAgregarVersion() {
-        BeansUtils.guardarUrlAnterior();
-        return "abmVersion?faces-redirect=true&nroVersion=0";
-    }
-
     public String irModificarVersion(int nroVersion) {
         BeansUtils.guardarUrlAnterior();
         return "abmVersion?faces-redirect=true&nroVersion=" + nroVersion;
     }
 
     public void darDeBajaVersion(int nroVersion) {
-        try {
+     
             controladorABMVersion.darDeBajaVersion(nroVersion);
             Messages.create("Versión anulada").detail("La versión ha sido anulada correctamente.").add();
-        } catch (VersionException e) {
-            Messages.create("Error al anular la versión.").error().detail(e.getMessage()).add();
-        }
+        
     }
 }

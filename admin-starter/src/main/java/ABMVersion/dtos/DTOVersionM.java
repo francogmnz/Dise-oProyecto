@@ -1,5 +1,4 @@
 package ABMVersion.dtos;
-import ABMVersion.dtos.DTOConfiguracionTETT;
 import ABMVersion.dtos.DTOEstado;
 import ABMVersion.dtos.DTOEstadoOrigenOUT;
 import java.sql.Timestamp;
@@ -23,11 +22,7 @@ public class DTOVersionM {
     public void setDtoEstado(List<DTOEstado> dtoEstado) {
         this.dtoEstado = dtoEstado;
     }
-
-    // Listas para manejar los DTOs
-
-    // Métodos Getter y Setter...
-
+    
     public int getCodTipoTramite() {
         return codTipoTramite;
     }

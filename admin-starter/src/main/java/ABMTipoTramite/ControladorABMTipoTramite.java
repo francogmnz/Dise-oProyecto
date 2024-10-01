@@ -11,6 +11,9 @@ import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTOIn;
 import ABMTipoTramite.dtos.NuevoTipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -45,5 +48,18 @@ public class ControladorABMTipoTramite {
         expertoABMTipoTramite.darDeBajaTipoTramite(codTipoTramite);
     }
 
-    
+   public void redirigirAModificarVersion(int codTipoTramite, int nroVersion) {
+    try {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        
+        // Construir la URL para redirigir a la página de modificación de versión
+        String url = externalContext.getRequestContextPath() + "/modificarVersion.xhtml?codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion;
+        externalContext.redirect(url);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+
 }

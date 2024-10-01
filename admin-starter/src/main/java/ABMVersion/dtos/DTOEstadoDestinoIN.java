@@ -10,7 +10,24 @@ package ABMVersion.dtos;
  */
 public class DTOEstadoDestinoIN {
     int codEstadoTramite;
+ private int Xpos; // Nueva posición X
+    private int Ypos;
 
+    public int getXpos() {
+        return Xpos;
+    }
+
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
+    }
+
+    public int getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
+    }
       public int getCodEstadoTramite() {
         return codEstadoTramite;
     }

@@ -12,36 +12,36 @@ import java.util.List;
  * @author Franco
  */
 public class DTOEstadoOrigenOUT {
+
     private int codEstadoTramite;
-    private String nombre;
-    private int posX;
-    private int posY;
-  private List<DTOEstadoDestinoOUT> dtoEstadoDestinoList= new ArrayList<>();
-    public String getNombre() {
-        return nombre;
+    private String nombreEstadoOrigen;
+    private int Xpos; // Nueva posición X
+    private int Ypos;
+    private List<DTOEstadoDestinoOUT> dtoEstadoDestinoList = new ArrayList<>();
+
+    public String getnombreEstadoOrigen() {
+        return nombreEstadoOrigen;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setnombreEstadoOrigen(String nombreEstadoOrigen) {
+        this.nombreEstadoOrigen = nombreEstadoOrigen;
     }
 
-    public int getPosX() {
-        return posX;
+    public int getXpos() {
+        return Xpos;
     }
 
-    public void setPosX(int posX) {
-        this.posX = posX;
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
     }
 
-    public int getPosY() {
-        return posY;
+    public int getYpos() {
+        return Ypos;
     }
 
-    public void setPosY(int posY) {
-        this.posY = posY;
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
     }
-    
-  
 
     public int getCodEstadoTramite() {
         return codEstadoTramite;

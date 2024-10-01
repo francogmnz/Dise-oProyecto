@@ -25,9 +25,8 @@ import utils.BeansUtils;
 public class UIABMTipoTramiteLista implements Serializable {
 
     private ControladorABMTipoTramite controladorABMTipoTramite = new ControladorABMTipoTramite();
-    private int codTipoTramiteFiltro=0;
-    private String nombreTipoTramiteFiltro="";
- 
+    private int codTipoTramiteFiltro = 0;
+    private String nombreTipoTramiteFiltro = "";
 
     public ControladorABMTipoTramite getControladorABMTipoTramite() {
         return controladorABMTipoTramite;
@@ -52,19 +51,16 @@ public class UIABMTipoTramiteLista implements Serializable {
     public void setNombreTipoTramiteFiltro(String nombreTipoTramiteFiltro) {
         this.nombreTipoTramiteFiltro = nombreTipoTramiteFiltro;
     }
-    
-    
 
-    
-    public void filtrar()
-    {
+    public void filtrar() {
 
     }
 
-    public List<TipoTramiteGrillaUI> buscarTipoTramites(){
+    public List<TipoTramiteGrillaUI> buscarTipoTramites() {
         System.out.println(codTipoTramiteFiltro);
         System.out.println(nombreTipoTramiteFiltro);
         List<TipoTramiteGrillaUI> tipoTramitesGrilla = new ArrayList<>();
+        
         List<TipoTramiteDTO> tipoTramitesDTO = controladorABMTipoTramite.buscarTipoTramites(codTipoTramiteFiltro, nombreTipoTramiteFiltro);
         for (TipoTramiteDTO tipoTramiteDTO : tipoTramitesDTO) {
             TipoTramiteGrillaUI tipoTramiteGrillaUI = new TipoTramiteGrillaUI();
@@ -75,8 +71,7 @@ public class UIABMTipoTramiteLista implements Serializable {
             tipoTramiteGrillaUI.setFechaHoraBajaTipoTramite(tipoTramiteDTO.getFechaHoraBajaTipoTramite());
             tipoTramiteGrillaUI.setPlazoEntregaDocumentacionTT(tipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             tipoTramiteGrillaUI.setNombreCategoriaTipoTramite(tipoTramiteDTO.getCategoriaTipoTramite().getNombreCategoriaTipoTramite());
-
-
+          
             tipoTramitesGrilla.add(tipoTramiteGrillaUI);
         }
         return tipoTramitesGrilla;
@@ -87,24 +82,29 @@ public class UIABMTipoTramiteLista implements Serializable {
         return "abmTipoTramite?faces-redirect=true&codTipoTramite=0"; // Usa '?faces-redirect=true' para hacer una redirección
     }
 
-    
     public String irModificarTipoTramite(int codTipoTramite) {
         BeansUtils.guardarUrlAnterior();
         return "abmTipoTramite?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
     }
-   public String irConfigurarTipoTramite(int codTipoTramite, int nroVersion) {
-    BeansUtils.guardarUrlAnterior();
-    return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion;
-}
 
-    public void darDeBajaTipoTramite(int codTipoTramite){
+    public String irConfigurarTipoTramite(int codTipoTramite, int nroVersion) {
+        BeansUtils.guardarUrlAnterior();
+        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite  + "&nroVersion=" + nroVersion;
+    }
+
+    public String irModificarVersion(int codTipoTramite, int nroVersion) {
+        BeansUtils.guardarUrlAnterior();
+        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion; // Corrige la concatenación
+    }
+
+    public void darDeBajaTipoTramite(int codTipoTramite) {
         try {
             controladorABMTipoTramite.darDeBajaTipoTramite(codTipoTramite);
             Messages.create("Anulado").detail("Anulado").add();;
-                    
+
         } catch (TipoTramiteException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
         }
     }
-    
+ 
 }

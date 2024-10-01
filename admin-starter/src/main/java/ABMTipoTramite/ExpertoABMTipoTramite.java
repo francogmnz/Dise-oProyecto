@@ -13,6 +13,7 @@ import ABMTipoTramite.dtos.NuevoTipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
 import entidades.CategoriaTipoTramite;
 import entidades.TipoTramite;
+import entidades.Version;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class ExpertoABMTipoTramite {
             criterio2.setValor(nombreTipoTramite);
             primerCriterio.add(criterio2);
         }
+        
 
         List objetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", primerCriterio);
         List<TipoTramiteDTO> tipoTramiteResultado = new ArrayList<>();
@@ -58,9 +60,36 @@ public class ExpertoABMTipoTramite {
             tipoTramiteDTO.setFechaHoraBajaTipoTramite(tipoTramite.getFechaHoraBajaTipoTramite());
             tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
             tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
+            
             tipoTramiteResultado.add(tipoTramiteDTO);
         }
+       /*primerCriterio.clear();
+        List<DTOCriterio> criterioVersion = new ArrayList<DTOCriterio>();
+        DTOCriterio criterioPorFechaBajaTT = new DTOCriterio();
+        criterioPorFechaBajaTT.setAtributo("fechaBajaVersion");
+        criterioPorFechaBajaTT.setOperacion("=");
+        criterioPorFechaBajaTT.setValor(null);
 
+        criterioVersion.add(criterioPorFechaBajaTT);
+
+        DTOCriterio criterioPorFechaDesdeVersion = new DTOCriterio();
+        criterioPorFechaDesdeVersion.setAtributo("fechaDesdeVersion");
+        criterioPorFechaDesdeVersion.setOperacion("<");
+        criterioPorFechaDesdeVersion.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioVersion.add(criterioPorFechaDesdeVersion);
+
+        DTOCriterio criterioPorFechaHastaVersion = new DTOCriterio();
+        criterioPorFechaHastaVersion.setAtributo("fechaHastaVersion");
+        criterioPorFechaHastaVersion.setOperacion(">");
+        criterioPorFechaHastaVersion.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioVersion.add(criterioPorFechaHastaVersion);
+
+        List versionObjetoList = FachadaPersistencia.getInstance().buscar("Version", criterioVersion);
+
+        for(Object x: versionObjetoList){
+        Version version = (Version) x;
+
+        } */
         return tipoTramiteResultado;
     
     }

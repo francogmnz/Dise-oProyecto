@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package entidades;
 
 import java.sql.Timestamp;
@@ -9,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author licciardi
- */
 public class TipoTramite extends Entidad {
     
     private int codTipoTramite;

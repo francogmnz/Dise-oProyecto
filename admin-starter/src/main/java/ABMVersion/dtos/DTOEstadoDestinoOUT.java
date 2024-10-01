@@ -9,19 +9,39 @@ package ABMVersion.dtos;
  * @author Franco
  */
 public class DTOEstadoDestinoOUT {
+
     int codEstadoTramite;
-    private String nombre;
+    private String nombreEstadoDestino;
+    private int Xpos; // Nueva posición X
+    private int Ypos; // Nueva posición Y
 
-    public String getNombre() {
-        return nombre;
+    public int getXpos() {
+        return Xpos;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setXpos(int Xpos) {
+        this.Xpos = Xpos;
     }
-    
 
-      public int getCodEstadoTramite() {
+    public int getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(int Ypos) {
+        this.Ypos = Ypos;
+    }
+
+  
+
+    public String getNombreEstadoDestino() {
+        return nombreEstadoDestino;
+    }
+
+    public void setNombreEstadoDestino(String nombreEstadoDestino) {
+        this.nombreEstadoDestino = nombreEstadoDestino;
+    }
+
+    public int getCodEstadoTramite() {
         return codEstadoTramite;
     }
 
