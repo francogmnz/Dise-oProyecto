@@ -27,14 +27,10 @@ public class ExpertoABMConsultor {
 
             DTOCriterio unCriterio = new DTOCriterio();
             unCriterio.setAtributo("legajoConsultor");
-            unCriterio.setOperacion("like");
-            unCriterio.setValor(String.valueOf(legajoConsultor) + "%");
-            lCriterio.add(unCriterio);
-        } else {
-            DTOCriterio unCriterio = new DTOCriterio();
-            unCriterio.setAtributo("legajoConsultor");
-            unCriterio.setOperacion("like");
-            unCriterio.setValor("%");
+//            unCriterio.setOperacion("like");
+//            unCriterio.setValor(String.valueOf(legajoConsultor) + "%");
+            unCriterio.setOperacion("=");
+            unCriterio.setValor(legajoConsultor);
             lCriterio.add(unCriterio);
         }
         if (nombreConsultor.trim().length() > 0) {
