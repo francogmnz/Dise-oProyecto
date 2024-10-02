@@ -71,25 +71,29 @@ public class UIABMConsultor implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        String legajo = "0";
+        int legajo = 0;
         // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
         if (request.getParameter("legajo") == null || !(request.getParameter("legajo").matches("\\d+")) || Integer.parseInt(request.getParameter("legajo")) < 0) {
             // Redirigir a la URL anterior si el código no es válido
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
-            return;
-        } else {
-            legajo = request.getParameter("legajo");
+            try {
+                legajo = Integer.parseInt(request.getParameter("legajo"));
+            } catch (NumberFormatException e) {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+                return;
+
+            }
         }
 
         insert = true;
-        if (Integer.valueOf(legajo) > 0) {
+        if (legajo > 0) {
             insert = false;
             DTOModificacionDatos dtoModificacionDatos = controladorABMConsultor.buscarConsultorAModificar(legajo);
             setNombreConsultor(dtoModificacionDatos.getNombreConsultor());
             setLegajoConsultor(dtoModificacionDatos.getLegajoConsultor());
             setNumMaximoTramites(dtoModificacionDatos.getNumMaximoTramites());
         }
-        if (Integer.valueOf(legajo) == 0) {
+        if (legajo == 0) {
             setNombreConsultor("");
             setLegajoConsultor(0);
             setNumMaximoTramites(0);
@@ -99,7 +103,7 @@ public class UIABMConsultor implements Serializable {
 
     public void agregarConsultor() throws ConsultorException {
 
-        if ( getLegajoConsultor() < 0) {
+        if (getLegajoConsultor() < 0) {
             err.agregarError("El Legajo debe ser un entero mayor a 0.");
         }
         if (getNombreConsultor().isEmpty()) {
