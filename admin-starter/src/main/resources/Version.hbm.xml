@@ -21,11 +21,11 @@
         <property name="fechaHastaVersion" column="fecha_hasta_version" type="timestamp"/>
 
         <!-- Relación ManyToOne con TipoTramite -->
-        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
+        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="false"/>
 
         <!-- Relación OneToMany con ConfTipoTramiteEstadoTramite -->
         <bag name="confTipoTramiteEstadoTramite" table="conf_tipo_tramite_estado_tramite" cascade="none">
-            <key column="OIDVersion" not-null="true"/>
+            <key column="OIDVersion" not-null="false"/>
             <one-to-many class="entidades.ConfTipoTramiteEstadoTramite"/>
         </bag>
         

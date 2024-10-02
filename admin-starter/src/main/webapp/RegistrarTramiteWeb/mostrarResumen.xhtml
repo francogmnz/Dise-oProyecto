@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Resumen del Trámite</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estiloMostrarResumen.css']}" />
+</h:head>
+<h:body>
+    <h:form>
+        <div class="container-resumen">
+
+            <h1 class="titulo-resumen">Resumen del Trámite</h1>
+
+
+            <div class="stepper-wrapper">
+                    <div class="stepper-item completed">
+                      <div class="step-counter">1</div>
+                      <div class="step-name">Acceder</div>
+                    </div>
+                    <div class="stepper-item completed">
+                      <div class="step-counter">2</div>
+                      <div class="step-name">Categoria</div>
+                    </div>
+                    <div class="stepper-item completed">
+                      <div class="step-counter">3</div>
+                      <div class="step-name">Trámite</div>
+                    </div>
+                    <div class="stepper-item active">
+                      <div class="step-counter">4</div>
+                      <div class="step-name">Confirmar</div>
+                    </div>
+                  </div>
+
+            <h2 class="subtitulo-resumen">Datos del Cliente</h2>
+            <h:panelGrid columns="2" styleClass="datos-cliente-grid">
+                <h:outputLabel value="Nombre:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.nombreCliente}" />
+
+                <h:outputLabel value="Apellido:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.apellidoCliente}" />
+
+                <h:outputLabel value="DNI:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.dniCliente}" />
+
+                <h:outputLabel value="Email:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.mailCliente}" />
+            </h:panelGrid>
+
+            <h2 class="subtitulo-resumen">Detalles del Trámite</h2>
+            <h:panelGrid columns="2" styleClass="detalles-tramite-grid">
+                <h:outputLabel value="Tipo de Trámite:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.nombreTipoTramite}" />
+
+                <h:outputLabel value="Descripción:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.descripcionTipoTramite}" />
+
+                <h:outputLabel value="Precio:" />
+                <h:outputText value="$ #{uiRegistrarTramiteWeb.precioTramite}" />
+
+                <h:outputLabel value="Plazo de Entrega:" />
+                <h:outputText value="#{uiRegistrarTramiteWeb.plazoEntregaDocumentacionTT} días" />
+            </h:panelGrid>
+
+            <h:panelGroup styleClass="botones">
+                <h:commandButton value="Confirmar Trámite" action="#{uiRegistrarTramiteWeb.confirmarTramite}" styleClass="btn-confirmar" />
+                <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverSeleccionarTipoTramite}" styleClass="btn-volver" />
+            </h:panelGroup>
+
+            <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+        </div>
+    </h:form>
+</h:body>
+</html>

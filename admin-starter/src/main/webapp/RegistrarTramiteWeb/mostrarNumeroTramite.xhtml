@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Trámite Registrado</title>
+    <link rel="stylesheet" type="text/css" href="#{resource['css/estiloMostrarNumeroTramite.css']}" />
+</h:head>
+<h:body>
+    <h:form>
+        <div class="container-numero-tramite">
+            <h1 class="titulo-numero-tramite">Trámite Registrado Exitosamente</h1>
+
+            <div class="mensaje-confirmacion">
+                <p>Su número de trámite es:</p>
+                <h2 class="numero-tramite">#{uiRegistrarTramiteWeb.numeroTramite}</h2>
+            </div>
+
+            <div class="informacion-tramite">
+
+                <h3 class="titulo-seccion">Informacion Importante</h3>
+                <p><strong>Plazo de entrega de documentación:</strong> 
+                    #{uiRegistrarTramiteWeb.plazoEntregaDocumentacionTT} días
+                </p>
+
+
+                <h3 class="titulo-seccion">Documentación Requerida</h3>
+                <ul class="lista-documentacion">
+                    <ui:repeat value="#{uiRegistrarTramiteWeb.documentaciones}" var="doc">
+                        <li>#{doc.nombreDocumentacion}</li>
+                    </ui:repeat>
+                </ul>
+            </div>
+
+            <div class="botones">
+                <h:commandButton value="Volver al Inicio" action="#{uiRegistrarTramiteWeb.irAlInicio}" styleClass="btn-inicio" />
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>
+
+
+

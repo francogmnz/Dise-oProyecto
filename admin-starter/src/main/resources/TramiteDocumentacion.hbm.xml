@@ -12,12 +12,14 @@
 
         <property name="archivoTD" column="archivo_td" type="string"/>
 
+        <property name="nombreTD" column="nombre_td" type="string"/>
+
         <property name="codTD" column="cod_td" type="int"/>
 
         <property name="fechaEntregaTD" column="fecha_entrega_td" type="timestamp"/>
 
         <!-- Relación ManyToOne con Documentacion -->
-        <many-to-one name="documentacion" class="entidades.Documentacion" column="OIDDocumentacion" not-null="true"/>
+        <many-to-one name="documentacion" class="entidades.Documentacion" column="OIDDocumentacion" not-null="false"/>
 
     </class>
 

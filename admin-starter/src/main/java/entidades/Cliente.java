@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package entidades;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author licciardi
- */
 public class Cliente extends Entidad {
     private int dniCliente;
     private String nombreCliente;

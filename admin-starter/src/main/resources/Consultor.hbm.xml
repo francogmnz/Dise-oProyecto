@@ -10,7 +10,7 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="legajoConsultor" type="int">
+        <property name="legajoConsultor" type="string">
             <column name="legajo_consultor"/>
         </property>
 
@@ -18,7 +18,7 @@
             <column name="nombre_consultor"/>
         </property>
 
-        <property name="nroMaximoTramites" type="int">
+        <property name="numMaximoTramites" type="int">
             <column name="nro_maximo_tramites"/>
         </property>
 

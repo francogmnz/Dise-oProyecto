@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        Carga de documentación
+    </ui:define>
+
+
+    <ui:define name="body">
+        <h:form enctype="multipart/form-data">
+            <h:messages id="messages" globalOnly="true" />
+            <adm:breadcrumb title="Upload"/>
+
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <!-- Subida de archivo -->
+                    <p:fileUpload listener="#{cargadocumentacion.handleFileUpload}" 
+                                  mode="advanced" dragDropSupport="true" auto="false"
+                                  onstart="showBar()" oncomplete="hideBar()" 
+                                  multiple="true" update="messages" sizeLimit="1000000" 
+                                  fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
+       
+                </div>
+            </div>
+            <!-- Mostrar el código del TramiteDocumentacion -->
+            <h:outputText value="Código del trámite documentacion: #{cargadocumentacion.codTD}" />
+            <h:outputText value="Código del trámite: #{cargadocumentacion.nroTramite}" />
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,133 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 26, 2024, 1:51:20 AM
+    Author     : licciardi
+*/
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container-numero-tramite {
+    width: 90%;
+    max-width: 600px;
+    margin: 50px auto; /* Añadí margen superior para centrar verticalmente */
+    padding: 20px;
+    background-color: #fff; /* Fondo blanco para destacar el contenido */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.titulo-numero-tramite {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+/* Mensaje de confirmación */
+.mensaje-confirmacion {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mensaje-confirmacion p {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.numero-tramite {
+    font-size: 2.5em;
+    color: #2196F3; /* Azul celeste */
+    margin-top: 10px;
+}
+
+.informacion-tramite {
+    margin-bottom: 30px;
+}
+
+.titulo-seccion {
+    font-size: 1.5em;
+    color: #333;
+    border-bottom: 2px solid #2196F3; /* Línea debajo del título */
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.informacion-tramite p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.lista-documentacion {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.lista-documentacion li {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Botón Volver al Inicio */
+.botones {
+    text-align: center;
+}
+
+.btn-inicio {
+    background-color: #0069d9 !important; /* Azul botón */
+    color: white !important;
+    border: none !important;
+    padding: 12px 25px !important;
+    font-size: 1.4em !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+    transition: background-color 0.3s ease; /* Animación suave al pasar el ratón */
+}
+
+.btn-inicio:hover {
+    background-color: #0053ba !important; /* Azul más oscuro */
+}
+
+/* Responsividad */
+@media screen and (max-width: 600px) {
+    .container-numero-tramite {
+        padding: 15px;
+    }
+
+    .titulo-numero-tramite {
+        font-size: 1.8em;
+    }
+
+    .mensaje-confirmacion p {
+        font-size: 1em;
+    }
+
+    .numero-tramite {
+        font-size: 2em;
+    }
+
+    .titulo-seccion {
+        font-size: 1.3em;
+    }
+
+    .informacion-tramite p, .lista-documentacion li {
+        font-size: 1em;
+    }
+
+    .btn-inicio {
+        width: 100%;
+        padding: 12px !important;
+    }
+}

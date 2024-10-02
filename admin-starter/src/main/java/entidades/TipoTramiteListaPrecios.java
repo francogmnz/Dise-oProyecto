@@ -9,18 +9,18 @@ package entidades;
  * @author licciardi
  */
 public class TipoTramiteListaPrecios extends Entidad {
-    private int precioTipoTramite;
+    private double precioTipoTramite;
     private TipoTramite tipoTramite;
     
 
     public TipoTramiteListaPrecios() {
     }
 
-    public int getPrecioTipoTramite() {
+    public double getPrecioTipoTramite() {
         return precioTipoTramite;
     }
 
-    public void setPrecioTipoTramite(int precioTipoTramite) {
+    public void setPrecioTipoTramite(double precioTipoTramite) {
         this.precioTipoTramite = precioTipoTramite;
        
     }
