@@ -146,10 +146,15 @@ public class UIRegistrarTramite implements Serializable {
         }
     }
 
-    // registrarTramite()
-    public String registrarTramite() throws RegistrarTramiteException {
-        controladorRegistrarTramite.registrarTramite();
-        return BeansUtils.redirectToPreviousPage();
+// registrarTramite()
+    public void registrarTramite() throws RegistrarTramiteException {
+        try {
+            controladorRegistrarTramite.registrarTramite();
+            BeansUtils.redirectToPreviousPage(); // Solo redirige si el registro es exitoso
+        } catch (RegistrarTramiteException e) {
+            // Muestra el mensaje de error sin redireccionar
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo registrar el trámite: " + e.getMessage()));
+        }
     }
 
     // Signo de ayuda para ir a los filtros de TipoTramite
