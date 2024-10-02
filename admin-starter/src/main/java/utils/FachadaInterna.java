@@ -5,7 +5,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.FlushMode;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
-
+import org.hibernate.criterion.Order;
 import java.util.List;
 
 public class FachadaInterna {
@@ -58,6 +58,9 @@ public class FachadaInterna {
                     case ">=":
                         cr.add(Restrictions.conjunction(Restrictions.ge(atributo, valor)));
                         break;
+                    case "desc":  // Para el orden descendente y obtener el nroTramite
+                        cr.addOrder(Order.desc(atributo));
+                        break;        
                     case "<>":
                         cr.add(Restrictions.conjunction(Restrictions.ne(atributo, valor)));
                         break;

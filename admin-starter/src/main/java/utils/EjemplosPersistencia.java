@@ -107,7 +107,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaUno = new EstadoTramite();
         etapaUno.setCodEstadoTramite(1);
-        etapaUno.setNombreEstadoTramite("Pendiente Documentacion");
+        etapaUno.setNombreEstadoTramite("Iniciado");
         etapaUno.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaUno.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaUno.setFechaHoraBajaEstadoTramite(null);
@@ -117,7 +117,7 @@ public class EjemplosPersistencia {
         
         EstadoTramite etapaDos = new EstadoTramite();
         etapaDos.setCodEstadoTramite(2);
-        etapaDos.setNombreEstadoTramite("Pendiente Documentacion");
+        etapaDos.setNombreEstadoTramite("Iniciado");
         etapaDos.setDescripcionEstadoTramite("Pendiente Documentacion");
         etapaDos.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
         etapaDos.setFechaHoraBajaEstadoTramite(null);
@@ -456,7 +456,7 @@ public class EjemplosPersistencia {
     tramite1.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
     tramite1.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
     tramite1.setFechaAnulacionTramite(null);  // Trámite no anulado
-    tramite1.setPrecioTramite(1500);
+    tramite1.setPrecioTramite(500);
     
     tramite1.addTramiteDocumentacion(tramiteDoc1);
     tramite1.addTramiteEstadoTramite(tet1);
@@ -479,7 +479,7 @@ public class EjemplosPersistencia {
     tramite2.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
     tramite2.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
     tramite2.setFechaAnulacionTramite(null);  // Trámite no anulado
-    tramite2.setPrecioTramite(2000);
+    tramite2.setPrecioTramite(700);
     
     tramite2.addTramiteDocumentacion(tramiteDoc2);
     tramite2.addTramiteEstadoTramite(tet2);
