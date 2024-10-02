@@ -51,3 +51,37 @@ a#logout {
     background-color: transparent;
     box-shadow: none;
 }
+
+.custom-upload .ui-fileupload .ui-button {
+    background-color: #007bff; /* Azul */
+    border: none;
+    color: white;
+}
+
+.ui-fileupload .ui-button {
+    background-color: #007bff;
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    box-shadow: none; 
+}
+
+.ui-fileupload {
+    background-color: transparent; 
+    border: none; 
+    padding: 0; 
+}
+
+.ui-fileupload-content {
+    display: none; 
+}
+.custom-upload .ui-fileupload {
+    background-color: transparent;
+    border: none;
+}
+
+.custom-upload .ui-fileupload-buttonbar {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}

@@ -22,7 +22,6 @@ import entidades.Tramite;
 import entidades.TramiteDocumentacion;
 import entidades.TramiteEstadoTramite;
 import entidades.Version;
-import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -537,13 +536,16 @@ public class ExpertoRegistrarTramite {
         td.setNombreTD(archivoTD.getNombre());
         td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
 
-        // Utiliza merge en lugar de guardar
         FachadaPersistencia.getInstance().merge(td);
+        FachadaPersistencia.getInstance().refrescar(tramiteElegido);
 
         // Verifica si todas las documentaciones han sido presentadas
         List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
+
         boolean todasPresentadas = true;
         for (TramiteDocumentacion tds : tdList) {
+            System.out.println("TD: " + tds.getNombreTD());
+            System.out.println("Fecha entrega dentro del for: " + tds.getFechaEntregaTD());
             if (tds.getFechaEntregaTD() == null) {
                 todasPresentadas = false;
                 break;
@@ -551,7 +553,7 @@ public class ExpertoRegistrarTramite {
         }
 
         // Solo asignar consultor si no se ha asignado ya y todas las documentaciones están presentadas
-        if (todasPresentadas && tramiteElegido.getConsultor() == null) {
+        if (todasPresentadas) {
             tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
 
             List<DTOCriterio> criterioListAgenda = new ArrayList<>();
@@ -572,12 +574,6 @@ public class ExpertoRegistrarTramite {
 
             Consultor consultorSeleccionado = null;
             int menorCantidadTramites = Integer.MAX_VALUE;
-
-            // Verificar los consultores disponibles
-            System.out.println("Consultores disponibles:");
-            for (Consultor consultor : consultorList) {
-                System.out.println(consultor.getNombreConsultor() + " - Max Trámites: " + consultor.getNroMaximoTramites());
-            }
 
             // Asignar el consultor que tiene la menor cantidad de trámites asignados
             for (Consultor consultor : consultorList) {
