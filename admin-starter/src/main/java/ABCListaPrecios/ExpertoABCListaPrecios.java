@@ -85,22 +85,7 @@ public class ExpertoABCListaPrecios {
     public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
         err.getErrores().clear();
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
-
-        dto.setAtributo("fechaHoraBajaListaPrecios");
-        dto.setOperacion("=");
-        dto.setValor(null);
-
-        criterioList.add(dto);
-        List objetoList = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
-        ListaPrecios ultimaListaPrecios = null;
-        for (Object x : objetoList) {
-            ListaPrecios listaPrecios = (ListaPrecios) x;
-            if (ultimaListaPrecios == null || listaPrecios.getFechaHoraDesdeListaPrecios().after(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
-                ultimaListaPrecios = listaPrecios;
-            }
-        }
+        ListaPrecios ultimaListaPrecios = buscarUltimaListaNoNula();
 
         Timestamp nuevaFechaHoraDesde = nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraHasta = nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios();
@@ -112,6 +97,8 @@ public class ExpertoABCListaPrecios {
 
         FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);
 
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
         criterioList.clear();
         dto = new DTOCriterio();
 
@@ -150,17 +137,17 @@ public class ExpertoABCListaPrecios {
             int codTipoTramite = tipoTramite.getCodTipoTramite();
             List<DetalleListaPreciosDTO> detalles = nuevaListaPreciosDTO.getDetalles();
 
-//                isENCONTRADO ES PARA SABER SI SE PONE EL PRECIO DE LA ULTIMA LISTA (CUANDO NO HAY PRECIO EN LA IMPORTADA) O PONER EL PRECIO DE LA IMPORTADA
+//          isENCONTRADO ES PARA SABER SI SE PONE EL PRECIO DE LA ULTIMA LISTA (CUANDO NO HAY PRECIO EN LA IMPORTADA) O PONER EL PRECIO DE LA IMPORTADA
             boolean isEncontrado = false;
             for (DetalleListaPreciosDTO detalle : detalles) {
+                double precioTT = detalle.getNuevoPrecioTipoTramite();
                 int codigoTT = detalle.getCodTipoTramite();
-                if (codTipoTramite == codigoTT) {
+                if (!(precioTT <= 0) && codigoTT == codTipoTramite) {
                     nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(detalle.getNuevoPrecioTipoTramite());
                     isEncontrado = true;
                     break;
                 }
             }
-            System.out.println(isEncontrado);
             if (!isEncontrado) {
                 List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = ultimaListaPrecios.getTipoTramiteListaPrecios();
                 for (TipoTramiteListaPrecios tipoTramiteListaPrecio : tipoTramiteListaPrecios) {
@@ -168,6 +155,7 @@ public class ExpertoABCListaPrecios {
                     int codTipoTramite1 = tipoTramite1.getCodTipoTramite();
                     if (codTipoTramite1 == codTipoTramite) {
                         nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(tipoTramiteListaPrecio.getPrecioTipoTramite());
+                        break;
                     }
                 }
             }
