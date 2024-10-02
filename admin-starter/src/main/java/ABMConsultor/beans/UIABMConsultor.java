@@ -76,13 +76,8 @@ public class UIABMConsultor implements Serializable {
         if (request.getParameter("legajo") == null || !(request.getParameter("legajo").matches("\\d+")) || Integer.parseInt(request.getParameter("legajo")) < 0) {
             // Redirigir a la URL anterior si el código no es válido
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
-            try {
-                legajo = Integer.parseInt(request.getParameter("legajo"));
-            } catch (NumberFormatException e) {
-                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
-                return;
 
-            }
+            return;
         }
         try {
             legajo = Integer.parseInt(request.getParameter("legajo"));
