@@ -82,7 +82,7 @@ public class ExpertoABMConsultor {
         }
     }
 
-    public DTOModificacionDatos buscarConsultorAModificar(String legajoConsultor) throws IOException {
+    public DTOModificacionDatos buscarConsultorAModificar(int legajoConsultor) throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         List<DTOCriterio> criterioList = new ArrayList<>();
