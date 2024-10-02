@@ -179,13 +179,13 @@ public class UIABCListaPrecios implements Serializable {
                 if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                     int codTipoTramite = (int) cell.getNumericCellValue();
                     detalle.setCodTipoTramite(codTipoTramite);
-                    Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
+//                    Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
                 }
 
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
                     double nuevoPrecioTipoTramite = cell2.getNumericCellValue();
                     detalle.setNuevoPrecioTipoTramite(nuevoPrecioTipoTramite);
-                    Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
+//                    Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
                 }
 
                 detalles.add(detalle);

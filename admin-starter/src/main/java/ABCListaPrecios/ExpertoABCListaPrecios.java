@@ -160,6 +160,7 @@ public class ExpertoABCListaPrecios {
                     break;
                 }
             }
+            System.out.println(isEncontrado);
             if (!isEncontrado) {
                 List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = ultimaListaPrecios.getTipoTramiteListaPrecios();
                 for (TipoTramiteListaPrecios tipoTramiteListaPrecio : tipoTramiteListaPrecios) {
@@ -206,6 +207,8 @@ public class ExpertoABCListaPrecios {
             headerCell3.setCellValue("descripcionTipoTramite");
             Cell headerCell4 = headerRow.createCell(3);
             headerCell4.setCellValue("precioTipoTramite");
+            Cell headerCell5 = headerRow.createCell(4);
+            headerCell5.setCellValue("nuevoPrecioTipoTramite");
 
             List<TipoTramiteListaPrecios> detalles = listaPreciosEncontrada.getTipoTramiteListaPrecios();
 
@@ -222,9 +225,8 @@ public class ExpertoABCListaPrecios {
 
                 Cell cell4 = dataRow.createCell(3);
                 cell4.setCellValue(detalles.get(j).getPrecioTipoTramite());
-                
+
                 Cell cell5 = dataRow.createCell(4);
-                cell5.setCellValue(detalles.get(j).getPrecioTipoTramite());
 
             }
 
