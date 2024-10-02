@@ -84,6 +84,13 @@ public class UIABMConsultor implements Serializable {
 
             }
         }
+        try {
+            legajo = Integer.parseInt(request.getParameter("legajo"));
+        } catch (NumberFormatException e) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            return;
+
+        }
 
         insert = true;
         if (legajo > 0) {

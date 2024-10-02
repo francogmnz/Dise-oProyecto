@@ -170,7 +170,7 @@ public class UIABCListaPrecios implements Serializable {
             while (row != null) {
                 DetalleListaPreciosDTO detalle = new DetalleListaPreciosDTO();
                 Cell cell = row.getCell(0);
-                Cell cell2 = row.getCell(1);
+                Cell cell2 = row.getCell(4);
 
                 if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
                     break;
