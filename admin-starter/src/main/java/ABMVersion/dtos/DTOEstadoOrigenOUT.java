@@ -15,8 +15,7 @@ public class DTOEstadoOrigenOUT {
 
     private int codEstadoTramite;
     private String nombreEstadoOrigen;
-    private int Xpos; // Nueva posición X
-    private int Ypos;
+   
     private List<DTOEstadoDestinoOUT> dtoEstadoDestinoList = new ArrayList<>();
 
     public String getnombreEstadoOrigen() {
@@ -27,21 +26,6 @@ public class DTOEstadoOrigenOUT {
         this.nombreEstadoOrigen = nombreEstadoOrigen;
     }
 
-    public int getXpos() {
-        return Xpos;
-    }
-
-    public void setXpos(int Xpos) {
-        this.Xpos = Xpos;
-    }
-
-    public int getYpos() {
-        return Ypos;
-    }
-
-    public void setYpos(int Ypos) {
-        this.Ypos = Ypos;
-    }
 
     public int getCodEstadoTramite() {
         return codEstadoTramite;

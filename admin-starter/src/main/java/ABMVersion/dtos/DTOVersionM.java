@@ -11,17 +11,29 @@ public class DTOVersionM {
     private int nroVersion;
     private Timestamp fechaHastaVersion;
     private Timestamp fechaDesdeVersion;
-    private List<DTOEstadoOrigenOUT> dtoEstadoOrigenOut = new ArrayList<>();
-    private List<DTOEstado> dtoEstado = new ArrayList<>();
+    private String dibujo;
+private List<DTOEstado> dtoEstado = new ArrayList<>();
 
 
-    public List<DTOEstado> getDtoEstado() {
+   public List<DTOEstado> getDtoEstado() {
         return dtoEstado;
     }
 
     public void setDtoEstado(List<DTOEstado> dtoEstado) {
         this.dtoEstado = dtoEstado;
     }
+    
+    public void addDTOEstado(DTOEstado dtoEstado) {
+        this.dtoEstado.add(dtoEstado);
+    } 
+    public String getDibujo() {
+        return dibujo;
+    }
+
+    public void setDibujo(String dibujo) {
+        this.dibujo = dibujo;
+    }
+
     
     public int getCodTipoTramite() {
         return codTipoTramite;
@@ -65,18 +77,5 @@ public class DTOVersionM {
 
     // Métodos para agregar DTOs a las listas
 
-    public void addDTOEstado(DTOEstado dtoEstado) {
-        this.dtoEstado.add(dtoEstado);
-    } 
 
-    public List<DTOEstadoOrigenOUT> getDtoEstadoOrigenOut() {
-        return dtoEstadoOrigenOut;
-    }
-
-    public void setDtoEstadoOrigenOut(List<DTOEstadoOrigenOUT> dtoEstadoOrigenOut) {
-        this.dtoEstadoOrigenOut = dtoEstadoOrigenOut;
-    }
-    public void addDtoEstadoOrigenOut(DTOEstadoOrigenOUT dtoEstadoOrigenOut) {
-        this.dtoEstadoOrigenOut.add(dtoEstadoOrigenOut);
-    }
 }

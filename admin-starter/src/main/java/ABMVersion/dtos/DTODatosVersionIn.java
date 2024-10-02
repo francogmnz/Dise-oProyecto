@@ -20,25 +20,17 @@ public class DTODatosVersionIn {
     List<DTOEstadoOrigenIN> dtoEstadoOrigenList = new ArrayList<>();
     List<DTOEstadoDestinoIN> dtoEstadoDestinoList = new ArrayList<>();
     private Date fechaHastaVersion;
-    private int Xpos; 
-    private int Ypos;
+    private String dibujo;
 
-    public int getXpos() {
-        return Xpos;
+    public String getDibujo() {
+        return dibujo;
     }
 
-    public void setXpos(int Xpos) {
-        this.Xpos = Xpos;
+    public void setDibujo(String dibujo) {
+        this.dibujo = dibujo;
     }
 
-    public int getYpos() {
-        return Ypos;
-    }
-
-    public void setYpos(int Ypos) {
-        this.Ypos = Ypos;
-    }
-
+  
     public List<DTOEstadoDestinoIN> getDtoEstadoDestinoList() {
         return dtoEstadoDestinoList;
     }

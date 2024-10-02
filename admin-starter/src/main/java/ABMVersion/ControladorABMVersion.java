@@ -11,7 +11,7 @@ import org.omnifaces.util.Messages;
 import utils.FachadaPersistencia;
 
 public class ControladorABMVersion {
-    
+
     private ExpertoABMVersion expertoABMVersion = new ExpertoABMVersion();
 
     // Buscar versiones basadas en el número, nombre y código del tipo de trámite
@@ -19,18 +19,15 @@ public class ControladorABMVersion {
         return expertoABMVersion.buscarVersion(nroVersion, codTipoTramite, nombreTipoTramite);
     }
 
-   /* public void modificarVersion(int codTipoTramite, DTOVersionM dtoVersionm) throws VersionException {
-       expertoABMVersion.modificarVersion(codTipoTramite, dtoVersionm);
-    } */
-
     // Buscar una versión específica para modificar
     public DTOVersionM buscarVersionAModificar(int nroVersion) {
         return (DTOVersionM) expertoABMVersion.buscarVersionAModificar(nroVersion);
     }
 
-    /*  public void modificarVersion(int codTipoTramite, DTOVersionM dtoVersionm) throws VersionException {
-        expertoABMVersion.modificarVersion(codTipoTramite, dtoVersionm);
-    }*/
+    public int obtenerUltimoNumeroVersion(int codTipoTramite) {
+        return expertoABMVersion.obtenerUltimoNumeroVersion(codTipoTramite);
+    }
+
     // Dar de baja una versión
     public void darDeBajaVersion(int nroVersion) {
         try {
@@ -40,9 +37,9 @@ public class ControladorABMVersion {
             Messages.addGlobalError("Error al dar de baja la versión: " + e.getMessage());
         }
     }
-    
+
     public DTOVersionM modificarVersion(int codTipoTramite) {
-        
+
         return expertoABMVersion.modificarVersion(codTipoTramite);
     }
 
@@ -50,5 +47,5 @@ public class ControladorABMVersion {
     public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
         return expertoABMVersion.confirmacion(dtoDatosVersion);
     }
-    
+
 }

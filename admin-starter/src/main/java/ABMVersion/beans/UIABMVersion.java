@@ -211,63 +211,7 @@ public class UIABMVersion implements Serializable {
             codTipoTramite = 0; // Valor por defecto o manejo de error
         }
 
-        //aca manejo por parametro el nro de la version igual q arriba con el cod tramite
-        String nroVersionStr = request.getParameter("nroVersion");
-        if (nroVersionStr != null && !nroVersionStr.isEmpty()) {
-            nroVersion = Integer.parseInt(nroVersionStr);
-        } else {
-            nroVersion = 1; // Valor por defecto o manejo de error
-        }
-
-        int nroVersion = Integer.parseInt(request.getParameter("nroVersion"));
-
-        if (nroVersion > 0) {
-            DTOVersionM dtoVersionM = controladorABMVersion.buscarVersionAModificar(nroVersion);
-            setNroVersion(dtoVersionM.getNroVersion());
-            setDescripcionVersion(dtoVersionM.getDescripcionVersion());
-            setFechaDesdeVersion(dtoVersionM.getFechaDesdeVersion());
-            setFechaHastaVersion(dtoVersionM.getFechaHastaVersion());
-            // Cargar los estados de la versión anterior como nodos
-            List<NodoIU> lestados = new ArrayList<>();
-
-            // Cargar estados de origen
-            for (DTOEstadoOrigenOUT estadoOrigen : dtoVersionM.getDtoEstadoOrigenOut()) {
-                NodoIU unE = new NodoIU();
-                unE.setCodigo(estadoOrigen.getCodEstadoTramite());
-                unE.setNombre(estadoOrigen.getnombreEstadoOrigen()); // Asegúrate que este método esté bien escrito
-                unE.setXpos(estadoOrigen.getXpos()); // Usar la posición ya existente
-                unE.setYpos(estadoOrigen.getYpos()); // Usar la posición ya existente
-
-                lestados.add(unE);
-
-                // Cargar los destinos para cada estado de origen
-                if (estadoOrigen.getDtoEstadoDestinoList() != null) {
-                    for (DTOEstadoDestinoOUT destino : estadoOrigen.getDtoEstadoDestinoList()) {
-                        NodoIU nodoDestino = new NodoIU();
-                        nodoDestino.setCodigo(destino.getCodEstadoTramite());
-                        nodoDestino.setNombre(destino.getNombreEstadoDestino());
-                        nodoDestino.setXpos(destino.getXpos()); // Posición de destino
-                        nodoDestino.setYpos(destino.getYpos()); // Posición de destino
-
-                        lestados.add(nodoDestino);
-                        unE.addDestino(destino.getCodEstadoTramite()); // Relación de origen a destino
-                    }
-                }
-            }
-
-            // Convertir la lista a JSON para el uso en el dibujo
-            cargarJSON = new Gson().toJson(lestados);
-
-        }
-
-        //aca llamo al controlador para traerme todos los estados cargados en el abm
-        DTOVersionM dv = controladorABMVersion.modificarVersion(codTipoTramite);
-
-        if (dv != null && dv.getNroVersion() != 0) {
-            this.nroVersion = dv.getNroVersion();  // Asignación desde el DTO para el nroVersion
-        } else {
-            this.nroVersion = 1;  // Si no hay un número de versión, comienza desde 1
-        }
+        DTOVersionM dtoVersionM = controladorABMVersion.modificarVersion(codTipoTramite);
 
         titulo = "Versión";
         editable = true;
@@ -275,7 +219,7 @@ public class UIABMVersion implements Serializable {
         //aca preparo los nodos
 
         List<NodoMenuIU> lestadosP = new ArrayList<NodoMenuIU>();
-        for (DTOEstado de : dv.getDtoEstado()) {
+        for (DTOEstado de : dtoVersionM.getDtoEstado()) {
             NodoMenuIU unEP = new NodoMenuIU();
             unEP.setCodigo(de.getCodEstadoTramite());
             unEP.setNombre(de.getNombreEstadoTramite());
@@ -286,59 +230,29 @@ public class UIABMVersion implements Serializable {
         nodosPosibles = gson.toJson(lestadosP);
 
         // Cargo dibujo
-        List<NodoIU> lestados = new ArrayList<NodoIU>();
-        if (dv.getDtoEstadoOrigenOut().isEmpty()) { // Primera versión
-            for (DTOEstado de : dv.getDtoEstado()) {
-                NodoIU unE = new NodoIU();
-                unE.setCodigo(de.getCodEstadoTramite());
-                unE.setNombre(de.getNombreEstadoTramite());
-
-                // Asignación de posiciones basadas en el código del estado de trámite
-                switch (de.getCodEstadoTramite()) {
-                    case 1:
-                        unE.setXpos(20);
-                        unE.setYpos(80);
-                        break;
-                    case 2:
-                        unE.setXpos(100);
-                        unE.setYpos(100);
-                        break;
-                    // Agrega más casos según sea necesario
-                    default:
-                        unE.setXpos(50); // Posición predeterminada
-                        unE.setYpos(50); // Posición predeterminada
-                        break;
-                }
-
-                lestados.add(unE);
-            }
+        // Convertir la lista a JSON
+        if (dtoVersionM.getDibujo() != null && dtoVersionM.getDibujo().trim().length() > 0) {
+            setNroVersion(dtoVersionM.getNroVersion());
+            setDescripcionVersion(dtoVersionM.getDescripcionVersion());
+            setFechaDesdeVersion(dtoVersionM.getFechaDesdeVersion());
+            setFechaHastaVersion(dtoVersionM.getFechaHastaVersion());
+            cargarJSON = dtoVersionM.getDibujo();
         } else {
-            // Manejo para las versiones posteriores
-            for (DTOEstadoOrigenOUT estadoOrigen : dv.getDtoEstadoOrigenOut()) {
-                NodoIU unE = new NodoIU();
-                unE.setCodigo(estadoOrigen.getCodEstadoTramite());
-                unE.setNombre(estadoOrigen.getnombreEstadoOrigen());
-                unE.setXpos(estadoOrigen.getXpos()); // Usar la posición ya existente
-                unE.setYpos(estadoOrigen.getYpos()); // Usar la posición ya existente
+            List<NodoIU> lestados = new ArrayList<NodoIU>();
 
-                lestados.add(unE);
-
-                // Cargar los destinos para cada estado de origen
-                for (DTOEstadoDestinoOUT destino : estadoOrigen.getDtoEstadoDestinoList()) {
-                    NodoIU nodoDestino = new NodoIU();
-                    nodoDestino.setCodigo(destino.getCodEstadoTramite());
-                    nodoDestino.setNombre(destino.getNombreEstadoDestino());
-                    nodoDestino.setXpos(destino.getXpos()); // Posición de destino
-                    nodoDestino.setYpos(destino.getYpos()); // Posición de destino
-
-                    lestados.add(nodoDestino);
-                    unE.addDestino(destino.getCodEstadoTramite()); // Relación de origen a destino
+            for (DTOEstado de : dtoVersionM.getDtoEstado()) {
+                if (de.getCodEstadoTramite() == 1) {
+                    NodoIU unE = new NodoIU();
+                    unE.setCodigo(de.getCodEstadoTramite());
+                    unE.setNombre(de.getNombreEstadoTramite());
+                    unE.setXpos(2);
+                    unE.setYpos(80);
+                    lestados.add(unE);
                 }
             }
+            cargarJSON = gson.toJson(lestados);
         }
 
-// Convertir la lista a JSON
-        cargarJSON = gson.toJson(lestados);
     }
 
     public void confirmar() throws VersionException {
@@ -348,7 +262,6 @@ public class UIABMVersion implements Serializable {
         dto.setDescripcionVersion(descripcionVersion);
         dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
         dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
-       
 
         System.out.println(this.guardarJSON);
         Messages.create("Guardar").detail(this.guardarJSON).add();
@@ -356,6 +269,7 @@ public class UIABMVersion implements Serializable {
         TypeFactory typeFactory = objectMapper.getTypeFactory();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         List<NodoIU> listaNodo = new ArrayList();
+        dto.setDibujo(this.guardarJSON);
 
         try {
             listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class,

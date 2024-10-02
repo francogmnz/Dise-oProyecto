@@ -14,7 +14,15 @@ public class Version extends Entidad {
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    
+    private String dibujo;
+
+    public String getDibujo() {
+        return dibujo;
+    }
+
+    public void setDibujo(String dibujo) {
+        this.dibujo = dibujo;
+    }
     private TipoTramite tipoTramite;
     private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  // Relación OneToMany con ConfTipoTramiteEstadoTramite
 
