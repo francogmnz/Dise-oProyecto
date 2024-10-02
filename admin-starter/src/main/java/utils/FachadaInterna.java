@@ -88,7 +88,16 @@ public class FachadaInterna {
         HibernateUtil.getSession().saveOrUpdate(objeto);
         HibernateUtil.getSession().flush();
     }
+    void merge(Object objeto) {
+        HibernateUtil.getSession().merge(objeto);
+        HibernateUtil.getSession().flush();
+    }
 
+    void refrescar(Object objeto) {
+        HibernateUtil.getSession().refresh(objeto);
+        HibernateUtil.getSession().flush();
+    }
+    
     void iniciarTransaccion() {
         if (HibernateUtil.getSession().getTransaction().isActive())
         {

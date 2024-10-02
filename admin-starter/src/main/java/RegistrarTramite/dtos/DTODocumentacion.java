@@ -7,6 +7,15 @@ public class DTODocumentacion {
     private int codTD;
     private String nombreDocumentacion;
     private Timestamp fechaEntregaDoc;
+    private String nombreTD;
+
+    public String getNombreTD() {
+        return nombreTD;
+    }
+
+    public void setNombreTD(String nombreTD) {
+        this.nombreTD = nombreTD;
+    }
 
     public int getCodTD() {
         return codTD;
