@@ -264,6 +264,8 @@ public class ExpertoRegistrarTramite {
 
         Tramite tramiteCreado = new Tramite(); // :create() Tramite
 
+        int nroTramite = generarNroTramite(); // Creo el nroTramite incremental
+        tramiteCreado.setNroTramite(nroTramite);
         // setNroTramite automaticamente en MYSQL
         tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
         tramiteCreado.setFechaInicioTramite(null);
@@ -353,9 +355,10 @@ public class ExpertoRegistrarTramite {
         for (TipoTramiteDocumentacion ttDoc : docList) {
             Documentacion doc = ttDoc.getDocumentacion(); // getDocumentacion(): Documentacion
             TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion(); // :create() TramiteDocumentacion
-            // agregar el codTD ??
+            int cotTD = generarCodTD(); // codTD incremental
+            tramiteDocumentacion.setCodTD(cotTD);
+//            tramiteDocumentacion.setNombreTD(nombreTD);
             tramiteDocumentacion.setDocumentacion(doc);
-
             tramiteCreado.addTramiteDocumentacion(tramiteDocumentacion);
             FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
         }
@@ -408,6 +411,7 @@ public class ExpertoRegistrarTramite {
         for (TramiteDocumentacion doc : tramiteElegido.getTramiteDocumentacion()) {
             DTODocumentacion resumenDoc = new DTODocumentacion();
             resumenDoc.setCodTD(doc.getCodTD());
+            resumenDoc.setNombreTD(doc.getNombreTD());
             resumenDoc.setNombreDocumentacion(doc.getDocumentacion().getNombreDocumentacion());
             resumenDoc.setFechaEntregaDoc(doc.getFechaEntregaTD());
             resumenDocList.add(resumenDoc);
@@ -507,6 +511,7 @@ public class ExpertoRegistrarTramite {
     public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite) {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
+        // Verifica si tramiteElegido ya está asignado
         if (tramiteElegido == null) {
             List<DTOCriterio> criterioList = new ArrayList<>();
             DTOCriterio criterio = new DTOCriterio();
@@ -518,25 +523,25 @@ public class ExpertoRegistrarTramite {
             tramiteElegido = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
         }
 
-        List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
-
+        List<DTOCriterio> criterioListTD = new ArrayList<>();
         DTOCriterio criterioTD = new DTOCriterio();
         criterioTD.setAtributo("codTD");
         criterioTD.setOperacion("=");
         criterioTD.setValor(codTD);
+        criterioListTD.add(criterioTD);
 
-        criterioList.add(criterioTD);
+        TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
 
-        TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioList).get(0);
-
+        // Actualiza el objeto TramiteDocumentacion
         td.setArchivoTD(archivoTD.getContenidoB64());
         td.setNombreTD(archivoTD.getNombre());
         td.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
 
-        FachadaPersistencia.getInstance().guardar(td);
+        // Utiliza merge en lugar de guardar
+        FachadaPersistencia.getInstance().merge(td);
 
+        // Verifica si todas las documentaciones han sido presentadas
         List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
-
         boolean todasPresentadas = true;
         for (TramiteDocumentacion tds : tdList) {
             if (tds.getFechaEntregaTD() == null) {
@@ -545,51 +550,50 @@ public class ExpertoRegistrarTramite {
             }
         }
 
-        if (todasPresentadas) {
+        // Solo asignar consultor si no se ha asignado ya y todas las documentaciones están presentadas
+        if (todasPresentadas && tramiteElegido.getConsultor() == null) {
             tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
 
-            criterioList.clear();
-
+            List<DTOCriterio> criterioListAgenda = new ArrayList<>();
             DTOCriterio agendaCriterio1 = new DTOCriterio();
             agendaCriterio1.setAtributo("fechaAgenda");
             agendaCriterio1.setOperacion("<");
             agendaCriterio1.setValor(new Timestamp(System.currentTimeMillis()));
-            criterioList.add(agendaCriterio1);
+            criterioListAgenda.add(agendaCriterio1);
 
             DTOCriterio agendaCriterio2 = new DTOCriterio();
             agendaCriterio2.setAtributo("fechaBajaAgendaConsultor");
             agendaCriterio2.setOperacion("=");
             agendaCriterio2.setValor(null);
-            criterioList.add(agendaCriterio2);
+            criterioListAgenda.add(agendaCriterio2);
 
-            AgendaConsultor agenda = (AgendaConsultor) FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioList).get(0);
-
+            AgendaConsultor agenda = (AgendaConsultor) FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda).get(0);
             List<Consultor> consultorList = agenda.getConsultores();
 
             Consultor consultorSeleccionado = null;
             int menorCantidadTramites = Integer.MAX_VALUE;
-            int tramitesAsignados = 0;
 
-            // Registrar los consultores disponibles
+            // Verificar los consultores disponibles
             System.out.println("Consultores disponibles:");
             for (Consultor consultor : consultorList) {
-                System.out.println(consultor.getNombreConsultor()+ " - Max Trámites: " + consultor.getNroMaximoTramites());
+                System.out.println(consultor.getNombreConsultor() + " - Max Trámites: " + consultor.getNroMaximoTramites());
             }
 
+            // Asignar el consultor que tiene la menor cantidad de trámites asignados
             for (Consultor consultor : consultorList) {
                 int nroMaximoTramites = consultor.getNroMaximoTramites();
 
                 // Crear criterio para contar trámites asignados
-                criterioList.clear();
+                criterioListAgenda.clear();
                 DTOCriterio consuCriterio = new DTOCriterio();
                 consuCriterio.setAtributo("consultor");
                 consuCriterio.setOperacion("=");
                 consuCriterio.setValor(consultor);
-                criterioList.add(consuCriterio);
+                criterioListAgenda.add(consuCriterio);
 
                 // Buscar trámites asociados a este consultor
-                List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
-                tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
+                List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
+                int tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
 
                 if (tramitesAsignados < nroMaximoTramites && tramitesAsignados < menorCantidadTramites) {
                     menorCantidadTramites = tramitesAsignados;
@@ -597,13 +601,69 @@ public class ExpertoRegistrarTramite {
                 }
             }
 
-            tramiteElegido.setConsultor(consultorSeleccionado);
-            tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
+            if (consultorSeleccionado != null) {
+                System.out.println(" - Trámites asignados: " + menorCantidadTramites + " Consultor seleccionado: " + consultorSeleccionado.getNombreConsultor());
+                tramiteElegido.setConsultor(consultorSeleccionado);
+                tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
 
-            FachadaPersistencia.getInstance().guardar(tramiteElegido);
+                // Guarda el tramiteElegido
+                FachadaPersistencia.getInstance().merge(tramiteElegido);
+            }
         }
 
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
+    public int generarNroTramite() {
+        int ultimoNroTramite = buscarUltimoNroTramite();
+        return ultimoNroTramite + 1;
+    }
+
+    public static int buscarUltimoNroTramite() {
+
+        List<DTOCriterio> criterioUltimoNroTramiteList = new ArrayList<>();
+
+        DTOCriterio criterioNroTramite = new DTOCriterio();
+        criterioNroTramite.setAtributo("nroTramite");
+        criterioNroTramite.setOperacion("desc");
+        criterioUltimoNroTramiteList.add(criterioNroTramite);
+
+        List<Object> tramiteList = FachadaPersistencia.getInstance().buscar("Tramite", criterioUltimoNroTramiteList);
+
+        // Si no hay tramite devuelvo 0 
+        if (tramiteList == null || tramiteList.isEmpty()) {
+            return 0;
+        }
+
+        Tramite ultimoTramite = (Tramite) tramiteList.get(0);
+
+        return ultimoTramite.getNroTramite();
+    }
+
+    // Generar codTD incremental
+    public int generarCodTD() {
+        int ultimoCodTD = buscarUltimoCodTD();
+        return ultimoCodTD + 1;
+    }
+
+    // Buscar el ultimo codTD
+    public static int buscarUltimoCodTD() {
+
+        List<DTOCriterio> criterioUltimoCodTDList = new ArrayList<>();
+
+        DTOCriterio criterioCodTD = new DTOCriterio();
+        criterioCodTD.setAtributo("codTD");
+        criterioCodTD.setOperacion("desc");
+        criterioUltimoCodTDList.add(criterioCodTD);
+
+        List<Object> tramiteDocumentacionList = FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioUltimoCodTDList);
+
+        if (tramiteDocumentacionList == null || tramiteDocumentacionList.isEmpty()) {
+            return 0;
+        }
+
+        TramiteDocumentacion ultimoTramiteDocumentacion = (TramiteDocumentacion) tramiteDocumentacionList.get(0);
+
+        return ultimoTramiteDocumentacion.getCodTD();
+    }
 }

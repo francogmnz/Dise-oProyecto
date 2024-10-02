@@ -148,11 +148,11 @@
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
                                 <div class="card">
                                     <h:form id="frmSingle">
-                                    <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
-                                                  mode="advanced" dragDropSupport="true" auto="false"
-                                                  onstart="showBar()" oncomplete="hideBar()" 
-                                                  multiple="true" update="messages" sizeLimit="1000000" 
-                                                  fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
+                                        <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
+                                                      mode="advanced" dragDropSupport="true" auto="false"
+                                                      onstart="showBar()" oncomplete="hideBar(); window.location.reload();" 
+                                                      multiple="true" update="messages" sizeLimit="1000000" 
+                                                      fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
 
                                     </h:form>
                                 </div>
@@ -161,6 +161,8 @@
                                                  icon="pi pi-arrow-down"  styleClass="btn-success">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>
+                                <!-- Mostrar el nombre del archivo subido -->
+                                <h:outputText value="#{doc.nombreTD}" rendered="#{not empty doc.nombreTD}" style="margin-left: 10px;"/>
                             </p:column>
                         </p:dataTable>
                     </p:panel>

@@ -24,6 +24,10 @@
 
         <property name="fechaHoraBajaConsultor" column="fecha_hora_baja_consultor" type="timestamp"/>
 
+        <bag name="agendas" table="consultor_agenda_consultor" inverse="true" cascade="save-update">
+            <key column="OIDConsultor" not-null="true"/>
+            <many-to-many class="entidades.AgendaConsultor" column="OIDAgendaConsultor"/>
+        </bag>
 
 
     </class>

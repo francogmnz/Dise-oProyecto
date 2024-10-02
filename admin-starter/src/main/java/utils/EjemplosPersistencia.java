@@ -181,7 +181,7 @@ public class EjemplosPersistencia {
             Consultor consultor2 = new Consultor();
             consultor2.setLegajoConsultor(1002);
             consultor2.setNombreConsultor("Ana López");
-            consultor2.setNroMaximoTramites(3);
+            consultor2.setNroMaximoTramites(4);
             consultor2.setFechaHoraBajaConsultor(null);
 
             FachadaPersistencia.getInstance().guardar(consultor2);
@@ -194,6 +194,7 @@ public class EjemplosPersistencia {
             agendaConsultor1.setFechaAltaAgendaConsultor(new Timestamp(System.currentTimeMillis()));
 
             agendaConsultor1.addConsultor(consultor1);
+            agendaConsultor1.addConsultor(consultor2);
 
             FachadaPersistencia.getInstance().guardar(agendaConsultor1);
 
