@@ -14,7 +14,7 @@ public class TramiteEstadoTramite extends Entidad {
     
     private Timestamp fechaHoraAltaTET;
     private Timestamp fechaHoraBajaTET;
-    private EstadoTramite estadoTramite;  // Relación ManyToOne con EstadoTramite
+    private EstadoTramite estadoTramite;  
 
     public TramiteEstadoTramite() {
     }

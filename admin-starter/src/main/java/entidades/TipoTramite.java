@@ -21,8 +21,8 @@ public class TipoTramite extends Entidad {
     private Timestamp fechaHoraBajaTipoTramite;
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
-    private CategoriaTipoTramite categoriaTipoTramite;  // Relación ManyToOne con CategoriaTipoTramite
-    private List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = new ArrayList<>();  // Relación OneToMany con TipoTramiteDocumentacion
+    private CategoriaTipoTramite categoriaTipoTramite;  
+    private List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = new ArrayList<>();  
 
     public TipoTramite() {
     }

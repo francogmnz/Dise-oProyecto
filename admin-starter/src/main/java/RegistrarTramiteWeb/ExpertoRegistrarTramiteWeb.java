@@ -188,14 +188,73 @@ public class ExpertoRegistrarTramiteWeb {
         return tipoTramitesAListar;
 
     }
-       
+   
+/*    
     public static int generarNroTramite(int codTipoTramite) {
         return (int) (System.currentTimeMillis() + codTipoTramite);
-}
+    }
+*/
+    public int generarNroTramite() {
+        int ultimoNroTramite = buscarUltimoNroTramite();
+        return ultimoNroTramite + 1;  
+    }
+
+    public static int buscarUltimoNroTramite() {
+ 
+        List<DTOCriterio> criterioUltimoNroTramiteList = new ArrayList<>();
 
 
+        DTOCriterio criterioNroTramite = new DTOCriterio();
+        criterioNroTramite.setAtributo("nroTramite");
+        criterioNroTramite.setOperacion("desc"); 
+        criterioUltimoNroTramiteList.add(criterioNroTramite);
 
-  
+        
+        List<Object> tramiteList = FachadaPersistencia.getInstance().buscar("Tramite", criterioUltimoNroTramiteList);
+
+        // Si no hay tramite devuelvo 0 
+        if (tramiteList == null || tramiteList.isEmpty()) {
+            return 0;
+        }
+
+        
+        Tramite ultimoTramite = (Tramite) tramiteList.get(0);
+
+        return ultimoTramite.getNroTramite();
+    }
+
+    
+    public int generarCodTD() {
+        int ultimoCodTD = buscarUltimoCodTD();
+        return ultimoCodTD + 1;  
+    }
+    
+    public static int buscarUltimoCodTD() {
+
+
+        List<DTOCriterio> criterioUltimoCodTDList = new ArrayList<>();
+
+ 
+        DTOCriterio criterioCodTD = new DTOCriterio();
+        criterioCodTD.setAtributo("codTD");
+        criterioCodTD.setOperacion("desc"); 
+        criterioUltimoCodTDList.add(criterioCodTD);
+
+
+        List<Object> tramiteDocumentacionList = FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioUltimoCodTDList);
+
+
+        if (tramiteDocumentacionList == null || tramiteDocumentacionList.isEmpty()) {
+            return 0;
+        }
+
+
+        TramiteDocumentacion ultimoTramiteDocumentacion = (TramiteDocumentacion) tramiteDocumentacionList.get(0);
+
+        return ultimoTramiteDocumentacion.getCodTD();
+    }
+    
+    
     public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
         
         TipoTramite tipoTramiteRelacionado = null;
@@ -255,7 +314,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         Tramite nuevoTramite = new Tramite();
         
-        int nroTramite = generarNroTramite(codTipoTramite);
+        int nroTramite = generarNroTramite();
         nuevoTramite.setNroTramite(nroTramite);
         nuevoTramite.setCliente(cliente);
         nuevoTramite.setTipoTramite(tipoTramiteRelacionado);
@@ -317,7 +376,8 @@ public class ExpertoRegistrarTramiteWeb {
                 TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion();
                 
                 tramiteDocumentacion.setArchivoTD(null);
-                //tramiteDocumentacion.setCodTD(0);
+                int nuevoCodTD = generarCodTD();
+                tramiteDocumentacion.setCodTD(nuevoCodTD);
                 tramiteDocumentacion.setFechaEntregaTD(null);
                 tramiteDocumentacion.setDocumentacion(documentacion);
                 
