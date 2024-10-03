@@ -5,6 +5,8 @@ package ABMConsultor.beans;
 import ABMConsultor.ControladorABMConsultor;
 import ABMConsultor.dtos.DTOConsultor;
 import ABMConsultor.exceptions.ConsultorException;
+import entidades.Consultor;
+import entidades.Tramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
+import utils.DTOCriterio;
+import utils.FachadaPersistencia;
 
 @Named("uiabmConsultorLista")
 @ViewScoped
@@ -103,6 +107,59 @@ public class UIABMConsultorLista implements Serializable {
         } else {
             return false;
         }
+    }
+    public int buscarTramitesConsultor(int legajoConsultor ){
+        List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
+    
+
+            DTOCriterio unCriterio = new DTOCriterio();
+            unCriterio.setAtributo("legajoConsultor");
+            unCriterio.setOperacion("=");
+            unCriterio.setValor(legajoConsultor);
+            lCriterio.add(unCriterio);
+
+        Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", lCriterio).get(0);
+        int legajoEncontrado = consultorEncontrado.getLegajoConsultor();
+        
+        lCriterio.clear();
+        
+        unCriterio = new DTOCriterio();
+
+        unCriterio.setAtributo("fechaFinTramite");
+        unCriterio.setOperacion("!=");
+        unCriterio.setValor(null);
+        
+        lCriterio.add(unCriterio);
+        
+        DTOCriterio unCriterio2 = new DTOCriterio();
+        
+        unCriterio2.setAtributo("fechaAnulacionTramite");
+        unCriterio2.setOperacion("!=");
+        unCriterio2.setValor(null);
+
+        lCriterio.add(unCriterio2);
+        
+        List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", lCriterio);
+        
+        int cantidadTramites=0;
+
+        for (Object x : objetoList) {
+
+            Tramite tramite = (Tramite) x;
+            if (tramite.getConsultor()!= null){
+            Consultor consultor = tramite.getConsultor();
+            int legajo = consultor.getLegajoConsultor();
+            
+
+            if (legajoEncontrado == legajo) {
+                cantidadTramites+=1;
+            }
+
+        }
+        }
+        
+        return cantidadTramites;
+        
     }
     
 }

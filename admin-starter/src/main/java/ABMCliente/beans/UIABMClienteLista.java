@@ -5,6 +5,8 @@ package ABMCliente.beans;
 import ABMCliente.ControladorABMCliente;
 import ABMCliente.dtos.DTOCliente;
 import ABMCliente.exceptions.ClienteException;
+import entidades.Cliente;
+import entidades.Tramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
+import utils.DTOCriterio;
+import utils.FachadaPersistencia;
 
 @Named("uiabmClienteLista")
 @ViewScoped
@@ -116,5 +120,58 @@ public class UIABMClienteLista implements Serializable {
         } else {
             return false;
         }
+    }
+    public int buscarTramitesCliente(int dniCliente ){
+        List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
+    
+
+            DTOCriterio unCriterio = new DTOCriterio();
+            unCriterio.setAtributo("dniCliente");
+            unCriterio.setOperacion("=");
+            unCriterio.setValor(dniCliente);
+            lCriterio.add(unCriterio);
+
+        Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", lCriterio).get(0);
+        int dniEncontrado = clienteEncontrado.getDniCliente();
+        
+        lCriterio.clear();
+        
+        unCriterio = new DTOCriterio();
+
+        unCriterio.setAtributo("fechaFinTramite");
+        unCriterio.setOperacion("!=");
+        unCriterio.setValor(null);
+        
+        lCriterio.add(unCriterio);
+        
+        DTOCriterio unCriterio2 = new DTOCriterio();
+        
+        unCriterio2.setAtributo("fechaAnulacionTramite");
+        unCriterio2.setOperacion("!=");
+        unCriterio2.setValor(null);
+
+        lCriterio.add(unCriterio2);
+        
+        List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", lCriterio);
+        
+        int cantidadTramites=0;
+
+        for (Object x : objetoList) {
+
+            Tramite tramite = (Tramite) x;
+            if (tramite.getCliente()!= null){
+            Cliente cliente = tramite.getCliente();
+            int dniCli = cliente.getDniCliente();
+            
+
+            if (dniEncontrado == dniCli) {
+                cantidadTramites+=1;
+            }
+
+        }
+        }
+        
+        return cantidadTramites;
+        
     }
 }

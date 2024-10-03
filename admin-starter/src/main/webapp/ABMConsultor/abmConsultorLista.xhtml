@@ -92,6 +92,11 @@
                             <f:facet name="header">Fecha Baja</f:facet>
                                 #{consultor.fechaHoraBajaConsultor}
                         </p:column>
+                        
+                        <p:column>
+                        <f:facet name="header">Tramites activos</f:facet>
+                            #{uiabmConsultorLista.buscarTramitesConsultor(consultor.legajoConsultor)}
+                    </p:column>
 
 
                         <p:column>

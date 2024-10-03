@@ -157,6 +157,8 @@ public class ExpertoABMConsultor {
         dto2.setAtributo("fechaHoraBajaConsultor");
         dto2.setOperacion("=");
         dto2.setValor(null);
+        
+        
 
         criterioList.add(dto2);
         Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
@@ -169,22 +171,30 @@ public class ExpertoABMConsultor {
         dto.setAtributo("fechaFinTramite");
         dto.setOperacion("!=");
         dto.setValor(null);
-
+        
         criterioList.add(dto);
+        
+        dto2.setAtributo("fechaAnulacionTramite");
+        dto2.setOperacion("!=");
+        dto2.setValor(null);
 
+        criterioList.add(dto2);
+        
         List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
 
         for (Object x : objetoList) {
 
             Tramite tramite = (Tramite) x;
+            if (tramite.getConsultor()!= null){
             Consultor consultor = tramite.getConsultor();
             int legajo = consultor.getLegajoConsultor();
 
             if (legajoEncontrado == legajo) {
                 throw new ConsultorException("Consultor no puede darse de baja por estar asignado en al menos a un tramite");
             }
-
+            }
         }
+            
 
         consultorEncontrado.setFechaHoraBajaConsultor(new Timestamp(System.currentTimeMillis()));
 
