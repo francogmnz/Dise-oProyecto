@@ -110,11 +110,11 @@ public class UITramiteLista implements Serializable {
     // loop por cada DTOTramite desde la UI para mostrar los Tramites filtrados
     public List<TramiteGrillaUI> mostrarTramites() {
 
-        System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
-        System.out.println("fechaRecepcionTramiteFiltro: " + fechaRecepcionTramiteFiltro);
-        System.out.println("dniFiltro: " + dniFiltro);
-        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
-        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
+//        System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
+//        System.out.println("fechaRecepcionTramiteFiltro: " + fechaRecepcionTramiteFiltro);
+//        System.out.println("dniFiltro: " + dniFiltro);
+//        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
+//        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
 
         if (fechaRecepcionTramiteFiltro != null) {
             Calendar calFiltro = Calendar.getInstance();

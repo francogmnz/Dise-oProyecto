@@ -17,6 +17,7 @@ public class DTODocumentacion {
         this.nombreTD = nombreTD;
     }
 
+    
     public int getCodTD() {
         return codTD;
     }

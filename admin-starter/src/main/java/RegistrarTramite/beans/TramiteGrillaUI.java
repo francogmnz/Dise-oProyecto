@@ -5,27 +5,19 @@ import java.sql.Timestamp;
 public class TramiteGrillaUI {
 
     private int nroTramite;
-    private int dni;
     private Timestamp fechaRecepcionTramite;
+    private Timestamp fechaAnulacion;
     private String nombreTipoTramite;
     private int codTipoTramite;
     private String nombreEstado;
-    private Timestamp fechaAnulacion;
+    private int dni;
 
     public int getNroTramite() {
         return nroTramite;
     }
 
-    public void setNroTramite(int nroTramie) {
-        this.nroTramite = nroTramie;
-    }
-
-    public int getDni() {
-        return dni;
-    }
-
-    public void setDni(int dni) {
-        this.dni = dni;
+    public void setNroTramite(int nroTramite) {
+        this.nroTramite = nroTramite;
     }
 
     public Timestamp getFechaRecepcionTramite() {
@@ -34,6 +26,14 @@ public class TramiteGrillaUI {
 
     public void setFechaRecepcionTramite(Timestamp fechaRecepcionTramite) {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
+    }
+
+    public Timestamp getFechaAnulacion() {
+        return fechaAnulacion;
+    }
+
+    public void setFechaAnulacion(Timestamp fechaAnulacion) {
+        this.fechaAnulacion = fechaAnulacion;
     }
 
     public String getNombreTipoTramite() {
@@ -60,12 +60,14 @@ public class TramiteGrillaUI {
         this.nombreEstado = nombreEstado;
     }
 
-    public Timestamp getFechaAnulacion() {
-        return fechaAnulacion;
+    public int getDni() {
+        return dni;
     }
 
-    public void setFechaAnulacion(Timestamp fechaAnulacion) {
-        this.fechaAnulacion = fechaAnulacion;
+    public void setDni(int dni) {
+        this.dni = dni;
     }
+
+
 
 }

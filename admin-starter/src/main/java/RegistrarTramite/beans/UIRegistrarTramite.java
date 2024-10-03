@@ -121,6 +121,7 @@ public class UIRegistrarTramite implements Serializable {
 
     // obtenerCliente(dniCliente): DTOCliente
     public void obtenerCliente() {
+
         try {
             DTOCliente dtoCliente = controladorRegistrarTramite.obtenerCliente(dni);
             if (dtoCliente != null) {
@@ -128,12 +129,13 @@ public class UIRegistrarTramite implements Serializable {
                 apellidoCliente = dtoCliente.getApellidoCliente();
                 mailCliente = dtoCliente.getMailCliente();
             }
+
         } catch (RegistrarTramiteException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el Cliente"));
         }
     }
 
-    // obtenerTipoTramite(codTipoTramite): DTOTipoTramite
+// obtenerTipoTramite(codTipoTramite): DTOTipoTramite
     public void obtenerTipoTramite() {
         try {
             DTOTipoTramite dtoTipoTramite = controladorRegistrarTramite.obtenerTipoTramite(codTipoTramite);
@@ -154,7 +156,7 @@ public class UIRegistrarTramite implements Serializable {
         } catch (RegistrarTramiteException e) {
             // Si ocurre una excepción, muestra el mensaje de error
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
             // No redirigir en caso de error, solo mostrar el mensaje
         }
     }

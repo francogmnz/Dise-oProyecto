@@ -206,8 +206,7 @@ public class ExpertoRegistrarTramite {
             dto1.setValor(dni);
 
             criterioList.add(dto1);
-        }
-
+        } 
         // :create() DTOCliente
         DTOCliente dtoCliente = new DTOCliente();
 
@@ -258,7 +257,7 @@ public class ExpertoRegistrarTramite {
         return dtoTipoTramite; // Retornamos el DTOTipoTramite
     }
 
-   // registrarTramite()
+    // registrarTramite()
     public void registrarTramite() throws RegistrarTramiteException {
 
         FachadaPersistencia.getInstance().iniciarTransaccion();

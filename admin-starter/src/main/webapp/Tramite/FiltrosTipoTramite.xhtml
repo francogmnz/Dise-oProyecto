@@ -37,14 +37,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <h:outputText value="Codigo TipoTramite:"/>
                             <br/>
                             <p:spacer height="10"/>
-                            <p:inputText id="codTipoTramiteFiltro" style="width:150px"
+                            <p:inputNumber id="codTipoTramiteFiltro" style="width:150px"
                                          placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
-                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
-                            </p:inputText>
+                            </p:inputNumber>
                         </p:outputPanel>
                     </div>
 
