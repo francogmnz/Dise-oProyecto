@@ -1,31 +1,32 @@
 package ABMVersion.dtos;
+
 import ABMVersion.dtos.DTOEstado;
-import ABMVersion.dtos.DTOEstadoOrigenOUT;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DTOVersionM {
+
     private int codTipoTramite;
     private String descripcionVersion;
     private int nroVersion;
     private Timestamp fechaHastaVersion;
     private Timestamp fechaDesdeVersion;
     private String dibujo;
-private List<DTOEstado> dtoEstado = new ArrayList<>();
+    private List<DTOEstado> dtoEstado = new ArrayList<>();
 
-
-   public List<DTOEstado> getDtoEstado() {
+    public List<DTOEstado> getDtoEstado() {
         return dtoEstado;
     }
 
     public void setDtoEstado(List<DTOEstado> dtoEstado) {
         this.dtoEstado = dtoEstado;
     }
-    
+
     public void addDTOEstado(DTOEstado dtoEstado) {
         this.dtoEstado.add(dtoEstado);
-    } 
+    }
+
     public String getDibujo() {
         return dibujo;
     }
@@ -34,7 +35,6 @@ private List<DTOEstado> dtoEstado = new ArrayList<>();
         this.dibujo = dibujo;
     }
 
-    
     public int getCodTipoTramite() {
         return codTipoTramite;
     }
@@ -76,6 +76,4 @@ private List<DTOEstado> dtoEstado = new ArrayList<>();
     }
 
     // Métodos para agregar DTOs a las listas
-
-
 }

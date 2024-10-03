@@ -10,7 +10,6 @@ public class VersionGrillaUI {
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-
     // Getters y Setters
 
     public int getNroVersion() {

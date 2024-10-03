@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Version extends Entidad {
+
     private int nroVersion;
     private String descripcionVersion;
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
     private String dibujo;
+    
 
     public String getDibujo() {
         return dibujo;
@@ -86,7 +88,7 @@ public class Version extends Entidad {
     }
 
     public void addConfTipoTramiteEstadoTramite(ConfTipoTramiteEstadoTramite cttet) {
-        confTipoTramiteEstadoTramite.add(cttet);   
-}  
-     
+        confTipoTramiteEstadoTramite.add(cttet);
+    }
+
 }

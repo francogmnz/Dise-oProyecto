@@ -12,26 +12,6 @@ public class DTOEstadoDestinoOUT {
 
     int codEstadoTramite;
     private String nombreEstadoDestino;
-    private int Xpos; // Nueva posición X
-    private int Ypos; // Nueva posición Y
-
-    public int getXpos() {
-        return Xpos;
-    }
-
-    public void setXpos(int Xpos) {
-        this.Xpos = Xpos;
-    }
-
-    public int getYpos() {
-        return Ypos;
-    }
-
-    public void setYpos(int Ypos) {
-        this.Ypos = Ypos;
-    }
-
-  
 
     public String getNombreEstadoDestino() {
         return nombreEstadoDestino;

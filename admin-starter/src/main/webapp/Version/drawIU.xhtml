@@ -9,7 +9,10 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <!-- Aquí puedes agregar metadatos adicionales si es necesario -->
+            <!-- Carga de Google Fonts -->
+            <h:outputStylesheet library="https://fonts.googleapis.com" name="css2?family=Poppins:wght@300;400;500&amp;display=swap" />
+            <!-- Referencia a tu archivo CSS personalizado -->
+            <h:outputStylesheet name="css/estiloVersion.css" />
         </f:metadata>
         <ui:param name="renderFormAsterisks" value="true"/>
     </ui:define>
@@ -73,7 +76,7 @@
                     </div>
 
                     <!-- Botón de Guardar -->
-                    <p:commandButton id="guardarBean2" value="Agregar nueva versión 2" 
+                    <p:commandButton id="guardarBean2" value="Agregar nueva versión" 
                                      action="#{uiabmVersion.confirmar()}" 
                                      icon="fa fa-check"
                                      styleClass="btn-primary"  
@@ -101,7 +104,7 @@
                         onclick="idraw.contentWindow.guardar(); window.document.getElementById('guardarBean2').click();" 
                         type="button">
                     <span class="ui-button-icon-left ui-icon ui-c fa fa-check"></span>
-                    <span class="ui-button-text ui-c">Agregar nueva versión 2</span>
+                    <span class="ui-button-text ui-c">Agregar nueva versión</span>
                 </button>
             </div> 
         </p:panel>

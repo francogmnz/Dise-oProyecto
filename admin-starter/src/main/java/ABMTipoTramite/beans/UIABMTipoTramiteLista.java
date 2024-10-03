@@ -8,6 +8,8 @@ import ABMTipoTramite.beans.*;
 import ABMTipoTramite.ControladorABMTipoTramite;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
+import ABMVersion.ControladorABMVersion;
+import ABMVersion.exceptions.VersionException;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -25,6 +27,8 @@ import utils.BeansUtils;
 public class UIABMTipoTramiteLista implements Serializable {
 
     private ControladorABMTipoTramite controladorABMTipoTramite = new ControladorABMTipoTramite();
+    private ControladorABMVersion controladorABMVersion = new ControladorABMVersion();
+
     private int codTipoTramiteFiltro = 0;
     private String nombreTipoTramiteFiltro = "";
 
@@ -87,15 +91,17 @@ public class UIABMTipoTramiteLista implements Serializable {
         return "abmTipoTramite?faces-redirect=true&codTipoTramite=" + codTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
     }
 
-    public String irConfigurarTipoTramite(int codTipoTramite, int nroVersion) {
+    public String irConfigurarTipoTramite(int codTipoTramite) {
         BeansUtils.guardarUrlAnterior();
-        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite  + "&nroVersion=" + nroVersion;
+        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
     }
+    public String darDeBajaVersion(int codTipoTramite) {
+        controladorABMVersion.darDeBajaVersion(codTipoTramite); // Llamada al método para dar de baja
+        Messages.create("Anulado").detail("La versión ha sido anulada correctamente.").add();
+        return "success"; // O cualquier string que indique el éxito
+}
 
-    public String irModificarVersion(int codTipoTramite, int nroVersion) {
-        BeansUtils.guardarUrlAnterior();
-        return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion; // Corrige la concatenación
-    }
+
 
     public void darDeBajaTipoTramite(int codTipoTramite) {
         try {

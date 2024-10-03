@@ -135,15 +135,27 @@
 
                         <p:spacer width="5"/>
 
-                        <p:commandButton value="Configurar" styleClass="btn-info" 
-                                         action="#{uiabmTipoTramiteLista.irConfigurarTipoTramite(tipoTramite.codTipoTramite, version.nroVersion)}" 
+                        <p:commandButton value="Configurar" 
+                                         icon="pi pi-pencil" 
+                                         iconPos="right" 
+                                         style="background-color: #ff5722; border-color: #ff5722; color: white;" 
+                                         action="#{uiabmTipoTramiteLista.irConfigurarTipoTramite(tipoTramite.codTipoTramite)}" 
+                                         disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
+                            <f:ajax render="@form"/>
+                        </p:commandButton>
+                        <p:commandButton value="Dar de baja versión" 
+                                         icon="pi pi-trash" 
+                                         iconPos="right" 
+                                         style="background-color: #2196F3; border-color: #2196F3; color: white; font-weight: bold; padding: 5px 5px; border-radius: 5px;" 
+                                         action="#{uiabmTipoTramiteLista.darDeBajaVersion(tipoTramite.codTipoTramite)}" 
                                          disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
 
+
                         <p:spacer width="5"/>
 
-                     
+
 
 
                     </p:column>

@@ -9,8 +9,6 @@ public class ConfTipoTramiteEstadoTramite extends Entidad {
     private int contadorConfigTTET;
     private int etapaOrigen;  
     private int etapaDestino;  
-    private int Xpos;
-    private int Ypos;
 
     private EstadoTramite estadoTramiteOrigen; 
 
@@ -18,22 +16,6 @@ public class ConfTipoTramiteEstadoTramite extends Entidad {
 
     public ConfTipoTramiteEstadoTramite() {
   
-    }
-
-    public int getXpos() {
-        return Xpos;
-    }
-
-    public void setXpos(int Xpos) {
-        this.Xpos = Xpos;
-    }
-
-    public int getYpos() {
-        return Ypos;
-    }
-
-    public void setYpos(int Ypos) {
-        this.Ypos = Ypos;
     }
 
     public int getContadorConfigTTET() {

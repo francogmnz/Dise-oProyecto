@@ -1,29 +1,34 @@
 package ABMVersion;
 
-import ABMVersion.ControladorABMVersion;
-import ABMVersion.dtos.DTODatosVersion;
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.dtos.DTOEstado;
-import ABMVersion.dtos.DTOEstadoDestinoOUT;
-import ABMVersion.dtos.DTOEstadoOrigenOUT;
 import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
 import entidades.Version;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
 public class ExpertoABMVersion {
+
+    public boolean estadoOrigenExiste(int codEstadoDestino, List<DTOEstadoOrigenIN> listaEstadosOrigen) {
+        for (DTOEstadoOrigenIN estadoOrigen : listaEstadosOrigen) {
+            if (estadoOrigen.getCodEstadoTramite() == codEstadoDestino) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // Método para buscar versiones
     public List<VersionDTO> buscarVersion(int nroVersion, int codTipoTramite, String nombreTipoTramite) {
@@ -73,70 +78,54 @@ public class ExpertoABMVersion {
         return versionResultado;
     }
 
-    // Método para buscar una versión para modificar
-    public DTOVersionM buscarVersionAModificar(int nroVersion) {
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
-
-        dto.setAtributo("nroVersion");
-        dto.setOperacion("=");
-        dto.setValor(nroVersion);
-
-        criterioList.add(dto);
-
-        List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
-
-        if (lVersion.isEmpty()) {
-            return null; // Manejo adecuado si no se encuentra la versión
-        }
-
-        Version versionEncontrada = (Version) lVersion.get(0);
-
-        DTOVersionM dtoVersionM = new DTOVersionM();
-        dtoVersionM.setNroVersion(versionEncontrada.getNroVersion()); // Asegúrate de incluir el nroVersion
-        dtoVersionM.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
-        dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
-        dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
-        dtoVersionM.setDibujo(versionEncontrada.getDibujo());
-
-        return dtoVersionM;
-    }
-
-    public void darDeBajaVersion(int nroVersion) throws VersionException {
+    public void darDeBajaVersion(int codTipoTramite) throws VersionException {
+    try {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         // Crear el criterio de búsqueda para encontrar la versión
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-
-        dto.setAtributo("nroVersion");
+        dto.setAtributo("tipoTramite");
         dto.setOperacion("=");
-        dto.setValor(nroVersion);
-
+        dto.setValor(codTipoTramite);
         criterioList.add(dto);
 
-        // Buscar la versión con el criterio dado
+        // Buscar las versiones con el criterio dado
         List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
 
         if (lVersion.isEmpty()) {
-            // Lanzar una excepción si la versión no se encuentra
-            throw new VersionException("La versión no existe");
+            throw new VersionException("No hay versiones disponibles para este tipo de trámite.");
         }
 
         // Obtener la versión encontrada y actualizar la fecha de baja
-        Version versionEncontrada = (Version) lVersion.get(0);
+        Version versionEncontrada = (Version) lVersion.get(lVersion.size() - 1); // Asumimos que la última versión es la más reciente
+        if (versionEncontrada.getFechaBajaVersion() != null) {
+            throw new VersionException("La versión ya está dada de baja.");
+        }
+        
         versionEncontrada.setFechaBajaVersion(new Timestamp(System.currentTimeMillis()));
-
-        // Guardar los cambios y finalizar la transacción
+        // Guardar los cambios
         FachadaPersistencia.getInstance().guardar(versionEncontrada);
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-    }
 
+        // Establecer la versión anterior como activa
+        if (lVersion.size() > 1) {
+            Version versionAnterior = (Version) lVersion.get(lVersion.size() - 2);
+            versionAnterior.setFechaBajaVersion(null); // Asegúrate de que la fecha de baja esté en null
+            FachadaPersistencia.getInstance().guardar(versionAnterior);
+        }
+
+        // Finalizar la transacción
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+    } catch (Exception e) {
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+        throw new VersionException("Error al dar de baja la versión: " + e.getMessage(), e);
+    }
+}
     public int obtenerUltimoNumeroVersion(int codTipoTramite) {
         // Obtener la instancia de FachadaPersistencia
         FachadaPersistencia f = FachadaPersistencia.getInstance();
         f.iniciarTransaccion();
-     // Búsqueda del TipoTramite
+        // Búsqueda del TipoTramite
         List<DTOCriterio> lc = new ArrayList<>();
         DTOCriterio c = new DTOCriterio();
         c.setAtributo("codTipoTramite");
@@ -145,10 +134,10 @@ public class ExpertoABMVersion {
         lc.add(c);
 
         List<Object> o = f.buscar("TipoTramite", lc);
-        TipoTramite t=null;
+        TipoTramite t = null;
         if (!o.isEmpty()) {
             t = (TipoTramite) o.get(0);
- 
+
         } else {
             System.out.println("TipoTramite no encontrado.");
             return 0;
@@ -162,24 +151,20 @@ public class ExpertoABMVersion {
             cTipoTramite.setAtributo("tipoTramite");
             cTipoTramite.setOperacion("=");
             cTipoTramite.setValor(t);
-            
+
             lc.add(cTipoTramite);
 
             // Criterio para ordenar por número de versión de manera descendente
-
-
             // Buscar versiones con los criterios establecidos
             List<Object> versiones = f.buscar("Version", lc);
 
             // Verificar si se encontraron versiones
             if (!versiones.isEmpty()) {
-                int ultimo=0;
-                for(Object ob:versiones)
-                {
+                int ultimo = 0;
+                for (Object ob : versiones) {
                     Version ultimaVersion = (Version) ob;
-                    if(ultimaVersion.getNroVersion() > ultimo)
-                    {
-                        ultimo=ultimaVersion.getNroVersion();
+                    if (ultimaVersion.getNroVersion() > ultimo) {
+                        ultimo = ultimaVersion.getNroVersion();
                     }
                 }
                 return ultimo;
@@ -195,38 +180,17 @@ public class ExpertoABMVersion {
         return 0;
     }
 
-    private boolean versionEncontrada(int nroVersion) {
-        FachadaPersistencia f = FachadaPersistencia.getInstance(); // Instancia de FachadaPersistencia
-        try {
-            f.iniciarTransaccion(); // Inicia la transacción
-
-            // Crear el criterio de búsqueda
-            List<DTOCriterio> lc = new ArrayList<>();
-            DTOCriterio c = new DTOCriterio();
-            c.setAtributo("nroVersion");
-            c.setOperacion("=");
-            c.setValor(nroVersion); // Busco la versión con el número dado
-            lc.add(c);
-
-            // Hago la búsqueda en la base de datos
-            List<Object> versiones = f.buscar("Version", lc);
-
-            // Si la lista no está vacía, significa que ya existe una versión con ese número
-            return !versiones.isEmpty();
-        } finally {
-            f.finalizarTransaccion(); // Finaliza la transacción
-        }
-    }
-
     public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
         FachadaPersistencia f = FachadaPersistencia.getInstance();
         f.iniciarTransaccion();
         Version nueva = new Version();
+
         // Establecer la versión de forma autoincremental
         int codTipoTramite = dtoDatosVersion.getCodTipoTramite();
         int ultimoNumeroVersion = obtenerUltimoNumeroVersion(codTipoTramite);
         int nuevoNumeroVersion = ultimoNumeroVersion + 1;
         nueva.setNroVersion(nuevoNumeroVersion);
+
         /* // Verificar si ya existe una versión con este número si esta duplicado no se guarda
         if (existeVersionConNumero(f, nuevoNumeroVersion)) {
             System.out.println("Ya existe una versión con el número: " + nuevoNumeroVersion);
@@ -236,11 +200,27 @@ public class ExpertoABMVersion {
         nueva.setNroVersion(nuevoNumeroVersion);*/
         // Configurar los demás atributos de la versión
         nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
-        nueva.setFechaDesdeVersion(new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()));
-        nueva.setFechaHastaVersion(new Timestamp(dtoDatosVersion.getFechaHastaVersion().getTime()));
-        //funciona este control de fecha!
+        // Obtener la fecha actual
+        nueva.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis())); // Traer fecha actual
+
+        // Sumar un mes a la fecha actual para fecha hasta
+         LocalDateTime fechaHasta = LocalDateTime.now().plusMonths(1); // Sumar 1 mes
+        nueva.setFechaHastaVersion(Timestamp.valueOf(fechaHasta));
+         
+        // Debug: Imprimir las fechas
+        System.out.println("Fecha Desde: " + nueva.getFechaDesdeVersion());
+        System.out.println("Fecha Hasta: " + nueva.getFechaHastaVersion());
+
+          // Verificar que la fecha hasta no sea menor que la fecha desde
         if (nueva.getFechaHastaVersion().before(nueva.getFechaDesdeVersion())) {
             JOptionPane.showMessageDialog(null, "La fecha hasta no puede ser menor que la fecha desde.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;  // No continuar si las fechas no son válidas
+        }
+         
+        // Verificar que las fechas no sean iguales
+        if (nueva.getFechaHastaVersion().before(nueva.getFechaDesdeVersion())) {
+            JOptionPane.showMessageDialog(null, "La fecha desde no puede ser igual a la fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;  // No continuar si las fechas son iguales
         }
 
         // Búsqueda del TipoTramite
@@ -264,10 +244,11 @@ public class ExpertoABMVersion {
         try {
             // Inicializar los contadores
             int i = 1;  // Para los estados de origen/destino
-            int cont = 1;  // Mover la declaración de `cont` fuera del ciclo
+            int cont = 1;  //cont para el contador de la config
 
             // Procesar Estados de Origen
             for (DTOEstadoOrigenIN dtoO : dtoDatosVersion.getDtoEstadoOrigenList()) {
+
                 // Búsqueda del Estado de Origen
                 List<DTOCriterio> lcEstado = new ArrayList<>();
                 DTOCriterio criterioEstado = new DTOCriterio();
@@ -286,10 +267,8 @@ public class ExpertoABMVersion {
                     ConfTipoTramiteEstadoTramite cttet = new ConfTipoTramiteEstadoTramite();
                     cttet.setEtapaOrigen(i);  // Asignar etapa de origen
                     cttet.setEstadoTramiteOrigen(eO);
-                    cttet.setContadorConfigTTET(cont);  // Asignar el valor actual del contador
-                    cttet.setXpos(dtoO.getXpos()); // Establecer posición X
-                    cttet.setYpos(dtoO.getYpos()); // Establecer posición Y
-                    cont++;  // Incrementar el contador después de cada configuración guardada
+                    cttet.setContadorConfigTTET(cont);  // asigna el valor actual del contador
+                    cont++;  // Incrementa el contador después de cada configuración guardada
 
                     // Lista para almacenar estados de destino
                     List<EstadoTramite> listaEstadoTramiteDestino = new ArrayList<>();
@@ -312,6 +291,12 @@ public class ExpertoABMVersion {
                         } else {
                             System.out.println("Estado de Destino no encontrado: " + dtoD.getCodEstadoTramite());
                         }
+
+                        if (!estadoOrigenExiste(dtoD.getCodEstadoTramite(), dtoDatosVersion.getDtoEstadoOrigenList())) {
+                            JOptionPane.showMessageDialog(null, "El estado de destino " + dtoD.getCodEstadoTramite() + " no tiene un estado de origen correspondiente.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return false;  // No continuar si hay estados de destino sin origen
+                        }
+
                     }
 
                     // Asignar la lista de estados de destino
@@ -324,7 +309,12 @@ public class ExpertoABMVersion {
                     nueva.addConfTipoTramiteEstadoTramite(cttet);
                     nueva.setDibujo(dtoDatosVersion.getDibujo());
                     // Guardar la configuración en la base de datos
-   
+
+                    //probando comprobacion de estado origen q no quede suelto 
+                    if (dtoO.getDtoEstadoDestinoList().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "El estado de origen " + dtoO.getCodEstadoTramite() + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;  // No continuar si algún estado está desconectado
+                    }
 
                     f.guardar(cttet);
                 } else {
@@ -332,8 +322,8 @@ public class ExpertoABMVersion {
                 }
             }
 
-            // Guardar la versión
             // Verificar que la fecha hasta no sea menor que la fecha desde
+            // Guardar la versión
             f.guardar(nueva);
             f.finalizarTransaccion();
 
@@ -345,97 +335,36 @@ public class ExpertoABMVersion {
         }
     }
 
-    /* public void modificarVersion(int codTipoTramite, DTOVersionM dtoVersionm) throws VersionException {
-        FachadaPersistencia fachada = FachadaPersistencia.getInstance();
-
-        // Iniciar la transacción
-        fachada.iniciarTransaccion();
-
-        try {
-            // Imprimir el codTipoTramite
-            System.out.println("Buscando versión para codTipoTramite: " + codTipoTramite);
-
-            // Crear criterio para buscar la versión por codTipoTramite
-            List<DTOCriterio> criterioList = new ArrayList<>();
-            DTOCriterio dtoTipo = new DTOCriterio();
-            dtoTipo.setAtributo("codTipoTramite");
-            dtoTipo.setOperacion("=");
-            dtoTipo.setValor(codTipoTramite);
-            criterioList.add(dtoTipo);
-
-            // Buscar la versión
-            List<Object> listaVersiones = fachada.buscar("Version", criterioList);
-
-            if (listaVersiones.isEmpty()) {
-                throw new VersionException("No se encontró la versión para el tipo de trámite especificado.");
-            }
-
-            // Tomar la primera versión encontrada
-            Version versionEncontrada = (Version) listaVersiones.get(0);
-
-            // Modificar los atributos de la versión con los datos del DTO
-            versionEncontrada.setNroVersion(dtoVersionm.getNroVersion());
-            versionEncontrada.setDescripcionVersion(dtoVersionm.getDescripcionVersion());
-
-            // Establecer fechas desde y hasta, según lo que venga en el DTO
-            if (dtoVersionm.getFechaDesdeVersion() != null) {
-                versionEncontrada.setFechaDesdeVersion(new Timestamp(dtoVersionm.getFechaDesdeVersion().getTime()));
-            }
-
-            if (dtoVersionm.getFechaHastaVersion() != null) {
-                versionEncontrada.setFechaHastaVersion(new Timestamp(dtoVersionm.getFechaHastaVersion().getTime()));
-            }
-
-            // Guardar los cambios
-            fachada.guardar(versionEncontrada);
-
-            // Finalizar la transacción
-            fachada.finalizarTransaccion();
-
-        } catch (Exception e) {
-            try {
-                // Rollback en caso de error
-                fachada.finalizarTransaccion();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            throw new VersionException("Error al modificar la versión: " + e.getMessage(), e);
-        }
-    }
-     */
     public DTOVersionM modificarVersion(int codTipoTramite) {
+
         DTOVersionM dtoVersionM = new DTOVersionM();
+
         // Iniciar la transacción
-               List<DTOCriterio> criterioList = new ArrayList<>();
+        List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-        int v=obtenerUltimoNumeroVersion(codTipoTramite);
+        int v = obtenerUltimoNumeroVersion(codTipoTramite);
         dto.setAtributo("nroVersion");
         dto.setOperacion("=");
         dto.setValor(v);
-
         criterioList.add(dto);
 
         List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
-        
+
         if (lVersion.isEmpty()) {
-            
-        }
-        else
-        {
-        Version versionEncontrada = (Version) lVersion.get(0);
 
-        
-        dtoVersionM.setNroVersion(versionEncontrada.getNroVersion()); // Asegúrate de incluir el nroVersion
-        dtoVersionM.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
-        dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
-        dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
-        dtoVersionM.setDibujo(versionEncontrada.getDibujo());
+        } else {
+            Version versionEncontrada = (Version) lVersion.get(0);
+
+            dtoVersionM.setNroVersion(versionEncontrada.getNroVersion());
+            dtoVersionM.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
+            dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
+            dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
+            dtoVersionM.setDibujo(versionEncontrada.getDibujo());
 
         }
-        
 
         // Buscar los EstadosTramite activos (que no están dados de baja)
-         criterioList = new ArrayList<>();
+        criterioList = new ArrayList<>();
         dto = new DTOCriterio();
         dto.setAtributo("fechaHoraBajaEstadoTramite");
         dto.setOperacion("=");

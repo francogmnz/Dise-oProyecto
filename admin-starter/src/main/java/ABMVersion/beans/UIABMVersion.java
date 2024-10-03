@@ -6,8 +6,6 @@ import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.DTOEstado;
-import ABMVersion.dtos.DTOEstadoDestinoOUT;
-import ABMVersion.dtos.DTOEstadoOrigenOUT;
 import ABMVersion.exceptions.VersionException;
 import Version.beans.NodoIU;
 import Version.beans.NodoMenuIU;
@@ -18,11 +16,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
-import entidades.Version;
-import jakarta.faces.application.NavigationHandler;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.context.Flash;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,10 +29,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utils.BeansUtils;
+import javax.swing.JOptionPane;
 
 @Named("uiabmVersion")
 @ViewScoped
+//constructor
 public class UIABMVersion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,6 +50,7 @@ public class UIABMVersion implements Serializable {
     private List<TipoTramite> listaTiposTramite = new ArrayList<>();
     private String estadoSeleccionado;
     private String tipoTramiteSeleccionado;
+
     // Variables para la interfaz del diagrama
     private String guardarJSON = "";
     private String cargarJSON = "";
@@ -200,9 +197,13 @@ public class UIABMVersion implements Serializable {
     }
 
     public UIABMVersion() {
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
+
         ExternalContext externalContext = facesContext.getExternalContext();
+
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+
         // Manejo del parámetro codTipoTramite
         String codTipoTramiteStr = request.getParameter("codTipoTramite");
         if (codTipoTramiteStr != null && !codTipoTramiteStr.isEmpty()) {
@@ -212,24 +213,21 @@ public class UIABMVersion implements Serializable {
         }
 
         DTOVersionM dtoVersionM = controladorABMVersion.modificarVersion(codTipoTramite);
-
         titulo = "Versión";
         editable = true;
         Gson gson = new Gson();
-        //aca preparo los nodos
 
+        //aca preparo los nodos
         List<NodoMenuIU> lestadosP = new ArrayList<NodoMenuIU>();
         for (DTOEstado de : dtoVersionM.getDtoEstado()) {
             NodoMenuIU unEP = new NodoMenuIU();
             unEP.setCodigo(de.getCodEstadoTramite());
             unEP.setNombre(de.getNombreEstadoTramite());
-            unEP.setXpos(de.getXpos());
-            unEP.setYpos(de.getYpos()); //con esto me traigo las posiciones en el dibujo :D
             lestadosP.add(unEP);
         }
         nodosPosibles = gson.toJson(lestadosP);
 
-        // Cargo dibujo
+        // Cargo el dibujo
         // Convertir la lista a JSON
         if (dtoVersionM.getDibujo() != null && dtoVersionM.getDibujo().trim().length() > 0) {
             setNroVersion(dtoVersionM.getNroVersion());
@@ -239,80 +237,89 @@ public class UIABMVersion implements Serializable {
             cargarJSON = dtoVersionM.getDibujo();
         } else {
             List<NodoIU> lestados = new ArrayList<NodoIU>();
-
             for (DTOEstado de : dtoVersionM.getDtoEstado()) {
                 if (de.getCodEstadoTramite() == 1) {
                     NodoIU unE = new NodoIU();
                     unE.setCodigo(de.getCodEstadoTramite());
                     unE.setNombre(de.getNombreEstadoTramite());
-                    unE.setXpos(2);
+                    unE.setXpos(80);
                     unE.setYpos(80);
                     lestados.add(unE);
                 }
             }
             cargarJSON = gson.toJson(lestados);
         }
-
     }
 
+    //metodo para confirmar los datos
     public void confirmar() throws VersionException {
+        // La fecha hasta no puede ser menor que la fecha desde
+        if (fechaHastaVersion.before(fechaDesdeVersion)) {
+            JOptionPane.showMessageDialog(null, "La fecha hasta no puede ser menor que la fecha desde.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;  // No continuar si las fechas no son válidas
+        }
 
+        // Verificar que las fechas no sean iguales
+        if (fechaDesdeVersion.equals(fechaHastaVersion)) {
+            JOptionPane.showMessageDialog(null, "La fecha desde no puede ser igual a la fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;  // No continuar si las fechas son iguales
+        }
+
+        // Crear el DTO
         DTODatosVersionIn dto = new DTODatosVersionIn();
         dto.setCodTipoTramite(codTipoTramite);
         dto.setDescripcionVersion(descripcionVersion);
         dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
         dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
 
-        System.out.println(this.guardarJSON);
-        Messages.create("Guardar").detail(this.guardarJSON).add();
         ObjectMapper objectMapper = new ObjectMapper();
         TypeFactory typeFactory = objectMapper.getTypeFactory();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        List<NodoIU> listaNodo = new ArrayList();
+        List<NodoIU> listaNodo = new ArrayList<>();
         dto.setDibujo(this.guardarJSON);
 
         try {
-            listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class,
-                    NodoIU.class
-            ));
+            listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class, NodoIU.class));
             System.out.println(listaNodo.toString());
-
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(UIABMVersion.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
             Messages.create(ex.getMessage()).error().add();
+            return;  // Si hay un error en el procesamiento del JSON, no continuar
         }
+
+        // Validar que los nodos tienen estados de destino conectados
         for (NodoIU unNodo : listaNodo) {
             DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
             ori.setCodEstadoTramite(unNodo.getCodigo());
+
+            // Comprobación de que el estado de origen no quede suelto
+            if (unNodo.getDestinos().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El estado de origen " + unNodo.getCodigo() + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;  // No continuar si algún estado está desconectado
+            }
+
+            // Añadir los destinos al DTO de origen
             for (Integer i : unNodo.getDestinos()) {
                 DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();
                 des.setCodEstadoTramite(i.intValue());
                 ori.addDtoEstadoDestinoList(des);
-
             }
+
             dto.addDtoEstadoOrigenList(ori);
         }
-        Gson gson = new Gson();
-        cargarJSON = gson.toJson(dto);
-        System.out.println(cargarJSON);
-        Messages.create("Guardar 2").detail(cargarJSON).add();
 
-        controladorABMVersion.confirmacion(dto);
+        // Intentar guardar los datos a través del controlador
+        boolean guardadoExitoso = controladorABMVersion.confirmacion(dto);
 
-        /*
-        //listaNodo tiene los nodos
-        //para comprobar
-        String jsonArray = "";
-
-        Gson gson = new Gson();
-        cargarJSON = gson.toJson(listaNodo);
-        System.out.println(jsonArray);
-        Messages.create("Guardar 2").detail(this.guardarJSON).add();
-         */
+        // Mostrar mensaje solo si se guardó exitosamente
+        if (guardadoExitoso) {
+            Gson gson = new Gson();
+            cargarJSON = gson.toJson(dto);
+            System.out.println(cargarJSON);
+            Messages.create("Guardar").detail(cargarJSON).add();
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al guardar los datos en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    /* public void modificarVersion(int codTipoTramite){
-        ControladorABMVersion controlador = new ControladorABMVersion();
-        Version versionAnterior = controlador.buscarVersionAModificar(codTìpoTramite, );
-    } */
+
 }

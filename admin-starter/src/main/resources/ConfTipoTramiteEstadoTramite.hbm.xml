@@ -22,14 +22,6 @@
             <column name="etapa_destino"/>
         </property>
 
-        <!-- Coordenadas X e Y para el dibujo -->
-        <property name="Xpos" type="int">
-            <column name="X_pos"/>
-        </property>
-        <property name="Ypos" type="int">
-            <column name="Y_pos"/>
-        </property>
-
         <!-- Relación ManyToOne con EstadoTramite (origen) -->
         <many-to-one name="estadoTramiteOrigen" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false"/>
 
