@@ -6,6 +6,7 @@ import RegistrarTramite.dtos.DTOTramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class UITramiteLista implements Serializable {
     // filtros de la lista de tramites
     private int nroTramiteFiltro = 0;
     private int dniFiltro = 0;
-    private Date fechaRecepcionTramiteFiltro = null;
+    private Date fechaRecepcionTramiteFiltro = new Timestamp(System.currentTimeMillis());
     private String nombreEstadoFiltro = "";
 
     // filtros del TipoTramite

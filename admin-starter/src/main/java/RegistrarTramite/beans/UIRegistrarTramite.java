@@ -129,7 +129,7 @@ public class UIRegistrarTramite implements Serializable {
                 mailCliente = dtoCliente.getMailCliente();
             }
         } catch (RegistrarTramiteException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el Cliente"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el Cliente"));
         }
     }
 
@@ -142,7 +142,7 @@ public class UIRegistrarTramite implements Serializable {
                 nombreTipoTramite = dtoTipoTramite.getNombreTipoTramite();
             }
         } catch (RegistrarTramiteException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el TipoTramite"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el TipoTramite"));
         }
     }
 

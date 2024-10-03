@@ -34,8 +34,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     <div class="ui-g-12 ui-md-12">
                         <p:outputLabel for="dni" value="DNI:" />
                         <br/>
-                        <p:inputText id="dni" value="#{uitramite.dni}" style="width: 100px;">
-                            <p:ajax event="blur" update="nombreCliente, apellidoCliente, mailCliente" listener="#{uitramite.obtenerCliente()}" />
+                        <p:inputText id="dni" value="#{uitramite.dni}" 
+                                     required="true" requiredMessage="DNI es obligatorio"
+                                     style="width: 100px;"
+                                     placeholder="DNI">
+                            <p:keyFilter mask="pint"/>
                         </p:inputText>
                         <p:message id="codigoMSG" for="dni" />
                     </div>
@@ -62,8 +65,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <div style="margin-right: 10px;">
                             <p:outputLabel for="codTipoTramite" value="Codigo tipo trámite:" />
                             <br/>
-                            <p:inputText id="codTipoTramite" value="#{uitramite.codTipoTramite}" style="width: 100px;">
-                                <p:ajax event="blur" update="nombreTipoTramiteSeleccionado" listener="#{uitramite.obtenerTipoTramite()}" />
+                            <p:inputText id="codTipoTramite" value="#{uitramite.codTipoTramite}" 
+                                         required="true"  requiredMessage="Código tipo trámite es obligatorio" 
+                                         style="width: 100px;"
+                                         placeholder="Código del Tipo Trámite">
+                                <p:keyFilter mask="pint"/>
                             </p:inputText>
                         </div>
 

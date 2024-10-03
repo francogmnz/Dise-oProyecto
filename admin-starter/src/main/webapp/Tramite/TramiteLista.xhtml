@@ -48,6 +48,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="nroTramiteFiltro" style="width:150px"
                                          placeholder="Número trámite" value="#{uitramiteLista.nroTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
@@ -63,6 +64,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="dniFiltro" style="width:150px"
                                          placeholder="DNI" value="#{uitramiteLista.dniFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
@@ -80,6 +82,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="codTipoTramiteFiltro" style="width:150px"
                                          placeholder="Codigo tipo trámite" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}"
                                         update="@form:grid1" />
@@ -105,6 +108,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-6">
+                        <h:outputText value="Estado:"/>
                         <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
                             <f:selectItem itemLabel="Seleccione un Estado" />
                             <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"

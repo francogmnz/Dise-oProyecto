@@ -40,6 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="codTipoTramiteFiltro" style="width:150px"
                                          placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="keyup" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />

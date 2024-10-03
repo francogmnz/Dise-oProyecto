@@ -274,7 +274,7 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setFechaFinTramite(null);
 
             if (tipoTramiteEncontrado == null || clienteEncontrado == null) {
-                throw new RegistrarTramiteException("No se pudo registrar el tramite");
+                throw new RegistrarTramiteException("No se pudo registrar el trámite");
             }
 
             tramiteCreado.setCliente(clienteEncontrado);
