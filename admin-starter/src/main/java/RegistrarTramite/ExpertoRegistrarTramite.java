@@ -258,7 +258,7 @@ public class ExpertoRegistrarTramite {
         return dtoTipoTramite; // Retornamos el DTOTipoTramite
     }
 
-    // registrarTramite()
+   // registrarTramite()
     public void registrarTramite() throws RegistrarTramiteException {
 
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -269,7 +269,6 @@ public class ExpertoRegistrarTramite {
 
             int nroTramite = generarNroTramite(); // Creo el nroTramite incremental
             tramiteCreado.setNroTramite(nroTramite);
-            // setNroTramite automaticamente en MYSQL
             tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
             tramiteCreado.setFechaInicioTramite(null);
             tramiteCreado.setFechaFinTramite(null);
@@ -372,12 +371,12 @@ public class ExpertoRegistrarTramite {
             }
 
             FachadaPersistencia.getInstance().guardar(tramiteCreado); // guardar(Tramite)
+            FachadaPersistencia.getInstance().finalizarTransaccion();
 
         } catch (RegistrarTramiteException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró se puede registrar"));
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw e;
         }
-
-        FachadaPersistencia.getInstance().finalizarTransaccion();
 
     }
 

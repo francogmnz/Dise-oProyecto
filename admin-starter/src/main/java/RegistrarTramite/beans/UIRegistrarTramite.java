@@ -146,14 +146,16 @@ public class UIRegistrarTramite implements Serializable {
         }
     }
 
-// registrarTramite()
-    public void registrarTramite() throws RegistrarTramiteException {
+    public void registrarTramite() {
         try {
             controladorRegistrarTramite.registrarTramite();
-            BeansUtils.redirectToPreviousPage(); // Solo redirige si el registro es exitoso
+            // Si el registro es exitoso, redirige a la página anterior
+            BeansUtils.redirectToPreviousPage();
         } catch (RegistrarTramiteException e) {
-            // Muestra el mensaje de error sin redireccionar
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo registrar el trámite: " + e.getMessage()));
+            // Si ocurre una excepción, muestra el mensaje de error
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            // No redirigir en caso de error, solo mostrar el mensaje
         }
     }
 
