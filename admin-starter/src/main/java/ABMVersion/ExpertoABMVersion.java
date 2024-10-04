@@ -1,11 +1,13 @@
 package ABMVersion;
 
+import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.dtos.DTOEstado;
+import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.omnifaces.util.Messages;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
@@ -121,6 +124,7 @@ public class ExpertoABMVersion {
         throw new VersionException("Error al dar de baja la versión: " + e.getMessage(), e);
     }
 }
+    
     public int obtenerUltimoNumeroVersion(int codTipoTramite) {
         // Obtener la instancia de FachadaPersistencia
         FachadaPersistencia f = FachadaPersistencia.getInstance();
@@ -383,4 +387,38 @@ public class ExpertoABMVersion {
         return dtoVersionM;
     }
 
+    public List<DTOTipoTramiteVersion> mostrarVersion() {
+    // Inicia la transacción
+    FachadaPersistencia.getInstance().iniciarTransaccion();
+    
+    // Crea la lista de criterios si quieres agregar filtros, o déjala vacía para obtener todas las versiones
+    List<DTOCriterio> criterioList = new ArrayList<>();
+    
+    // Busca todas las versiones en la base de datos
+    List<Object> lVersiones = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+    
+    // Crea una lista para devolver los DTOs
+    List<DTOTipoTramiteVersion> dtoVersiones = new ArrayList<>();
+    
+    // Itera sobre los resultados y mapea los atributos al DTO
+    for (Object obj : lVersiones) {
+        Version version = (Version) obj;
+        
+        DTOTipoTramiteVersion dto = new DTOTipoTramiteVersion();
+        dto.setNroVersion(version.getNroVersion());
+        dto.setFechaDesdeVersion(version.getFechaDesdeVersion());
+        dto.setFechaHastaVersion(version.getFechaHastaVersion());
+        dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
+        dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
+        
+        // Agrega el DTO a la lista
+        dtoVersiones.add(dto);
+    }
+    
+    // Finaliza la transacción
+    FachadaPersistencia.getInstance().finalizarTransaccion();
+    
+    // Devuelve la lista de versiones como DTOs
+    return dtoVersiones;
+}
 }

@@ -1,8 +1,9 @@
 package ABMVersion.beans;
 
-import java.sql.Timestamp;  // Asegúrate de que esta importación es necesaria
+import ABMTipoTramite.dtos.TipoTramiteDTO;
+import java.sql.Timestamp;
+import java.util.List;
 
-// Clase usada para mostrar los estados en la grilla al iniciar el CU ABMVersion
 public class VersionGrillaUI {
 
     private int nroVersion;
@@ -10,7 +11,37 @@ public class VersionGrillaUI {
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    // Getters y Setters
+    private int codTipoTramite;
+    private String nombreTipoTramite;
+
+    public int getCodTipoTramite() {
+        return codTipoTramite;
+    }
+
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
+    }
+
+    public String getNombreTipoTramite() {
+        return nombreTipoTramite;
+    }
+
+    public void setNombreTipoTramite(String nombreTipoTramite) {
+        this.nombreTipoTramite = nombreTipoTramite;
+    }
+
+    public List<TipoTramiteDTO> getTramites() {
+        return tramites;
+    }
+
+    public void setTramites(List<TipoTramiteDTO> tramites) {
+        this.tramites = tramites;
+    }
+    private List<TipoTramiteDTO> tramites;
+
+    public List<TipoTramiteDTO> getTipoTramites() {
+        return tramites;
+    }
 
     public int getNroVersion() {
         return nroVersion;

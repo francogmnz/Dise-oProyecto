@@ -2,6 +2,7 @@ package ABMVersion;
 
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
+import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
@@ -48,9 +49,12 @@ public class ControladorABMVersion {
     public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
         return expertoABMVersion.confirmacion(dtoDatosVersion);
     }
+    
 
     public boolean estadoOrigenExiste(int codEstadoDestino, List<DTOEstadoOrigenIN> listaEstadosOrigen) {
         return expertoABMVersion.estadoOrigenExiste(codEstadoDestino, listaEstadosOrigen);
     }
-
+public List<DTOTipoTramiteVersion> mostrarVersion() {
+        return expertoABMVersion.mostrarVersion();
+    }
 }
