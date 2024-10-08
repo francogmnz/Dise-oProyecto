@@ -1,5 +1,8 @@
 package com.github.adminfaces.starter.infra.security;
 
+import ABMUsuario.ControladorABMUsuario;
+import ABMUsuario.dtos.UsuarioDTO;
+import ABMUsuario.exceptions.UsuarioException;
 import com.github.adminfaces.template.session.AdminSession;
 import org.omnifaces.util.Faces;
 
@@ -14,7 +17,7 @@ import com.github.adminfaces.template.config.AdminConfig;
 import jakarta.inject.Inject;
 
 /**
- * Created by rmpestano on 12/20/14.
+ * Corregido en 2024 por los pibes de Synapsis on 8/10/24.
  *
  * This is just a login example.
  *
@@ -33,52 +36,91 @@ public class LogonMB extends AdminSession implements Serializable {
     private String email;
     private String password;
     private boolean remember;
+
     @Inject
     private AdminConfig adminConfig;
 
+    private ControladorABMUsuario controladorABMUsuario = new ControladorABMUsuario();
 
-    public void login() throws IOException {
-        currentUser = email;
-        addDetailMessage("Logged in successfully as <b>" + email + "</b>");
-        Faces.getExternalContext().getFlash().setKeepMessages(true);
-        Faces.redirect(adminConfig.getIndexPage());
+    private UsuarioDTO usuarioLogueado;
+
+    public void login() throws IOException, UsuarioException {
+        try {
+            
+            usuarioLogueado = controladorABMUsuario.iniciarSesion(email, password);
+
+            // Asignar el usuario actual
+            currentUser = usuarioLogueado.getUsername();
+
+            
+            addDetailMessage("Inicio de sesión exitoso como <b>" + currentUser + "</b>");
+            Faces.getExternalContext().getFlash().setKeepMessages(true);
+
+            // Redirigir según el rol del usuario 
+            String paginaRedireccion = adminConfig.getIndexPage(); // Página por defecto
+
+            if ("Admin".equals(usuarioLogueado.getRolNombre())) {
+                paginaRedireccion = "/admin/index.xhtml"; // configurar dependiendo del rol
+            } else if ("Consultor".equals(usuarioLogueado.getRolNombre())) {
+                paginaRedireccion = "/admin/index.xhtml";// configurar dependiendo del rol
+            } else if ("Recepcionista".equals(usuarioLogueado.getRolNombre())) {
+                paginaRedireccion = "/admin/index.xhtml";// configurar dependiendo del rol
+            } else if ("Cliente".equals(usuarioLogueado.getRolNombre())) {
+                paginaRedireccion = "/admin/index.xhtml";// configurar dependiendo del rol
+            } else {
+                // Página de acceso denegado o error
+                paginaRedireccion = "/acceso-denegado.xhtml";
+            }
+
+            
+            Faces.redirect(paginaRedireccion);
+
+        } catch (UsuarioException e) {
+            
+            addDetailMessage("Error: " + e.getMessage());
+            Faces.getExternalContext().getFlash().setKeepMessages(true);
+        }
     }
 
     @Override
     public boolean isLoggedIn() {
-
+        
         return currentUser != null;
     }
 
     public String getEmail() {
         return email;
     }
-
+    
     public void setEmail(String email) {
         this.email = email;
     }
-
+    
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public boolean isRemember() {
         return remember;
     }
-
+    
     public void setRemember(boolean remember) {
         this.remember = remember;
     }
-
+    
     public String getCurrentUser() {
         return currentUser;
     }
-
+    
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
+    }
+    
+    public UsuarioDTO getUsuarioLogueado() {
+        return usuarioLogueado;
     }
 }

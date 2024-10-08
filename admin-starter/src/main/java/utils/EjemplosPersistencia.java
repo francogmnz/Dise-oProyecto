@@ -534,6 +534,31 @@ public class EjemplosPersistencia {
 
     }
     
+    public void inicializarRoles() {
+           FachadaPersistencia.getInstance().iniciarTransaccion();
+
+           String[] roles = {"Admin", "Consultor", "Recepcionista", "Cliente"};
+
+           for (String nombreRol : roles) {
+               List<DTOCriterio> criterios = new ArrayList<>();
+               DTOCriterio criterio = new DTOCriterio();
+               criterio.setAtributo("nombreRol");
+               criterio.setOperacion("=");
+               criterio.setValor(nombreRol);
+               criterios.add(criterio);
+
+               List rolesExistentes = FachadaPersistencia.getInstance().buscar("Rol", criterios);
+
+               if (rolesExistentes.isEmpty()) {
+                   Rol rol = new Rol();
+                   rol.setNombreRol(nombreRol);
+                   FachadaPersistencia.getInstance().guardar(rol);
+               }
+           }
+
+           FachadaPersistencia.getInstance().finalizarTransaccion();
+       }    
+    
     /**
      * Busca un articulo a traves de su codigo (en este caso deberia ser uno por ser unico).
      */

@@ -40,6 +40,8 @@
         <mapping resource="TramiteDocumentacion.hbm.xml"/>
         <mapping resource="TramiteEstadoTramite.hbm.xml"/>
         <mapping resource="Version.hbm.xml"/>
+        <mapping resource="Rol.hbm.xml"/>
+        <mapping resource="Usuario.hbm.xml"/>
 
     </session-factory>
 

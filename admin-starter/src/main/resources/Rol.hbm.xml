@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="entidades.Rol" table="rol">
+        <id name="OID" column="OIDRol">
+            <generator class="uuid2"/>
+        </id>
+        <property name="nombreRol" column="nombre_rol" type="string"/>
+        <property name="fechaHoraBajaRol" column="fecha_hora_baja_rol" type="timestamp"/>
+        <bag name="listaUsuarios" table="usuario" cascade="none" inverse="false">
+            <key column="OIDRol"/>
+            <one-to-many class="entidades.Usuario"/>
+        </bag>
+    </class>
+</hibernate-mapping>
+
+
+

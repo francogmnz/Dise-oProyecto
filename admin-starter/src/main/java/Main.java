@@ -8,6 +8,7 @@ public class Main {
         
 //        EjemplosPersistencia ejemplos = new EjemplosPersistencia();
 //        ejemplos.crearElementos2();
+//        ejemplos.inicializarRoles();
         
         System.out.println("Funcionando");
     }

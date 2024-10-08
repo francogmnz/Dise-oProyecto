@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="entidades.Usuario" table="usuario">
+        <id name="OID" column="OIDUsuario">
+            <generator class="uuid2"/>
+        </id>
+        <property name="username" column="username" type="string"/>
+        <property name="password" column="password" type="string"/>
+        <property name="fechaHoraBajaUsuario" column="fecha_hora_baja_usuario" type="timestamp"/>
+        <many-to-one name="rol" class="entidades.Rol" column="OIDRol" not-null="true"/>
+    </class>
+    
+    
+<!--    <subclass name="entidades.Admin" extends="entidades.Usuario" discriminator-value="Admin">
+
+    </subclass>-->
+
+<!--
+    <subclass name="entidades.Recepcionista" extends="entidades.Usuario" discriminator-value="Recepcionista">
+
+    </subclass>  
+-->          
+</hibernate-mapping>
+
+
