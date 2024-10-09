@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class DTODatosVersionIn {
 
+    private int nroVersion;
+
     private int codTipoTramite;
     private String descripcionVersion;
     private Date fechaDesdeVersion;
@@ -21,6 +23,14 @@ public class DTODatosVersionIn {
     List<DTOEstadoDestinoIN> dtoEstadoDestinoList = new ArrayList<>();
     private Date fechaHastaVersion;
     private String dibujo;
+
+    public int getNroVersion() {
+        return nroVersion;
+    }
+
+    public void setNroVersion(int nroVersion) {
+        this.nroVersion = nroVersion;
+    }
 
     public String getDibujo() {
         return dibujo;
@@ -30,7 +40,6 @@ public class DTODatosVersionIn {
         this.dibujo = dibujo;
     }
 
-  
     public List<DTOEstadoDestinoIN> getDtoEstadoDestinoList() {
         return dtoEstadoDestinoList;
     }

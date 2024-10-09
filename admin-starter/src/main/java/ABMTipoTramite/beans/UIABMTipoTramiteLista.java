@@ -95,12 +95,7 @@ public class UIABMTipoTramiteLista implements Serializable {
         BeansUtils.guardarUrlAnterior();
         return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
     }
-    public String darDeBajaVersion(int codTipoTramite) {
-        controladorABMVersion.darDeBajaVersion(codTipoTramite); // Llamada al método para dar de baja
-        Messages.create("Anulado").detail("La versión ha sido anulada correctamente.").add();
-        return "success"; // O cualquier string que indique el éxito
-}
-
+  
 
 
     public void darDeBajaTipoTramite(int codTipoTramite) {

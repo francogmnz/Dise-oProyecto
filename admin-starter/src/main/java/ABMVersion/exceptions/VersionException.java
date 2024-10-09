@@ -14,8 +14,5 @@ public class VersionException extends Exception{
         super(mensaje);
     }
 
-    public VersionException(String string, Exception e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
 }

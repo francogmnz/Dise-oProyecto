@@ -98,5 +98,13 @@ public class FachadaInterna {
         HibernateUtil.getSession().getTransaction().commit();
         HibernateUtil.getSession().close();
     }
+    void merge(Object objeto) {
+        HibernateUtil.getSession().merge(objeto);
+        HibernateUtil.getSession().flush();
+    }
 
+    void refrescar(Object objeto) {
+        HibernateUtil.getSession().refresh(objeto);
+        HibernateUtil.getSession().flush();
+    }
 }

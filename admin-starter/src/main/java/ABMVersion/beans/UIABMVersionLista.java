@@ -4,14 +4,17 @@ import ABMVersion.ControladorABMVersion;
 import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.VersionDTO;
-import ABMVersion.exceptions.VersionException;
+import entidades.TipoTramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
+import utils.DTOCriterio;
+import utils.FachadaPersistencia;
 
 @Named("uiabmVersionLista")
 @ViewScoped
@@ -47,82 +50,92 @@ public class UIABMVersionLista implements Serializable {
     }
 
     public void filtrar() {
-        // Actualiza la lista de versiones con los filtros aplicados
-        buscarVersiones();
+        mostrarVersion();
     }
 
-    public List<VersionGrillaUI> buscarVersiones() {
-        List<VersionGrillaUI> versionesGrilla = new ArrayList<>();
-        try {
-            List<VersionDTO> versionesDTO = controladorABMVersion.buscarVersion(nroVersionFiltro, descripcionFiltro, 0); // Ajusta según necesidad
-            for (VersionDTO versionDTO : versionesDTO) {
-                VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
-                versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
-                versionGrillaUI.setDescripcionVersion(versionDTO.getDescripcionVersion());
-                versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
-                versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
-                versionGrillaUI.setFechaBajaVersion(versionDTO.getFechaBajaVersion());
-                versionesGrilla.add(versionGrillaUI);
-            }
-        } catch (Exception e) {
-            Messages.create("Error al recuperar las versiones.").error().detail(e.getMessage()).add();
-        }
-        return versionesGrilla;
+   
+
+    public void anularVersion(int codTipoTramite, int nroVersion) {
+
+        controladorABMVersion.anularVersion(codTipoTramite, nroVersion);
+        Messages.create("Versión anulada").detail("La versión ha sido anulada correctamente.").add();
     }
-    public void darDeBajaVersion(int nroVersion) {
-     
-            controladorABMVersion.darDeBajaVersion(nroVersion);
-            Messages.create("Versión anulada").detail("La versión ha sido anulada correctamente.").add();
-        
-    }
+
     public String irConfigurarTipoTramite(int codTipoTramite) {
         BeansUtils.guardarUrlAnterior();
         return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
     }
+
     public List<VersionGrillaUI> mostrarVersion() {
-    List<VersionGrillaUI> versionesGrilla = new ArrayList<>();
-    try {
-        List<DTOTipoTramiteVersion> versionesDTO = controladorABMVersion.mostrarVersion();
-        
-        for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
-            VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
-            versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
-            versionGrillaUI.setCodTipoTramite(versionDTO.getCodTipoTramite());
-            versionGrillaUI.setNombreTipoTramite(versionDTO.getNombreTipoTramite());
-            versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
-            versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
+        List<VersionGrillaUI> versionesGrilla = new ArrayList<>();
+        try {
+            List<DTOTipoTramiteVersion> versionesDTO = controladorABMVersion.mostrarVersion();
 
-            // Si la versión es 0, la añades a la lista para que se pueda modificar
-            if (versionDTO.getNroVersion() == 0) {
-                versionesGrilla.add(versionGrillaUI);
-            }
-        }
-
-        // Buscar y agregar la versión más alta para cada tipo de trámite
-        for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
-            boolean esVersionMasAlta = true;
-            for (DTOTipoTramiteVersion otraVersionDTO : versionesDTO) {
-                if (versionDTO.getCodTipoTramite() == otraVersionDTO.getCodTipoTramite() &&
-                    otraVersionDTO.getNroVersion() > versionDTO.getNroVersion()) {
-                    esVersionMasAlta = false;
-                    break;
-                }
-            }
-            // Si es la versión más alta, agregarla a la lista
-            if (esVersionMasAlta) {
+            for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
                 VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
                 versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
                 versionGrillaUI.setCodTipoTramite(versionDTO.getCodTipoTramite());
                 versionGrillaUI.setNombreTipoTramite(versionDTO.getNombreTipoTramite());
                 versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
                 versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
-                versionesGrilla.add(versionGrillaUI);
+
+                // Si la versión es 0, la añades a la lista para que se pueda modificar
+                if (versionDTO.getNroVersion() == 0) {
+                    versionesGrilla.add(versionGrillaUI);
+                }
+            }
+
+            // Buscar y agregar la versión más alta para cada tipo de trámite
+            for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
+                boolean esVersionMasAlta = true;
+                for (DTOTipoTramiteVersion otraVersionDTO : versionesDTO) {
+                    if (versionDTO.getCodTipoTramite() == otraVersionDTO.getCodTipoTramite()
+                            && otraVersionDTO.getNroVersion() > versionDTO.getNroVersion()) {
+                        esVersionMasAlta = false;
+                        break;
+                    }
+                }
+                // Si es la versión más alta, agregarla a la lista
+                if (esVersionMasAlta) {
+                    VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
+                    versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
+                    versionGrillaUI.setCodTipoTramite(versionDTO.getCodTipoTramite());
+                    versionGrillaUI.setNombreTipoTramite(versionDTO.getNombreTipoTramite());
+                    versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
+                    versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
+                    versionesGrilla.add(versionGrillaUI);
+                }
+            }
+
+            // Aquí puedes llamar a un método para actualizar la UI
+        } catch (Exception e) {
+            Messages.create("Error al recuperar las versiones.").error().detail(e.getMessage()).add();
+        }
+
+        return versionesGrilla;
+    }
+
+    public boolean isAnulable(VersionGrillaUI v) {
+        if (v.getNroVersion() > 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public boolean isVersionActiva(VersionGrillaUI v) {
+        if (v != null) {
+            Timestamp fd = v.getFechaDesdeVersion();
+            Timestamp fh = v.getFechaHastaVersion();
+            Timestamp fb = v.getFechaBajaVersion();
+            if (fb == null) {  // Si no hay fecha de baja
+                Timestamp hoy = new Timestamp(System.currentTimeMillis());
+                // Verifica si hoy está dentro del rango de fechas
+                return fd.before(hoy) && fh.after(hoy);
             }
         }
-    } catch (Exception e) {
-        Messages.create("Error al recuperar las versiones.").error().detail(e.getMessage()).add();
+        return false; // Si la versión es nula o no está activa
     }
-    return versionesGrilla;
-}
 
+    
 }

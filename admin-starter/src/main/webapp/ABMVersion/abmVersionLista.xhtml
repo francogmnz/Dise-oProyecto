@@ -126,18 +126,20 @@
                     <p:column>
                         <f:facet name="header">Número de Versión</f:facet>
                             #{version.nroVersion}
+                        
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Fecha DEsde</f:facet>
-                            #{version.fechaDesdeVersion}
+                        <f:facet name="header">Fecha Desde</f:facet>
+                        <h:outputText value="#{version.fechaDesdeVersion}">
+                        
+                        </h:outputText>
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Fecha Hasta</f:facet>
-                            #{version.fechaHastaVersion}
+                        <f:facet name="header">Fecha Baja</f:facet>
+                            #{version.fechaBajaVersion}
                     </p:column>
-
 
                     <!--
                     <p:column>
@@ -177,12 +179,15 @@
 
                         <p:spacer width="5"/>
 
-                        <!-- Botón Eliminar en forma circular con ícono de cruz -->
-                        <p:commandButton styleClass="btn-circle btn-eliminar" icon="fa fa-trash" 
-                                         action="#{uiabmVersionLista.irConfigurarTipoTramite(version.codTipoTramite)}"
-                                         disabled="#{version.fechaBajaVersion != null}">
-                            <p:confirm header="Anulación de #{version.nroVersion}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                        <p:commandButton styleClass="btn-circle btn-eliminar" 
+                                         icon="fa fa-trash" 
+                                         action="#{uiabmVersionLista.anularVersion(version.codTipoTramite, version.nroVersion)}"
+                                         update="grid1" >
+                            <p:confirm header="Anulación de #{version.codTipoTramite}" 
+                                       message="¿Está seguro?" 
+                                       icon="ui-icon-alert"/>
                         </p:commandButton>
+
 
                         <p:spacer width="5"/>
 
