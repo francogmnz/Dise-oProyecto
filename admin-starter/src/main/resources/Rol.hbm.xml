@@ -7,12 +7,10 @@
         <id name="OID" column="OIDRol">
             <generator class="uuid2"/>
         </id>
+        
         <property name="nombreRol" column="nombre_rol" type="string"/>
         <property name="fechaHoraBajaRol" column="fecha_hora_baja_rol" type="timestamp"/>
-        <bag name="listaUsuarios" table="usuario" cascade="none" inverse="false">
-            <key column="OIDRol"/>
-            <one-to-many class="entidades.Usuario"/>
-        </bag>
+        
     </class>
 </hibernate-mapping>
 

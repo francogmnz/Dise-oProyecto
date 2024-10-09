@@ -14,9 +14,7 @@ import java.util.List;
 public class Rol extends Entidad {
     private String nombreRol;
     private Timestamp fechaHoraBajaRol;
-    private List<Usuario> listaUsuarios; 
-
-
+   
 
     public String getNombreRol() {
         return nombreRol;
@@ -34,11 +32,4 @@ public class Rol extends Entidad {
         this.fechaHoraBajaRol = fechaHoraBajaRol;
     }
 
-    public List<Usuario> getListaUsuarios() {
-        return listaUsuarios;
-    }
-
-    public void setListaUsuarios(List<Usuario> listaUsuarios) {
-        this.listaUsuarios = listaUsuarios;
-    }
 }
