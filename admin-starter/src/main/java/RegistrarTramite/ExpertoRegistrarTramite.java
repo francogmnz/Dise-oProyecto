@@ -102,16 +102,17 @@ public class ExpertoRegistrarTramite {
         // Filtro para Cliente
         // Buscar("Cliente", "dniCliente = " + dniCliente): List<Object>
         if (dniCliente > 0) {
+            List<DTOCriterio> criterioListC = new ArrayList<DTOCriterio>();
             DTOCriterio criterioCliente = new DTOCriterio();
 
             criterioCliente.setAtributo("dniCliente");
             criterioCliente.setOperacion("=");
             criterioCliente.setValor(dniCliente);
-            criterioList.add(criterioCliente);
+            criterioListC.add(criterioCliente);
 
             Cliente clienteEncontrado = null;
 
-            List lClientes = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+            List lClientes = FachadaPersistencia.getInstance().buscar("Cliente", criterioListC);
             if (lClientes.size() > 0) {
                 clienteEncontrado = (Cliente) lClientes.get(0);
             }
@@ -128,16 +129,17 @@ public class ExpertoRegistrarTramite {
         // Filtro para TipoTramite
         // buscar("TipoTramite", "codTipoTramite = " + codTipoTramite): List<Object>
         if (codTipoTramite > 0) {
+            List<DTOCriterio> criterioListTT = new ArrayList<DTOCriterio>();
             DTOCriterio criterioTT = new DTOCriterio();
 
             criterioTT.setAtributo("codTipoTramite");
             criterioTT.setOperacion("=");
             criterioTT.setValor(codTipoTramite);
-            criterioList.add(criterioTT);
+            criterioListTT.add(criterioTT);
 
             TipoTramite tipoTramiteEncontrado = null;
 
-            List ltipoTramites = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+            List ltipoTramites = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioListTT);
             if (!ltipoTramites.isEmpty()) {
                 tipoTramiteEncontrado = (TipoTramite) ltipoTramites.get(0);
             }
@@ -153,16 +155,18 @@ public class ExpertoRegistrarTramite {
         // Filtro para EstadoTramite
         // buscar("EstadoTramite", "nombreEstadoTramite = " + nombreEstadoTramite): List<Object>
         if (nombreEstadoTramite.trim().length() > 0) {
+            List<DTOCriterio> criterioListET = new ArrayList<DTOCriterio>();
+            
             DTOCriterio dtoEstado = new DTOCriterio();
 
             dtoEstado.setAtributo("nombreEstadoTramite");
             dtoEstado.setOperacion("=");
             dtoEstado.setValor(nombreEstadoTramite);
-            criterioList.add(dtoEstado);
+            criterioListET.add(dtoEstado);
 
             EstadoTramite estadoEncontrado = null;
 
-            List estadoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+            List estadoList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioListET);
             if (!estadoList.isEmpty()) {
                 estadoEncontrado = (EstadoTramite) estadoList.get(0);
             }
@@ -178,6 +182,7 @@ public class ExpertoRegistrarTramite {
         + "OR Cliente = " + cliente.toString() + "OR TipoTramite = " + tipoTramite.toString() 
         + "OR EstadoTramite = " + estadoTramite.toString()*/
         List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList); // busca Tramites, segun los criterios indicados
+        criterioList.clear();
         List<DTOTramite> tramiteResultados = new ArrayList<>();
 
         // Loop por cada Tramite para setear los atributos requeridos en DTOTramite
