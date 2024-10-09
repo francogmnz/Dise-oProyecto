@@ -559,6 +559,52 @@ public class EjemplosPersistencia {
            FachadaPersistencia.getInstance().finalizarTransaccion();
        }    
     
+    public void inicializarAdmin() {
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+
+        
+        List<DTOCriterio> criteriosRol = new ArrayList<>();
+        DTOCriterio criterioRol = new DTOCriterio();
+        criterioRol.setAtributo("nombreRol");
+        criterioRol.setOperacion("=");
+        criterioRol.setValor("Admin");
+        criteriosRol.add(criterioRol);
+
+        List roles = FachadaPersistencia.getInstance().buscar("Rol", criteriosRol);
+        Rol rolAdmin;
+
+        if (roles.isEmpty()) {
+            
+            rolAdmin = new Rol();
+            rolAdmin.setNombreRol("Admin");
+            FachadaPersistencia.getInstance().guardar(rolAdmin);
+        } else {
+            rolAdmin = (Rol) roles.get(0);
+        }
+
+        
+        List<DTOCriterio> criteriosUsuario = new ArrayList<>();
+        DTOCriterio criterioUsuario = new DTOCriterio();
+        criterioUsuario.setAtributo("username");
+        criterioUsuario.setOperacion("=");
+        criterioUsuario.setValor("admin");
+        criteriosUsuario.add(criterioUsuario);
+
+        List usuarios = FachadaPersistencia.getInstance().buscar("Usuario", criteriosUsuario);
+
+        if (usuarios.isEmpty()) {
+            
+            Usuario admin = new Usuario();
+            admin.setUsername("admin");
+            admin.setPassword(PasswordUtils.hashPassword("admin")); 
+            admin.setRol(rolAdmin);
+
+            FachadaPersistencia.getInstance().guardar(admin);
+        }
+
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+    }
+    
     /**
      * Busca un articulo a traves de su codigo (en este caso deberia ser uno por ser unico).
      */

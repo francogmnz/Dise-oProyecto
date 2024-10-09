@@ -32,6 +32,10 @@
             <p:commandButton styleClass="btn btn-success btn-block" action="#{logonMB.login}" onclick="showBar()" oncomplete="if(args.validationFailed){hideBar()}"
                              value="Iniciar Sesión" update="@form"/>
         </div>
+        <div class="col-xs-12">
+            <p:commandButton value="¿Deseas registrarte como usuario?" styleClass="btn btn-primary btn-block"
+                 action="#{logonMB.irARegistro}" immediate="true" />
+        </div>
     </div>
 </h:form>
 </h:body>

@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this template
--->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.Recepcionista" table="recepcionista">
+
+        <id name="OID" type="string">
+            <column name="OIDRecepcionista"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="legajoRecepcionista" type="int">
+            <column name="legajo_recepcionista"/>
+        </property>
+
+        <property name="nombreRecepcionista" type="string">
+            <column name="nombre_recepcionista"/>
+        </property>
 
 
 
-<root>
-    
-</root>
+        <property name="fechaHoraBajaRecepcionista" column="fecha_hora_baja_recepcionista" type="timestamp"/>
+        
+        <many-to-one name="usuario" class="entidades.Usuario" column="OIDUsuario" not-null="false"/>
+
+
+
+    </class>
+
+</hibernate-mapping>
 

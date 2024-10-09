@@ -42,6 +42,8 @@
         <mapping resource="Version.hbm.xml"/>
         <mapping resource="Rol.hbm.xml"/>
         <mapping resource="Usuario.hbm.xml"/>
+        <mapping resource="Admin.hbm.xml"/>
+        <mapping resource="Recepcionista.hbm.xml"/>
 
     </session-factory>
 

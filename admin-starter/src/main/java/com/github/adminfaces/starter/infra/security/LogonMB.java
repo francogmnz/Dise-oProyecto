@@ -14,6 +14,8 @@ import java.io.Serializable;
 
 import static com.github.adminfaces.starter.util.Utils.addDetailMessage;
 import com.github.adminfaces.template.config.AdminConfig;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 
 /**
@@ -49,7 +51,7 @@ public class LogonMB extends AdminSession implements Serializable {
             
             usuarioLogueado = controladorABMUsuario.iniciarSesion(email, password);
 
-            // Asignar el usuario actual
+            
             currentUser = usuarioLogueado.getUsername();
 
             
@@ -68,7 +70,7 @@ public class LogonMB extends AdminSession implements Serializable {
             } else if ("Cliente".equals(usuarioLogueado.getRolNombre())) {
                 paginaRedireccion = "/admin/index.xhtml";// configurar dependiendo del rol
             } else {
-                // Página de acceso denegado o error
+                
                 paginaRedireccion = "/acceso-denegado.xhtml";
             }
 
@@ -88,6 +90,16 @@ public class LogonMB extends AdminSession implements Serializable {
         return currentUser != null;
     }
 
+    public String irARegistro() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/admin/login/register.xhtml");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo redirigir a la página de registro."));
+        }
+        return null; 
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -124,3 +136,4 @@ public class LogonMB extends AdminSession implements Serializable {
         return usuarioLogueado;
     }
 }
+

@@ -24,6 +24,7 @@
 
         <property name="fechaHoraBajaConsultor" column="fecha_hora_baja_consultor" type="timestamp"/>
 
+        <many-to-one name="usuario" class="entidades.Usuario" column="OIDUsuario" not-null="false"/>
 
 
     </class>

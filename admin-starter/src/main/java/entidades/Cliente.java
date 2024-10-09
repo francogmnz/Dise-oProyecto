@@ -9,6 +9,8 @@ public class Cliente extends Entidad {
     private String apellidoCliente;
     private String mailCliente;
     private Timestamp fechaHoraBajaCliente;
+    
+    private Usuario usuario;
 
     public Cliente() {
     }
@@ -51,6 +53,14 @@ public class Cliente extends Entidad {
 
     public void setFechaHoraBajaCliente(Timestamp fechaHoraBajaCliente) {
         this.fechaHoraBajaCliente = fechaHoraBajaCliente;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
     
     
