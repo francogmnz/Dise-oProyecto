@@ -11,7 +11,6 @@
     <ui:define name="body">
 
         <h:form id="tramiteForm">
-
             <p:tabView dynamic="true" cache="true" effect="fold">
                 <p:tab title="Datos Trámite">
                     <!-- Pestaña Datos Tramite -->
@@ -132,12 +131,17 @@
                         <p:dataTable id="tablaDoc" var="doc" value="#{uiresumen.resumenDoc}">
                             <!-- Columna: Nombre documento -->
                             <p:column style="text-align: center">
+                                <f:facet name="header">codTD</f:facet>
+                                    #{doc.codTD}
+                            </p:column>
+
+                            <p:column style="text-align: center">
                                 <f:facet name="header">Nombre documento</f:facet>
                                     #{doc.nombreDocumentacion}
                             </p:column>
 
                             <!-- Columna: Estado Entrega -->
-                            <p:column style="text-align: center">
+                            <p:column id="estadoEntrega" style="text-align: center">
                                 <f:facet name="header">Estado Entrega</f:facet>
                                 <h:outputText value="#{doc.fechaEntregaDoc != null ? 'ENTREGADO' : 'PENDIENTE'}" 
                                               style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
@@ -147,23 +151,58 @@
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
                                 <div class="card custom-upload">
-                                    <h:form id="frmSingle">
+                                    <h:form id="frmSingle#{doc.codTD}">
+                                        <!-- Campo oculto para enviar el codTD -->
+                                        <h:inputHidden id="codTD" value="#{uiresumen.codTD}"/>
+
+                                        <!-- Componente fileUpload -->
                                         <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
-                                                      mode="advanced" dragDropSupport="true" auto="true"
-                                                      onstart="showBar()" oncomplete="hideBar(); window.location.reload();"
-                                                      multiple="true" update="messages" sizeLimit="1000000"
-                                                      fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
+                                                      mode="advanced" 
+                                                      dragDropSupport="true" 
+                                                      auto="true"
+                                                      onstart="showBar()" 
+                                                      oncomplete="PF('msgDialog').show(); window.location.reload();"
+                                                      update="@form"
+                                                      multiple="true"
+                                                      sizeLimit="1000000"
+                                                      allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/"
+                                                      disabled="#{uiresumen.fileUploadDisabled}">
+                                        </p:fileUpload>
+
+                                        <!-- Botón para seleccionar el archivo y actualizar el codTD -->
+                                        <p:commandButton value="Validar"
+                                                         actionListener="#{uiresumen.setCodTD(doc.codTD)}"
+                                                         update="@form"
+                                                         process="@this"
+                                                         oncomplete="PF('msgDialog').hide();">
+                                        </p:commandButton>
                                     </h:form>
+
                                 </div>
                             </p:column>
-                                <p:column style="text-align: center">
-                                    <f:facet name="header">Descarga</f:facet>
-                                   <p:commandButton value="Descargar archivo" ajax="false"
+
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Descarga</f:facet>
+                                <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
                                                  icon="pi pi-arrow-down"  styleClass="btn-success">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>    
-                                </p:column>
+                            </p:column>
+
+                            <!-- Columna: Botón de Eliminar -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Eliminar</f:facet>
+                                <p:commandButton value="Eliminar"
+                                                 actionListener="#{uiresumen.eliminarArchivo(doc.codTD)}"
+                                                 icon="pi pi-trash"
+                                                 update="tablaDoc"
+                                                 oncomplete="PF('msgDialog').show();"
+                                                 disabled="#{doc.fechaEntregaDoc == null}">
+                                </p:commandButton> 
+                            </p:column>
+
+
                         </p:dataTable>
                     </p:panel>
                 </p:tab>

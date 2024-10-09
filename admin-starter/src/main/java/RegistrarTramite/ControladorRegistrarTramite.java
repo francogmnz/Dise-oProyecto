@@ -14,6 +14,11 @@ public class ControladorRegistrarTramite {
 
     private ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
 
+    public void eliminarDocumentacion(int codTD, int nroTramite) throws Exception {
+        expertoRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
+    }
+
+    
     public List<DTOEstadoTramite> mostrarComboEstados() {
         return expertoRegistrarTramite.mostrarComboEstados();
     }

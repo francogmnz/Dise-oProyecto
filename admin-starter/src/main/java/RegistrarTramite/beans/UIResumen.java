@@ -11,7 +11,6 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import jakarta.servlet.http.Part;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +24,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FilesUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.file.UploadedFiles;
 import org.primefaces.shaded.commons.io.IOUtils;
 import utils.BeansUtils;
 import utils.DTOCriterio;
@@ -231,14 +233,6 @@ public class UIResumen implements Serializable {
         this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
-    public int getCodTD() {
-        return codTD;
-    }
-
-    public void setCodTD(int codTD) {
-        this.codTD = codTD;
-    }
-
     public String getNombreTD() {
         return nombreTD;
     }
@@ -246,8 +240,6 @@ public class UIResumen implements Serializable {
     public void setNombreTD(String nombreTD) {
         this.nombreTD = nombreTD;
     }
-    
-    
 
     public List<DTODocumentacion> getResumenDoc() {
         return resumenDoc;
@@ -282,35 +274,67 @@ public class UIResumen implements Serializable {
         return "Tramite?faces-redirect=true&codTD=" + codTD + "&nroTramite=" + nroTramite;
     }
 
-    // Manejar la subida del archivo
+    public int getCodTD() {
+        return codTD;
+    }
+
+    public void setCodTD(int codTD) {
+        this.codTD = codTD;
+        System.out.println("codTD activo actualizado: " + codTD);
+        this.fileUploadDisabled = false; // Habilita el fileUpload
+
+    }
+
+    private boolean fileUploadDisabled = true; // Inicia deshabilitado
+
+    public boolean isFileUploadDisabled() {
+        return fileUploadDisabled;
+    }
+
+    public void setFileUploadDisabled(boolean fileUploadDisabled) {
+        this.fileUploadDisabled = fileUploadDisabled;
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
         try {
+            System.out.println("codTD recibido: " + codTD);
             FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
-            //Convierto el archivo subido en Base64
+            // Convertir el archivo a Base64 y almacenar
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
 
             DTOFile fileU = new DTOFile();
-
-            //Usar DTOFile para almacenar el archivo subido
             fileU.setNombre(event.getFile().getFileName());
             fileU.setContenidoB64(encodedString);
 
-            //System.out.println("encriptado =" + fileEjemplo.getContenidoB64());
-            //llamo a la funcion registrarDocumentacion una vez cargado el archivo
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
-
             this.file = fileU;
 
+            // Deshabilitar el upload una vez que se suba un archivo
         } catch (IOException ex) {
             Logger.getLogger(UIResumen.class.getName()).log(Level.SEVERE, null, ex);
-
         }
     }
 
-    // Manejar la descarga del archivo
+    public void eliminarArchivo(int codTD) {
+        try {
+            // Llamar al experto para eliminar la documentación
+            controladorRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
+
+            // Mensaje de éxito
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Archivo eliminado", "El archivo ha sido eliminado correctamente."));
+        } catch (Exception e) {
+            // Manejo de errores
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar el archivo."));
+            e.printStackTrace();
+        }
+    }
+
+// Manejar la descarga del archivo
     private DefaultStreamedContent fileD;
     private DTOFile file = new DTOFile();
 
@@ -353,8 +377,10 @@ public class UIResumen implements Serializable {
                         .contentType("application/octet-stream") // Tipo genérico para archivos binarios
                         .stream(() -> inputStream) // Proporciona el flujo de datos del archivo
                         .build();
+
             } catch (Exception ex) {
-                Logger.getLogger(UIResumen.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UIResumen.class
+                        .getName()).log(Level.SEVERE, null, ex);
 
             }
 
