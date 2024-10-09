@@ -207,9 +207,6 @@ public class UITramiteLista implements Serializable {
         return "ResumenTramite?faces-redirect=true&nroTramite=" + nroTramite;
     }
 
-    public void anularTramite(int nroTramite) {
-    }
-
     // loop por cada DTOTipoTramite desde la UI para mostrar los TipoTramite filtrados
     public List<FiltrosTipoTramiteGrillaUI> buscarTipoTramite() {
         System.out.println(codTipoTramiteFiltro);

@@ -19,7 +19,26 @@ public class ControladorRegistrarTramite {
         expertoRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
     }
 
+    int ultimoNroTramite = buscarUltimoNroTramite();
+
+    public int getUltimoNroTramite() {
+        return ultimoNroTramite;
+    }
+
+    public void setUltimoNroTramite(int ultimoNroTramite) {
+        this.ultimoNroTramite = ultimoNroTramite;
+    }
     
+    public static int buscarUltimoNroTramite() {
+        return ExpertoRegistrarTramite.buscarUltimoNroTramite();
+    }
+    
+    
+
+    public TramiteDocumentacion buscarDocDescargar(int codigoDoc) {
+        return expertoRegistrarTramite.buscarDocDescargar(codigoDoc);
+    }
+
     public List<DTOEstadoTramite> mostrarComboEstados() {
         return expertoRegistrarTramite.mostrarComboEstados();
     }
@@ -51,14 +70,9 @@ public class ControladorRegistrarTramite {
     public List<DTOTipoTramite> buscarTipoTramite(int codTipoTramite, String nombreTipoTramite, String nombreCategoria, String descTipoTramite) {
         return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nombreTipoTramite, nombreCategoria, descTipoTramite);
     }
-    
-    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite){
+
+    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite) {
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD, nroTramite);
     }
-    
-    public TramiteDocumentacion buscarDocDescargar(int codigoDoc){
-        return expertoRegistrarTramite.buscarDocDescargar(codigoDoc);
-    }
-    
-    
+
 }

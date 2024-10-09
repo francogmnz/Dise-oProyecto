@@ -9,6 +9,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -121,6 +122,7 @@ public class UIRegistrarTramite implements Serializable {
 
     // obtenerCliente(dniCliente): DTOCliente
     public void obtenerCliente() {
+
         try {
             DTOCliente dtoCliente = controladorRegistrarTramite.obtenerCliente(dni);
             if (dtoCliente != null) {
@@ -128,12 +130,13 @@ public class UIRegistrarTramite implements Serializable {
                 apellidoCliente = dtoCliente.getApellidoCliente();
                 mailCliente = dtoCliente.getMailCliente();
             }
+
         } catch (RegistrarTramiteException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el Cliente"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el Cliente"));
         }
     }
 
-    // obtenerTipoTramite(codTipoTramite): DTOTipoTramite
+// obtenerTipoTramite(codTipoTramite): DTOTipoTramite
     public void obtenerTipoTramite() {
         try {
             DTOTipoTramite dtoTipoTramite = controladorRegistrarTramite.obtenerTipoTramite(codTipoTramite);
@@ -142,21 +145,23 @@ public class UIRegistrarTramite implements Serializable {
                 nombreTipoTramite = dtoTipoTramite.getNombreTipoTramite();
             }
         } catch (RegistrarTramiteException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el TipoTramite"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el TipoTramite"));
         }
     }
 
-    public void registrarTramite() {
+    public String registrarTramite() throws IOException {
         try {
             controladorRegistrarTramite.registrarTramite();
-            // Si el registro es exitoso, redirige a la página anterior
-            BeansUtils.redirectToPreviousPage();
+            nroTramite = controladorRegistrarTramite.getUltimoNroTramite();
+            // Redirigir al resumen del trámite con el número del trámite
+            return "ResumenTramite?faces-redirect=true&nroTramite=" + nroTramite;
         } catch (RegistrarTramiteException e) {
             // Si ocurre una excepción, muestra el mensaje de error
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
             // No redirigir en caso de error, solo mostrar el mensaje
         }
+        return null;
     }
 
     // Signo de ayuda para ir a los filtros de TipoTramite

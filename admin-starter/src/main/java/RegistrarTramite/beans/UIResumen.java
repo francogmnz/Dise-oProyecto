@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -58,6 +59,8 @@ public class UIResumen implements Serializable {
     private Timestamp fechaEntregaDoc;
     private List<DTODocumentacion> resumenDoc;
 
+    private Timestamp fechaLimite;
+
     @PostConstruct
     public void init() {
         // Obtener el parámetro de la URL
@@ -77,6 +80,12 @@ public class UIResumen implements Serializable {
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
+                    if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(fechaRecepcionTramite);
+                        calendar.add(Calendar.DAY_OF_MONTH, plazoDocumentacion);  // Suma los días del plazo
+                        fechaLimite = new Timestamp(calendar.getTimeInMillis());
+                    }
                     this.precioTramite = tramiteElegido.getPrecioTramite();
                     this.codTipoTramite = tramiteElegido.getCodTipoTramite();
                     this.nombreTipoTramite = tramiteElegido.getNombreTipoTramite();
@@ -257,6 +266,21 @@ public class UIResumen implements Serializable {
         this.fileD = fileD;
     }
 
+    // Método para calcular la fecha límite
+    public Timestamp getFechaLimite() {
+        if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaRecepcionTramite);
+            calendar.add(Calendar.DAY_OF_MONTH, plazoDocumentacion);  // Suma los días del plazo
+            fechaLimite = new Timestamp(calendar.getTimeInMillis());
+        }
+        return fechaLimite;
+    }
+
+    public void setFechaLimite(Timestamp fechaLimite) {
+        this.fechaLimite = fechaLimite;
+    }
+
     ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
 
     // anularTramite()
@@ -281,7 +305,8 @@ public class UIResumen implements Serializable {
     public void setCodTD(int codTD) {
         this.codTD = codTD;
         System.out.println("codTD activo actualizado: " + codTD);
-        this.fileUploadDisabled = false; //Habilita el fileUpload
+        this.fileUploadDisabled = false; // Habilita el fileUpload
+
     }
 
     private boolean fileUploadDisabled = true; // Inicia deshabilitado
@@ -371,6 +396,7 @@ public class UIResumen implements Serializable {
             } catch (Exception ex) {
                 Logger.getLogger(UIResumen.class
                         .getName()).log(Level.SEVERE, null, ex);
+
             }
 
         }
@@ -379,4 +405,8 @@ public class UIResumen implements Serializable {
         return fileD;
     }
 
+    // Boton agregar volver a tramites
+    public String irPantallaTramites() {
+        return "TramiteLista?faces-redirect=true";
+    }
 }
