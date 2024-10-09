@@ -1,15 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
--->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
     <ui:define name="metadata">
-        <ui:param name="title" value="Gestión de Trámites"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+        <ui:param name="title" value="Gestión de Trámites"/> 
 
         <style type="text/css">
             .ui-datatable .ui-datatable-header {
@@ -23,7 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     </ui:define>
 
     <ui:define name="body">
-        <h:form>
+        <h:form id="form1">
             <p:focus context="@form"/>
             <div class="box box-primary">
 
@@ -33,7 +27,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                          styleClass="btn-block btn-warning btn-lg"/>
                     </div>
                 </div>
-
 
                 <!-- Tabla para mostrar la lista de Tramites -->
                 <p:separator/>
@@ -48,6 +41,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="nroTramiteFiltro" style="width:150px"
                                          placeholder="Número trámite" value="#{uitramiteLista.nroTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
@@ -63,6 +57,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="dniFiltro" style="width:150px"
                                          placeholder="DNI" value="#{uitramiteLista.dniFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
@@ -80,6 +75,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputText id="codTipoTramiteFiltro" style="width:150px"
                                          placeholder="Codigo tipo trámite" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
                                 <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}"
                                         update="@form:grid1" />
@@ -105,6 +101,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-6">
+                        <h:outputText value="Estado:"/>
                         <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
                             <f:selectItem itemLabel="Seleccione un Estado" />
                             <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"
@@ -113,16 +110,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                            itemLabel="#{estadoTramite.nombreEstado}"/> 
                             <p:ajax event="change" listener="#{uitramiteLista.filtrar()}" update="@form:grid1" />
                         </p:selectOneMenu>
-
                     </div>
+                    
+                    <div class="ui-g-12 ui-md-6">
+                        <h:outputText value="Ordenar por"/>
+                            <p:selectOneMenu value="#{uitramiteLista.criterio}">
+                                <f:selectItem itemLabel="Número Trámite Ascendente" itemValue="codAsc" />
+                                <f:selectItem itemLabel="Número Trámite Descendente" itemValue="codDesc" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Ordenar" actionListener="#{uitramiteLista.mostrarTramites}" update="form1:grid1" />
+                    </div>
+                    
                 </div>
-
-
+           
+                
                 <p:spacer height="5"/>
 
-                <p:dataTable id="grid1" widgetVar="tramiteTable" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
-                             paginator="true" rowsPerPageTemplate="5,10" rows="5"  paginatorPosition="bottom" >
-
+                <!-- Tabla para mostrar los trámites -->
+                <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
+                             paginator="true" rows="10" paginatorPosition="bottom">
                     <p:column>
                         <f:facet name="header">Número Trámite</f:facet>
                         <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
@@ -133,12 +139,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                     <p:column>
                         <f:facet name="header">DNI</f:facet>
-                            #{tramite.dni}
+                        #{tramite.dni}
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Codigo Tipo Trámite</f:facet>
-                            #{tramite.codTipoTramite}
+                        #{tramite.codTipoTramite}
                     </p:column>
 
                     <p:column>
@@ -150,10 +156,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                     <p:column>
                         <f:facet name="header">Estado Trámite</f:facet>
-                            #{tramite.nombreEstado}
+                        #{tramite.nombreEstado}
                     </p:column>
 
                 </p:dataTable>
+
             </div>
 
             <div class="col-sm-12 col-md-3">
@@ -161,6 +168,5 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                  styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
             </div>
         </h:form>
-
     </ui:define>
 </ui:composition>

@@ -25,62 +25,6 @@ public class FachadaInterna {
         return fachadaInterna;
     }
 
-//     List<Object> buscar(String claseABuscar, List<DTOCriterio> criterioList) {
-//        if (HibernateUtil.getSession().getTransaction().isActive())
-//        {
-//            HibernateUtil.getSession().getTransaction().commit();
-//        }
-//        HibernateUtil.getSession().beginTransaction();
-//        
-//        Criteria cr = null;
-//        try {
-//            cr = HibernateUtil.getSession().createCriteria(Class.forName(paqueteEntidades + "." + claseABuscar), claseABuscar.toLowerCase());
-//        } catch (ClassNotFoundException e) {
-//            System.out.println("Error creating criteria. " + e);
-//        }
-//        if (criterioList != null) {
-//            for (DTOCriterio criterio : criterioList) {
-//                String atributo = criterio.getAtributo();
-//                String operacion = criterio.getOperacion();
-//                Object valor = criterio.getValor();
-//
-//                switch (operacion) {
-//                    case "=":
-//                        cr.add(Restrictions.conjunction(Restrictions.eqOrIsNull(atributo, valor)));
-//                        break;
-//                    case "<":
-//                        cr.add(Restrictions.conjunction(Restrictions.lt(atributo, valor)));
-//                        break;
-//                    case ">":
-//                        cr.add(Restrictions.conjunction(Restrictions.gt(atributo, valor)));
-//                        break;
-//                    case "<=":
-//                        cr.add(Restrictions.conjunction(Restrictions.le(atributo, valor)));
-//                        break;
-//                    case ">=":
-//                        cr.add(Restrictions.conjunction(Restrictions.ge(atributo, valor)));
-//                        break;
-//                    case "<>":
-//                        cr.add(Restrictions.conjunction(Restrictions.ne(atributo, valor)));
-//                        break;
-//                    case "like":
-//                        cr.add(Restrictions.conjunction(Restrictions.ilike(atributo,(String)valor,MatchMode.ANYWHERE)));
-//                        break;
-//                    case "contains":
-//                        // atributo tiene que se igual al nombre de la lista contenedora
-//                        String property = String.format("%s.%s", claseABuscar.toLowerCase(), atributo);
-//                        cr.setFetchMode(property, FetchMode.JOIN);
-//                        cr.createAlias(property, "lista");
-//                        cr.setFetchMode("lista.OID" + claseABuscar, FetchMode.JOIN);
-//                        cr.add(Restrictions.eq("lista.OID", ((entidades.Entidad) valor).getOID()));
-//                        break;
-//                }
-//
-//            }
-//        }
-//
-//        return cr.list();
-//    }
     List<Object> buscar(String claseABuscar, List<DTOCriterio> criterioList) {
         if (HibernateUtil.getSession().getTransaction().isActive()) {
             HibernateUtil.getSession().getTransaction().commit();
@@ -137,9 +81,15 @@ public class FachadaInterna {
                                 cr.add(Restrictions.between(atributo, valoresBetween[0], valoresBetween[1]));
                             }
                             break;
+                            
                         case "desc":  // Para el orden descendente y obtener el nroTramite
                             cr.addOrder(Order.desc(atributo));
                             break;
+                            
+                        case "asc":  // Para el orden asc y obtener el nroTramite
+                            cr.addOrder(Order.asc(atributo));
+                            break;
+                            
                         case "contains":
                             String property = String.format("%s.%s", claseABuscar.toLowerCase(), atributo);
                             cr.setFetchMode(property, FetchMode.JOIN);

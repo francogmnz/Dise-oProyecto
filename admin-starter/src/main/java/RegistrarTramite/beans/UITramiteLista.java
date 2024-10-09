@@ -23,6 +23,7 @@ public class UITramiteLista implements Serializable {
     private int dniFiltro = 0;
     private Date fechaRecepcionTramiteFiltro = null;
     private String nombreEstadoFiltro = "";
+     private String criterio = "";
 
     // filtros del TipoTramite
     private int codTipoTramiteFiltro = 0;
@@ -103,6 +104,14 @@ public class UITramiteLista implements Serializable {
         this.descripcionTipoTramiteFiltro = descripcionTipoTramiteFiltro;
     }
 
+    public String getCriterio() {
+        return criterio;
+    }
+
+    public void setCriterio(String criterio) {
+        this.criterio = criterio;
+    }
+
     public void filtrar() {
     }
 
@@ -137,10 +146,56 @@ public class UITramiteLista implements Serializable {
 
             tramiteGrilla.add(tramiteGrillaUI);
         }
+        
+        ordenarLista(tramiteGrilla);
 
         return tramiteGrilla;
     }
+    
+        // Método de ordenamiento que implementaste
+    public List<TramiteGrillaUI> ordenarLista(List<TramiteGrillaUI> tGrilla) {
+        switch (criterio) {
+            case "codAsc":
+                tGrilla.sort((t1, t2) -> {
+                    Integer nroTramite1 = t1.getNroTramite();
+                    Integer nroTramite2 = t2.getNroTramite();
 
+                    if (nroTramite1 == null && nroTramite2 == null) {
+                        return 0;
+                    }
+                    if (nroTramite1 == null) {
+                        return -1;
+                    }
+                    if (nroTramite2 == null) {
+                        return 1;
+                    }
+                    return Integer.compare(nroTramite1, nroTramite2);
+                });
+                break;
+
+            case "codDesc":
+                tGrilla.sort((t1, t2) -> {
+                    Integer nroTramite1 = t1.getNroTramite();
+                    Integer nroTramite2 = t2.getNroTramite();
+
+                    if (nroTramite1 == null && nroTramite2 == null) {
+                        return 0;
+                    }
+                    if (nroTramite1 == null) {
+                        return 1;
+                    }
+                    if (nroTramite2 == null) {
+                        return -1;
+                    }
+                    return Integer.compare(nroTramite2, nroTramite1);
+                });
+                break;
+            
+        }
+
+        return tGrilla;
+        }
+      
     // Boton agregar Tramite
     public String irRegistrarTramite() {
         BeansUtils.guardarUrlAnterior();

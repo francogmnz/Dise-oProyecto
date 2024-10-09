@@ -7,6 +7,7 @@ import RegistrarTramite.dtos.DTOTipoTramite;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
+import entidades.TramiteDocumentacion;
 import java.util.Date;
 import java.util.List;
 
@@ -54,5 +55,10 @@ public class ControladorRegistrarTramite {
     public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite){
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD, nroTramite);
     }
+    
+    public TramiteDocumentacion buscarDocDescargar(int codigoDoc){
+        return expertoRegistrarTramite.buscarDocDescargar(codigoDoc);
+    }
+    
     
 }
