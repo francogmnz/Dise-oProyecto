@@ -9,6 +9,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -148,17 +149,19 @@ public class UIRegistrarTramite implements Serializable {
         }
     }
 
-    public void registrarTramite() {
+    public String registrarTramite() throws IOException {
         try {
             controladorRegistrarTramite.registrarTramite();
-            // Si el registro es exitoso, redirige a la página anterior
-            BeansUtils.redirectToPreviousPage();
+            nroTramite = controladorRegistrarTramite.getUltimoNroTramite() + 1;
+            // Redirigir al resumen del trámite con el número del trámite
+            return "ResumenTramite?faces-redirect=true&nroTramite=" + nroTramite;
         } catch (RegistrarTramiteException e) {
             // Si ocurre una excepción, muestra el mensaje de error
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
             // No redirigir en caso de error, solo mostrar el mensaje
         }
+        return null;
     }
 
     // Signo de ayuda para ir a los filtros de TipoTramite

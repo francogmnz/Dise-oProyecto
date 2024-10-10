@@ -11,7 +11,6 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import jakarta.servlet.http.Part;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,14 +18,18 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FilesUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.file.UploadedFiles;
 import org.primefaces.shaded.commons.io.IOUtils;
 import utils.BeansUtils;
 import utils.DTOCriterio;
@@ -56,6 +59,8 @@ public class UIResumen implements Serializable {
     private Timestamp fechaEntregaDoc;
     private List<DTODocumentacion> resumenDoc;
 
+    private Timestamp fechaLimite;
+
     @PostConstruct
     public void init() {
         // Obtener el parámetro de la URL
@@ -75,6 +80,12 @@ public class UIResumen implements Serializable {
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
+                    if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(fechaRecepcionTramite);
+                        calendar.add(Calendar.DAY_OF_MONTH, plazoDocumentacion);  // Suma los días del plazo
+                        fechaLimite = new Timestamp(calendar.getTimeInMillis());
+                    }
                     this.precioTramite = tramiteElegido.getPrecioTramite();
                     this.codTipoTramite = tramiteElegido.getCodTipoTramite();
                     this.nombreTipoTramite = tramiteElegido.getNombreTipoTramite();
@@ -231,14 +242,6 @@ public class UIResumen implements Serializable {
         this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
-    public int getCodTD() {
-        return codTD;
-    }
-
-    public void setCodTD(int codTD) {
-        this.codTD = codTD;
-    }
-
     public String getNombreTD() {
         return nombreTD;
     }
@@ -246,8 +249,6 @@ public class UIResumen implements Serializable {
     public void setNombreTD(String nombreTD) {
         this.nombreTD = nombreTD;
     }
-    
-    
 
     public List<DTODocumentacion> getResumenDoc() {
         return resumenDoc;
@@ -263,6 +264,21 @@ public class UIResumen implements Serializable {
 
     public void setFileD(DefaultStreamedContent fileD) {
         this.fileD = fileD;
+    }
+
+    // Método para calcular la fecha límite
+    public Timestamp getFechaLimite() {
+        if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaRecepcionTramite);
+            calendar.add(Calendar.DAY_OF_MONTH, plazoDocumentacion);  // Suma los días del plazo
+            fechaLimite = new Timestamp(calendar.getTimeInMillis());
+        }
+        return fechaLimite;
+    }
+
+    public void setFechaLimite(Timestamp fechaLimite) {
+        this.fechaLimite = fechaLimite;
     }
 
     ControladorRegistrarTramite controladorRegistrarTramite = new ControladorRegistrarTramite();
@@ -282,35 +298,67 @@ public class UIResumen implements Serializable {
         return "Tramite?faces-redirect=true&codTD=" + codTD + "&nroTramite=" + nroTramite;
     }
 
-    // Manejar la subida del archivo
+    public int getCodTD() {
+        return codTD;
+    }
+
+    public void setCodTD(int codTD) {
+        this.codTD = codTD;
+        System.out.println("codTD activo actualizado: " + codTD);
+        this.fileUploadDisabled = false; // Habilita el fileUpload
+
+    }
+
+    private boolean fileUploadDisabled = true; // Inicia deshabilitado
+
+    public boolean isFileUploadDisabled() {
+        return fileUploadDisabled;
+    }
+
+    public void setFileUploadDisabled(boolean fileUploadDisabled) {
+        this.fileUploadDisabled = fileUploadDisabled;
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
         try {
+            System.out.println("codTD recibido: " + codTD);
             FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
-            //Convierto el archivo subido en Base64
+            // Convertir el archivo a Base64 y almacenar
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
 
             DTOFile fileU = new DTOFile();
-
-            //Usar DTOFile para almacenar el archivo subido
             fileU.setNombre(event.getFile().getFileName());
             fileU.setContenidoB64(encodedString);
 
-            //System.out.println("encriptado =" + fileEjemplo.getContenidoB64());
-            //llamo a la funcion registrarDocumentacion una vez cargado el archivo
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
-
             this.file = fileU;
 
+            // Deshabilitar el upload una vez que se suba un archivo
         } catch (IOException ex) {
             Logger.getLogger(UIResumen.class.getName()).log(Level.SEVERE, null, ex);
-
         }
     }
 
-    // Manejar la descarga del archivo
+    public void eliminarArchivo(int codTD) {
+        try {
+            // Llamar al experto para eliminar la documentación
+            controladorRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
+
+            // Mensaje de éxito
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Archivo eliminado", "El archivo ha sido eliminado correctamente."));
+        } catch (Exception e) {
+            // Manejo de errores
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar el archivo."));
+            e.printStackTrace();
+        }
+    }
+
+// Manejar la descarga del archivo
     private DefaultStreamedContent fileD;
     private DTOFile file = new DTOFile();
 
@@ -324,16 +372,7 @@ public class UIResumen implements Serializable {
 
     public StreamedContent getFileD(int codTD) {
 
-        List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
-
-        DTOCriterio fileCriterio = new DTOCriterio();
-        fileCriterio.setAtributo("codTD");
-        fileCriterio.setOperacion("=");
-        fileCriterio.setValor(codTD);
-
-        criterioList.add(fileCriterio);
-
-        TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioList).get(0);
+        TramiteDocumentacion td = controladorRegistrarTramite.buscarDocDescargar(codTD);
 
         file.setContenidoB64(td.getArchivoTD());
         file.setNombre(td.getNombreTD());
@@ -353,8 +392,10 @@ public class UIResumen implements Serializable {
                         .contentType("application/octet-stream") // Tipo genérico para archivos binarios
                         .stream(() -> inputStream) // Proporciona el flujo de datos del archivo
                         .build();
+
             } catch (Exception ex) {
-                Logger.getLogger(UIResumen.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UIResumen.class
+                        .getName()).log(Level.SEVERE, null, ex);
 
             }
 
@@ -364,4 +405,8 @@ public class UIResumen implements Serializable {
         return fileD;
     }
 
+    // Boton agregar volver a tramites
+    public String irPantallaTramites() {
+        return "TramiteLista?faces-redirect=true";
+    }
 }

@@ -40,7 +40,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:inputNumber id="codTipoTramiteFiltro" style="width:150px"
                                          placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}"
                                          onfocus="Javascript:this.focus();this.select();">
-                                <p:ajax event="keyup" 
+                                <p:keyFilter mask="pint" />
+                                <p:ajax event="change" 
                                         listener="#{uitramiteLista.filtrar()}" 
                                         update="@form:grid1" />
                             </p:inputNumber>
@@ -96,7 +97,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <p:spacer height="5"/>
 
-                <p:dataTable id="grid1" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}" sortMode="multiple">
+                <p:dataTable id="grid1" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}">
 
                     <p:column sortBy="#{tipoTramite.codTipoTramite}">
                         <f:facet name="header">Código</f:facet>
@@ -118,6 +119,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             #{tipoTramite.descripcionTipoTramite}
                     </p:column>
 
+                     
                 </p:dataTable>
 
             </div>

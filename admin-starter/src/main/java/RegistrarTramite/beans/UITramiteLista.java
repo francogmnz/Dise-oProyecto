@@ -24,6 +24,7 @@ public class UITramiteLista implements Serializable {
     private int dniFiltro = 0;
     private Date fechaRecepcionTramiteFiltro = new Timestamp(System.currentTimeMillis());
     private String nombreEstadoFiltro = "";
+    private String criterio = "";
 
     // filtros del TipoTramite
     private int codTipoTramiteFiltro = 0;
@@ -71,6 +72,14 @@ public class UITramiteLista implements Serializable {
         this.nombreEstadoFiltro = nombreEstadoFiltro;
     }
 
+    public String getCriterio() {
+        return criterio;
+    }
+
+    public void setCriterio(String criterio) {
+        this.criterio = criterio;
+    }
+
     // filtros TipoTramite
     public int getCodTipoTramiteFiltro() {
         return codTipoTramiteFiltro;
@@ -115,7 +124,6 @@ public class UITramiteLista implements Serializable {
 //        System.out.println("dniFiltro: " + dniFiltro);
 //        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
 //        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
-
         if (fechaRecepcionTramiteFiltro != null) {
             Calendar calFiltro = Calendar.getInstance();
             calFiltro.setTime(fechaRecepcionTramiteFiltro);
@@ -139,7 +147,48 @@ public class UITramiteLista implements Serializable {
             tramiteGrilla.add(tramiteGrillaUI);
         }
 
+        ordenarLista(tramiteGrilla);
         return tramiteGrilla;
+    }
+
+    public List<TramiteGrillaUI> ordenarLista(List<TramiteGrillaUI> tGrilla) {
+        switch (criterio) {
+            case "codAsc":
+                tGrilla.sort((t1, t2) -> {
+                    Integer nroTramite1 = t1.getNroTramite();
+                    Integer nroTramite2 = t2.getNroTramite();
+                    if (nroTramite1 == null && nroTramite2 == null) {
+                        return 0;
+                    }
+                    if (nroTramite1 == null) {
+                        return -1;
+                    }
+                    if (nroTramite2 == null) {
+                        return 1;
+                    }
+                    return Integer.compare(nroTramite1, nroTramite2);
+                });
+                break;
+            case "codDesc":
+                tGrilla.sort((t1, t2) -> {
+                    Integer nroTramite1 = t1.getNroTramite();
+                    Integer nroTramite2 = t2.getNroTramite();
+                    if (nroTramite1 == null && nroTramite2 == null) {
+                        return 0;
+                    }
+                    if (nroTramite1 == null) {
+                        return 1;
+                    }
+                    if (nroTramite2 == null) {
+                        return -1;
+                    }
+                    return Integer.compare(nroTramite2, nroTramite1);
+                });
+                break;
+
+        }
+
+        return tGrilla;
     }
 
     // Boton agregar Tramite
@@ -151,9 +200,6 @@ public class UITramiteLista implements Serializable {
     // Redirigir a la página de resumen con el número de trámite como parámetro
     public String mostrarResumenTramite(int nroTramite) {
         return "ResumenTramite?faces-redirect=true&nroTramite=" + nroTramite;
-    }
-
-    public void anularTramite(int nroTramite) {
     }
 
     // loop por cada DTOTipoTramite desde la UI para mostrar los TipoTramite filtrados

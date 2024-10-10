@@ -12,6 +12,34 @@
 
         <h:form id="tramiteForm">
 
+
+
+            <!-- Datos importantes -->
+            <p:panel style="width: 100%; margin-bottom: 8px; color: #c0c0c0;">
+                <h:panelGrid columns="3" style="width: 100%; text-align: center; padding-left: 12px; padding-right: 12px;" columnClasses="custom-column">
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Trámite n°:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value=" #{uiresumen.nroTramite}" style="font-size: 18px;" />
+                    </h:panelGroup>
+
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Cliente:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value=" #{uiresumen.nombreCliente}" style="font-size: 18px; margin-left: 10px;" />
+                        <h:outputText value=" #{uiresumen.apellidoCliente}" style="font-size: 18px;" />
+                    </h:panelGroup>
+
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Fecha límite documentación:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value="#{uiresumen.fechaLimite}" style="font-size: 18px;">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+            </p:panel>
+
+
+
             <p:tabView dynamic="true" cache="true" effect="fold">
                 <p:tab title="Datos Trámite">
                     <!-- Pestaña Datos Tramite -->
@@ -32,7 +60,8 @@
 
                             <h:panelGroup>
                                 <h:outputLabel value="Fecha Anulación:" style="font-weight:700;"/>
-                                <h:outputText value=" #{uiresumen.fechaAnulacionTramite}" />
+                                <h:outputText value=" #{uiresumen.fechaAnulacionTramite}" 
+                                              style="color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
@@ -112,15 +141,23 @@
                     </p:panel>
 
                     <!-- Botón de Anular -->
-                    <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="margin-top: 8px; width:160px; height:36px;" actionListener="#{uiresumen.anularTramite(nroTramite)}" disabled="#{uiresumen.fechaAnulacionTramite != null}">
-                        <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" message="¿Desea anular el trámite?" icon="ui-icon-alert"/>
+                    <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="margin-top: 8px; width:160px; height:36px;" 
+                                     actionListener="#{uiresumen.anularTramite(nroTramite)}" 
+                                     disabled="#{uiresumen.fechaAnulacionTramite != null}" 
+                                     update="@form" 
+                                     oncomplete="if (!args.validationFailed) window.location.reload();">
+                        <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" 
+                                   message="¿Desea anular el trámite?" 
+                                   icon="ui-icon-alert"/>
                     </p:commandButton>
+
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
-                        <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                        <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" 
                                          icon="fa fa-check"/>
-                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" 
                                          icon="fa fa-close"/>
                     </p:confirmDialog>
+
                 </p:tab>
 
                 <!-- Pestaña Documentación -->
@@ -132,12 +169,17 @@
                         <p:dataTable id="tablaDoc" var="doc" value="#{uiresumen.resumenDoc}">
                             <!-- Columna: Nombre documento -->
                             <p:column style="text-align: center">
+                                <f:facet name="header">codTD</f:facet>
+                                    #{doc.codTD}
+                            </p:column>
+
+                            <p:column style="text-align: center">
                                 <f:facet name="header">Nombre documento</f:facet>
                                     #{doc.nombreDocumentacion}
                             </p:column>
 
                             <!-- Columna: Estado Entrega -->
-                            <p:column style="text-align: center">
+                            <p:column id="estadoEntrega" style="text-align: center">
                                 <f:facet name="header">Estado Entrega</f:facet>
                                 <h:outputText value="#{doc.fechaEntregaDoc != null ? 'ENTREGADO' : 'PENDIENTE'}" 
                                               style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
@@ -147,27 +189,69 @@
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
                                 <div class="card custom-upload">
-                                    <h:form id="frmSingle">
+                                    <h:form id="frmSingle#{doc.codTD}">
+                                        <!-- Campo oculto para enviar el codTD -->
+                                        <h:inputHidden id="codTD" value="#{uiresumen.codTD}"/>
+
+                                        <!-- Componente fileUpload -->
                                         <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
-                                                      mode="advanced" dragDropSupport="true" auto="true"
-                                                      onstart="showBar()" oncomplete="hideBar(); window.location.reload();"
-                                                      multiple="true" update="messages" sizeLimit="1000000"
-                                                      fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|txt)$/"/>
+                                                      mode="advanced" 
+                                                      dragDropSupport="true" 
+                                                      auto="true"
+                                                      onstart="showBar()" 
+                                                      oncomplete="PF('msgDialog').show(); window.location.reload();"
+                                                      update="@form"
+                                                      multiple="true"
+                                                      sizeLimit="10000000"
+                                                      allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/"
+                                                      disabled="#{uiresumen.fileUploadDisabled}">
+                                        </p:fileUpload>
+
+                                        <!-- Botón para seleccionar el archivo y actualizar el codTD -->
+                                        <p:commandButton value="Validar"
+                                                         actionListener="#{uiresumen.setCodTD(doc.codTD)}"
+                                                         update="@form"
+                                                         process="@this"
+                                                         oncomplete="PF('msgDialog').hide();"
+                                                         disabled="#{uiresumen.fechaAnulacionTramite != null}">
+                                        </p:commandButton>
                                     </h:form>
+
                                 </div>
                             </p:column>
-                                <p:column style="text-align: center">
-                                    <f:facet name="header">Descarga</f:facet>
-                                   <p:commandButton value="Descargar archivo" ajax="false"
+
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Descarga</f:facet>
+                                <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
                                                  icon="pi pi-arrow-down"  styleClass="btn-success">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>    
-                                </p:column>
+                            </p:column>
+
+                            <!-- Columna: Botón de Eliminar -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Eliminar</f:facet>
+                                <p:commandButton value="Eliminar"
+                                                 actionListener="#{uiresumen.eliminarArchivo(doc.codTD)}"
+                                                 icon="pi pi-trash"
+                                                 update="tablaDoc"
+                                                 oncomplete="PF('msgDialog').show();"
+                                                 disabled="#{doc.fechaEntregaDoc == null}">
+                                </p:commandButton> 
+                            </p:column>
+
+
                         </p:dataTable>
                     </p:panel>
                 </p:tab>
             </p:tabView>
+
+            <!-- Botón de Volver a Tramites, alineado a la derecha -->
+            <div style="text-align: right; margin-top: 8px;">
+                <p:commandButton value="Volver a trámites" action="#{uiresumen.irPantallaTramites()}"
+                                 icon="pi pi-arrow-left" style="width: 180px;" />
+            </div>
         </h:form>
     </ui:define>
 </ui:composition>

@@ -7,12 +7,37 @@ import RegistrarTramite.dtos.DTOTipoTramite;
 import RegistrarTramite.dtos.DTOTramiteElegido;
 import RegistrarTramite.dtos.DTOTramite;
 import RegistrarTramite.exceptions.RegistrarTramiteException;
+import entidades.TramiteDocumentacion;
 import java.util.Date;
 import java.util.List;
 
 public class ControladorRegistrarTramite {
 
     private ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
+
+    public void eliminarDocumentacion(int codTD, int nroTramite) throws Exception {
+        expertoRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
+    }
+
+    int ultimoNroTramite = buscarUltimoNroTramite();
+
+    public int getUltimoNroTramite() {
+        return ultimoNroTramite;
+    }
+
+    public void setUltimoNroTramite(int ultimoNroTramite) {
+        this.ultimoNroTramite = ultimoNroTramite;
+    }
+    
+    public static int buscarUltimoNroTramite() {
+        return ExpertoRegistrarTramite.buscarUltimoNroTramite();
+    }
+    
+    
+
+    public TramiteDocumentacion buscarDocDescargar(int codigoDoc) {
+        return expertoRegistrarTramite.buscarDocDescargar(codigoDoc);
+    }
 
     public List<DTOEstadoTramite> mostrarComboEstados() {
         return expertoRegistrarTramite.mostrarComboEstados();
@@ -45,9 +70,9 @@ public class ControladorRegistrarTramite {
     public List<DTOTipoTramite> buscarTipoTramite(int codTipoTramite, String nombreTipoTramite, String nombreCategoria, String descTipoTramite) {
         return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nombreTipoTramite, nombreCategoria, descTipoTramite);
     }
-    
-    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite){
+
+    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite) {
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD, nroTramite);
     }
-    
+
 }
