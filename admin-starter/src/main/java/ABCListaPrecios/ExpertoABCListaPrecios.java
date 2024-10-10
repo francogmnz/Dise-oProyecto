@@ -47,6 +47,9 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("La FechaHasta ingresada no es correcta intente nuevamente.");
         }
         List objetoList = FachadaPersistencia.getInstance().buscar("ListaPrecios", lCriterio);
+        if (objetoList.isEmpty()) {
+            
+        }
         List<ListaPreciosDTO> listasPreciosResultado = new ArrayList<>();
         for (Object x : objetoList) {
             ListaPrecios listaPrecios = (ListaPrecios) x;
@@ -85,86 +88,125 @@ public class ExpertoABCListaPrecios {
     public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
         err.getErrores().clear();
         FachadaPersistencia.getInstance().iniciarTransaccion();
+
+        // Buscar la última lista de precios
         ListaPrecios ultimaListaPrecios = buscarUltimaListaNoNula();
 
+        // Ajustar las fechas de la nueva lista de precios
         Timestamp nuevaFechaHoraDesde = nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios();
         Timestamp nuevaFechaHoraHasta = nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios();
 
-        Timestamp FechaHoraHasta = ultimaListaPrecios.getFechaHoraHastaListaPrecios();
-        if (nuevaFechaHoraDesde.after(FechaHoraHasta) || nuevaFechaHoraDesde.before(FechaHoraHasta)) {
-            ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
-        }
-
-        FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);
-
+        // Verificar si ya existe una lista de precios con el mismo código
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-        criterioList.clear();
-        dto = new DTOCriterio();
-
         dto.setAtributo("codListaPrecios");
         dto.setOperacion("=");
         dto.setValor(nuevaListaPreciosDTO.getCodListaPrecios());
-
         criterioList.add(dto);
-        List lListaPrecios = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
 
+        List lListaPrecios = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
         if (lListaPrecios.size() > 0) {
             throw new ListaPreciosException("El código ya existe");
-
         }
 
+        // Crear la nueva lista de precios
         ListaPrecios nuevaListaPrecios = new ListaPrecios();
         nuevaListaPrecios.setCodListaPrecios(nuevaListaPreciosDTO.getCodListaPrecios());
         nuevaListaPrecios.setFechaHoraDesdeListaPrecios(nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios());
         nuevaListaPrecios.setFechaHoraHastaListaPrecios(nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios());
 
-        criterioList.clear();
-        dto = new DTOCriterio();
+        // Verificar si es la primera lista de precios (no hay lista previa)
+        if (ultimaListaPrecios == null) {
+            // Setear directamente los precios del detalle en la nueva lista
+            for (DetalleListaPreciosDTO detalle : nuevaListaPreciosDTO.getDetalles()) {
+                // Crear el criterio para buscar el tipo de trámite
+                List<DTOCriterio> criterioTipoTramite = new ArrayList<>();
+                DTOCriterio criterio = new DTOCriterio();
+                criterio.setAtributo("codTipoTramite");
+                criterio.setOperacion("=");
+                criterio.setValor(detalle.getCodTipoTramite());
+                criterioTipoTramite.add(criterio);
+                
+                DTOCriterio dto2 = new DTOCriterio();
+                dto2.setAtributo("fechaHoraBajaTipoTramite");
+                dto2.setOperacion("=");
+                dto2.setValor(null);
+                criterioTipoTramite.add(dto2);
+                
+                // Buscar el tipo de trámite
+                List tipoTramiteList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramite);
+                if (!tipoTramiteList.isEmpty()) {
+                    TipoTramite tipoTramite = (TipoTramite) tipoTramiteList.get(0);
 
-        dto.setAtributo("fechaHoraBajaTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(null);
-
-        criterioList.add(dto);
-        List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
-
-        for (Object x : objetoList2) {
-            TipoTramite tipoTramite = (TipoTramite) x;
-            TipoTramiteListaPrecios nuevoTipoTramiteListaPrecios = new TipoTramiteListaPrecios();
-            nuevoTipoTramiteListaPrecios.setTipoTramite(tipoTramite);
-            nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(0);
-            int codTipoTramite = tipoTramite.getCodTipoTramite();
-            List<DetalleListaPreciosDTO> detalles = nuevaListaPreciosDTO.getDetalles();
-
-//          isENCONTRADO ES PARA SABER SI SE PONE EL PRECIO DE LA ULTIMA LISTA (CUANDO NO HAY PRECIO EN LA IMPORTADA) O PONER EL PRECIO DE LA IMPORTADA
-            boolean isEncontrado = false;
-            for (DetalleListaPreciosDTO detalle : detalles) {
-                double precioTT = detalle.getNuevoPrecioTipoTramite();
-                int codigoTT = detalle.getCodTipoTramite();
-                if (!(precioTT <= 0) && codigoTT == codTipoTramite) {
+                    TipoTramiteListaPrecios nuevoTipoTramiteListaPrecios = new TipoTramiteListaPrecios();
+                    nuevoTipoTramiteListaPrecios.setTipoTramite(tipoTramite);
                     nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(detalle.getNuevoPrecioTipoTramite());
-                    isEncontrado = true;
-                    break;
+
+                    // Guardar el nuevo tipo de trámite y asociarlo a la nueva lista
+                    FachadaPersistencia.getInstance().guardar(nuevoTipoTramiteListaPrecios);
+                    nuevaListaPrecios.addTipoTramiteListaPrecios(nuevoTipoTramiteListaPrecios);
                 }
             }
-            if (!isEncontrado) {
-                List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = ultimaListaPrecios.getTipoTramiteListaPrecios();
-                for (TipoTramiteListaPrecios tipoTramiteListaPrecio : tipoTramiteListaPrecios) {
-                    TipoTramite tipoTramite1 = tipoTramiteListaPrecio.getTipoTramite();
-                    int codTipoTramite1 = tipoTramite1.getCodTipoTramite();
-                    if (codTipoTramite1 == codTipoTramite) {
-                        nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(tipoTramiteListaPrecio.getPrecioTipoTramite());
+        } else {
+            // Si ya hay una lista anterior, ajustar la fecha de fin de la última lista
+            Timestamp FechaHoraHasta = ultimaListaPrecios.getFechaHoraHastaListaPrecios();
+            if (nuevaFechaHoraDesde.after(FechaHoraHasta) || nuevaFechaHoraDesde.before(FechaHoraHasta)) {
+                ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
+            }
+            FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);
+
+            // Procesar los precios de los trámites en base a la nueva lista o la última lista existente
+            criterioList.clear();
+            dto = new DTOCriterio();
+            dto.setAtributo("fechaHoraBajaTipoTramite");
+            dto.setOperacion("=");
+            dto.setValor(null);
+            criterioList.add(dto);
+
+            List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+
+            for (Object x : objetoList2) {
+                TipoTramite tipoTramite = (TipoTramite) x;
+                TipoTramiteListaPrecios nuevoTipoTramiteListaPrecios = new TipoTramiteListaPrecios();
+                nuevoTipoTramiteListaPrecios.setTipoTramite(tipoTramite);
+                nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(0);
+
+                int codTipoTramite = tipoTramite.getCodTipoTramite();
+                List<DetalleListaPreciosDTO> detalles = nuevaListaPreciosDTO.getDetalles();
+
+                boolean isEncontrado = false;
+                for (DetalleListaPreciosDTO detalle : detalles) {
+                    double precioTT = detalle.getNuevoPrecioTipoTramite();
+                    int codigoTT = detalle.getCodTipoTramite();
+                    if (!(precioTT <= 0) && codigoTT == codTipoTramite) {
+                        nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(detalle.getNuevoPrecioTipoTramite());
+                        isEncontrado = true;
                         break;
                     }
                 }
+
+                // Si no se encuentra en los detalles de la nueva lista, setear el precio de la última lista
+                if (!isEncontrado) {
+                    List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = ultimaListaPrecios.getTipoTramiteListaPrecios();
+                    for (TipoTramiteListaPrecios tipoTramiteListaPrecio : tipoTramiteListaPrecios) {
+                        TipoTramite tipoTramite1 = tipoTramiteListaPrecio.getTipoTramite();
+                        int codTipoTramite1 = tipoTramite1.getCodTipoTramite();
+                        if (codTipoTramite1 == codTipoTramite) {
+                            nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(tipoTramiteListaPrecio.getPrecioTipoTramite());
+                            break;
+                        }
+                    }
+                }
+
+                // Guardar el nuevo tipo de trámite y asociarlo a la nueva lista
+                FachadaPersistencia.getInstance().guardar(nuevoTipoTramiteListaPrecios);
+                nuevaListaPrecios.addTipoTramiteListaPrecios(nuevoTipoTramiteListaPrecios);
             }
-            FachadaPersistencia.getInstance().guardar(nuevoTipoTramiteListaPrecios);
-            nuevaListaPrecios.addTipoTramiteListaPrecios(nuevoTipoTramiteListaPrecios);
         }
+
+        // Guardar la nueva lista de precios y finalizar la transacción
         FachadaPersistencia.getInstance().guardar(nuevaListaPrecios);
         FachadaPersistencia.getInstance().finalizarTransaccion();
-
     }
 
     public StreamedContent exportarListaPrecios(int codigo) {
