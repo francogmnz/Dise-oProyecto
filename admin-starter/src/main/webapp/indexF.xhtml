@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.template}">
+
+    <ui:param name="renderBreadCrumb" value="false"/>
+
+    <ui:define name="title">
+        <h2 class="align-center">
+            Bienvenido 
+            <span style="color: blue; text-decoration: underline;">
+                #{logonMB.email.blank ? "" :logonMB.email}
+            </span> 
+            a <strong>TODO EN TRÁMITES</strong>
+            <br/>
+            <small><strong>“Tu tiempo es valioso, nosotros lo gestionamos”</strong></small>
+            <br/>
+        </h2>
+    </ui:define>
+
+
+</ui:composition>

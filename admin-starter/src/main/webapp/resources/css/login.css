@@ -1,0 +1,173 @@
+html {
+    /*background: url(#{resource[ 'images:fondo.png' ]}) no-repeat center center fixed;*/
+    background: url() no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+body .load-bar {
+    margin-top: -20px;
+}
+body.login-page {
+    background-color: transparent;
+}
+body.login-page .login-logo{
+    text-shadow: 3px 3px 1px white;
+}
+.container {
+    color: white;
+    background-color: #000000a6;
+    backdrop-filter: blur(2px);
+    width: 40rem;
+    /* height: 50rem;*/
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    border-radius: 15px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.containerlinks h4 {
+    display: flex;
+    flex-direction: column; /* Los hijos (enlaces) se apilan verticalmente */
+    align-items: center;    /* Opcional: centra el contenido horizontalmente */
+}
+
+.containerlinks a {
+    width: 50%;
+    /* height: 33px; */
+    padding: 4px;
+    text-align: center;
+    /* margin: 5px 0; */
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.35s ease-out;
+    border-radius: 10px;
+}
+
+.containerlinks a:hover {
+    background-color: #ff0000b0; /* Cambio de fondo al pasar el mouse */
+    color: white;
+    transform: scale(1.15);
+}
+a {
+    text-align: center;
+    transition: all 0.35s ease-out;
+}
+a:hover {
+    transform: scale(1.05);
+}
+
+.divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0; /* Espaciado entre el divisor y los enlaces */
+    width: 100%;    /* El divisor también ocupa todo el ancho */
+}
+.footer-buttons {
+    display: flex;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    margin-top: 20px; /* Espaciado superior */
+    left: 50px;
+    position: absolute;
+    bottom: 50px;
+}
+.footer-especial-button {
+    display: flex;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    margin-top: 20px; /* Espaciado superior */
+    right: 50px;
+    position: absolute;
+    bottom: 50px;
+}
+
+.btn-social {
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 10px;
+}
+.sociales{
+    margin: 0 5px;
+}
+.sociales:hover {
+    transform: scale(1.25);
+}
+
+/* below css hides growls in small screens and makes messages visible */
+@media (max-width: 768px) {
+
+    body div.ui-growl {
+        display: none;
+    }
+
+    body div.ui-messages {
+        display: block;
+    }
+
+}
+
+/* below css hides messages in medium/big devices and makes growl visible in such devices */
+@media (min-width: 769px) {
+    body div.ui-growl {
+        display: block;
+    }
+
+    body div.ui-messages {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
+    html {
+        /*background-image: url(#{resource[ 'images:fondo.png' ]});*/
+        background-image: url();
+
+    }
+}
+
+.login-box, .register-box {
+    display: inline-flex;
+    width: -webkit-fill-available;
+    /* margin: 7% auto; */
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+
+/*ACA LO DEL CORREO ENVIADO EXITOSAMENTE*/
+
+#mensaje {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: rgb(0 128 0 / 97%); /* Fondo verde semitransparente */
+    color: white;
+    font-size: 24px;
+    transition: opacity 1s ease;
+    flex-direction: column;
+/*    
+    align-items: center;
+    justify-content: center;*/
+}

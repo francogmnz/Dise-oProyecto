@@ -1,0 +1,133 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos para el formulario */
+h3 {
+    margin-left: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px; /* Aumentando el tamaño de la letra */
+}
+
+/* Panel Grid */
+.p-panelgrid {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 40px; /* Aumentando el padding para más espacio */
+    margin: 20px auto; /* Centrando el panel */
+}
+
+/* Etiquetas */
+h\:outputLabel {
+    font-weight: bold;
+    color: #555;
+    font-size: 18px; /* Aumentando el tamaño de la letra */
+}
+p\:password {
+    font-weight: bold;
+    color: #555;
+    font-size: 18px; /* Aumentando el tamaño de la letra */
+}
+
+/* Campos de texto */
+.p-inputtext {
+    padding: 15px; /* Aumentando el padding */
+    border: none; /* Sin bordes */
+    border-radius: 4px;
+    background-color: #f9f9f9; /* Color de fondo más claro */
+    transition: background-color 0.3s;
+}
+
+/* Campos de texto deshabilitados */
+.p-inputtext:disabled {
+    background-color: #ffffff;
+    color: #6c757d;
+    opacity: 1!important;
+}
+
+/* Botones */
+.p-commandButton {
+    margin-top: 20px; /* Más espacio arriba del botón */
+}
+
+/* Estilos para el botón "Guardar" */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px; /* Más espacio en el botón */
+    font-size: 16px; /* Aumentando el tamaño de la letra del botón */
+}
+
+/* Contenedor para el botón "Guardar" */
+.btn-container {
+    text-align: right; /* Alineando el botón a la derecha */
+    margin-top: 20px; /* Espacio arriba del contenedor */
+    margin-right: 20px; /* Espacio arriba del contenedor */
+}
+
+/* Hover para el botón "Guardar" */
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Estilos para el icono del botón */
+.pi {
+    margin-right: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .p-panelgrid {
+        grid-template-columns: 1fr;
+        padding: 20px; /* Ajustando el padding en pantallas más pequeñas */
+    }
+}
+
+.contrasena{
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: 425px;
+    a{
+        margin: 5px;
+    }
+
+}
+
+.miTabla {
+    font-size: 22px;
+    margin: 50px auto;
+    width: 750px;
+    padding: 20px;
+    tr{
+        background-color: cornsilk;
+        border: 20px solid #ffffff00;
+        text-align: justify;
+    }
+    .lblDato{
+        background-color: white;
+        width: 425px;
+    }
+    .ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
+        opacity: 2.35;
+        filter: alpha(opacity = 35);
+    }
+}
+
+
+.miTabla h:outputLabel {
+    text-align: right; /* Alinea el texto a la derecha */
+}
+.miTabla p:password{
+    text-align: right; /* Alinea el texto a la derecha */
+}
+
+.miTabla p\:inputText {
+    width: 400%; /* Doble del tamaño de la columna de la etiqueta */
+}
+
+

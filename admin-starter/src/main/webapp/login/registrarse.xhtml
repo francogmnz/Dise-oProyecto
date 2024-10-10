@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Registrarse</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-144x144.png']}" sizes="144x144"/>
+        <meta name="theme-color" content="#444"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <h:outputStylesheet library="css" name="login.css" />
+        <style>
+            html {
+                background-image: url(#{resource[ 'images:registrar.png' ]});
+            }
+        </style>
+    </h:head>
+
+    <h:body styleClass="hold-transition login-page">
+        <p:growl sticky="false" life="3000">
+            <p:autoUpdate/>
+        </p:growl>
+        <div class="login-box">
+            <div class="login-logo"><b>Registrarse</b></div>
+
+            <div class="container login-box-body" style="width: 60rem;">
+                <p:messages closable="true"/>
+                <h:form>
+                    <div class="ui-g ui-fluid">
+
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <p:inputText id="dni" value="#{uiRegistroBean.dniClientesStr}" required="true" requiredMessage="El DNI es obligatorio." placeholder="DNI" 
+                                             oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') { this.value = ''; }"  maxlength="9">
+                                    <p:ajax event="blur" listener="#{uiRegistroBean.existeCliente()}" process="@this"/>
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-4">
+                                <p:inputText id="nombre" value="#{uiRegistroBean.nombreCliente}" required="true" requiredMessage="El Nombre es obligatorio." placeholder="Nombre" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚ]/g, '');"/>
+                            </div>
+                            <div class="ui-g-4">
+                                <p:inputText id="apellido" value="#{uiRegistroBean.apellidoCliente}" required="true"  requiredMessage="El Apellido es obligatorio." placeholder="Apellido" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚ]/g, '');"/>
+                            </div>
+                            <div class="ui-g-4">
+                                <p:inputText id="usuario" value="#{uiRegistroBean.username}" required="true" requiredMessage="El Usuario es obligatorio."  placeholder="Usuario"/>
+                            </div>
+                            <div class="ui-g-4">
+                                <p:password id="password" value="#{uiRegistroBean.password}" required="true"  requiredMessage="La contraseña es obligatoria." placeholder="Contraseña"/>
+                            </div>
+                            <div class="ui-g-4">
+                                <p:password id="confpassword" value="#{uiRegistroBean.confirmPassword}" required="true"  requiredMessage="Confirmar contraseña es obligatorio." placeholder="Confirmar Contraseña"/>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:inputText id="email" value="#{uiRegistroBean.mailCliente}" required="true"  requiredMessage="El Correo es obligatorio." placeholder="Correo Electrónico"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 textonegro">
+                            <p:commandButton styleClass="btn btn-success btn-block" action="#{uiRegistroBean.registrarUsuario()}" value="Registrarme" update="@form">
+                                <p:ajax onsuccess="if (#{uiRegistroBean.correoEnviado}) { mostrarMensaje(); $('#mensajeCorreo').show(); }"/>
+                            </p:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <div id="mensaje">
+                    <h2><i class="fa fa-check"></i> Usuario creado</h2>
+
+                    <h3 id="mensajeCorreo">Se ha enviado un correo para validar su usuario </h3>
+                    <h4>revise su casilla de mensajes. El correo expira en 24hs.</h4>                
+                </div>
+
+
+
+            </div>
+
+            <div class="footer-buttons">
+                <p:commandButton value="Volver" action="index.xhtml" styleClass="btn btn-danger" immediate="true" />
+            </div>
+            <div class="footer-especial-button">
+                <p:commandButton value="Soy de Diseño y voy a ver todo" action="index.xhtml" styleClass="btn btn-teal" immediate="true">
+                    <p:ajax event="click" listener="#{logonMB.setEmail('superUsuario o Profe')}" />
+                    <p:ajax event="click" listener="#{logonMB.login}" />
+                </p:commandButton>
+            </div>
+        </div>
+
+        <script>
+            function mostrarMensaje() {
+                var mensaje = document.getElementById('mensaje');
+                mensaje.style.display = 'flex'; // Muestra el mensaje
+                mensaje.style.opacity = 1; // Asegúrate de que esté visible
+
+                // Temporizador para ocultar el mensaje y redirigir
+                setTimeout(function () {
+                    mensaje.style.opacity = 0; // Oculta el mensaje
+                    setTimeout(function () {
+                        mensaje.style.display = 'none'; // Elimina el mensaje
+                        window.location.href = '/admin/login.xhtml'; // Redirige a la página de login
+                    }, 1000); // Espera a que se complete la transición
+                }, 5000); // Muestra el mensaje por 5 segundos
+            }
+        </script>
+    </h:body>
+</html>

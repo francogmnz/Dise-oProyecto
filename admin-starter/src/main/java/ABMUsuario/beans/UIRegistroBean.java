@@ -20,18 +20,29 @@ import java.io.Serializable;
 @Named("uiRegistroBean")
 @ViewScoped
 public class UIRegistroBean implements Serializable {
+
     private ControladorABMUsuario controladorABMUsuario = new ControladorABMUsuario();
 
     private String username;
     private String password;
     private String confirmPassword;
     private String rolNombre;
-    
+
     private int dniCliente;
+    private String dniClientesStr;
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
 
+    private boolean correoEnviado = false;
+
+    public boolean isCorreoEnviado() {
+        return correoEnviado;
+    }
+
+    public void setCorreoEnviado(boolean correoEnviado) {
+        this.correoEnviado = correoEnviado;
+    }
 
     public String getUsername() {
         return username;
@@ -73,6 +84,14 @@ public class UIRegistroBean implements Serializable {
         this.dniCliente = dniCliente;
     }
 
+    public String getDniClientesStr() {
+        return dniClientesStr;
+    }
+
+    public void setDniClientesStr(String dniClientesStr) {
+        this.dniClientesStr = dniClientesStr;
+    }
+
     public String getNombreCliente() {
         return nombreCliente;
     }
@@ -97,11 +116,12 @@ public class UIRegistroBean implements Serializable {
         this.mailCliente = mailCliente;
     }
 
-    
-    
     public String registrarUsuario() {
+        FacesContext context = FacesContext.getCurrentInstance();
         if (!password.equals(confirmPassword)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las contraseñas no coinciden"));
+            if (context.getMessageList().isEmpty()) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cuidado! Las contraseñas no coinciden.", ""));
+            }
             return null;
         }
 
@@ -109,40 +129,31 @@ public class UIRegistroBean implements Serializable {
             NuevoUsuarioDTO nuevoUsuarioDTO = new NuevoUsuarioDTO();
             nuevoUsuarioDTO.setUsername(username);
             nuevoUsuarioDTO.setPassword(password);
-            nuevoUsuarioDTO.setRolNombre("Cliente"); 
+            nuevoUsuarioDTO.setRolNombre("Cliente");
 
-            
             nuevoUsuarioDTO.setDniCliente(dniCliente);
             nuevoUsuarioDTO.setNombreCliente(nombreCliente);
             nuevoUsuarioDTO.setApellidoCliente(apellidoCliente);
             nuevoUsuarioDTO.setMailCliente(mailCliente);
 
             controladorABMUsuario.registrarUsuario(nuevoUsuarioDTO);
-            return "/login?faces-redirect=true";
-        } catch (UsuarioException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
-            return null;
-        }
-    }    
-    /*
-    public String registrarUsuario() {
-        if (!password.equals(confirmPassword)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las contraseñas no coinciden"));
-            return null;
-        }
-
-        try {
-            NuevoUsuarioDTO nuevoUsuarioDTO = new NuevoUsuarioDTO();
-            nuevoUsuarioDTO.setUsername(username);
-            nuevoUsuarioDTO.setPassword(password);
-            nuevoUsuarioDTO.setRolNombre(rolNombre);
-
-            controladorABMUsuario.registrarUsuario(nuevoUsuarioDTO);
-            return "/login?faces-redirect=true";
+            correoEnviado = true; 
+            System.out.println(mailCliente);
+            return "";
+//            return "/login?faces-redirect=true";
         } catch (UsuarioException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
             return null;
         }
     }
-    */
+
+    public void existeCliente() throws UsuarioException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (!dniClientesStr.isEmpty()) {
+            dniCliente = Integer.valueOf(dniClientesStr);
+        }
+        if (controladorABMUsuario.existeCliente(dniCliente)) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cuidado! Ya existe un usuario con ese DNI, por favor intente con otro.", ""));
+        }
+    }
 }

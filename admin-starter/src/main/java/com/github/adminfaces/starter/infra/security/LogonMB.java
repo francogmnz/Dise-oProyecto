@@ -17,17 +17,19 @@ import com.github.adminfaces.template.config.AdminConfig;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Corregido en 2024 por los pibes de Synapsis on 8/10/24.
  *
  * This is just a login example.
  *
- * AdminSession uses isLoggedIn to determine if user must be redirect to login page or not.
- * By default AdminSession isLoggedIn always resolves to true so it will not try to redirect user.
+ * AdminSession uses isLoggedIn to determine if user must be redirect to login
+ * page or not. By default AdminSession isLoggedIn always resolves to true so it
+ * will not try to redirect user.
  *
- * If you already have your authorization mechanism which controls when user must be redirect to initial page or logon
- * you can skip this class.
+ * If you already have your authorization mechanism which controls when user
+ * must be redirect to initial page or logon you can skip this class.
  */
 @Named
 @SessionScoped
@@ -48,17 +50,15 @@ public class LogonMB extends AdminSession implements Serializable {
 
     public void login() throws IOException, UsuarioException {
         try {
-            
-            usuarioLogueado = controladorABMUsuario.iniciarSesion(email, password);
 
-            
+            usuarioLogueado = controladorABMUsuario.iniciarSesion(email, password);
             currentUser = usuarioLogueado.getUsername();
 
-            
             addDetailMessage("Inicio de sesión exitoso como <b>" + currentUser + "</b>");
             Faces.getExternalContext().getFlash().setKeepMessages(true);
 
-            // Redirigir según el rol del usuario 
+            // Redirigir según el rol del usuario
+            // Redirigir o hacer un solo Index con cosas visibles segun el rol
             String paginaRedireccion = adminConfig.getIndexPage(); // Página por defecto
 
             if ("Admin".equals(usuarioLogueado.getRolNombre())) {
@@ -70,15 +70,14 @@ public class LogonMB extends AdminSession implements Serializable {
             } else if ("Cliente".equals(usuarioLogueado.getRolNombre())) {
                 paginaRedireccion = "/admin/index.xhtml";// configurar dependiendo del rol
             } else {
-                
+
                 paginaRedireccion = "/acceso-denegado.xhtml";
             }
 
-            
             Faces.redirect(paginaRedireccion);
 
         } catch (UsuarioException e) {
-            
+
             addDetailMessage("Error: " + e.getMessage());
             Faces.getExternalContext().getFlash().setKeepMessages(true);
         }
@@ -86,54 +85,43 @@ public class LogonMB extends AdminSession implements Serializable {
 
     @Override
     public boolean isLoggedIn() {
-        
+
         return currentUser != null;
     }
 
-    public String irARegistro() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/admin/login/register.xhtml");
-        } catch (IOException e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo redirigir a la página de registro."));
-        }
-        return null; 
-    }
-    
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getPassword() {
         return password;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public boolean isRemember() {
         return remember;
     }
-    
+
     public void setRemember(boolean remember) {
         this.remember = remember;
     }
-    
+
     public String getCurrentUser() {
         return currentUser;
     }
-    
+
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
     }
-    
+
     public UsuarioDTO getUsuarioLogueado() {
         return usuarioLogueado;
     }
 }
-

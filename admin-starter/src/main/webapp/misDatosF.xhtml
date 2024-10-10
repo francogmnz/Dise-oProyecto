@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Mis Datos"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+        <link href="resources/css/misDatos.css" rel="stylesheet" type="text/css"/>
+    </ui:define>
+
+    <ui:define name="description">
+        Mis Datos
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="formDatosPersonales">
+
+            <h:messages globalOnly="true" layout="table" rendered="false"/>
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+                <h3>Datos Personales</h3>
+
+                <p:panelGrid id="tabla1" columns="2" styleClass="miTabla">
+
+                    <h:outputLabel value="Nombre:" for="nombre" />
+                    <p:inputText id="nombre" class="lblDato" value="#{misDatos.nom}" disabled="#{misDatos.desHabilitarGrilla}" />
+
+                    <h:outputLabel value="Apellido:" for="apellido" />
+                    <p:inputText id="apellido" class="lblDato" value="#{misDatos.ape}" disabled="#{misDatos.desHabilitarGrilla}" />
+
+                    <h:outputLabel value="DNI:" for="dni" />
+                    <p:inputText id="dni" class="lblDato" value="#{misDatos.dni}" disabled="true" />
+
+                    <h:outputLabel value="Usuario:" for="usuario" />
+                    <p:inputText id="usuario" class="lblDato" value="#{misDatos.usuario}" disabled="#{misDatos.desHabilitarGrilla}" />
+
+                    <h:outputLabel value="Contraseña:" for="contrasena" />
+                    <h:panelGroup id="passwordPanel">
+                        <p:inputText id="contrasena" class="contrasena lblDato"
+                                     value="#{misDatos.contrasena}" 
+                                     disabled="#{misDatos.desHabilitarGrilla}" 
+                                     type="#{misDatos.mostrarContrasena ? 'text' : 'password'}"
+                                     widgetVar="pwdWidget" />
+
+                        <p:commandLink action="#{misDatos.btnContr()}" update=":formDatosPersonales:passwordPanel">
+                            <i id="eyeIcon" class="pi #{misDatos.mostrarContrasena ? 'pi-eye-slash' : 'pi-eye'}"></i>
+                        </p:commandLink>
+                    </h:panelGroup>
+
+
+
+                    <h:outputLabel value="Correo Electrónico:" for="correo" />
+                    <p:inputText id="correo" class="lblDato" value="#{misDatos.email}" disabled="#{misDatos.desHabilitarGrilla}" />
+                </p:panelGrid>
+                <div class="btn-container">
+                    <p:commandButton id="btn2" value="Cancelar" action="#{misDatos.btnModSav}" icon="fa fa-trash" styleClass="btn btn-danger" oncomplete="window.location.reload()" rendered="#{!misDatos.desHabilitarGrilla}" />
+                    <p:commandButton id="btn1" value="#{misDatos.desHabilitarGrilla? 'Modificar':'Guardar'}" action="#{misDatos.btnModSav}" icon="#{misDatos.desHabilitarGrilla?'fa fa-pencil': 'fa fa-save'}" styleClass="#{misDatos.desHabilitarGrilla?'btn btn-warning': 'btn btn-success'}" update="@form"/>
+                </div>
+                <h3>Mis Roles</h3>
+                <p:panelGrid id="tabla2" columns="2" styleClass="miTabla">
+
+                    <h:outputLabel value="Legajo Consultor:" for="legajoCon" />
+                    <p:inputText id="legajoCon" class="lblDato" value="#{misDatos.lgjAdm}" disabled="true" />
+
+                    <h:outputLabel value="Legajo Administrador:" for="legajoAdm" />
+                    <p:inputText id="legajoAdm" class="lblDato" value="#{misDatos.lgjCon}" disabled="true" />
+
+                    <h:outputLabel value="Legajo Recepcionista:" for="legajoRcp" />
+                    <p:inputText id="legajoRcp" class="lblDato" value="#{misDatos.lgjRcp}" disabled="true" />
+
+                </p:panelGrid>
+
+            </div>
+
+        </h:form>
+
+        <script type="text/javascript">
+            function togglePasswordVisibility() {
+                var passwordField = document.getElementById("formDatosPersonales:contrasena_input");
+                var eyeIcon = document.getElementById("eyeIcon");
+
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    eyeIcon.classList.remove('pi-eye');
+                    eyeIcon.classList.add('pi-eye-slash');
+                } else {
+                    passwordField.type = "password";
+                    eyeIcon.classList.remove('pi-eye-slash');
+                    eyeIcon.classList.add('pi-eye');
+                }
+            }
+        </script>
+
+
+    </ui:define>
+</ui:composition>

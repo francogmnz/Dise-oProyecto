@@ -16,69 +16,61 @@ import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 import utils.PasswordUtils;
 
-/**
- *
- * @author licciardi
- */
 public class ExpertoABMUsuario {
 
     public void registrarUsuario(NuevoUsuarioDTO nuevoUsuarioDTO) throws UsuarioException {
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-
-        List<DTOCriterio> criterios = new ArrayList<>();
-        DTOCriterio criterioUsuario = new DTOCriterio();
-        criterioUsuario.setAtributo("username");
-        criterioUsuario.setOperacion("=");
-        criterioUsuario.setValor(nuevoUsuarioDTO.getUsername());
-        criterios.add(criterioUsuario);
-
-        List usuarios = FachadaPersistencia.getInstance().buscar("Usuario", criterios);
-
-        if (!usuarios.isEmpty()) {
-            FachadaPersistencia.getInstance().finalizarTransaccion();
-            throw new UsuarioException("El nombre de usuario ya existe");
-        }
-
- 
-        criterios.clear();
-        DTOCriterio criterioRol = new DTOCriterio();
-        criterioRol.setAtributo("nombreRol");
-        criterioRol.setOperacion("=");
-        criterioRol.setValor("Cliente"); // Rol fijo como Cliente
-        criterios.add(criterioRol);
-        List roles = FachadaPersistencia.getInstance().buscar("Rol", criterios);
-
-        if (roles.isEmpty()) {
-            // Crear el rol Cliente si no existe
-            Rol rolCliente = new Rol();
-            rolCliente.setNombreRol("Cliente");
-            FachadaPersistencia.getInstance().guardar(rolCliente);
-            roles.add(rolCliente);
-        }
-
-        Rol rol = (Rol) roles.get(0);
-
-        
-        Usuario usuario = new Usuario();
-        usuario.setUsername(nuevoUsuarioDTO.getUsername());
-        usuario.setPassword(PasswordUtils.hashPassword(nuevoUsuarioDTO.getPassword()));
-        usuario.setRol(rol);
-
-        FachadaPersistencia.getInstance().guardar(usuario);
-
-      
-        Cliente cliente = new Cliente();
-        cliente.setDniCliente(nuevoUsuarioDTO.getDniCliente());
-        cliente.setNombreCliente(nuevoUsuarioDTO.getNombreCliente());
-        cliente.setApellidoCliente(nuevoUsuarioDTO.getApellidoCliente());
-        cliente.setMailCliente(nuevoUsuarioDTO.getMailCliente());
-        cliente.setUsuario(usuario); // asocio cliente con usuario
-
-        FachadaPersistencia.getInstance().guardar(cliente);
-
-        FachadaPersistencia.getInstance().finalizarTransaccion();
+//        FachadaPersistencia.getInstance().iniciarTransaccion();
+//
+//        List<DTOCriterio> criterios = new ArrayList<>();
+//        DTOCriterio criterioUsuario = new DTOCriterio();
+//        criterioUsuario.setAtributo("username");
+//        criterioUsuario.setOperacion("=");
+//        criterioUsuario.setValor(nuevoUsuarioDTO.getUsername());
+//        criterios.add(criterioUsuario);
+//
+//        List usuarios = FachadaPersistencia.getInstance().buscar("Usuario", criterios);
+//
+//        if (!usuarios.isEmpty()) {
+//            FachadaPersistencia.getInstance().finalizarTransaccion();
+//            throw new UsuarioException("El nombre de usuario ya existe");
+//        }
+//
+//        criterios.clear();
+//        DTOCriterio criterioRol = new DTOCriterio();
+//        criterioRol.setAtributo("nombreRol");
+//        criterioRol.setOperacion("=");
+//        criterioRol.setValor("Cliente"); // Rol fijo como Cliente
+//        criterios.add(criterioRol);
+//        List roles = FachadaPersistencia.getInstance().buscar("Rol", criterios);
+//
+//        if (roles.isEmpty()) {
+//            // Crear el rol Cliente si no existe
+//            Rol rolCliente = new Rol();
+//            rolCliente.setNombreRol("Cliente");
+//            FachadaPersistencia.getInstance().guardar(rolCliente);
+//            roles.add(rolCliente);
+//        }
+//
+//        Rol rol = (Rol) roles.get(0);
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setUsername(nuevoUsuarioDTO.getUsername());
+//        usuario.setPassword(PasswordUtils.hashPassword(nuevoUsuarioDTO.getPassword()));
+//        usuario.setRol(rol);
+//
+//        FachadaPersistencia.getInstance().guardar(usuario);
+//
+//        Cliente cliente = new Cliente();
+//        cliente.setDniCliente(nuevoUsuarioDTO.getDniCliente());
+//        cliente.setNombreCliente(nuevoUsuarioDTO.getNombreCliente());
+//        cliente.setApellidoCliente(nuevoUsuarioDTO.getApellidoCliente());
+//        cliente.setMailCliente(nuevoUsuarioDTO.getMailCliente());
+//        cliente.setUsuario(usuario); // asocio cliente con usuario
+//
+//        FachadaPersistencia.getInstance().guardar(cliente);
+//        FachadaPersistencia.getInstance().finalizarTransaccion();
     }
-    
+
     /*
     public void registrarUsuario(NuevoUsuarioDTO nuevoUsuarioDTO) throws UsuarioException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -133,7 +125,7 @@ public class ExpertoABMUsuario {
         FachadaPersistencia.getInstance().guardar(rol);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
-    */
+     */
     public UsuarioDTO iniciarSesion(String username, String password) throws UsuarioException {
         List<DTOCriterio> criterios = new ArrayList<>();
         DTOCriterio criterio = new DTOCriterio();
@@ -165,5 +157,23 @@ public class ExpertoABMUsuario {
 
         return usuarioDTO;
     }
-}
 
+    public boolean existeCliente(int dni) throws UsuarioException {
+
+        List<DTOCriterio> criterios = new ArrayList<>();
+        DTOCriterio criterio = new DTOCriterio();
+        criterio.setAtributo("dniCliente");
+        criterio.setOperacion("=");
+        criterio.setValor(dni);
+        criterios.add(criterio);
+        
+        List cli = FachadaPersistencia.getInstance().buscar("Cliente", criterios);
+
+        if (!cli.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+}

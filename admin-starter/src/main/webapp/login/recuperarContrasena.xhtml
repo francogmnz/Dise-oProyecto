@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Recuperar acceso</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-144x144.png']}" sizes="144x144"/>
+        <meta name="theme-color" content="#444"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <style type="text/css">
+            body .load-bar {
+                margin-top: -20px;
+            }
+            /* below css hides growls in small screens and makes messages visible */
+            @media (max-width: 768px) {
+
+                body div.ui-growl {
+                    display: none;
+                }
+
+                body div.ui-messages {
+                    display: block;
+                }
+
+            }
+
+            /* below css hides messages in medium/big devices and makes growl visible in such devices */
+            @media (min-width: 769px) {
+                body div.ui-growl {
+                    display: block;
+                }
+
+                body div.ui-messages {
+                    display: none;
+                }
+            }
+
+            body.login-page {
+                background-color: transparent;
+            }
+
+            html {
+                background: url(#{resource[ 'images:recuperar.png' ]}) no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+
+            @media (max-width: 768px) {
+                html {
+                    background-image: url(#{resource[ 'images:recuperar.png' ]});
+                }
+            }
+            body.login-page .login-logo{
+                text-shadow: 3px 3px 1px white;
+            }
+
+        </style>
+    </h:head>
+
+    <h:body styleClass="hold-transition login-page">
+        <p:growl sticky="true">
+            <p:autoUpdate/>
+        </p:growl>
+        <div id="loader" class="load-bar" style="display: none">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <p:dialog id="adminStatusDialog" modal="true" widgetVar="statusDialog" draggable="false" closable="false"
+                  resizable="false" responsive="true" showHeader="false" appendTo="@(body)">
+            <p:graphicImage library="images" name="#{adminConfig.loadingImage}"/>
+        </p:dialog>
+
+        <div class="login-box">
+            <div class="login-logo">
+                <p:link href="index.xhtml" style="font-size: 40px;"><b>Recuperar acceso</b></p:link>
+            </div>
+            <!-- /.login-logo -->
+            <style>
+                .container {
+                    background-color: #ffffffe0;
+                    backdrop-filter: blur(1px);
+                    width: 35rem;
+                    /*height: 50rem;*/
+                    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+                    border-radius: 15px;
+                    position: relative;
+                    z-index: 1;
+                    overflow: hidden;
+                    color: black;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                .containerlinks h4 {
+                    display: flex;
+                    flex-direction: column; /* Los hijos (enlaces) se apilan verticalmente */
+                    align-items: center;    /* Opcional: centra el contenido horizontalmente */
+                }
+
+                .containerlinks a {
+                    width: 100%;
+                    height: 33px;
+                    padding: 4px;
+                    text-align: center;
+                    margin: 5px 0;
+                    text-decoration: none;
+                    color: #333;
+                    transition: all 0.35s ease-out;
+                    border-radius: 15px;
+                }
+
+                .containerlinks a:hover {
+                    background-color: #81bbff; /* Cambio de fondo al pasar el mouse */
+                    color: white;
+                    transform: scale(1.05);
+                }
+                a {
+                    width: 100%;
+                    text-align: center;
+                    transition: all 0.35s ease-out;
+                }
+                a:hover {
+                    transform: scale(1.05);
+                }
+
+                .divider {
+                    height: 1px;
+                    background-color: #ccc;
+                    margin: 10px 0; /* Espaciado entre el divisor y los enlaces */
+                    width: 100%;    /* El divisor también ocupa todo el ancho */
+                }
+                .footer-buttons {
+                    display: flex;
+                    justify-content: flex-start; /* Alinear a la izquierda */
+                    margin-top: 20px; /* Espaciado superior */
+                    left: 50px;
+                    position: absolute;
+                    bottom: 50px;
+                }
+
+
+            </style>
+
+            <div class="container login-box-body">
+                <h:form>
+                    <div class="ui-g ui-fluid">
+
+                        <p:messages closable="true"/>
+
+                        <div class="ui-g-12 textonegro">
+                            <div class="material icon-left">
+                                <p:inputText id="dni" value="#{uiCorreo.datoBuscado}" required="true" requiredMessage="Ingrese su dni" placeholder="Ingrese su dni">
+                                    <i class="fa fa-user-circle-o" style="font-size: 16px;
+                                       margin-top: 10px;"/>
+                                </p:inputText>
+                                <p:outputLabel for="dni" value="Ingrese su dni"/>
+                                <p:message for="dni"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+
+                        <br/>
+                        <p:spacer height="10"/>
+                        <div class="ui-g-12 textonegro">
+                            <br/>
+                            <div class="col-xs-12">
+                                <p:commandButton styleClass="btn btn-success btn-block" action="#{uiCorreo.enviarEmail()}" onclick="showBar()" oncomplete="if(args.validationFailed){hideBar()}" value="Recuperar" update="@form"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </h:form>
+
+
+            </div>
+            <div class="footer-buttons">
+                <p:commandButton value="Volver" action="index.xhtml" styleClass="btn btn-danger" immediate="true" />
+            </div>
+        </div>
+        <adm:ripple />
+        <h:outputScript library="js" name="admintemplate.js" target="head"/>
+    </h:body>
+</html>
