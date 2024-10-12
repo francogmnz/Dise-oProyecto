@@ -10,7 +10,9 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
 import utils.DTOCriterio;
@@ -53,8 +55,6 @@ public class UIABMVersionLista implements Serializable {
         mostrarVersion();
     }
 
-   
-
     public void anularVersion(int codTipoTramite, int nroVersion) {
 
         controladorABMVersion.anularVersion(codTipoTramite, nroVersion);
@@ -66,54 +66,54 @@ public class UIABMVersionLista implements Serializable {
         return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
     }
 
-    public List<VersionGrillaUI> mostrarVersion() {
-        List<VersionGrillaUI> versionesGrilla = new ArrayList<>();
-        try {
-            List<DTOTipoTramiteVersion> versionesDTO = controladorABMVersion.mostrarVersion();
+  public List<VersionGrillaUI> mostrarVersion() {
 
-            for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
-                VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
-                versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
-                versionGrillaUI.setCodTipoTramite(versionDTO.getCodTipoTramite());
-                versionGrillaUI.setNombreTipoTramite(versionDTO.getNombreTipoTramite());
-                versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
-                versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
+    // Lista para la grilla
+    List<VersionGrillaUI> versionGrilla = new ArrayList<>();
 
-                // Si la versión es 0, la añades a la lista para que se pueda modificar
-                if (versionDTO.getNroVersion() == 0) {
-                    versionesGrilla.add(versionGrillaUI);
-                }
+    // Obtener los trámites vigentes del consultor filtrado
+    List<DTOTipoTramiteVersion> dtoTramitesVigentesList = controladorABMVersion.mostrarVersion();
+
+    // Mapa para almacenar la versión más alta por cada tipo de trámite
+    Map<Integer, DTOTipoTramiteVersion> versionMasRecientePorTramite = new HashMap<>();
+
+    // Iterar sobre cada DTO
+    for (DTOTipoTramiteVersion dtoTipoTramiteVersion : dtoTramitesVigentesList) {
+        int codTipoTramite = dtoTipoTramiteVersion.getCodTipoTramite();
+
+        // Verificar si ya existe una versión para este tipo de trámite
+        if (!versionMasRecientePorTramite.containsKey(codTipoTramite)) {
+            // Si no existe, agregar esta versión
+            versionMasRecientePorTramite.put(codTipoTramite, dtoTipoTramiteVersion);
+        } else {
+            // Si ya existe una versión, verificar si esta es más reciente
+            DTOTipoTramiteVersion versionExistente = versionMasRecientePorTramite.get(codTipoTramite);
+            if (dtoTipoTramiteVersion.getFechaDesdeVersion().after(versionExistente.getFechaDesdeVersion())) {
+                // Actualizar si la versión actual tiene una fecha desde mayor
+                versionMasRecientePorTramite.put(codTipoTramite, dtoTipoTramiteVersion);
             }
-
-            // Buscar y agregar la versión más alta para cada tipo de trámite
-            for (DTOTipoTramiteVersion versionDTO : versionesDTO) {
-                boolean esVersionMasAlta = true;
-                for (DTOTipoTramiteVersion otraVersionDTO : versionesDTO) {
-                    if (versionDTO.getCodTipoTramite() == otraVersionDTO.getCodTipoTramite()
-                            && otraVersionDTO.getNroVersion() > versionDTO.getNroVersion()) {
-                        esVersionMasAlta = false;
-                        break;
-                    }
-                }
-                // Si es la versión más alta, agregarla a la lista
-                if (esVersionMasAlta) {
-                    VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
-                    versionGrillaUI.setNroVersion(versionDTO.getNroVersion());
-                    versionGrillaUI.setCodTipoTramite(versionDTO.getCodTipoTramite());
-                    versionGrillaUI.setNombreTipoTramite(versionDTO.getNombreTipoTramite());
-                    versionGrillaUI.setFechaDesdeVersion(versionDTO.getFechaDesdeVersion());
-                    versionGrillaUI.setFechaHastaVersion(versionDTO.getFechaHastaVersion());
-                    versionesGrilla.add(versionGrillaUI);
-                }
-            }
-
-            // Aquí puedes llamar a un método para actualizar la UI
-        } catch (Exception e) {
-            Messages.create("Error al recuperar las versiones.").error().detail(e.getMessage()).add();
         }
-
-        return versionesGrilla;
     }
+
+    // Convertir las versiones más recientes en objetos para la grilla
+    for (DTOTipoTramiteVersion versionReciente : versionMasRecientePorTramite.values()) {
+        VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
+
+        // Setear los atributos del trámite en el objeto de la grilla
+        versionGrillaUI.setNombreTipoTramite(versionReciente.getNombreTipoTramite());
+        versionGrillaUI.setNroVersion(versionReciente.getNroVersion());
+        versionGrillaUI.setFechaDesdeVersion(versionReciente.getFechaDesdeVersion());
+        versionGrillaUI.setFechaHastaVersion(versionReciente.getFechaHastaVersion());
+        versionGrillaUI.setFechaBajaVersion(versionReciente.getFechaBajaVersion());
+        versionGrillaUI.setCodTipoTramite(versionReciente.getCodTipoTramite());
+        // Agregar el objeto a la lista que se mostrará en la grilla
+        versionGrilla.add(versionGrillaUI);
+    }
+
+    // Retornar la lista de objetos para mostrar en la grilla
+    return versionGrilla;
+}
+
 
     public boolean isAnulable(VersionGrillaUI v) {
         if (v.getNroVersion() > 1) {
@@ -122,7 +122,7 @@ public class UIABMVersionLista implements Serializable {
             return true;
         }
     }
-    
+
     public boolean isVersionActiva(VersionGrillaUI v) {
         if (v != null) {
             Timestamp fd = v.getFechaDesdeVersion();
@@ -137,5 +137,4 @@ public class UIABMVersionLista implements Serializable {
         return false; // Si la versión es nula o no está activa
     }
 
-    
 }

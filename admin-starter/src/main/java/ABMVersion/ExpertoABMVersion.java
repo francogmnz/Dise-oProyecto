@@ -71,55 +71,14 @@ public class ExpertoABMVersion {
         // Devuelve la lista de versiones como DTOs
         return dtoVersiones;
     }
-    
-
-    public Version buscarUltimaVersionNoNula(int codTipoTramite) {
-        // Buscar la última versión activa (no dada de baja) de un tipo de trámite específico
-        List<DTOCriterio> lCriterio = new ArrayList<>();
-
-        DTOCriterio tipoTramiteCriterio = new DTOCriterio();
-        tipoTramiteCriterio.setAtributo("codTipoTramite");
-        tipoTramiteCriterio.setOperacion("=");
-        tipoTramiteCriterio.setValor(codTipoTramite);
-        lCriterio.add(tipoTramiteCriterio);
-
-        TipoTramite tipoTramiteEncontrado = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", lCriterio).get(0);
-
-        lCriterio.clear();
-
-        // Criterio para buscar por tipo de trámite
-        DTOCriterio criterioTipoTramite = new DTOCriterio();
-        criterioTipoTramite.setAtributo("tipoTramite");
-        criterioTipoTramite.setOperacion("=");
-        criterioTipoTramite.setValor(tipoTramiteEncontrado);
-        lCriterio.add(criterioTipoTramite);
-        // Criterio para buscar versiones activas
-        DTOCriterio unCriterio = new DTOCriterio();
-        unCriterio.setAtributo("fechaBajaVersion");
-        unCriterio.setOperacion("=");
-        unCriterio.setValor(null);
-        lCriterio.add(unCriterio);
-
-        List<Object> objetoList = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
-        Version ultimaVersion = null;
-
-        // Obtener la versión más reciente de la lista
-        for (Object obj : objetoList) {
-            Version version = (Version) obj;
-            if (ultimaVersion == null || version.getFechaDesdeVersion().after(ultimaVersion.getFechaDesdeVersion())) {
-                ultimaVersion = version;
-            }
-        }
-
-        return ultimaVersion;
-    }
 
     public int obtenerUltimoNumeroVersion(int codTipoTramite) {
-        // Obtener la instancia de FachadaPersistencia
         FachadaPersistencia f = FachadaPersistencia.getInstance();
+
         f.iniciarTransaccion();
-        // Búsqueda del TipoTramite
+
         List<DTOCriterio> lc = new ArrayList<>();
+
         DTOCriterio c = new DTOCriterio();
         c.setAtributo("codTipoTramite");
         c.setOperacion("=");
@@ -130,34 +89,31 @@ public class ExpertoABMVersion {
         TipoTramite t = null;
         if (!o.isEmpty()) {
             t = (TipoTramite) o.get(0);
-
         } else {
             System.out.println("TipoTramite no encontrado.");
             return 0;
         }
-        try {
-            // Crear el criterio de búsqueda para obtener el último número de versión del tipo de trámite
-            lc = new ArrayList<>();
 
-            // Criterio para filtrar por el código de tipo de trámite
+        try {
+            // Crear el criterio de búsqueda para obtener el último número de versión
+            lc = new ArrayList<>();
             DTOCriterio cTipoTramite = new DTOCriterio();
             cTipoTramite.setAtributo("tipoTramite");
             cTipoTramite.setOperacion("=");
             cTipoTramite.setValor(t);
-
             lc.add(cTipoTramite);
 
-            cTipoTramite.setAtributo("fechaBajaVersion");
-            cTipoTramite.setOperacion("=");
-            cTipoTramite.setValor(null);
+            // Filtrar por fechaBajaVersion nula
+            DTOCriterio cFechaBaja = new DTOCriterio();
+            cFechaBaja.setAtributo("fechaBajaVersion");
+            cFechaBaja.setOperacion("=");
+            cFechaBaja.setValor(null);
+            lc.add(cFechaBaja);
 
-            lc.add(cTipoTramite);
-
-            // Criterio para ordenar por número de versión de manera descendente
-            // Buscar versiones con los criterios establecidos
             List<Object> versiones = f.buscar("Version", lc);
 
-            // Verificar si se encontraron versiones
+            System.out.println("Versiones encontradas: " + versiones.size()); // Depuración
+
             if (!versiones.isEmpty()) {
                 int ultimo = 0;
                 for (Object ob : versiones) {
@@ -169,13 +125,11 @@ public class ExpertoABMVersion {
                 return ultimo;
             }
         } catch (Exception e) {
-            // Manejo de excepciones (opcional: registrar el error)
             e.printStackTrace();
         } finally {
             f.finalizarTransaccion();
         }
 
-        // Si no hay versiones, retornar 0
         return 0;
     }
 
@@ -192,11 +146,8 @@ public class ExpertoABMVersion {
         // Configurar los demás atributos de la versión
         nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
         // Obtener la fecha actual
-        nueva.setFechaDesdeVersion(new Timestamp(System.currentTimeMillis())); // Traer fecha actual
-
-        // Sumar un mes a la fecha actual para fecha hasta
-        LocalDateTime fechaHasta = LocalDateTime.now().plusMonths(1); // Sumar 1 mes
-        nueva.setFechaHastaVersion(Timestamp.valueOf(fechaHasta));
+        nueva.setFechaDesdeVersion(new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()));
+        nueva.setFechaHastaVersion(new Timestamp(dtoDatosVersion.getFechaHastaVersion().getTime()));
 
         // Debug: Imprimir las fechas
         System.out.println("Fecha Desde: " + nueva.getFechaDesdeVersion());
@@ -313,6 +264,63 @@ public class ExpertoABMVersion {
                     System.out.println("Estado de Origen no encontrado: " + dtoO.getCodEstadoTramite());
                 }
             }
+            
+            
+            /* METODO PARA VER HUECOS PERO NO FUNCIONA
+            lc.clear();
+            // Verificar y actualizar la última versión
+            List<DTOCriterio> lCriterio = new ArrayList<>();
+            DTOCriterio criterio1 = new DTOCriterio();
+            criterio1.setAtributo("tipoTramite");
+            criterio1.setOperacion("=");
+            criterio1.setValor(codTipoTramite);  // Asegúrate de que este valor esté definido
+            lCriterio.add(criterio1);
+
+            DTOCriterio criterio2 = new DTOCriterio();
+            criterio2.setAtributo("fechaBajaVersion");
+            criterio2.setOperacion("=");
+            criterio2.setValor(null);
+            lCriterio.add(criterio2);
+
+            List objetoList2 = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
+            List<Version> listVersion = (List<Version>) objetoList2;
+            Version ultVersion = null;
+
+            for (Version version : listVersion) {
+                if (ultVersion == null || ultVersion.getFechaDesdeVersion().compareTo(version.getFechaDesdeVersion()) < 0) {
+                    ultVersion = version;
+                }
+            }
+
+            // Comparar fechas
+            if (ultVersion != null) {
+                Timestamp FDNv = nueva.getFechaDesdeVersion();
+                Timestamp FDUv = ultVersion.getFechaDesdeVersion();
+
+                if (FDNv.before(FDUv)) {
+                    JOptionPane.showMessageDialog(null, "Error: la nueva versión está antes que la última versión. Existen versiones futuras.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;  // Retornar para detener el flujo
+                }
+
+                Timestamp FHUv = ultVersion.getFechaHastaVersion();
+                if (FDNv.after(FHUv)) {
+                    JOptionPane.showMessageDialog(null, "Error: la nueva versión está después de la última versión. No puede haber huecos entre versiones.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;  // Retornar para detener el flujo
+                }
+
+                Timestamp FHNv = nueva.getFechaHastaVersion();
+                if (FHNv.equals(FDNv)) {
+                    JOptionPane.showMessageDialog(null, "La fecha desde no puede ser igual a la fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;  // Retornar para detener el flujo
+                }
+                if (FHNv.before(FDNv)) {
+                    JOptionPane.showMessageDialog(null, "Error: la nueva versión no puede tener una fecha desde > fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;  // Retornar para detener el flujo
+                }
+
+                // Actualizar la última versión
+                ultVersion.setFechaHastaVersion(FDNv);
+            } */
             // Guardar la versión
             f.guardar(nueva);
             f.finalizarTransaccion();

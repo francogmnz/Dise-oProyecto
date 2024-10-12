@@ -132,7 +132,7 @@
                     <p:column>
                         <f:facet name="header">Fecha Desde</f:facet>
                         <h:outputText value="#{version.fechaDesdeVersion}">
-                        
+                          <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:column>
 
