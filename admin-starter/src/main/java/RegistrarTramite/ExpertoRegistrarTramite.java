@@ -156,7 +156,6 @@ public class ExpertoRegistrarTramite {
         // buscar("EstadoTramite", "nombreEstadoTramite = " + nombreEstadoTramite): List<Object>
         if (nombreEstadoTramite.trim().length() > 0) {
             List<DTOCriterio> criterioListET = new ArrayList<DTOCriterio>();
-            
             DTOCriterio dtoEstado = new DTOCriterio();
 
             dtoEstado.setAtributo("nombreEstadoTramite");
@@ -483,28 +482,28 @@ public class ExpertoRegistrarTramite {
 
         if (nombreCategoria.trim().length() > 0) {
             List<DTOCriterio> criterioList2 = new ArrayList<DTOCriterio>();
-            
+
             DTOCriterio criterio3 = new DTOCriterio();
-            
+
             criterio3.setAtributo("nombreCategoriaTipoTramite");
             criterio3.setOperacion("like");
             criterio3.setValor(nombreCategoria);
             criterioList2.add(criterio3);
 
-            List lCategoria =  FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList2);
-            
+            List lCategoria = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList2);
+
             CategoriaTipoTramite categoriaEncontrada = null;
-            
+
             if (lCategoria.size() > 0) {
                 categoriaEncontrada = (CategoriaTipoTramite) lCategoria.get(0);
             }
 
             DTOCriterio criterio4 = new DTOCriterio();
-            
+
             criterio4.setAtributo("categoriaTipoTramite");
             criterio4.setOperacion("=");
             criterio4.setValor(categoriaEncontrada);
-            
+
             criterioList.add(criterio4);
         }
 
@@ -671,6 +670,12 @@ public class ExpertoRegistrarTramite {
                 throw new Exception("No se encontró el documento con el código proporcionado");
             }
 
+            if (tramiteElegido.getFechaPresentacionTotalDocumentacion() != null) {
+                tramiteElegido.setConsultor(null);
+                tramiteElegido.setFechaPresentacionTotalDocumentacion(null);
+                tramiteElegido.setFechaInicioTramite(null);
+            }
+            FachadaPersistencia.getInstance().merge(tramiteElegido);
             // Finalizar la transacción correctamente
             FachadaPersistencia.getInstance().finalizarTransaccion();
 

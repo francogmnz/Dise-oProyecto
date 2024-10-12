@@ -202,9 +202,9 @@
                                                       oncomplete="PF('msgDialog').show(); window.location.reload();"
                                                       update="@form"
                                                       multiple="true"
-                                                      sizeLimit="1000000"
+                                                      sizeLimit="10000000"
                                                       allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/"
-                                                      disabled="#{uiresumen.fileUploadDisabled}">
+                                                      disabled="{uiresumen.fileUploadDisabled}">
                                         </p:fileUpload>
 
                                         <!-- Botón para seleccionar el archivo y actualizar el codTD -->
@@ -224,7 +224,8 @@
                                 <f:facet name="header">Descarga</f:facet>
                                 <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
-                                                 icon="pi pi-arrow-down"  styleClass="btn-success">
+                                                 icon="pi pi-arrow-down"  styleClass="btn-success"
+                                                 disabled="#{doc.fechaEntregaDoc == null}">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>    
                             </p:column>

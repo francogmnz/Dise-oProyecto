@@ -9,7 +9,7 @@ package RegistrarTramite.dtos;
  * @author matis
  */
 public class DTOEstadoTramite {
-    
+
     private String nombreEstado;
 
     public String getNombreEstado() {
@@ -19,5 +19,5 @@ public class DTOEstadoTramite {
     public void setNombreEstado(String nombreEstado) {
         this.nombreEstado = nombreEstado;
     }
-    
+
 }

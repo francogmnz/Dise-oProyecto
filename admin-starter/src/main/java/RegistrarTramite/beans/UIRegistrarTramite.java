@@ -152,7 +152,7 @@ public class UIRegistrarTramite implements Serializable {
     public String registrarTramite() throws IOException {
         try {
             controladorRegistrarTramite.registrarTramite();
-            nroTramite = controladorRegistrarTramite.getUltimoNroTramite();
+            nroTramite = controladorRegistrarTramite.getUltimoNroTramite() + 1;
             // Redirigir al resumen del trámite con el número del trámite
             return "ResumenTramite?faces-redirect=true&nroTramite=" + nroTramite;
         } catch (RegistrarTramiteException e) {

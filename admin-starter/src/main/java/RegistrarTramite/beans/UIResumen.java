@@ -392,13 +392,10 @@ public class UIResumen implements Serializable {
                         .contentType("application/octet-stream") // Tipo genérico para archivos binarios
                         .stream(() -> inputStream) // Proporciona el flujo de datos del archivo
                         .build();
-
             } catch (Exception ex) {
                 Logger.getLogger(UIResumen.class
                         .getName()).log(Level.SEVERE, null, ex);
-
             }
-
         }
 
         //Retorna el archivo listo para ser descargado
