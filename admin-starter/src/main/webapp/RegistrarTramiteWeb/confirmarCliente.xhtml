@@ -7,18 +7,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{uiRegistrarTramiteWeb.verificarEstadoEnConfirmarCliente}" />
+</f:metadata>       
 <h:head>
     <title>Gestión de Trámites - Confirmar Cliente</title>
     <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloConfirmarCliente.css" />
 </h:head>
-<h:body>
+<h:body> 
     <h:form id="formConfirmarCliente">
         <div class="container-centralizado">
             <h:panelGrid columns="1" styleClass="panel-principal">
 
                 <h1 class="titulo">Gestión de Trámites</h1>
-                
+                <h:messages id="messages" globalOnly="false" showSummary="true" showDetail="true" styleClass="error-message" />
                 <div class="stepper-wrapper">
                     <div class="stepper-item active">
                       <div class="step-counter">1</div>
@@ -66,14 +70,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     <h:selectBooleanCheckbox id="confirmaCliente" value="#{uiRegistrarTramiteWeb.confirmaCliente}" />
                     <h:outputLabel for="confirmaCliente" value="Confirmo que soy el cliente." />
                 </div>
-
-                <h:panelGroup rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}">
-                    <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
-                </h:panelGroup>
-
-
-
-                
+          
                 <div class="botones-accion">
                     <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.confirmarCliente}" styleClass="btn-confirmar">
                         <f:ajax execute="@form" render="@form" />

@@ -25,9 +25,9 @@
                             <p:outputLabel for="codTipoTramite" value="Código de tipoTramite:" />
                </div>
                  <div class="ui-sm-12 ui-g-11">
-                     <p:inputText id="codTipoTramite" value="#{uiabmTipoTramite.codTipoTramite}" style="width: 150px;" disabled="#{!uiabmTipoTramite.insert}"  > <!-- readonly="true" -->
-
-                     </p:inputText><p:message id="codigoMSG" for="codTipoTramite"/> <!-- codigoMSG? cambio -->
+                     <p:inputText id="codTipoTramite" value="#{uiabmTipoTramite.codTipoTramite}" style="width: 150px;" disabled="#{!uiabmTipoTramite.insert}" required="true" requiredMessage="Debe ingresar el codigo del tipo de tramite." validatorMessage="El codigo debe contener entre 1 y 10 digitos."> <!-- ver si le ponemos el validator tambien a el plazo. readonly="true" -->
+                        <f:validateRegex pattern="^\d{1,10}$" /> 
+                     </p:inputText><p:message id="codigoMSG" for="codTipoTramite"/> 
                  </div>
                    </div>       
             <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
@@ -35,7 +35,7 @@
                           <p:outputLabel for="nombreTipoTramite" value="Nombre de la TipoTramite:" />
             </div>
             <div class="ui-sm-12 ui-g-11"> 
-                  <p:inputText id="nombreTipoTramite" value="#{uiabmTipoTramite.nombreTipoTramite}" required="true" requiredMessage="Debe ingresar el nombre de TipoTramite." />
+                  <p:inputText id="nombreTipoTramite" value="#{uiabmTipoTramite.nombreTipoTramite}" required="true" requiredMessage="Debe ingresar el nombre de TipoTramite." maxlength="255"/>
                   <p:message id="nombreMSG" for="nombreTipoTramite" />
              </div>
         </div>   
@@ -44,7 +44,7 @@
                           <p:outputLabel for="descripcionTipoTramite" value="Descripcion de la TipoTramite:" />
             </div>
             <div class="ui-sm-12 ui-g-11"> 
-                  <p:inputText id="descripcionTipoTramite" value="#{uiabmTipoTramite.descripcionTipoTramite}" required="true" requiredMessage="Debe ingresar la descripción de TipoTramite." /> 
+                  <p:inputText id="descripcionTipoTramite" value="#{uiabmTipoTramite.descripcionTipoTramite}" required="true" requiredMessage="Debe ingresar la descripción de TipoTramite." maxlength="255"/> 
                   <p:message id="descripcionMSG" for="descripcionTipoTramite" />
              </div>
         </div>  
@@ -53,7 +53,7 @@
                           <p:outputLabel for="descripcionWebTipoTramite" value="Descripcion Web de la TipoTramite:" />
             </div>
             <div class="ui-sm-12 ui-g-11"> 
-                  <p:inputText id="descripcionWebTipoTramite" value="#{uiabmTipoTramite.descripcionWebTipoTramite}" required="true" requiredMessage="Debe ingresar la descripción web de TipoTramite." /> 
+                  <p:inputText id="descripcionWebTipoTramite" value="#{uiabmTipoTramite.descripcionWebTipoTramite}" required="true" requiredMessage="Debe ingresar la descripción web de TipoTramite." maxlength="255"/> 
                   <p:message id="descripcionWebMSG" for="descripcionWebTipoTramite" />
              </div>
         </div>  
@@ -63,7 +63,7 @@
                           <p:outputLabel for="plazoEntregaDocumentacionTT" value="Plazo de entrega del TipoTramite:" />
             </div>
             <div class="ui-sm-12 ui-g-11"> 
-                  <p:inputText id="plazoEntregaDocumentacionTT" value="#{uiabmTipoTramite.plazoEntregaDocumentacionTT}" required="true" requiredMessage="Debe ingresar el plazo de entrega de documentación."/>
+                  <p:inputText id="plazoEntregaDocumentacionTT" value="#{uiabmTipoTramite.plazoEntregaDocumentacionTT}" required="true" requiredMessage="Debe ingresar el plazo de entrega de documentación." maxlength="255"/>
                   <p:message id="plazoEntregaMSG" for="plazoEntregaDocumentacionTT" />
              </div>
         </div>

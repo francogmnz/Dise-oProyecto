@@ -32,79 +32,6 @@ import utils.FachadaPersistencia;
  */
 public class ExpertoABMTipoTramite {
 
-    /*
-    // Este buscar tipoTramite de esta manera se debe al fetch join 
-    public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
-        
-        List<DTOCriterio> criterioBuscarTipoTramiteList = new ArrayList<DTOCriterio>();
-        
-        if (codTipoTramite > 0) {
-            DTOCriterio criterioPorCodigoTT = new DTOCriterio();
-            criterioPorCodigoTT.setAtributo("codTipoTramite");
-            criterioPorCodigoTT.setOperacion("=");
-            criterioPorCodigoTT.setValor(codTipoTramite); 
-            criterioBuscarTipoTramiteList.add(criterioPorCodigoTT);
-        }
-
-        if (nombreTipoTramite.trim().length() > 0) {
-            DTOCriterio criterioPorNombreTT = new DTOCriterio();
-            criterioPorNombreTT.setAtributo("nombreTipoTramite");
-            criterioPorNombreTT.setOperacion("like");
-            criterioPorNombreTT.setValor(nombreTipoTramite);
-            criterioBuscarTipoTramiteList.add(criterioPorNombreTT);
-        }
-
-        List TipoTramiteObjetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTipoTramiteList);
-        Map<Integer,TipoTramiteDTO> tipoTramiteMap = new HashMap<>();
-        
-                
-        for (Object x : TipoTramiteObjetoList) {
-            TipoTramite tipoTramite = (TipoTramite) x;
-            TipoTramiteDTO tipoTramiteDTO = tipoTramiteMap.getOrDefault(tipoTramite.getCodTipoTramite(), new TipoTramiteDTO());
-
-            
-            if(!tipoTramiteMap.containsKey(tipoTramite.getCodTipoTramite())){
-            tipoTramiteDTO.setCodTipoTramite(tipoTramite.getCodTipoTramite());
-            tipoTramiteDTO.setNombreTipoTramite(tipoTramite.getNombreTipoTramite());
-            tipoTramiteDTO.setDescripcionTipoTramite(tipoTramite.getDescripcionTipoTramite());
-            tipoTramiteDTO.setDescripcionWebTipoTramite(tipoTramite.getDescripcionWebTipoTramite());
-            tipoTramiteDTO.setFechaHoraBajaTipoTramite(tipoTramite.getFechaHoraBajaTipoTramite());
-            tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
-            tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
-            }
-            
-            List<TipoTramiteDocumentacion> listaTTD = tipoTramite.getTipoTramiteDocumentacion();
-            List<DocumentacionDTO> documentacionesDTO = new ArrayList<>();            
-           
-            for(TipoTramiteDocumentacion ttd: listaTTD){
-                if(ttd.getFechaHoraBajaTTD() == null){
-                    
-                    Documentacion documentacion = ttd.getDocumentacion();
-                    
-                    DocumentacionDTO docDTO = new DocumentacionDTO();
-                    
-                    docDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
-                    docDTO.setNombreDocumentacion(documentacion.getNombreDocumentacion());
-                    
-                    documentacionesDTO.add(docDTO);
-                    
-  
-                    
-                }
-            }
-            
-            tipoTramiteDTO.setDocumentacionesDTO(documentacionesDTO);
-           
-            tipoTramiteMap.put(tipoTramite.getCodTipoTramite(), tipoTramiteDTO);
-        }
-
-        return new ArrayList<>(tipoTramiteMap.values());
- 
-    }
-    
-    */
-    
-    //Buscar tipoTramite sin fetch Join
     public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
         
         List<DTOCriterio> criterioBuscarTipoTramiteList = new ArrayList<DTOCriterio>();
@@ -225,31 +152,12 @@ public class ExpertoABMTipoTramite {
     }
     
     public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+        
+        validarTipoTramiteA(nuevoTipoTramiteDTO, documentacionesSeleccionadasDTO);
+        
         FachadaPersistencia.getInstance().iniciarTransaccion();
-            
-        Integer codigoParaValidacion = (Integer) nuevoTipoTramiteDTO.getCodCategoriaTipoTramite();
-        if(codigoParaValidacion == null) {
-            throw new TipoTramiteException("Debe seleccionar una categoría.");
-        }
+        
 
-        if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
-            throw new TipoTramiteException("Debe seleccionar al menos una documentación.");
-        }        
-
-        List<DTOCriterio> criterioAgregarTTList = new ArrayList<>();
-        DTOCriterio criterioPorCodigoTT = new DTOCriterio();
-
-        criterioPorCodigoTT.setAtributo("codTipoTramite");
-        criterioPorCodigoTT.setOperacion("=");
-        criterioPorCodigoTT.setValor(nuevoTipoTramiteDTO.getCodTipoTramite());
-
-        criterioAgregarTTList.add(criterioPorCodigoTT);
-
-        List lTipoTramite = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioAgregarTTList);
-
-        if (lTipoTramite.size() > 0) {
-            throw new TipoTramiteException("El codigo TipoTramite ya existe");
-        } else {
             TipoTramite tipoTramite = new TipoTramite();
  
             tipoTramite.setCodTipoTramite(nuevoTipoTramiteDTO.getCodTipoTramite());
@@ -304,7 +212,7 @@ public class ExpertoABMTipoTramite {
             FachadaPersistencia.getInstance().guardar(tipoTramite);
 
             FachadaPersistencia.getInstance().finalizarTransaccion();
-        }
+        
     }
     
         public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
@@ -347,15 +255,17 @@ public class ExpertoABMTipoTramite {
 
         
         public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn,List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+        
+        validarTipoTramiteM(modificarTipoTramiteDTOIn, documentacionesSeleccionadasDTO);
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
         Integer codigoParaValidacion = (Integer) modificarTipoTramiteDTOIn.getCodCategoriaTipoTramite();
         if(codigoParaValidacion == null) {
-            throw new TipoTramiteException("Debe seleccionar una categoría.");
+            throw new TipoTramiteException("Debe seleccionar una categoria.");
         }
 
         if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
-            throw new TipoTramiteException("Debe seleccionar al menos una documentación.");
+            throw new TipoTramiteException("Debe seleccionar al menos una documentacion.");
         }           
         
         List<DTOCriterio> criterioModificarTTList = new ArrayList<>();
@@ -486,8 +396,7 @@ public class ExpertoABMTipoTramite {
 
         
         if (!tramitesRelacionadosActivos.isEmpty()) {
-            //FachadaPersistencia.getInstance().finalizarTransaccion();
-            throw new TipoTramiteException("No se puede dar de baja el TipoTramite porque hay Trámites activos relacionados.");
+            throw new TipoTramiteException("No se puede dar de baja el TipoTramite porque hay Tramites activos relacionados.");
         } else{
             List<TipoTramiteDocumentacion> listaTipoTramiteDocumentacionABajar = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
             for(TipoTramiteDocumentacion ttd: listaTipoTramiteDocumentacionABajar){
@@ -502,4 +411,165 @@ public class ExpertoABMTipoTramite {
         }
     }
     
+    private void validarTipoTramiteA(NuevoTipoTramiteDTO tipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+
+        if (tipoTramiteDTO.getCodTipoTramite() <= 0) {
+            throw new TipoTramiteException("El codigo debe ser un entero mayor a cero.");
+        }
+
+        String nombreTipoTramite = tipoTramiteDTO.getNombreTipoTramite();
+        if (nombreTipoTramite == null || nombreTipoTramite.trim().isEmpty() || nombreTipoTramite.length() > 255) {
+            throw new TipoTramiteException("El nombre debe tener entre 1 y 255 caracteres.");
+        }
+
+        String descripcionTT = tipoTramiteDTO.getDescripcionTipoTramite();
+        if (descripcionTT == null || descripcionTT.trim().isEmpty() || descripcionTT.length() > 255) {
+            throw new TipoTramiteException("La descripcion debe tener entre 1 y 255 caracteres.");
+        }
+
+        String descripcionWebTT = tipoTramiteDTO.getDescripcionWebTipoTramite();
+        if (descripcionWebTT == null || descripcionWebTT.trim().isEmpty() || descripcionWebTT.length() > 255) {
+            throw new TipoTramiteException("La descripcion web debe tener entre 1 y 255 caracteres.");
+        }
+
+        if (tipoTramiteDTO.getPlazoEntregaDocumentacionTT() <= 0) {
+            throw new TipoTramiteException("El plazo de entrega debe ser un entero mayor a cero.");
+        }
+
+        if (tipoTramiteDTO.getCodCategoriaTipoTramite() <= 0) {
+            throw new TipoTramiteException("Debe seleccionar una categoria.");
+        }
+
+        if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
+            throw new TipoTramiteException("Debe seleccionar al menos una documentacion.");
+        }
+
+        List<DTOCriterio> criterioCodigoTT = new ArrayList<>();
+        DTOCriterio dtoCodigoTT = new DTOCriterio();
+        dtoCodigoTT.setAtributo("codTipoTramite");
+        dtoCodigoTT.setOperacion("=");
+        dtoCodigoTT.setValor(tipoTramiteDTO.getCodTipoTramite());
+        criterioCodigoTT.add(dtoCodigoTT);
+
+        List lTipoTramiteCodigo = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioCodigoTT);
+        if (!lTipoTramiteCodigo.isEmpty()) {
+            throw new TipoTramiteException("El codigo del tipo de tramite ya existe.");
+        }
+
+        List<DTOCriterio> criterioNombreTT = new ArrayList<>();
+        DTOCriterio dtoNombreTT = new DTOCriterio();
+        dtoNombreTT.setAtributo("nombreTipoTramite");
+        dtoNombreTT.setOperacion("=");
+        dtoNombreTT.setValor(nombreTipoTramite);
+        criterioNombreTT.add(dtoNombreTT);
+
+        List lTipoTramiteNombre = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioNombreTT);
+        if (!lTipoTramiteNombre.isEmpty()) {
+            throw new TipoTramiteException("El nombre del tipo de tramite ya existe.");
+        }
+
+
+        List<DTOCriterio> criterioDescripcionTT = new ArrayList<>();
+        DTOCriterio dtoDescripcionTT = new DTOCriterio();
+        dtoDescripcionTT.setAtributo("descripcionTipoTramite");
+        dtoDescripcionTT.setOperacion("=");
+        dtoDescripcionTT.setValor(descripcionTT);
+        criterioDescripcionTT.add(dtoDescripcionTT);
+
+        List lTipoTramiteDescripcion = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionTT);
+        if (!lTipoTramiteDescripcion.isEmpty()) {
+            throw new TipoTramiteException("La descripcion del tipo de tramite ya existe.");
+        }
+
+        List<DTOCriterio> criterioDescripcionWebTT = new ArrayList<>();
+        DTOCriterio dtoDescripcionWebTT = new DTOCriterio();
+        dtoDescripcionWebTT.setAtributo("descripcionWebTipoTramite");
+        dtoDescripcionWebTT.setOperacion("=");
+        dtoDescripcionWebTT.setValor(descripcionWebTT);
+        criterioDescripcionWebTT.add(dtoDescripcionWebTT);
+
+        List lTipoTramiteDescripcionWeb = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionWebTT);
+        if (!lTipoTramiteDescripcionWeb.isEmpty()) {
+            throw new TipoTramiteException("La descripcion web del tipo de tramite ya existe.");
+        }
+    }
+        
+    private void validarTipoTramiteM(ModificarTipoTramiteDTOIn tipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+
+        String nombreTipoTramite = tipoTramiteDTO.getNombreTipoTramite();
+        if (nombreTipoTramite == null || nombreTipoTramite.trim().isEmpty() || nombreTipoTramite.length() > 255) {
+            throw new TipoTramiteException("El nombreTipoTramite debe tener entre 1 y 255 caracteres.");
+        }
+
+
+        String descripcionTT = tipoTramiteDTO.getDescripcionTipoTramite();
+        if (descripcionTT == null || descripcionTT.trim().isEmpty() || descripcionTT.length() > 255) {
+            throw new TipoTramiteException("La descripcion debe tener entre 1 y 255 caracteres.");
+        }
+
+
+        String descripcionWebTT = tipoTramiteDTO.getDescripcionWebTipoTramite();
+        if (descripcionWebTT == null || descripcionWebTT.trim().isEmpty() || descripcionWebTT.length() > 255) {
+            throw new TipoTramiteException("La descripcion web debe tener entre 1 y 255 caracteres.");
+        }
+
+
+        if (tipoTramiteDTO.getPlazoEntregaDocumentacionTT() <= 0) {
+            throw new TipoTramiteException("El plazo de entrega debe ser un entero mayor a cero.");
+        }
+
+
+        if (tipoTramiteDTO.getCodCategoriaTipoTramite() <= 0) {
+            throw new TipoTramiteException("Debe seleccionar una categoria.");
+        }
+
+
+        if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
+            throw new TipoTramiteException("Debe seleccionar al menos una documentacion.");
+        }
+
+        List<DTOCriterio> criterioNombreTT = new ArrayList<>();
+        DTOCriterio dtoNombreTT = new DTOCriterio();
+        dtoNombreTT.setAtributo("nombreTipoTramite");
+        dtoNombreTT.setOperacion("=");
+        dtoNombreTT.setValor(nombreTipoTramite);
+        criterioNombreTT.add(dtoNombreTT);
+
+        DTOCriterio dtoDistintoCodTT = new DTOCriterio();
+        dtoDistintoCodTT.setAtributo("codTipoTramite");
+        dtoDistintoCodTT.setOperacion("<>");
+        dtoDistintoCodTT.setValor(tipoTramiteDTO.getCodTipoTramite());
+        criterioNombreTT.add(dtoDistintoCodTT);
+
+        List lTipoTramiteNombre = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioNombreTT);
+        if (!lTipoTramiteNombre.isEmpty()) {
+            throw new TipoTramiteException("El nombre del tipo de tramite ya existe.");
+        }
+
+        List<DTOCriterio> criterioDescripcionTT = new ArrayList<>();
+        DTOCriterio dtoDescripcionTT = new DTOCriterio();
+        dtoDescripcionTT.setAtributo("descripcionTipoTramite");
+        dtoDescripcionTT.setOperacion("=");
+        dtoDescripcionTT.setValor(descripcionTT);
+        criterioDescripcionTT.add(dtoDescripcionTT);
+        criterioDescripcionTT.add(dtoDistintoCodTT);
+
+        List lTipoTramiteDescripcion = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionTT);
+        if (!lTipoTramiteDescripcion.isEmpty()) {
+            throw new TipoTramiteException("La descripcion del tipo de tramite ya existe.");
+        }
+
+        List<DTOCriterio> criterioDescripcionWebTT = new ArrayList<>();
+        DTOCriterio dtoDescripcionWebTT = new DTOCriterio();
+        dtoDescripcionWebTT.setAtributo("descripcionWebTipoTramite");
+        dtoDescripcionWebTT.setOperacion("=");
+        dtoDescripcionWebTT.setValor(descripcionWebTT);
+        criterioDescripcionWebTT.add(dtoDescripcionWebTT);
+        criterioDescripcionWebTT.add(dtoDistintoCodTT);
+
+        List lTipoTramiteDescripcionWeb = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionWebTT);
+        if (!lTipoTramiteDescripcionWeb.isEmpty()) {
+            throw new TipoTramiteException("La descripcion web del tipo de tramite ya existe.");
+        }
+    }        
 }

@@ -187,6 +187,7 @@ public class UIABMTipoTramite implements Serializable {
                 }
                 
                 controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn,documentacionesSeleccionadasDTO);
+                Messages.create("Exito").detail("Tipo de tramite modificado correctamente.").add();
                 return BeansUtils.redirectToPreviousPage();
             }
             else
@@ -211,14 +212,15 @@ public class UIABMTipoTramite implements Serializable {
                 }
                         
                 controladorABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);
-
+                Messages.create("Exito").detail("Tipo de tramite agregado correctamente.").add();
+                return BeansUtils.redirectToPreviousPage();
             }
-            return BeansUtils.redirectToPreviousPage();
-        }
+            
+        }catch (TipoTramiteException e) {
+            Messages.create("Error").error().detail(e.getMessage()).add();
+            return null;
         
-        catch (TipoTramiteException e) {
-                Messages.create(e.getMessage()).fatal().add();
-                return "";
+
          }
     }
 

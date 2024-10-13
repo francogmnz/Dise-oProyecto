@@ -7,17 +7,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+    
+<f:metadata>
+    <f:viewAction action="#{uiRegistrarTramiteWeb.verificarEstadoEnSeleccionarTipoTramite}" />
+</f:metadata>     
 <h:head>
     <title>Seleccionar Tipo de Trámite</title>
     <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloTipoTramite.css" /> 
 </h:head>
-<h:body>
+<h:body>   
     <h:form>
     <div class="container-tipo-tramite">
 
         <h1 class="titulo-tipo-tramite">Gestión de Trámites</h1>
-
+        <h:messages id="messages" globalOnly="true" showSummary="true" showDetail="false" styleClass="error-message-tipo" />
 
         <div class="stepper-wrapper">
             <div class="stepper-item completed">
@@ -41,7 +46,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <p class="subtitulo-lindo-tipo">Seleccione el tipo de trámite que desea realizar:</p>
 
         <div class="tipos-tramite-lista">
-            <ui:repeat value="#{uiRegistrarTramiteWeb.listarTipoTramites()}" var="tipoTramite">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.tiposTramiteGrilla}" var="tipoTramite">
                 <div class="tipo-tramite-fila">
                     <div class="tipo-tramite-header">
                         <h2>#{tipoTramite.nombreTipoTramite}</h2>
@@ -68,7 +73,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </div>
 
         <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverSeleccionarCategoria}" styleClass="btn-volver" />
-        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message-tipo" />
     </div>
     </h:form>
 </h:body>

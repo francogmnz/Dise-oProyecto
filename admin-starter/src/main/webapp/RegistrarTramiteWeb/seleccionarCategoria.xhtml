@@ -7,7 +7,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{uiRegistrarTramiteWeb.verificarEstadoEnSeleccionarCategoria}" />
+</f:metadata> 
 <h:head>
     <title>Seleccionar Categoría</title>
     <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloCategoria.css" />
@@ -16,7 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:form>
     <div class="container">
         <h1 class="titulo">Gestión de Trámites</h1>
-
+        <h:messages id="messages" globalOnly="true" showSummary="true" showDetail="false" styleClass="error-message" />
         <div class="stepper-wrapper">
                     <div class="stepper-item completed">
                       <div class="step-counter">1</div>
@@ -39,7 +43,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
 
         <div class="categorias-grid">
-            <ui:repeat value="#{uiRegistrarTramiteWeb.listarCategoriasTipoTramite()}" var="categoria">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.categoriasGrilla}" var="categoria">
                 <div class="categoria-item">
                     <div class="categoria-header">
                         <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
@@ -57,7 +61,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </div>
 
         <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverConfirmarCliente}" styleClass="btn-volver" />
-        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
     </div>
     </h:form>
 </h:body>
