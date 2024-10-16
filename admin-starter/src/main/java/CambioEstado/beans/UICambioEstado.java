@@ -1,121 +1,89 @@
 package CambioEstado.beans;
 
-import ABMArticulo.exceptions.CambioEstadoException;
 import CambioEstado.ControladorCambioEstado;
-import CambioEstado.dtos.CambioEstadoDTO;
-import entidades.Estado;
+import CambioEstado.dtos.DTOTramitesVigentes;
+import CambioEstado.dtos.TramiteDTO;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.omnifaces.util.Messages;
-import utils.BeansUtils;
-import utils.FachadaPersistencia;
 
 @Named("uiCambioEstado")
 @ViewScoped
 public class UICambioEstado implements Serializable {
 
     private ControladorCambioEstado controladorCambioEstado = new ControladorCambioEstado();
+    private int legajoConsultor;  // Código del consultor para filtrar los trámites
+    private String nombreConsultor;  // Nombre del consultor (si es necesario usarlo)
+    private List<CambioEstadoGrillaUI> tramitesConsultor;  // Lista de trámites para mostrar
 
-    private boolean insert;
-    private int idTramite;
-    private String estadoSeleccionado;
-    private String descripcion;
-
-    private List<Estado> estadosDisponibles;
-
-    // Getters y Setters
-
-    public boolean isInsert() {
-        return insert;
-    }
-
-    public void setInsert(boolean insert) {
-        this.insert = insert;
-    }
-
-    public int getIdTramite() {
-        return idTramite;
-    }
-
-    public void setIdTramite(int idTramite) {
-        this.idTramite = idTramite;
-    }
-
-    public String getEstadoSeleccionado() {
-        return estadoSeleccionado;
-    }
-
-    public void setEstadoSeleccionado(String estadoSeleccionado) {
-        this.estadoSeleccionado = estadoSeleccionado;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public List<Estado> getEstadosDisponibles() {
-        if (estadosDisponibles == null) {
-            cargarEstadosDisponibles();
-        }
-        return estadosDisponibles;
-    }
-
-    private void cargarEstadosDisponibles() {
-        List<Object> resultado = FachadaPersistencia.getInstance().buscar("Estado", new ArrayList<>());
-        estadosDisponibles = resultado.stream()
-                .map(obj -> (Estado) obj)
-                .collect(Collectors.toList());
-    }
-
-    public UICambioEstado() {
+    public UICambioEstado() throws IOException {
+        // Inicialización y obtención de parámetros de la request
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
-        // Verificar si el parámetro está presente
-        String idTramiteParam = request.getParameter("idTramite");
-        if (idTramiteParam != null) {
-            idTramite = Integer.parseInt(idTramiteParam);
-            insert = false;
-            // Aquí podrías cargar el estado actual del trámite si es necesario
+        // Obtener código de consultor desde la request
+        if (request.getParameter("legajoConsultor") != null) {
+            legajoConsultor = Integer.parseInt(request.getParameter("legajoConsultor"));
+            cargarTramitesConsultor(); // Cargar trámites asociados al consultor
+        }
+    }
+
+    // Método para cargar trámites al iniciar
+    public void cargarTramitesConsultor() {
+        tramitesConsultor = new ArrayList<>();
+        // Obtener los trámites vigentes del consultor desde el controlador
+        List<DTOTramitesVigentes> dtoTramitesVigentesList = controladorCambioEstado.buscarTramites(legajoConsultor);
+
+        // Recorrer los trámites y agregarlos a la lista de UI
+        for (DTOTramitesVigentes dtoTramitesVigentes : dtoTramitesVigentesList) {
+            for (TramiteDTO tramiteDTO : dtoTramitesVigentes.getTramites()) {
+                CambioEstadoGrillaUI tramiteUI = new CambioEstadoGrillaUI();
+                tramiteUI.setCodEstadoTramite(tramiteDTO.getEstadoTramite().getCodEstadoTramite());
+                tramiteUI.setNombreEstadoTramite(tramiteDTO.getEstadoTramite().getNombreEstadoTramite());
+                tramiteUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
+                tramiteUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
+                tramiteUI.setNroTramite(tramiteDTO.getNroTramite());
+
+                // Agregar a la lista de trámites a mostrar
+                tramitesConsultor.add(tramiteUI);
+            }
+        }
+    }
+
+    // Método para buscar trámites basado en el legajo consultor ingresado
+    public void buscarTramites() {
+        if (legajoConsultor > 0) {
+            cargarTramitesConsultor(); // Cargar trámites para el legajo consultor ingresado
         } else {
-            insert = true;
+            System.out.println("Por favor ingrese un código de consultor válido.");
         }
     }
 
-    public String cambiarEstado() {
-        try {
-            Estado estado = buscarEstadoPorOID(estadoSeleccionado);
-            if (estado == null) {
-                throw new CambioEstadoException("El estado seleccionado no es válido.");
-            }
-
-            CambioEstadoDTO cambioEstadoDTO = new CambioEstadoDTO(idTramite, estado.getNombre(), descripcion);
-            controladorCambioEstado.cambiarEstado(cambioEstadoDTO);
-            return BeansUtils.redirectToPreviousPage();
-        } catch (CambioEstadoException e) {
-            Messages.create(e.getMessage()).fatal().add();
-            return "";
-        }
+    // Getters y Setters
+    public List<CambioEstadoGrillaUI> getTramitesConsultor() {
+        return tramitesConsultor;
     }
 
-    private Estado buscarEstadoPorOID(String oid) {
-        for (Estado estado : estadosDisponibles) {
-            if (estado.getOID().equals(oid)) {
-                return estado;
-            }
-        }
-        return null;
+    public int getLegajoConsultor() {
+        return legajoConsultor;
+    }
+
+    public void setLegajoConsultor(int legajoConsultor) { // Corrige el nombre del setter
+        this.legajoConsultor = legajoConsultor;
+    }
+
+    public String getNombreConsultor() {
+        return nombreConsultor;
+    }
+
+    public void setNombreConsultor(String nombreConsultor) {
+        this.nombreConsultor = nombreConsultor;
     }
 }

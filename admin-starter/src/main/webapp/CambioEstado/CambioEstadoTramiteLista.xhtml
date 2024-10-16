@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
+
     <ui:define name="metadata">
         <ui:param name="title" value="Gestión de Trámites"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
 
@@ -19,149 +22,62 @@
     </ui:define>
 
     <ui:define name="body">
-        <h:form>
+        <h:form id="tramitesForm">
             <p:focus context="@form"/>
             <div class="box box-primary">
 
                 <!-- Filtros de búsqueda -->
-                <div class="ui-g ui-fluid">
-                    <!-- Filtro por Número de Trámite -->
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="Número trámite:"/>
-                            <br/>
-                            <p:spacer height="10"/>
-                            <p:inputText id="nroTramiteFiltro" style="width:150px"
-                                         placeholder="Número trámite" value="#{uitramiteLista.nroTramiteFiltro}">
-                                <p:ajax event="keyup" 
-                                        listener="#{uitramiteLista.filtrar}" 
-                                        update="@form:grid1" />
-                            </p:inputText>
-                        </p:outputPanel>
-                    </div>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel value="Código del Consultor: " for="codigoFiltro"/>
+                    <p:inputText id="codigoFiltro" value="#{uiabmArticuloLista.codigoFiltro}" />
 
-                    <!-- Filtro por DNI -->
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="DNI:"/>
-                            <br/>
-                            <p:spacer height="10"/>
-                            <p:inputText id="dniFiltro" style="width:150px"
-                                         placeholder="DNI" value="#{uitramiteLista.dniFiltro}">
-                                <p:ajax event="keyup" 
-                                        listener="#{uitramiteLista.filtrar}" 
-                                        update="@form:grid1" />
-                            </p:inputText>
-                        </p:outputPanel>
-                    </div>
+                    <h:outputLabel value="Nombre del Consultor: " for="nombreFiltro"/>
+                    <p:inputText id="nombreFiltro" value="#{uiabmArticuloLista.nombreFiltro}" />
 
-                    <!-- Filtro por Tipo de Trámite -->
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="Tipo trámite:"/>
-                            <br/>
-                            <p:spacer height="10"/>
-                            <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
-                                         placeholder="Tipo trámite" value="#{uitramiteLista.nombreTipoTramiteFiltro}">
-                                <p:ajax event="keyup" 
-                                        listener="#{uitramiteLista.filtrar}" 
-                                        update="@form:grid1" />
-                            </p:inputText>
-                        </p:outputPanel>
-                    </div>
+                    <p:commandButton value="Buscar" action="#{uiabmArticuloLista.filtrar}" update=":tramitesTable" />
+                </h:panelGrid>
 
-                    <!-- Filtro por Fecha de Recepción -->
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="Fecha recepción:"/>
-                            <p:spacer height="10"/>
-                            <p:calendar id="fechaRecepcionTramiteFiltro" style="width:150px"
-                                        value="#{uitramiteLista.fechaRecepcionTramiteFiltro}"
-                                        pattern="dd/MM/yyyy" showButtonPanel="true" 
-                                        placeholder="Seleccionar fecha">
-                                <p:ajax event="dateSelect" 
-                                        listener="#{uitramiteLista.filtrar}" 
-                                        update="@form:grid1" />
-                            </p:calendar>
-                        </p:outputPanel>
-                    </div>
+                <p:spacer height="10"/>
 
-                    <!-- Filtro por Estado del Trámite -->
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputLabel for="estadoMenu" value="Estado del Trámite:"/>
-                        <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
-                            <f:selectItem itemLabel="Seleccione un Estado" />
-                            <f:selectItems value="#{uitramite.estadosTramiteDisponibles}"
-                                           var="estadoTramite"
-                                           itemValue="#{estadoTramite.nombreEstadoTramite}"
-                                           itemLabel="#{estadoTramite.nombreEstadoTramite}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </div>
+                <!-- Tabla de trámites vigentes -->
+                <p:dataTable id="tramitesTable" var="tramite" value="#{uiabmArticuloLista.buscarConsultor()}"
+                             widgetVar="tramitesTableWidget" paginator="true" rows="10" 
+                             emptyMessage="No se encontraron trámites para los filtros aplicados.">
 
-                <p:spacer height="5"/>
+                    <p:column headerText="Número de Trámite">
+                        <h:outputText value="#{tramite.nroTramite}" />
+                    </p:column>
 
-                <!-- Tabla de Trámites -->
-        <p:dataTable id="grid1" widgetVar="tramiteTable"
-                     value="#{uitramiteLista.buscarTramites()}"
-                     var="tramite" paginator="true" rows="5"
-                     selection="#{uitramiteLista.selectedTramite}"
-                     rowKey="#{tramite.nroTramite}"
-                     selectionMode="single">
+                    <p:column headerText="Código Estado">
+                        <h:outputText value="#{tramite.codEstadoTramite}" />
+                    </p:column>
 
-            <!-- Evento de selección -->
-            <p:ajax event="rowSelect" update="tramiteDetails tramiteEstado" />
+                    <p:column headerText="Nombre Estado">
+                        <h:outputText value="#{tramite.nombreEstadoTramite}" />
+                    </p:column>
 
-            <!-- Columnas de la tabla -->
-            <p:column>
-                <f:facet name="header">Número Trámite</f:facet>
-                #{tramite.nroTramite}
-            </p:column>
+                    <p:column headerText="Fecha de Inicio">
+                        <h:outputText value="#{tramite.fechaInicioTramite}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
-            <p:column>
-                <f:facet name="header">DNI</f:facet>
-                #{tramite.dni}
-            </p:column>
+                    <p:column headerText="Fecha de Recepción">
+                        <h:outputText value="#{tramite.fechaRecepcionTramite}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
-            <p:column>
-                <f:facet name="header">Tipo Trámite</f:facet>
-                #{tramite.nombreTipoTramite}
-            </p:column>
+                    <p:column headerText="Acciones">
+                        <p:commandButton value="Modificar" 
+                                         action="#{uiCambioEstado}"
+                                         update=":tramitesForm" />
+                    </p:column>
 
-            <p:column>
-                <f:facet name="header">Fecha Recepción</f:facet>
-                <h:outputText value="#{tramite.fechaRecepcionTramite}">
-                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                </h:outputText>
-            </p:column>
+                </p:dataTable>
 
-            <p:column>
-                <f:facet name="header">Estado Trámite</f:facet>
-                #{tramite.nombreEstado}
-            </p:column>
-
-        </p:dataTable>
-
-        <!-- Detalles del trámite seleccionado -->
-        <h:panelGroup id="tramiteDetails" rendered="#{not empty uitramiteLista.selectedTramite}">
-            <h3>Detalles del Trámite Seleccionado</h3>
-            <h:outputText value="Número Trámite: #{uitramiteLista.selectedTramite.nroTramite}" />
-            <br />
-            <h:outputText value="DNI: #{uitramiteLista.selectedTramite.dni}" />
-            <br />
-            <h:outputText value="Descripción: #{uitramiteLista.selectedTramite.descripcion}" />
-            <br />
-            <h:outputText value="Estado actual: #{uitramiteLista.selectedTramite.nombreEstado}" id="tramiteEstado" />
-        </h:panelGroup>
-
-        <!-- Botón para cambiar estado del trámite seleccionado -->
-        <p:commandButton value="Cambiar Estado"
-                         action="#{uitramiteLista.cambiarEstado}"
-                         icon="pi pi-refresh"
-                         update="tramiteDetails tramiteEstado"
-                         disabled="#{empty uitramiteLista.selectedTramite}" />
-    </h:form>
-
-
+            </div>
+            <p:spacer height="5"/>
+        </h:form>
     </ui:define>
 </ui:composition>

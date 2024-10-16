@@ -12,7 +12,6 @@ import java.util.Date;
  * @author licciardi
  */
 
-//Extiendo entidad?
 public class TipoTramiteDocumentacion extends Entidad {
     
     private Timestamp fechaDesdeTTD;

@@ -20,7 +20,7 @@ public class Version extends Entidad {
     private Timestamp fechaHastaVersion;
     
     private TipoTramite tipoTramite;
-    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  // Relación OneToMany con ConfTipoTramiteEstadoTramite
+    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  
 
     public Version() {
     }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Seleccionar Categoría</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloCategoria.css" />
+</h:head>
+<h:body>
+    <h:form>
+    <div class="container">
+        <h1 class="titulo">Gestión de Trámites</h1>
+
+        <div class="stepper-wrapper">
+                    <div class="stepper-item completed">
+                      <div class="step-counter">1</div>
+                      <div class="step-name">Acceder</div>
+                    </div>
+                    <div class="stepper-item active">
+                      <div class="step-counter">2</div>
+                      <div class="step-name">Categoria</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">3</div>
+                      <div class="step-name">Trámite</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">4</div>
+                      <div class="step-name">Confirmar</div>
+                    </div>
+                  </div>
+
+        <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
+
+        <div class="categorias-grid">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.listarCategoriasTipoTramite()}" var="categoria">
+                <div class="categoria-item">
+                    <div class="categoria-header">
+                        <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
+                    </div>
+                    <div class="categoria-body">
+                        <p><strong>Descripción:</strong> #{categoria.descripcionCategoriaTipoTramite}</p>
+                        <hr class="divisoria" />
+                        <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
+                    </div>
+                    <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
+                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codCategoriaSeleccionada}" value="#{categoria.codCategoriaTipoTramite}" />
+                    </h:commandButton>
+                </div>
+            </ui:repeat>
+        </div>
+
+        <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverConfirmarCliente}" styleClass="btn-volver" />
+        <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+    </div>
+    </h:form>
+</h:body>
+</html>

@@ -68,7 +68,8 @@ public class UIABMEstadoLista implements Serializable {
         return estadosGrilla;
     }
 
-    public String irAgregarEstado() {        BeansUtils.guardarUrlAnterior();
+    public String irAgregarEstado() {
+        BeansUtils.guardarUrlAnterior();
         return "abmEstado?faces-redirect=true&codigo=0"; // Usa '?faces-redirect=true' para hacer una redirección
     }
 

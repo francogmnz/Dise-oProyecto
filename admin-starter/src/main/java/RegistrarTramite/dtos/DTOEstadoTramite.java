@@ -9,15 +9,15 @@ package RegistrarTramite.dtos;
  * @author matis
  */
 public class DTOEstadoTramite {
-    
-    private String nombreEstadoTramite;
 
-    public String getNombreEstadoTramite() {
-        return nombreEstadoTramite;
+    private String nombreEstado;
+
+    public String getNombreEstado() {
+        return nombreEstado;
     }
 
-    public void setNombreEstadoTramite(String nombreEstadoTramite) {
-        this.nombreEstadoTramite = nombreEstadoTramite;
+    public void setNombreEstado(String nombreEstado) {
+        this.nombreEstado = nombreEstado;
     }
-    
+
 }

@@ -34,11 +34,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     <div class="ui-g-12 ui-md-12">
                         <p:outputLabel for="dni" value="DNI:" />
                         <br/>
-                        <p:inputText id="dni" value="#{uitramite.dni}" style="width: 100px;">
+                        <p:inputText id="dni" value="#{uitramite.dni}" 
+                                     required="true" requiredMessage="DNI es obligatorio"
+                                     style="width: 100px;"
+                                     placeholder="DNI">
+                            <p:keyFilter mask="pint"/>
                             <p:ajax event="blur" update="nombreCliente, apellidoCliente, mailCliente" listener="#{uitramite.obtenerCliente()}" />
                         </p:inputText>
                         <p:message id="codigoMSG" for="dni" />
                     </div>
+
 
                     <!-- Campos Nombre, Apellido y Mail -->
                     <div class="ui-g-12 ui-md-4">
@@ -62,8 +67,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <div style="margin-right: 10px;">
                             <p:outputLabel for="codTipoTramite" value="Codigo tipo trámite:" />
                             <br/>
-                            <p:inputText id="codTipoTramite" value="#{uitramite.codTipoTramite}" style="width: 100px;">
-                                <p:ajax event="blur" update="nombreTipoTramiteSeleccionado" listener="#{uitramite.obtenerTipoTramite()}" />
+                            <p:inputText id="codTipoTramite" value="#{uitramite.codTipoTramite}" 
+                                         required="true"  requiredMessage="Código tipo trámite es obligatorio" 
+                                         style="width: 100px;"
+                                         placeholder="Código del Tipo Trámite">
+                                <p:keyFilter mask="pint"/>
+                                <p:ajax event="blur" update="nombreTipoTramite" listener="#{uitramite.obtenerTipoTramite()}" />
                             </p:inputText>
                         </div>
 
@@ -78,8 +87,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                         <!-- Campo de Nombre Tipo Trámite -->
                         <div>
-                            <p:outputLabel for="nombreTipoTramiteSeleccionado" value="Nombre Tipo Trámite:" />
-                            <p:inputText id="nombreTipoTramiteSeleccionado" value="#{uitramite.nombreTipoTramiteSeleccionado}" disabled="true" />
+                            <p:outputLabel for="nombreTipoTramite" value="Nombre Tipo Trámite:" />
+                            <p:inputText id="nombreTipoTramite" value="#{uitramite.nombreTipoTramite}" disabled="true" />
                         </div>
                     </div>
 
@@ -93,9 +102,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                         <!-- Botón de Confirmar -->
                         <div>
-                            <p:commandButton value="Confirmar" action="#{uitramite.registrarTramite()}" 
+                            <p:commandButton value="Confirmar" action="#{uitramite.registrarTramite()}"
                                              icon="fa fa-check" styleClass="btn-success btn-block" style="width: 180px;" />
                         </div>
+
                     </div>
 
 

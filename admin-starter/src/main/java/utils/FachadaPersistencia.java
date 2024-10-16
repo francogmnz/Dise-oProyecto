@@ -1,6 +1,5 @@
 package utils;
 
-import RegistrarTramite.dtos.TramiteDTO;
 import java.util.List;
 
 public class FachadaPersistencia {
@@ -23,6 +22,14 @@ public class FachadaPersistencia {
 
     public void guardar(Object objeto) {
         FachadaInterna.getInstance().guardar(objeto);
+    }
+
+    public void merge(Object objeto) {
+        FachadaInterna.getInstance().merge(objeto);
+    }
+
+    public void refrescar(Object objeto) {
+        FachadaInterna.getInstance().refrescar(objeto);
     }
 
     public void iniciarTransaccion() {

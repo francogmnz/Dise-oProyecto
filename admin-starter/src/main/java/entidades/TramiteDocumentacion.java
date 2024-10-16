@@ -18,6 +18,7 @@ public class TramiteDocumentacion extends Entidad {
     private int codTD;
     private Timestamp fechaEntregaTD;
     private Documentacion documentacion;
+    private String nombreTD;
 
     public TramiteDocumentacion() {
     }
@@ -52,6 +53,14 @@ public class TramiteDocumentacion extends Entidad {
 
     public void setDocumentacion(Documentacion documentacion) {
         this.documentacion = documentacion;
+    }
+
+    public String getNombreTD() {
+        return nombreTD;
+    }
+
+    public void setNombreTD(String nombreTD) {
+        this.nombreTD = nombreTD;
     }
     
     

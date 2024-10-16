@@ -106,7 +106,6 @@ public class ExpertoABMEstado {
 
         criterioList.add(dto);
 
-        
         Estado estadoEncontrado = (Estado) FachadaPersistencia.getInstance().buscar("Estado", criterioList).get(0);
 
         estadoEncontrado.setCodigo(modificarEstadoDTOIn.getCodigo());

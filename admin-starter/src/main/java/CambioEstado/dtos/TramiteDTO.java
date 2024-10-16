@@ -6,13 +6,12 @@ import java.sql.Timestamp;
 public class TramiteDTO {
     
     private int nroTramite;
-    private int dni;
     private int codTipoTramite;
     private Timestamp fechaRecepcionTramite;
+    private Timestamp fechaInicioTramite;
     private String nombreTipoTramite;
-    private String nombreEstado;
-    private Timestamp fechaAnulacion;
-    
+    private int codEstadoTramite;
+    private String nombreEstadoTramite;
     private EstadoTramite estadoTramite;
 
     public int getNroTramite() {
@@ -23,14 +22,6 @@ public class TramiteDTO {
         this.nroTramite = nroTramite;
     }
 
-    public int getDni() {
-        return dni;
-    }
-
-    public void setDni(int dni) {
-        this.dni = dni;
-    }
-
     public int getCodTipoTramite() {
         return codTipoTramite;
     }
@@ -39,7 +30,6 @@ public class TramiteDTO {
         this.codTipoTramite = codTipoTramite;
     }
 
-    
     public Timestamp getFechaRecepcionTramite() {
         return fechaRecepcionTramite;
     }
@@ -48,6 +38,13 @@ public class TramiteDTO {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
     }
 
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
 
     public String getNombreTipoTramite() {
         return nombreTipoTramite;
@@ -57,20 +54,20 @@ public class TramiteDTO {
         this.nombreTipoTramite = nombreTipoTramite;
     }
 
-    public String getNombreEstado() {
-        return nombreEstado;
+    public int getCodEstadoTramite() {
+        return codEstadoTramite;
     }
 
-    public void setNombreEstado(String nombreEstado) {
-        this.nombreEstado = nombreEstado;
+    public void setCodEstadoTramite(int codEstadoTramite) {
+        this.codEstadoTramite = codEstadoTramite;
     }
 
-    public Timestamp getFechaAnulacion() {
-        return fechaAnulacion;
+    public String getNombreEstadoTramite() {
+        return nombreEstadoTramite;
     }
 
-    public void setFechaAnulacion(Timestamp fechaAnulacion) {
-        this.fechaAnulacion = fechaAnulacion;
+    public void setNombreEstadoTramite(String nombreEstadoTramite) {
+        this.nombreEstadoTramite = nombreEstadoTramite;
     }
 
     public EstadoTramite getEstadoTramite() {
@@ -80,9 +77,6 @@ public class TramiteDTO {
     public void setEstadoTramite(EstadoTramite estadoTramite) {
         this.estadoTramite = estadoTramite;
     }
-    
-    
-    
     
     
 }
