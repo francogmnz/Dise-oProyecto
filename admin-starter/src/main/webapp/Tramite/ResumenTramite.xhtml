@@ -185,40 +185,30 @@
                                               style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
                             </p:column>
 
-                            <!-- Columna: Botón Agregar/Editar Entrega -->
+                            <!-- Columna: Agregar/Editar Entrega -->
                             <p:column style="text-align: center">
                                 <f:facet name="header">Agregar/Editar Entrega</f:facet>
-                                <div class="card custom-upload">
-                                    <h:form id="frmSingle#{doc.codTD}">
-                                        <!-- Campo oculto para enviar el codTD -->
-                                        <h:inputHidden id="codTD" value="#{uiresumen.codTD}"/>
-
-                                        <!-- Componente fileUpload -->
-                                        <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
-                                                      mode="advanced" 
-                                                      dragDropSupport="true" 
-                                                      auto="true"
-                                                      onstart="showBar()" 
-                                                      oncomplete="PF('msgDialog').show(); window.location.reload();"
-                                                      update="@form"
-                                                      multiple="true"
-                                                      sizeLimit="10000000"
-                                                      allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/"
-                                                      disabled="{uiresumen.fileUploadDisabled}">
-                                        </p:fileUpload>
-
-                                        <!-- Botón para seleccionar el archivo y actualizar el codTD -->
-                                        <p:commandButton value="Validar"
-                                                         actionListener="#{uiresumen.setCodTD(doc.codTD)}"
-                                                         update="@form"
-                                                         process="@this"
-                                                         oncomplete="PF('msgDialog').hide();"
-                                                         disabled="#{uiresumen.fechaAnulacionTramite != null}">
-                                        </p:commandButton>
-                                    </h:form>
-
-                                </div>
+                                <h:form id="form#{doc.codTD}">
+                                    <h:inputHidden id="codTD" value="#{doc.codTD}" />
+                                    <p:fileUpload 
+                                        listener="#{uiresumen.handleFileUpload}" 
+                                        mode="advanced" 
+                                        dragDropSupport="true" 
+                                        auto="true"
+                                        multiple="false" 
+                                        sizeLimit="10000000"
+                                        allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/">
+                                    </p:fileUpload>
+                                </h:form>
                             </p:column>
+
+
+
+
+
+
+
+
 
                             <p:column style="text-align: center">
                                 <f:facet name="header">Descarga</f:facet>
@@ -244,6 +234,14 @@
 
 
                         </p:dataTable>
+                        <script type="text/javascript">
+                            function setCodTD(codTD) {
+                                // Asignar el codTD al campo oculto en el formulario
+                                var hiddenInput = document.getElementById('form' + codTD + ':codTD');
+                                hiddenInput.value = codTD;
+                                console.log("CodTD establecido: " + codTD); // Para depuración
+                            }
+                        </script>
                     </p:panel>
                 </p:tab>
             </p:tabView>
