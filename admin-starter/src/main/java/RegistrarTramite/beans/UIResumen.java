@@ -8,6 +8,7 @@ import RegistrarTramite.exceptions.RegistrarTramiteException;
 import entidades.TramiteDocumentacion;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -19,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -100,12 +102,16 @@ public class UIResumen implements Serializable {
                     this.resumenDoc = tramiteElegido.getResumenDoc();
 
                     for (DTODocumentacion doc : resumenDoc) {
-                        this.codTD = doc.getCodTD();
+                        System.out.println("Asignando codTD desde resumenDoc: " + doc.getCodTD());
+
+//                        this.codTD = doc.getCodTD();
                         this.nombreTD = doc.getNombreTD();
                         this.nombreDocumentacion = doc.getNombreDocumentacion();
                         this.fechaEntregaDoc = doc.getFechaEntregaDoc();
 
                     }
+
+                    System.out.println("codTD actual: " + codTD);
                 }
             } catch (NumberFormatException e) {
                 // Manejar error de conversión de número
@@ -304,7 +310,8 @@ public class UIResumen implements Serializable {
 
     public void setCodTD(int codTD) {
         this.codTD = codTD;
-        System.out.println("codTD activo actualizado: " + codTD);
+
+        System.out.println("codTD seteado correctamente: " + this.codTD);
         this.fileUploadDisabled = false; // Habilita el fileUpload
 
     }
@@ -321,11 +328,21 @@ public class UIResumen implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
+            // Obtener el componente asociado al campo codTD dentro del mismo formulario del archivo subido
+            UIInput codTDInput = (UIInput) event.getComponent().findComponent("codTD");
+
+            if (codTDInput == null || codTDInput.getValue() == null) {
+                throw new IllegalArgumentException("codTD no encontrado en la solicitud.");
+            }
+
+            // Convertir el valor obtenido en un entero
+            int codTD = Integer.parseInt(codTDInput.getValue().toString());
+
             System.out.println("codTD recibido: " + codTD);
             FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-
-            // Convertir el archivo a Base64 y almacenar
+            
+            // Continuar con la lógica de subida de archivo
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
 
@@ -333,12 +350,12 @@ public class UIResumen implements Serializable {
             fileU.setNombre(event.getFile().getFileName());
             fileU.setContenidoB64(encodedString);
 
+            // Pasar codTD al método correspondiente
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
             this.file = fileU;
 
-            // Deshabilitar el upload una vez que se suba un archivo
-        } catch (IOException ex) {
-            Logger.getLogger(UIResumen.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();  // Manejar errores apropiadamente
         }
     }
 
@@ -396,9 +413,7 @@ public class UIResumen implements Serializable {
             } catch (Exception ex) {
                 Logger.getLogger(UIResumen.class
                         .getName()).log(Level.SEVERE, null, ex);
-
             }
-
         }
 
         //Retorna el archivo listo para ser descargado

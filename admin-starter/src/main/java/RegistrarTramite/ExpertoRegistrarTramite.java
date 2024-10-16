@@ -203,67 +203,98 @@ public class ExpertoRegistrarTramite {
     }
 
     // obtenerCliente(dniCliente): DTOCliente
+// obtenerCliente(dniCliente): DTOCliente
     public DTOCliente obtenerCliente(int dni) throws RegistrarTramiteException {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
 
-        // buscar("Cliente", "dniCliente = " + dniCliente + " AND fechaHoraBaja = " + null): List<Object>
+        // Verificar si el DNI es válido
         if (dni > 0) {
             DTOCriterio dto1 = new DTOCriterio();
             dto1.setAtributo("dniCliente");
             dto1.setOperacion("=");
             dto1.setValor(dni);
-
             criterioList.add(dto1);
+
+            DTOCriterio dto2 = new DTOCriterio();
+            dto2.setAtributo("fechaHoraBajaCliente");
+            dto2.setOperacion("=");
+            dto2.setValor(null);
+            criterioList.add(dto2);
+        } else {
+            throw new RegistrarTramiteException("DNI invalido");
         }
-        // :create() DTOCliente
+
+        // Buscar clientes con los criterios proporcionados
+        List<Object> clientesEncontrados = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+
+        // Crear el objeto DTOCliente
         DTOCliente dtoCliente = new DTOCliente();
 
-        // seteamos en DTOCliente los atributos del Cliente encontrado
-        try {
-            clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
-
+        // Verificar si se encontraron clientes
+        if (!clientesEncontrados.isEmpty()) {
+            clienteEncontrado = (Cliente) clientesEncontrados.get(0);
             dtoCliente.setNombreCliente(clienteEncontrado.getNombreCliente());
             dtoCliente.setApellidoCliente(clienteEncontrado.getApellidoCliente());
             dtoCliente.setMailCliente(clienteEncontrado.getMailCliente());
-
-        } catch (Exception e) {
-            throw new RegistrarTramiteException("Error al obtener el Cliente");
+        } else {
+            clienteEncontrado = null;
+            dtoCliente = null;
         }
 
-        return dtoCliente; // Retornamos el DTOCliente
+        if (clientesEncontrados.isEmpty()) {
+            throw new RegistrarTramiteException("No se encontró el Cliente");
+        }
+
+        criterioList.clear();
+
+        return dtoCliente; // Retornar DTOCliente (puede ser null si no se encontró)
     }
 
     // obtenerTipoTramite(codTipoTramite): DTOTipoTramite
     public DTOTipoTramite obtenerTipoTramite(int codTipoTramite) throws RegistrarTramiteException {
 
-        List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
+        List<DTOCriterio> criterioListTT = new ArrayList<>();
 
-        // buscar("TipoTramite", "codTipoTramite = " + codTipoTramite + " AND fechaHoraBaja = " + null): List<Object>
+        // Verificar si el código de tipo de trámite es válido
         if (codTipoTramite > 0) {
-            DTOCriterio dto1 = new DTOCriterio();
-            dto1.setAtributo("codTipoTramite");
-            dto1.setOperacion("=");
-            dto1.setValor(codTipoTramite);
+            DTOCriterio dto1tt = new DTOCriterio();
+            dto1tt.setAtributo("codTipoTramite");
+            dto1tt.setOperacion("=");
+            dto1tt.setValor(codTipoTramite);
+            criterioListTT.add(dto1tt);
 
-            criterioList.add(dto1);
+            DTOCriterio dto2tt = new DTOCriterio();
+            dto2tt.setAtributo("fechaHoraBajaTipoTramite");
+            dto2tt.setOperacion("=");
+            dto2tt.setValor(null);
+            criterioListTT.add(dto2tt);
+        } else {
+            throw new RegistrarTramiteException("Código de TipoTramite inválido");
         }
 
-        // :create() DTOTipoTramite
+        // Buscar tipos de trámite con los criterios proporcionados
+        List<Object> ttEncontrados = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioListTT);
+
+        // Crear el objeto DTOTipoTramite
         DTOTipoTramite dtoTipoTramite = new DTOTipoTramite();
 
-        // seteamos en DTOTipoTramite los datos del TipoTramite encontrado
-        try {
-            tipoTramiteEncontrado = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
-
-            dtoTipoTramite.setCodTipoTramite(tipoTramiteEncontrado.getCodTipoTramite());
+        // Verificar si se encontraron tipos de trámite
+        if (!ttEncontrados.isEmpty()) {
+            tipoTramiteEncontrado = (TipoTramite) ttEncontrados.get(0);
             dtoTipoTramite.setNombreTipoTramite(tipoTramiteEncontrado.getNombreTipoTramite());
-
-        } catch (Exception e) {
-            throw new RegistrarTramiteException("Error al obtener el TipoTramite");
+        } else {
+            tipoTramiteEncontrado = null;
+            dtoTipoTramite = null;
         }
 
-        return dtoTipoTramite; // Retornamos el DTOTipoTramite
+        if (ttEncontrados.isEmpty()) {
+            throw new RegistrarTramiteException("No se encontró el TipoTramite");
+        }
+
+        criterioListTT.clear();
+
+        return dtoTipoTramite; // Retornar DTOTipoTramite (puede ser null si no se encontró)
     }
 
     // registrarTramite()
@@ -282,7 +313,7 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setFechaFinTramite(null);
 
             if (tipoTramiteEncontrado == null || clienteEncontrado == null) {
-                throw new RegistrarTramiteException("No se pudo registrar el trámite");
+                throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente || TipoTramite no encontrado/s");
             }
 
             tramiteCreado.setCliente(clienteEncontrado);
@@ -481,24 +512,34 @@ public class ExpertoRegistrarTramite {
         }
 
         if (nombreCategoria.trim().length() > 0) {
+            List<DTOCriterio> criterioList2 = new ArrayList<DTOCriterio>();
+
             DTOCriterio criterio3 = new DTOCriterio();
+
             criterio3.setAtributo("nombreCategoriaTipoTramite");
             criterio3.setOperacion("like");
             criterio3.setValor(nombreCategoria);
-            criterioList.add(criterio3);
+            criterioList2.add(criterio3);
 
-            CategoriaTipoTramite categoriaEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
+            List lCategoria = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList2);
 
-            criterioList.clear();
+            CategoriaTipoTramite categoriaEncontrada = null;
+
+            if (lCategoria.size() > 0) {
+                categoriaEncontrada = (CategoriaTipoTramite) lCategoria.get(0);
+            }
 
             DTOCriterio criterio4 = new DTOCriterio();
+
             criterio4.setAtributo("categoriaTipoTramite");
             criterio4.setOperacion("=");
             criterio4.setValor(categoriaEncontrada);
+
             criterioList.add(criterio4);
         }
 
         List objecList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+        criterioList.clear();
         List<DTOTipoTramite> tipoTramiteResultados = new ArrayList<>();
 
         // loop por cada TipoTramite para setear los atributos requeridos en DTOTipoTramite
@@ -537,6 +578,7 @@ public class ExpertoRegistrarTramite {
         criterioTD.setValor(codTD);
         criterioListTD.add(criterioTD);
 
+        System.out.println("codTD " + codTD);
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
         FachadaPersistencia.getInstance().merge(td);
 
@@ -653,14 +695,14 @@ public class ExpertoRegistrarTramite {
                 td.setArchivoTD(null);
                 td.setNombreTD(null);
                 td.setFechaEntregaTD(null);
-               
+
                 // Guardar los cambios en la base de datos
                 FachadaPersistencia.getInstance().guardar(td);
             } else {
                 throw new Exception("No se encontró el documento con el código proporcionado");
             }
 
-            if (tramiteElegido.getFechaPresentacionTotalDocumentacion() != null){
+            if (tramiteElegido.getFechaPresentacionTotalDocumentacion() != null) {
                 tramiteElegido.setConsultor(null);
                 tramiteElegido.setFechaPresentacionTotalDocumentacion(null);
                 tramiteElegido.setFechaInicioTramite(null);

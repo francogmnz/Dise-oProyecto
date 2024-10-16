@@ -122,30 +122,38 @@ public class UIRegistrarTramite implements Serializable {
 
     // obtenerCliente(dniCliente): DTOCliente
     public void obtenerCliente() {
-
         try {
             DTOCliente dtoCliente = controladorRegistrarTramite.obtenerCliente(dni);
             if (dtoCliente != null) {
                 nombreCliente = dtoCliente.getNombreCliente();
                 apellidoCliente = dtoCliente.getApellidoCliente();
                 mailCliente = dtoCliente.getMailCliente();
+            } else { // Si no existe el cliente
+                nombreCliente = null;
+                apellidoCliente = null;
+                mailCliente = null;
             }
-
         } catch (RegistrarTramiteException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el Cliente"));
+            nombreCliente = null;
+            apellidoCliente = null;
+            mailCliente = null;
         }
     }
 
-// obtenerTipoTramite(codTipoTramite): DTOTipoTramite
+    // obtenerTipoTramite(codTipoTramite): DTOTipoTramite
     public void obtenerTipoTramite() {
         try {
             DTOTipoTramite dtoTipoTramite = controladorRegistrarTramite.obtenerTipoTramite(codTipoTramite);
             if (dtoTipoTramite != null) {
                 codTipoTramite = dtoTipoTramite.getCodTipoTramite();
                 nombreTipoTramite = dtoTipoTramite.getNombreTipoTramite();
+            } else { // Si no existe el TipoTramite
+                nombreTipoTramite = null;
             }
         } catch (RegistrarTramiteException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "No se encontró el TipoTramite"));
+            nombreTipoTramite = null;
         }
     }
 
