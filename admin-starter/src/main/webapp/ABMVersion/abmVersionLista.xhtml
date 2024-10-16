@@ -126,13 +126,13 @@
                     <p:column>
                         <f:facet name="header">Número de Versión</f:facet>
                             #{version.nroVersion}
-                        
+
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Fecha Desde</f:facet>
                         <h:outputText value="#{version.fechaDesdeVersion}">
-                          <f:convertDateTime pattern="dd/MM/yyyy" />
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:column>
 
@@ -192,8 +192,16 @@
                         <p:spacer width="5"/>
 
                         <!-- Botón Historial en forma circular con ícono de historial/papel -->
-                        <p:commandButton styleClass="btn-circle btn-historial" icon="fa fa-history" 
-                                         update="@form">
+                        <p:commandButton 
+                            styleClass="btn-circle btn-historial" 
+                            icon="fa fa-history" 
+                            action="#{uiabmVersionLista.irMostrarHistoricoVersiones(version.codTipoTramite)}"
+                            process="@this" 
+                            update="@form" 
+                            oncomplete="if (!args.validationFailed) { 
+                            // Opcionalmente puedes mostrar un mensaje de éxito o realizar otra acción
+                            Messages.addGlobalInfo('Redirigiendo al historial de versiones.');
+                            }">
                         </p:commandButton>
 
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">

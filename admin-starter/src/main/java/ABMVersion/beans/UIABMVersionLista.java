@@ -2,7 +2,9 @@ package ABMVersion.beans;
 
 import ABMVersion.ControladorABMVersion;
 import ABMVersion.beans.VersionGrillaUI;
+import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
+import ABMVersion.dtos.DTOVersionH;
 import ABMVersion.dtos.VersionDTO;
 import entidades.TipoTramite;
 import jakarta.faces.view.ViewScoped;
@@ -25,6 +27,37 @@ public class UIABMVersionLista implements Serializable {
     private ControladorABMVersion controladorABMVersion = new ControladorABMVersion();
     private int nroVersionFiltro;
     private String descripcionFiltro = "";
+    
+    //agregado
+    private int codTipoTramite;
+    private String nombreTipoTramite;
+    private List<DTODatosVersionH> datosVersionH;
+
+    public List<DTODatosVersionH> getDatosVersionH() {
+        return datosVersionH;
+    }
+
+    public void setDatosVersionH(List<DTODatosVersionH> datosVersionH) {
+        this.datosVersionH = datosVersionH;
+    }
+
+    public String getNombreTipoTramite() {
+        return nombreTipoTramite;
+    }
+
+    public void setNombreTipoTramite(String nombreTipoTramite) {
+        this.nombreTipoTramite = nombreTipoTramite;
+    }
+    
+
+    public int getCodTipoTramite() {
+        return codTipoTramite;
+    }
+
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
+    }
+    //agregado
 
     // Getters y Setters
     public ControladorABMVersion getControladorABMVersion() {
@@ -60,11 +93,29 @@ public class UIABMVersionLista implements Serializable {
         controladorABMVersion.anularVersion(codTipoTramite, nroVersion);
         Messages.create("Versión anulada").detail("La versión ha sido anulada correctamente.").add();
     }
+    
+    
+    
+    public void cargarHistorial() {
+        if (codTipoTramite != 0) {
+            mostrarHistoricoVersion(codTipoTramite);
+        }
+    }
 
     public String irConfigurarTipoTramite(int codTipoTramite) {
         BeansUtils.guardarUrlAnterior();
         return "/Version/drawIU.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
     }
+    
+    
+     public String irMostrarHistoricoVersiones(int codTipoTramite) {
+        BeansUtils.guardarUrlAnterior();
+        return "/ABMVersion/historialVersion.xhtml?faces-redirect=true&codTipoTramite=" + codTipoTramite;
+    }
+    
+    
+    
+    
 
   public List<VersionGrillaUI> mostrarVersion() {
 
@@ -137,4 +188,45 @@ public class UIABMVersionLista implements Serializable {
         return false; // Si la versión es nula o no está activa
     }
 
+    
+    public void mostrarHistoricoVersion(int codTipoTramite) {
+    // Lógica para obtener las versiones históricas
+      VersionHistoricoGrillaUI versionHistoricoGrillaUI = new VersionHistoricoGrillaUI();
+
+    try {
+        // Llamar al controlador para obtener el DTO de versiones históricas
+        DTOVersionH versionH = controladorABMVersion.mostrarHistoricoVersion(codTipoTramite);
+        
+      
+        // Comprobar que el DTO no sea nulo
+        if (versionH != null && versionH.getDtoDatosVersionH() != null) {
+//            for (DTODatosVersionH datosVersionH : versionH.getDtoDatosVersionH()) 
+
+                //VersionGrillaUI versionGrillaUI = new VersionGrillaUI();
+               
+                this.codTipoTramite = versionH.getCodTipoTramite();
+                this.nombreTipoTramite = versionH.getNombreTipoTramite();
+                this.datosVersionH = versionH.getDtoDatosVersionH();
+                
+            //Recorrer la lista por DTODatosVersionH
+//                versionGrillaUI.setNroVersion(datosVersionH.getNroVersion());
+//                versionGrillaUI.setFechaDesdeVersion(datosVersionH.getFechaDesdeVersion());
+//                versionGrillaUI.setFechaHastaVersion(datosVersionH.getFechaHastaVersion());
+                
+
+            
+        }
+        
+    } catch (Exception e) {
+        Messages.create("Error al recuperar las versiones históricas.").error().detail(e.getMessage()).add();
+    }
+
+    // Redirigir a la página de historial de versiones
+//        return versionHistoricoGrillaUI;
+
+}
+    
+    
+    
+    
 }

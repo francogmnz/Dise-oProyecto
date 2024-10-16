@@ -1,5 +1,6 @@
 package ABMVersion;
 
+import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
@@ -7,6 +8,7 @@ import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.dtos.DTOEstado;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
+import ABMVersion.dtos.DTOVersionH;
 import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
@@ -264,63 +266,72 @@ public class ExpertoABMVersion {
                     System.out.println("Estado de Origen no encontrado: " + dtoO.getCodEstadoTramite());
                 }
             }
-            
-            
-            /* METODO PARA VER HUECOS PERO NO FUNCIONA
+
+            // Método para verificar huecos entre versiones
             lc.clear();
-            // Verificar y actualizar la última versión
-            List<DTOCriterio> lCriterio = new ArrayList<>();
-            DTOCriterio criterio1 = new DTOCriterio();
-            criterio1.setAtributo("tipoTramite");
-            criterio1.setOperacion("=");
-            criterio1.setValor(codTipoTramite);  // Asegúrate de que este valor esté definido
-            lCriterio.add(criterio1);
 
-            DTOCriterio criterio2 = new DTOCriterio();
-            criterio2.setAtributo("fechaBajaVersion");
-            criterio2.setOperacion("=");
-            criterio2.setValor(null);
-            lCriterio.add(criterio2);
+            List<DTOCriterio> criterioList = new ArrayList<>();
+            DTOCriterio tipoTramiteCriterio = new DTOCriterio();
+            tipoTramiteCriterio.setAtributo("codTipoTramite");
+            tipoTramiteCriterio.setOperacion("=");
+            tipoTramiteCriterio.setValor(codTipoTramite);
+            criterioList.add(tipoTramiteCriterio);
 
-            List objetoList2 = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
-            List<Version> listVersion = (List<Version>) objetoList2;
+            TipoTramite tipoTramiteEncontrado = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
+
+            criterioList.clear();
+
+// Criterio para el código de tipo de trámite
+            DTOCriterio tipoTramiteCriterio1 = new DTOCriterio();
+            tipoTramiteCriterio1.setAtributo("tipoTramite");
+            tipoTramiteCriterio1.setOperacion("=");
+            tipoTramiteCriterio1.setValor(tipoTramiteEncontrado);
+            criterioList.add(tipoTramiteCriterio1);
+
+// Criterio para filtrar versiones activas (sin fecha de baja)
+            DTOCriterio fechaVersion = new DTOCriterio();
+            fechaVersion.setAtributo("fechaBajaVersion");
+            fechaVersion.setOperacion("is");
+            fechaVersion.setValor(null);  // Solo versiones activas
+            criterioList.add(fechaVersion);
+
+            // Buscar la versión con el criterio dado
+            List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+            List<Version> listVersion = new ArrayList<>();
+            for (Object obj : lVersion) {
+                if (obj instanceof Version) {  // Verificar que el objeto sea de tipo Version
+                    listVersion.add((Version) obj);
+                } else {
+                    System.out.println("Elemento encontrado en lVersion no es de tipo Version: " + obj);
+                }
+            }
+
+// Ahora puedes proceder a verificar la última versión
             Version ultVersion = null;
-
             for (Version version : listVersion) {
                 if (ultVersion == null || ultVersion.getFechaDesdeVersion().compareTo(version.getFechaDesdeVersion()) < 0) {
                     ultVersion = version;
                 }
             }
 
-            // Comparar fechas
+// Validar nuevas fechas
             if (ultVersion != null) {
                 Timestamp FDNv = nueva.getFechaDesdeVersion();
-                Timestamp FDUv = ultVersion.getFechaDesdeVersion();
-
-                if (FDNv.before(FDUv)) {
-                    JOptionPane.showMessageDialog(null, "Error: la nueva versión está antes que la última versión. Existen versiones futuras.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;  // Retornar para detener el flujo
-                }
-
-                Timestamp FHUv = ultVersion.getFechaHastaVersion();
-                if (FDNv.after(FHUv)) {
-                    JOptionPane.showMessageDialog(null, "Error: la nueva versión está después de la última versión. No puede haber huecos entre versiones.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;  // Retornar para detener el flujo
-                }
-
                 Timestamp FHNv = nueva.getFechaHastaVersion();
-                if (FHNv.equals(FDNv)) {
-                    JOptionPane.showMessageDialog(null, "La fecha desde no puede ser igual a la fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;  // Retornar para detener el flujo
-                }
-                if (FHNv.before(FDNv)) {
-                    JOptionPane.showMessageDialog(null, "Error: la nueva versión no puede tener una fecha desde > fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;  // Retornar para detener el flujo
+
+                Timestamp FDUv = ultVersion.getFechaDesdeVersion();
+                Timestamp FHUv = ultVersion.getFechaHastaVersion();
+
+                // Comprobar que no haya huecos
+                if (FDNv.before(FDUv) || FDNv.after(FHUv)) {
+                    JOptionPane.showMessageDialog(null, "Error: la nueva versión no puede crear huecos entre versiones.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;  // Detener el flujo si hay un hueco
                 }
 
-                // Actualizar la última versión
-                ultVersion.setFechaHastaVersion(FDNv);
-            } */
+                // Si todas las validaciones son correctas, actualizar la última versión (opcional)
+                // ultVersion.setFechaHastaVersion(FDNv); // Solo si es necesario
+            }
+
             // Guardar la versión
             f.guardar(nueva);
             f.finalizarTransaccion();
@@ -513,4 +524,60 @@ public class ExpertoABMVersion {
         // Finalizar transacción
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
+
+    public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) throws VersionException {
+
+        // Inicia la transacción
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+
+        List<DTOCriterio> lc = new ArrayList<>();
+        DTOCriterio criterioTipoTramite = new DTOCriterio();
+        criterioTipoTramite.setAtributo("codTipoTramite");
+        criterioTipoTramite.setOperacion("=");
+        criterioTipoTramite.setValor(codTipoTramite);
+        lc.add(criterioTipoTramite);
+
+        TipoTramite tipoTramite = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", lc).get(0);
+
+        if (tipoTramite == null) {
+            throw new VersionException("Tipo de trámite no encontrado.");
+        }
+
+        List<DTOCriterio> criteriosVersion = new ArrayList<>();
+        DTOCriterio criterioVersion = new DTOCriterio();
+        criterioVersion.setAtributo("tipoTramite");
+        criterioVersion.setOperacion("=");
+        criterioVersion.setValor(tipoTramite);
+        criteriosVersion.add(criterioVersion);
+
+        List<Object> lVersiones = FachadaPersistencia.getInstance().buscar("Version", criteriosVersion);
+
+        DTOVersionH dtoVersionH = new DTOVersionH();
+        dtoVersionH.setCodTipoTramite(tipoTramite.getCodTipoTramite());
+        dtoVersionH.setNombreTipoTramite(tipoTramite.getNombreTipoTramite());  // Suponiendo que existe un campo nombre
+
+        // Crea la lista para los datos de las versiones
+        List<DTODatosVersionH> listaDatosVersionH = new ArrayList<>();
+
+        // Itera sobre los resultados y mapea los atributos al DTO
+        for (Object obj : lVersiones) {
+            Version version = (Version) obj;
+
+            // Crea un nuevo DTO para los datos de la versión
+            DTODatosVersionH datosVersionH = new DTODatosVersionH();
+            datosVersionH.setNroVersion(version.getNroVersion());
+            datosVersionH.setFechaDesdeVersion(version.getFechaDesdeVersion());
+            datosVersionH.setFechaHastaVersion(version.getFechaHastaVersion());
+
+            // Agrega el DTO a la lista
+            listaDatosVersionH.add(datosVersionH);
+        }
+
+        // Asigna la lista de datos de versiones al DTO principal
+        dtoVersionH.setDtoDatosVersionH(listaDatosVersionH);
+
+        // Devuelve el DTO con las versiones históricas
+        return dtoVersionH;
+    }
+
 }

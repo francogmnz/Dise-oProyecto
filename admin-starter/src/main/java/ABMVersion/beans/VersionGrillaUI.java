@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 public class VersionGrillaUI {
 
     private int nroVersion;
+    private String descripcionVersion;
+
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
@@ -57,6 +59,14 @@ public class VersionGrillaUI {
 
     public void setNombreTipoTramite(String nombreTipoTramite) {
         this.nombreTipoTramite = nombreTipoTramite;
+    }
+
+    public String getDescripcionVersion() {
+        return descripcionVersion;
+    }
+
+    public void setDescripcionVersion(String descripcionVersion) {
+        this.descripcionVersion = descripcionVersion;
     }
 
   

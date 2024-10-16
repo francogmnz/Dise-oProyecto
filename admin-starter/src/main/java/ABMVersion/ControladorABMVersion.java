@@ -3,6 +3,7 @@ package ABMVersion;
 import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
+import ABMVersion.dtos.DTOVersionH;
 import ABMVersion.dtos.DTOVersionM;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
@@ -42,5 +43,15 @@ public class ControladorABMVersion {
     public List<DTOTipoTramiteVersion> mostrarVersion() {
         return expertoABMVersion.mostrarVersion();
     }
+    
+    public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) {
+    try {
+        // Llamar al experto para obtener todas las versiones del tipo de trámite
+        return expertoABMVersion.mostrarHistoricoVersion(codTipoTramite);
+    } catch (Exception e) {
+        Messages.create("Error al recuperar el historial de versiones.").error().detail(e.getMessage()).add();
+        return null;// Retornar  vacía en caso de error
+    }
+}
 
 }

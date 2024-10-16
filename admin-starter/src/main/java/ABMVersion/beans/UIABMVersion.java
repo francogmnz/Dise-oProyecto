@@ -246,6 +246,7 @@ public class UIABMVersion implements Serializable {
                     unE.setYpos(80);
                     lestados.add(unE);
                 }
+              
             }
             cargarJSON = gson.toJson(lestados);
         }
