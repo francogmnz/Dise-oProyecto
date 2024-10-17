@@ -341,7 +341,13 @@ public class ExpertoRegistrarTramite {
             dto3.setValor(null);
             criterioList.add(dto3);
 
-            ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
+            List<Object> listaPrecios= FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
+            
+            if(listaPrecios.isEmpty()){
+                throw new RegistrarTramiteException("No se encontro una lista de precios vigente");
+            }
+            
+            ListaPrecios listaPreciosEncontrada = (ListaPrecios) listaPrecios.get(0);
 
             // getTipoTramiteListaPrecios(): List<TipoTramiteListaPrecios>
             List<TipoTramiteListaPrecios> precioTTList = listaPreciosEncontrada.getTipoTramiteListaPrecios();
@@ -349,6 +355,8 @@ public class ExpertoRegistrarTramite {
             for (TipoTramiteListaPrecios tTP : precioTTList) {
                 if (tTP.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) { // getCodTipoTramite() igual al que se muestra
                     tramiteCreado.setPrecioTramite(tTP.getPrecioTipoTramite()); // setPrecioTramite(precioTipoTramite)
+                }else{
+                    throw new RegistrarTramiteException("No existe un precio para ese TipoTramite");
                 }
             }
 
@@ -363,7 +371,14 @@ public class ExpertoRegistrarTramite {
 
             criterioList.add(criterioEstado);
 
-            EstadoTramite estadoEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
+            List<Object> estadosEncontrados = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+            
+            if(estadosEncontrados.isEmpty()){
+                throw new RegistrarTramiteException("No se encontro un estado con nombre 'Iniciado' ");
+            }
+            
+            EstadoTramite estadoEncontrado = (EstadoTramite) estadosEncontrados.get(0);
+            
             tramiteCreado.setEstadoTramite(estadoEncontrado); // setEstadoTramite(estadoEncontrado)
 
             TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite(); // :create() TramiteEstadoTramite
@@ -390,7 +405,14 @@ public class ExpertoRegistrarTramite {
             criteriov2.setValor(new Timestamp(System.currentTimeMillis()));
             criterioList.add(criteriov2);
 
-            Version versionEncontrada = (Version) FachadaPersistencia.getInstance().buscar("Version", criterioList).get(0);
+            List<Object> versionesEncontradas = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+            
+            if(versionesEncontradas.isEmpty()){
+                throw new RegistrarTramiteException("No se encontró una version vigente");
+            }
+            
+            Version versionEncontrada = (Version) versionesEncontradas.get(0);
+            
             tramiteCreado.setVersion(versionEncontrada);
 
             criterioList.clear();
@@ -403,7 +425,7 @@ public class ExpertoRegistrarTramite {
                 TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion(); // :create() TramiteDocumentacion
                 int cotTD = generarCodTD(); // codTD incremental
                 tramiteDocumentacion.setCodTD(cotTD);
-//            tramiteDocumentacion.setNombreTD(nombreTD);
+    //          tramiteDocumentacion.setNombreTD(nombreTD);
                 tramiteDocumentacion.setDocumentacion(doc);
                 tramiteCreado.addTramiteDocumentacion(tramiteDocumentacion);
                 FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
@@ -562,6 +584,7 @@ public class ExpertoRegistrarTramite {
         // Verificar si el trámite ya ha sido elegido
         if (tramiteElegido == null) {
             List<DTOCriterio> criterioList = new ArrayList<>();
+            
             DTOCriterio criterio = new DTOCriterio();
             criterio.setAtributo("nroTramite");
             criterio.setOperacion("=");
@@ -579,6 +602,7 @@ public class ExpertoRegistrarTramite {
         criterioListTD.add(criterioTD);
 
         System.out.println("codTD " + codTD);
+        
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
         FachadaPersistencia.getInstance().merge(td);
 
@@ -587,6 +611,7 @@ public class ExpertoRegistrarTramite {
         for (TramiteDocumentacion tds : tdList) {
             if (tds.getCodTD() == codTD) {
                 System.out.println("Actualizando documentación para codTD: " + codTD);
+                
                 tds.setArchivoTD(archivoTD.getContenidoB64());
                 tds.setNombreTD(archivoTD.getNombre());
                 tds.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));

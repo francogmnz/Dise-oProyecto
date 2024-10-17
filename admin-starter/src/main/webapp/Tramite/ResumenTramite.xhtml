@@ -197,18 +197,11 @@
                                         auto="true"
                                         multiple="false" 
                                         sizeLimit="10000000"
-                                        allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/">
+                                        oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);"
+                                        allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/">                      
                                     </p:fileUpload>
                                 </h:form>
                             </p:column>
-
-
-
-
-
-
-
-
 
                             <p:column style="text-align: center">
                                 <f:facet name="header">Descarga</f:facet>
