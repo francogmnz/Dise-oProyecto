@@ -5,8 +5,11 @@ import java.sql.Timestamp;
 public class TramiteGrillaUI {
 
     private int nroTramite;
+    private Timestamp fechaInicioTramite;
+    private Timestamp fechaPresentacionTotalDocumentacion;
+    private Timestamp fechaFinTramite;
     private Timestamp fechaRecepcionTramite;
-    private Timestamp fechaAnulacion;
+    private Timestamp fechaAnulacionTramite;
     private String nombreTipoTramite;
     private int codTipoTramite;
     private String nombreEstado;
@@ -20,6 +23,32 @@ public class TramiteGrillaUI {
         this.nroTramite = nroTramite;
     }
 
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    public Timestamp getFechaPresentacionTotalDocumentacion() {
+        return fechaPresentacionTotalDocumentacion;
+    }
+
+    public void setFechaPresentacionTotalDocumentacion(Timestamp fechaPresentacionTotalDocumentacion) {
+        this.fechaPresentacionTotalDocumentacion = fechaPresentacionTotalDocumentacion;
+    }
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
+    }
+    
+    
+
     public Timestamp getFechaRecepcionTramite() {
         return fechaRecepcionTramite;
     }
@@ -28,12 +57,12 @@ public class TramiteGrillaUI {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
     }
 
-    public Timestamp getFechaAnulacion() {
-        return fechaAnulacion;
+    public Timestamp getFechaAnulacionTramite() {
+        return fechaAnulacionTramite;
     }
 
-    public void setFechaAnulacion(Timestamp fechaAnulacion) {
-        this.fechaAnulacion = fechaAnulacion;
+    public void setFechaAnulacion(Timestamp fechaAnulacionTramite) {
+        this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
     public String getNombreTipoTramite() {

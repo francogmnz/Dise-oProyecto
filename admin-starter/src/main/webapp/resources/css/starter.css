@@ -85,3 +85,19 @@ a#logout {
     border: none;
     padding: 0;
 }
+
+.fila-verde {
+    background-color: green;
+}
+
+.fila-amarilla {
+    background-color: yellow;
+}
+
+.fila-naranja {
+    background-color: orange;
+}
+
+.fila-roja {
+    background-color: red;
+}

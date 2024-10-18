@@ -22,7 +22,7 @@ public class UITramiteLista implements Serializable {
     // filtros de la lista de tramites
     private int nroTramiteFiltro = 0;
     private int dniFiltro = 0;
-    private Date fechaRecepcionTramiteFiltro = new Timestamp(System.currentTimeMillis());
+    private Date fechaRecepcionTramiteFiltro = null;
     private String nombreEstadoFiltro = "";
     private String criterio = "";
 
@@ -223,7 +223,24 @@ public class UITramiteLista implements Serializable {
         }
         return ttGrilla;
     }
-
+    
+    public boolean isAnulada(TramiteGrillaUI tramiteEnviado){
+        if(tramiteEnviado.getFechaFinTramite() != null || tramiteEnviado.getFechaAnulacionTramite() != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean isIniciado(TramiteGrillaUI tramiteEnviado){
+        if(tramiteEnviado.getFechaInicioTramite() != null && 
+                tramiteEnviado.getFechaPresentacionTotalDocumentacion() != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     public String irModificarTramite(int nroTramite) {
         BeansUtils.guardarUrlAnterior();
         return "tramite?faces-redirect=true&codigo=" + nroTramite;

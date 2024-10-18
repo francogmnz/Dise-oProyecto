@@ -355,8 +355,6 @@ public class ExpertoRegistrarTramite {
             for (TipoTramiteListaPrecios tTP : precioTTList) {
                 if (tTP.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) { // getCodTipoTramite() igual al que se muestra
                     tramiteCreado.setPrecioTramite(tTP.getPrecioTipoTramite()); // setPrecioTramite(precioTipoTramite)
-                }else{
-                    throw new RegistrarTramiteException("No existe un precio para ese TipoTramite");
                 }
             }
 
