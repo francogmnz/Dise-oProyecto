@@ -82,14 +82,22 @@ public class ExpertoABMCategoriaTipoTramite {
     
         public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite) {
         List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dtoCod = new DTOCriterio();
 
-        dto.setAtributo("codCategoriaTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(codCategoriaTipoTramite);
+        dtoCod.setAtributo("codCategoriaTipoTramite");
+        dtoCod.setOperacion("=");
+        dtoCod.setValor(codCategoriaTipoTramite);
 
-        criterioList.add(dto);
+        criterioList.add(dtoCod);
 
+        DTOCriterio dtoFecha = new DTOCriterio();
+        
+        dtoFecha.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        
+        criterioList.add(dtoFecha);
+        
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
 
         ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = new ModificarCategoriaTipoTramiteDTO();
@@ -107,13 +115,21 @@ public class ExpertoABMCategoriaTipoTramite {
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
         List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dtoCod = new DTOCriterio();
         
-        dto.setAtributo("codCategoriaTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
+        dtoCod.setAtributo("codCategoriaTipoTramite");
+        dtoCod.setOperacion("=");
+        dtoCod.setValor(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
 
-        criterioList.add(dto);
+        criterioList.add(dtoCod);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        
+        dtoFecha.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        
+        criterioList.add(dtoFecha);        
 
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
         
@@ -133,13 +149,21 @@ public class ExpertoABMCategoriaTipoTramite {
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
         List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dtoCod = new DTOCriterio();
         
-        dto.setAtributo("codCategoriaTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(codCategoriaTipoTramite);
+        dtoCod.setAtributo("codCategoriaTipoTramite");
+        dtoCod.setOperacion("=");
+        dtoCod.setValor(codCategoriaTipoTramite);
         
-        criterioList.add(dto);
+        criterioList.add(dtoCod);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        
+        dtoFecha.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        
+        criterioList.add(dtoFecha);
         
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
         
@@ -175,7 +199,7 @@ public class ExpertoABMCategoriaTipoTramite {
         FachadaPersistencia.getInstance().finalizarTransaccion();
         }
     }
-    
+        
        
     private void validarCategoriaTipoTramiteA(NuevaCategoriaTipoTramiteDTO categoriaDTO) throws CategoriaTipoTramiteException {
 
