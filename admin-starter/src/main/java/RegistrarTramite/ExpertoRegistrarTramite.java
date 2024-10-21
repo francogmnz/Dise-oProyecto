@@ -319,49 +319,67 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setCliente(clienteEncontrado);
             tramiteCreado.setTipoTramite(tipoTramiteEncontrado);
 
-            List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>(); // creamos la lista de criterios
+            List<DTOCriterio> criterioListaPreciosList = new ArrayList<>();
+            DTOCriterio criterioFechaHoraBajaLP = new DTOCriterio();
 
-            /* buscar("ListaPrecio", "fechaHoraBaja = " + null +
-        "AND fechaHoraDesde < " + fechaActual + "AND fechaHoraHasta >" + fechaActual*/
-            DTOCriterio dto1 = new DTOCriterio();
-            dto1.setAtributo("fechaHoraDesdeListaPrecios");
-            dto1.setOperacion("<");
-            dto1.setValor(new Timestamp(System.currentTimeMillis()));
-            criterioList.add(dto1);
+            criterioFechaHoraBajaLP.setAtributo("fechaHoraBajaListaPrecios");
+            criterioFechaHoraBajaLP.setOperacion("=");
+            criterioFechaHoraBajaLP.setValor(null);
 
-            DTOCriterio dto2 = new DTOCriterio();
-            dto2.setAtributo("fechaHoraHastaListaPrecios");
-            dto2.setOperacion(">");
-            dto2.setValor(new Timestamp(System.currentTimeMillis()));
-            criterioList.add(dto2);
+            criterioListaPreciosList.add(criterioFechaHoraBajaLP);
 
-            DTOCriterio dto3 = new DTOCriterio();
-            dto3.setAtributo("fechaHoraBajaListaPrecios");
-            dto3.setOperacion("=");
-            dto3.setValor(null);
-            criterioList.add(dto3);
+            DTOCriterio criterioFechaHoraDesdeLP = new DTOCriterio();
 
-            List<Object> listaPrecios= FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
-            
-            if(listaPrecios.isEmpty()){
-                throw new RegistrarTramiteException("No se encontro una lista de precios vigente");
+            criterioFechaHoraDesdeLP.setAtributo("fechaHoraDesdeListaPrecios");
+            criterioFechaHoraDesdeLP.setOperacion("<");
+            criterioFechaHoraDesdeLP.setValor(new Timestamp(System.currentTimeMillis()));
+
+            criterioListaPreciosList.add(criterioFechaHoraDesdeLP);
+
+            DTOCriterio criterioFechaHoraHastaLP = new DTOCriterio();
+
+            criterioFechaHoraHastaLP.setAtributo("fechaHoraHastaListaPrecios");
+            criterioFechaHoraHastaLP.setOperacion(">");
+            criterioFechaHoraHastaLP.setValor(new Timestamp(System.currentTimeMillis()));
+
+            criterioListaPreciosList.add(criterioFechaHoraHastaLP); 
+
+            List<Object> listaPreciosList = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioListaPreciosList);
+            if (listaPreciosList == null || listaPreciosList.isEmpty()) {
+                throw new RegistrarTramiteException("No se encontro una Lista de Precios valida.");
             }
-            
-            ListaPrecios listaPreciosEncontrada = (ListaPrecios) listaPrecios.get(0);
 
-            // getTipoTramiteListaPrecios(): List<TipoTramiteListaPrecios>
-            List<TipoTramiteListaPrecios> precioTTList = listaPreciosEncontrada.getTipoTramiteListaPrecios();
-            // loop por cada TipoTramiteListaPrecios
-            for (TipoTramiteListaPrecios tTP : precioTTList) {
-                if (tTP.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) { // getCodTipoTramite() igual al que se muestra
-                    tramiteCreado.setPrecioTramite(tTP.getPrecioTipoTramite()); // setPrecioTramite(precioTipoTramite)
+            ListaPrecios listaPrecios = (ListaPrecios) listaPreciosList.get(0);
+
+
+            List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = listaPrecios.getTipoTramiteListaPrecios();
+
+            boolean precioEncontrado = false;
+           
+            for(TipoTramiteListaPrecios ttlp: tipoTramiteListaPrecios){
+                TipoTramite tipoTramite = ttlp.getTipoTramite();
+              
+                System.out.println("El codigo del tramite es: " + tipoTramite.getCodTipoTramite());
+                
+                System.out.println("El codTT a encontrar: " + tipoTramiteEncontrado.getCodTipoTramite());
+                
+                if(tipoTramite.getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()){
+                    tramiteCreado.setPrecioTramite(ttlp.getPrecioTipoTramite());
+                    precioEncontrado = true;
+                    break;
                 }
             }
+            
+            if (!precioEncontrado) {
+                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene un precio asignado en la lista de precios activa.");
+            }   
 
+            List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
             criterioList.clear();
 
-            /* buscar("EstadoTramite", "nombreEstadoTramite = " + 'INICIADO' + "AND
-        fechaHoraBajaET = " + null): List<Object> */
+            /* buscar("EstadoTramite", "nombreEstadoTramite = " + 'INICIADO' + 
+            "AND fechaHoraBajaET = " + null): List<Object> */
+            
             DTOCriterio criterioEstado = new DTOCriterio();
             criterioEstado.setAtributo("nombreEstadoTramite");
             criterioEstado.setOperacion("like");
