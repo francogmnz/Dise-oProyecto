@@ -9,7 +9,6 @@
             .ui-datatable .ui-datatable-header {
                 text-align: right !important;
             }
-            
         </style>
     </ui:define>
 
@@ -18,27 +17,6 @@
     </ui:define>
 
     <ui:define name="body">
-        <style>
-            .fila-verde {
-                background-color: #7bff9a;
-                font-weight: bolder;
-            }
-            
-            .fila-amarilla {
-                background-color: #fff27b !important;
-                font-weight: bolder;
-            }
-            
-            .fila-naranja {
-                background-color: #ffa97b;
-                font-weight: bolder;
-            }
-
-            .fila-roja {
-                background-color: #ff7884;
-                font-weight: bolder;
-            }
-        </style>
         <h:form id="form1">
             <p:focus context="@form"/>
             <div class="box box-primary">
@@ -245,43 +223,39 @@
                 <p:spacer height="5"/>
 
                 <!-- Tabla para mostrar los trámites -->
-                <p:dataTable id="grid1" widgetVar="tramiteTable" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
-                             paginator="true" rows="10" paginatorPosition="bottom"
-                             rowStyleClass="#{uitramiteLista.isAnulada(tramite) ? 'fila-roja' : 
-                                            (uitramiteLista.isIniciado(tramite) ? 'fila-verde' : '')}">
+                <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
+                             paginator="true" rows="10" paginatorPosition="bottom">
+                    <p:column>
+                        <f:facet name="header">Número Trámite</f:facet>
+                        <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
+                                       value="#{tramite.nroTramite}" 
+                                       immediate="true"
+                                       style="text-decoration: none; color: blue;" />
+                    </p:column>
 
-                        <p:column>
-                            <f:facet name="header">Número Trámite</f:facet>
-                            <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
-                                           value="#{tramite.nroTramite}" 
-                                           immediate="true"
-                                           style="text-decoration: none; color: blue;" />
-                        </p:column>
+                    <p:column>
+                        <f:facet name="header">DNI</f:facet>
+                            #{tramite.dni}
+                    </p:column>
 
-                        <p:column>
-                            <f:facet name="header">DNI</f:facet>
-                                #{tramite.dni}
-                        </p:column>
+                    <p:column>
+                        <f:facet name="header">Codigo Tipo Trámite</f:facet>
+                            #{tramite.codTipoTramite}
+                    </p:column>
 
-                        <p:column>
-                            <f:facet name="header">Código Tipo Trámite</f:facet>
-                                #{tramite.codTipoTramite}
-                        </p:column>
+                    <p:column>
+                        <f:facet name="header">Fecha Recepción</f:facet>
+                        <h:outputText value="#{tramite.fechaRecepcionTramite}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
-                        <p:column>
-                            <f:facet name="header">Fecha Recepción</f:facet>
-                            <h:outputText value="#{tramite.fechaRecepcionTramite}">
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </h:outputText>
-                        </p:column>
-
-                        <p:column>
-                            <f:facet name="header">Estado Trámite</f:facet>
-                            <strong>#{tramite.nombreEstado}</strong>
-                        </p:column>
+                    <p:column>
+                        <f:facet name="header">Estado Trámite</f:facet>
+                        <strong>#{tramite.nombreEstado}</strong>
+                    </p:column>
 
                 </p:dataTable>
-
 
             </div>
 

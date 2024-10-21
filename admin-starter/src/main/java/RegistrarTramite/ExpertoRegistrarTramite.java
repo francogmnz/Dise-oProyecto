@@ -319,67 +319,59 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setCliente(clienteEncontrado);
             tramiteCreado.setTipoTramite(tipoTramiteEncontrado);
 
-            List<DTOCriterio> criterioListaPreciosList = new ArrayList<>();
-            DTOCriterio criterioFechaHoraBajaLP = new DTOCriterio();
+            List<DTOCriterio> criterioList = new ArrayList<>(); // Creamos la lista de criterios
 
-            criterioFechaHoraBajaLP.setAtributo("fechaHoraBajaListaPrecios");
-            criterioFechaHoraBajaLP.setOperacion("=");
-            criterioFechaHoraBajaLP.setValor(null);
+            // Criterio para fechaHoraDesdeListaPrecios < fechaActual
+            DTOCriterio fechaDesdeLP = new DTOCriterio();
+            fechaDesdeLP.setAtributo("fechaHoraDesdeListaPrecios");
+            fechaDesdeLP.setOperacion("<");
+            fechaDesdeLP.setValor(new Timestamp(System.currentTimeMillis()));
+            criterioList.add(fechaDesdeLP);
 
-            criterioListaPreciosList.add(criterioFechaHoraBajaLP);
+            // Criterio para fechaHoraHastaListaPrecios > fechaActual
+            DTOCriterio fechaAltaLP = new DTOCriterio();
+            fechaAltaLP.setAtributo("fechaHoraHastaListaPrecios");
+            fechaAltaLP.setOperacion(">");
+            fechaAltaLP.setValor(new Timestamp(System.currentTimeMillis()));
+            criterioList.add(fechaAltaLP);
 
-            DTOCriterio criterioFechaHoraDesdeLP = new DTOCriterio();
+            // Criterio para fechaHoraBajaListaPrecios == null
+            DTOCriterio fechaBajaLP = new DTOCriterio();
+            fechaBajaLP.setAtributo("fechaHoraBajaListaPrecios");
+            fechaBajaLP.setOperacion("=");
+            fechaBajaLP.setValor(null);
+            criterioList.add(fechaBajaLP);
 
-            criterioFechaHoraDesdeLP.setAtributo("fechaHoraDesdeListaPrecios");
-            criterioFechaHoraDesdeLP.setOperacion("<");
-            criterioFechaHoraDesdeLP.setValor(new Timestamp(System.currentTimeMillis()));
+            List<Object> listaPreciosEncontradas = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList);
 
-            criterioListaPreciosList.add(criterioFechaHoraDesdeLP);
-
-            DTOCriterio criterioFechaHoraHastaLP = new DTOCriterio();
-
-            criterioFechaHoraHastaLP.setAtributo("fechaHoraHastaListaPrecios");
-            criterioFechaHoraHastaLP.setOperacion(">");
-            criterioFechaHoraHastaLP.setValor(new Timestamp(System.currentTimeMillis()));
-
-            criterioListaPreciosList.add(criterioFechaHoraHastaLP); 
-
-            List<Object> listaPreciosList = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioListaPreciosList);
-            if (listaPreciosList == null || listaPreciosList.isEmpty()) {
-                throw new RegistrarTramiteException("No se encontro una Lista de Precios valida.");
+            // Verificación de existencia de lista de precios activa
+            if (listaPreciosEncontradas == null || listaPreciosEncontradas.isEmpty()) {
+                throw new RegistrarTramiteException("No se encontró una lista de precios activa.");
             }
 
-            ListaPrecios listaPrecios = (ListaPrecios) listaPreciosList.get(0);
+            ListaPrecios listaPreciosEncontrada = (ListaPrecios) listaPreciosEncontradas.get(0);
 
+            // Obtenemos la lista de precios por tipo de trámite
+            List<TipoTramiteListaPrecios> precioTTList = listaPreciosEncontrada.getTipoTramiteListaPrecios();
 
-            List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = listaPrecios.getTipoTramiteListaPrecios();
-
-            boolean precioEncontrado = false;
-           
-            for(TipoTramiteListaPrecios ttlp: tipoTramiteListaPrecios){
-                TipoTramite tipoTramite = ttlp.getTipoTramite();
-              
-                System.out.println("El codigo del tramite es: " + tipoTramite.getCodTipoTramite());
-                
-                System.out.println("El codTT a encontrar: " + tipoTramiteEncontrado.getCodTipoTramite());
-                
-                if(tipoTramite.getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()){
-                    tramiteCreado.setPrecioTramite(ttlp.getPrecioTipoTramite());
-                    precioEncontrado = true;
+            // Verificación de precios para el tipo de trámite seleccionado
+            boolean tipoTramiteConPrecio = false;
+            for (TipoTramiteListaPrecios tTP : precioTTList) {
+                if (tTP.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) {
+                    tramiteCreado.setPrecioTramite(tTP.getPrecioTipoTramite());
+                    tipoTramiteConPrecio = true;
                     break;
                 }
             }
-            
-            if (!precioEncontrado) {
-                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene un precio asignado en la lista de precios activa.");
-            }   
 
-            List<DTOCriterio> criterioList = new ArrayList<DTOCriterio>();
+            if (!tipoTramiteConPrecio) {
+                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene una lista de precios activa.");
+            }
+
             criterioList.clear();
 
             /* buscar("EstadoTramite", "nombreEstadoTramite = " + 'INICIADO' + 
             "AND fechaHoraBajaET = " + null): List<Object> */
-            
             DTOCriterio criterioEstado = new DTOCriterio();
             criterioEstado.setAtributo("nombreEstadoTramite");
             criterioEstado.setOperacion("like");
@@ -388,13 +380,13 @@ public class ExpertoRegistrarTramite {
             criterioList.add(criterioEstado);
 
             List<Object> estadosEncontrados = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
-            
-            if(estadosEncontrados.isEmpty()){
+
+            if (estadosEncontrados.isEmpty()) {
                 throw new RegistrarTramiteException("No se encontro un estado con nombre 'Iniciado' ");
             }
-            
+
             EstadoTramite estadoEncontrado = (EstadoTramite) estadosEncontrados.get(0);
-            
+
             tramiteCreado.setEstadoTramite(estadoEncontrado); // setEstadoTramite(estadoEncontrado)
 
             TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite(); // :create() TramiteEstadoTramite
@@ -422,13 +414,13 @@ public class ExpertoRegistrarTramite {
             criterioList.add(criteriov2);
 
             List<Object> versionesEncontradas = FachadaPersistencia.getInstance().buscar("Version", criterioList);
-            
-            if(versionesEncontradas.isEmpty()){
+
+            if (versionesEncontradas.isEmpty()) {
                 throw new RegistrarTramiteException("No se encontró una version vigente");
             }
-            
+
             Version versionEncontrada = (Version) versionesEncontradas.get(0);
-            
+
             tramiteCreado.setVersion(versionEncontrada);
 
             criterioList.clear();
@@ -441,7 +433,7 @@ public class ExpertoRegistrarTramite {
                 TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion(); // :create() TramiteDocumentacion
                 int cotTD = generarCodTD(); // codTD incremental
                 tramiteDocumentacion.setCodTD(cotTD);
-    //          tramiteDocumentacion.setNombreTD(nombreTD);
+                //          tramiteDocumentacion.setNombreTD(nombreTD);
                 tramiteDocumentacion.setDocumentacion(doc);
                 tramiteCreado.addTramiteDocumentacion(tramiteDocumentacion);
                 FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
@@ -600,7 +592,7 @@ public class ExpertoRegistrarTramite {
         // Verificar si el trámite ya ha sido elegido
         if (tramiteElegido == null) {
             List<DTOCriterio> criterioList = new ArrayList<>();
-            
+
             DTOCriterio criterio = new DTOCriterio();
             criterio.setAtributo("nroTramite");
             criterio.setOperacion("=");
@@ -618,7 +610,7 @@ public class ExpertoRegistrarTramite {
         criterioListTD.add(criterioTD);
 
         System.out.println("codTD " + codTD);
-        
+
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
         FachadaPersistencia.getInstance().merge(td);
 
@@ -627,7 +619,7 @@ public class ExpertoRegistrarTramite {
         for (TramiteDocumentacion tds : tdList) {
             if (tds.getCodTD() == codTD) {
                 System.out.println("Actualizando documentación para codTD: " + codTD);
-                
+
                 tds.setArchivoTD(archivoTD.getContenidoB64());
                 tds.setNombreTD(archivoTD.getNombre());
                 tds.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));

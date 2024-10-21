@@ -47,7 +47,7 @@
 
                         </p:outputPanel> 
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
                             <h:outputText value="Nombre:"/>
@@ -63,7 +63,7 @@
 
                         </p:outputPanel> 
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
                             <h:outputText value="Descripcion:"/>
@@ -78,7 +78,7 @@
                             </p:inputText>
                         </p:outputPanel> 
                     </div>
-                    
+
                 </div>
                 <p:spacer height="5"/>
                 <p:dataTable id="grid1" widgetVar="estadoTramiteTable" value="#{uiabmEstadoTramiteLista.buscarEstadosTramite()}" var="estadoTramite" >
@@ -115,16 +115,15 @@
                         </p:commandButton>
                         <p:spacer width="5"/>
                         <p:commandButton value="Eliminar" styleClass="btn-dSSanger" update="@form" actionListener="#{uiabmEstadoTramiteLista.darDeBajaEstadoTramite(estadoTramite.codEstadoTramite)}" disabled="#{estadoTramite.fechaHoraBajaEstadoTramite != null}">
-
-                            <p:confirm header="Anulación de #{estadoTramite.codEstadoTramite} #{estadoTramite.nombreEstadoTramite}" message="¿Está seguro?" icon="ui-icon-alert"/>
-
+                            <p:confirm header="Confirmación" message="¿Desea de dar de baja al estado: #{estadoTramite.nombreEstadoTramite}?" icon="ui-icon-alert"/>
                         </p:commandButton>
 
-                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
-                            <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
-                                             icon="fa fa-check"/>
-                            <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
-                                             icon="fa fa-close"/>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350"
+                                         style="border: 1px solid red; background-color: #f0f0f0;">
+                            <h:panelGroup style="display: flex; justify-content: space-between; margin-top: 0; padding-top: 0;">
+                                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes btn-danger ui-button-flat" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
+                            </h:panelGroup>
                         </p:confirmDialog>
                     </p:column>
 

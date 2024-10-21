@@ -31,7 +31,7 @@
                             </p:inputText><p:message id="codigoMSG" for="codEstadoTramite"/>
                         </div>
                     </div>       
-                    
+
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-11">
                             <p:outputLabel for="nombreEstadoTramite" value="Nombre del Estado Tramite:" />
@@ -61,6 +61,13 @@
 
                 </div>
             </p:panel>
+            <!-- Botón de Volver atras, alineado a la derecha -->
+            <div style="text-align: right; margin-top: 8px;">
+                <p:commandButton value="Volver atrás"
+                                 icon="pi pi-arrow-left" style="width: 180px;" 
+                                 onclick="window.history.back(); return false;" />
+            </div>
+
         </h:form>
 
     </ui:define>

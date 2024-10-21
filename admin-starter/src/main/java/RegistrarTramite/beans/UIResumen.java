@@ -339,9 +339,9 @@ public class UIResumen implements Serializable {
             int codTD = Integer.parseInt(codTDInput.getValue().toString());
 
             System.out.println("codTD recibido: " + codTD);
-            FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Exitoso // ", event.getFile().getFileName() + " subido."));
+
             // Continuar con la lógica de subida de archivo
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
@@ -366,7 +366,7 @@ public class UIResumen implements Serializable {
 
             // Mensaje de éxito
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Archivo eliminado", "El archivo ha sido eliminado correctamente."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Archivo eliminado // ", "El archivo ha sido eliminado correctamente."));
         } catch (Exception e) {
             // Manejo de errores
             FacesContext.getCurrentInstance().addMessage(null,
@@ -374,7 +374,6 @@ public class UIResumen implements Serializable {
             e.printStackTrace();
         }
     }
-
 // Manejar la descarga del archivo
     private DefaultStreamedContent fileD;
     private DTOFile file = new DTOFile();
