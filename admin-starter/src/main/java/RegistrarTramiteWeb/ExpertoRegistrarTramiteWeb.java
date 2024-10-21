@@ -338,6 +338,14 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioUltimaVersionTTList.add(criterioFechaHastaVersion);
         
+        DTOCriterio criterioFechaBajaVersion = new DTOCriterio();
+        
+        criterioFechaBajaVersion.setAtributo("fechaBajaVersion");
+        criterioFechaBajaVersion.setOperacion("=");
+        criterioFechaBajaVersion.setValor(null);
+        
+        criterioUltimaVersionTTList.add(criterioFechaBajaVersion);
+         
         DTOCriterio criterioTTRelacionado = new DTOCriterio();
         
         criterioTTRelacionado.setAtributo("tipoTramite");

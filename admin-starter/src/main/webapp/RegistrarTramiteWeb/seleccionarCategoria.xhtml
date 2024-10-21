@@ -15,6 +15,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 <h:head>
     <title>Seleccionar Categoría</title>
     <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloCategoria.css" />
+    <script type="text/javascript">
+        function mostrarPanelPrueba() {
+            document.getElementById('panelPrueba').style.display = 'block';
+        }
+        function ocultarPanelPrueba() {
+            document.getElementById('panelPrueba').style.display = 'none';
+        }
+    </script>    
 </h:head>
 <h:body>
     <h:form>
@@ -62,6 +70,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverConfirmarCliente}" styleClass="btn-volver" />
     </div>
+      
+        <!-- Borrar desde aqui -->    
+        <!-- Área sensible para mostrar el panel -->
+        <div class="area-oculta">
+            <h:commandButton value="" styleClass="boton-invisible" onclick="mostrarPanelPrueba(); return false;" />
+        </div>
+
+        <!-- Panel que aparece al hacer clic en el área oculta -->
+        <div id="panelPrueba" class="panel-prueba" style="display: none;">
+            <h:outputLabel for="inputPrueba" value="codCategoriaTipoTramite a probar:" class="label-prueba" />
+            <h:inputText id="inputPrueba" value="#{uiRegistrarTramiteWeb.codigoCategoriaTTPrueba}" class="input-prueba" />
+            <h:commandButton value="Probar" action="#{uiRegistrarTramiteWeb.probarSeleccionarCategoria}" styleClass="btn-probar" />
+            <h:commandButton value="Cerrar" onclick="ocultarPanelPrueba(); return false;" styleClass="btn-cerrar" />
+        </div>
+
+        <!-- Hasta aqui -->
+
     </h:form>
 </h:body>
 </html>

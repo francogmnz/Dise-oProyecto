@@ -468,4 +468,39 @@ public class RegistrarTramiteWebUI implements Serializable {
         }
     }
 
+// Borrar desde aqui - Casos de prueba Testing
+   
+    private int codigoCategoriaTTPrueba;
+    private int codTipoTramitePrueba;
+
+
+    public int getCodigoCategoriaTTPrueba() {
+        return codigoCategoriaTTPrueba;
+    }
+
+    public void setCodigoCategoriaTTPrueba(int codigoCategoriaTTPrueba) {
+        this.codigoCategoriaTTPrueba = codigoCategoriaTTPrueba;
+    }
+
+    public int getCodTipoTramitePrueba() {
+        return codTipoTramitePrueba;
+    }
+
+    public void setCodTipoTramitePrueba(int codTipoTramitePrueba) {
+        this.codTipoTramitePrueba = codTipoTramitePrueba;
+    }
+
+    public String probarSeleccionarCategoria() {
+
+        codCategoriaSeleccionada = codigoCategoriaTTPrueba;
+        return seleccionarCategoria();
+    }
+
+    public String probarSeleccionarTipoTramite() {
+
+        codTipoTramiteSeleccionado = codTipoTramitePrueba;
+        return seleccionarTipoTramite();
+    }
+
+
 }

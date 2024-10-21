@@ -25,8 +25,7 @@
                             <p:outputLabel for="codTipoTramite" value="Código de tipoTramite:" />
                </div>
                  <div class="ui-sm-12 ui-g-11">
-                     <p:inputText id="codTipoTramite" value="#{uiabmTipoTramite.codTipoTramite}" style="width: 150px;" disabled="#{!uiabmTipoTramite.insert}" required="true" requiredMessage="Debe ingresar el codigo del tipo de tramite." validatorMessage="El codigo debe contener entre 1 y 10 digitos."> <!-- ver si le ponemos el validator tambien a el plazo. readonly="true" -->
-                        <f:validateRegex pattern="^\d{1,10}$" /> 
+                     <p:inputText id="codTipoTramite" value="#{uiabmTipoTramite.codTipoTramite}" style="width: 150px;" disabled="#{!uiabmTipoTramite.insert}" required="true" requiredMessage="Debe ingresar el codigo del tipo de tramite." > <!-- ver si le ponemos el validator tambien a el plazo. readonly="true" -->
                      </p:inputText><p:message id="codigoMSG" for="codTipoTramite"/> 
                  </div>
                    </div>       
