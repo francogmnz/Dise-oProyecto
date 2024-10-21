@@ -339,7 +339,7 @@ public class UIResumen implements Serializable {
             int codTD = Integer.parseInt(codTDInput.getValue().toString());
 
             System.out.println("codTD recibido: " + codTD);
-            FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
+            FacesMessage message = new FacesMessage("Exitoso // ", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             
             // Continuar con la lógica de subida de archivo
@@ -366,7 +366,7 @@ public class UIResumen implements Serializable {
 
             // Mensaje de éxito
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Archivo eliminado", "El archivo ha sido eliminado correctamente."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Archivo eliminado // ", "El archivo ha sido eliminado correctamente."));
         } catch (Exception e) {
             // Manejo de errores
             FacesContext.getCurrentInstance().addMessage(null,
