@@ -61,7 +61,19 @@
                             <h:panelGroup>
                                 <h:outputLabel value="Fecha Anulación:" style="font-weight:700;"/>
                                 <h:outputText value=" #{uiresumen.fechaAnulacionTramite}" 
-                                              style="color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
+                                              style="font-weight:700; color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Inicio:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaInicioTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaInicioTramite != null ? 'green' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Fin:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaFinTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaFinTramite != null ? 'red' : 'black'};"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
@@ -199,7 +211,7 @@
                                         sizeLimit="10000000"
                                         allowTypes="/(\.|\/)(pdf|txt)$/"
                                         oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);"
-                                        disabled="#{doc.fechaEntregaDoc != null}">
+                                        disabled="#{doc.fechaEntregaDoc != null || uiresumen.fechaAnulacionTramite != null}">
                                     </p:fileUpload>
                                 </h:form>
                             </p:column>

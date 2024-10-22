@@ -195,6 +195,9 @@ public class ExpertoRegistrarTramite {
             dtoTramite.setCodTipoTramite(tramite.getTipoTramite().getCodTipoTramite());
             dtoTramite.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite());
 
+            //
+            dtoTramite.setFechaInicioTramite(tramite.getFechaInicioTramite());
+
             tramiteResultados.add(dtoTramite);// Cargo los datos seteados en dtoTramite a la lista
         }
 
@@ -414,14 +417,29 @@ public class ExpertoRegistrarTramite {
             criteriov2.setValor(new Timestamp(System.currentTimeMillis()));
             criterioList.add(criteriov2);
 
+            DTOCriterio criteriov3 = new DTOCriterio();
+            criteriov3.setAtributo("fechaBajaVersion");
+            criteriov3.setOperacion("=");
+            criteriov3.setValor(null);
+            criterioList.add(criteriov3);
+
             List<Object> versionesEncontradas = FachadaPersistencia.getInstance().buscar("Version", criterioList);
 
-            if (versionesEncontradas.isEmpty()) {
+            if (versionesEncontradas == null || versionesEncontradas.isEmpty()) {
                 throw new RegistrarTramiteException("No se encontró una version vigente");
             }
 
             Version versionEncontrada = (Version) versionesEncontradas.get(0);
-            tramiteCreado.setVersion(versionEncontrada);
+
+            boolean ttConVersionActiva = false;
+            if (versionEncontrada.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) {
+                tramiteCreado.setVersion(versionEncontrada);
+                ttConVersionActiva = true;
+            }
+
+            if (!ttConVersionActiva) {
+                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene una version activa.");
+            }
 
             criterioList.clear();
 
@@ -468,6 +486,8 @@ public class ExpertoRegistrarTramite {
         resumenDTO.setNroTramite(tramiteElegido.getNroTramite());
         resumenDTO.setFechaRecepcionTramite(tramiteElegido.getFechaRecepcionTramite());
         resumenDTO.setFechaAnulacionTramite(tramiteElegido.getFechaAnulacionTramite());
+        resumenDTO.setFechaInicioTramite(tramiteElegido.getFechaInicioTramite());
+        resumenDTO.setFechaFinTramite(tramiteElegido.getFechaFinTramite());
         resumenDTO.setPlazoDocumentacion(tramiteElegido.getTipoTramite().getPlazoEntregaDocumentacionTT());
         resumenDTO.setCodTipoTramite(tramiteElegido.getTipoTramite().getCodTipoTramite());
         resumenDTO.setNombreTipoTramite(tramiteElegido.getTipoTramite().getNombreTipoTramite());

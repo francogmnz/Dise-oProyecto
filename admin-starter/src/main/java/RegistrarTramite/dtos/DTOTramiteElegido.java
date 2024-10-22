@@ -9,6 +9,8 @@ public class DTOTramiteElegido {
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacionTramite;
+    private Timestamp fechaInicioTramite;
+    private Timestamp fechaFinTramite;
     private int plazoDocumentacion;
     private int codTipoTramite;
     private String nombreTipoTramite;
@@ -44,6 +46,22 @@ public class DTOTramiteElegido {
 
     public void setFechaAnulacionTramite(Timestamp fechaAnulacionTramite) {
         this.fechaAnulacionTramite = fechaAnulacionTramite;
+    }
+
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
     }
 
     public int getPlazoDocumentacion() {

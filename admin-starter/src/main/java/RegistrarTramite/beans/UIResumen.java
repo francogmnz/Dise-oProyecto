@@ -44,6 +44,8 @@ public class UIResumen implements Serializable {
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacionTramite;
+    private Timestamp fechaInicioTramite;
+    private Timestamp fechaFinTramite;
     private int plazoDocumentacion;
     private int codTipoTramite;
     private String nombreTipoTramite;
@@ -81,6 +83,7 @@ public class UIResumen implements Serializable {
                     this.nroTramite = tramiteElegido.getNroTramite();
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
+                    this.fechaInicioTramite = tramiteElegido.getFechaInicioTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
                     if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
                         Calendar calendar = Calendar.getInstance();
@@ -134,6 +137,22 @@ public class UIResumen implements Serializable {
 
     public void setFechaRecepcionTramite(Timestamp fechaRecepcionTramite) {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
+    }
+
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
     }
 
     public int getPlazoDocumentacion() {
@@ -341,7 +360,7 @@ public class UIResumen implements Serializable {
             System.out.println("codTD recibido: " + codTD);
             FacesMessage message = new FacesMessage("Exitoso // ", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            
+
             // Continuar con la lógica de subida de archivo
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);

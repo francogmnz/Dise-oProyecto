@@ -144,6 +144,10 @@ public class UITramiteLista implements Serializable {
             tramiteGrillaUI.setCodTipoTramite(tramiteDTO.getCodTipoTramite());
             tramiteGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
 
+            // 
+            tramiteGrillaUI.setFechaAnulacion(tramiteDTO.getFechaAnulacion());
+            tramiteGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
+
             tramiteGrilla.add(tramiteGrillaUI);
         }
 
@@ -227,6 +231,19 @@ public class UITramiteLista implements Serializable {
     public String irModificarTramite(int nroTramite) {
         BeansUtils.guardarUrlAnterior();
         return "tramite?faces-redirect=true&codigo=" + nroTramite;
+    }
+
+    public boolean isAnulado(TramiteGrillaUI tramiteFila) {
+        return tramiteFila.getFechaAnulacion() != null;
+    }
+
+    public boolean isPendienteDoc(TramiteGrillaUI tramiteFila) {
+        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null;
+    }
+
+    public boolean isIniciado(TramiteGrillaUI tramiteFila) {
+        // Si no es anulado y no es pendiente de documentación, devolver true
+        return tramiteFila.getFechaInicioTramite() != null;
     }
 
 }

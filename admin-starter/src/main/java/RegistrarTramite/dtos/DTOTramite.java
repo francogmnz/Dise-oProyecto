@@ -12,6 +12,7 @@ public class DTOTramite {
     private String nombreTipoTramite;
     private String nombreEstado;
     private Timestamp fechaAnulacion;
+    private Timestamp fechaInicioTramite;
     
     private EstadoTramite estadoTramite;
 
@@ -73,6 +74,15 @@ public class DTOTramite {
         this.fechaAnulacion = fechaAnulacion;
     }
 
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
     }

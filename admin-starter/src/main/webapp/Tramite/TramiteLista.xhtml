@@ -222,9 +222,31 @@
 
                 <p:spacer height="5"/>
 
+                <!-- Subrayado para los tramites -->
+                <style type="text/css">
+                    .isAnulado {
+                        color: #000;
+                        background-color: #f1948a;
+                    }
+
+                    .isPendienteDoc {
+                        color: #000;
+                        background-color: #f7dc6f;
+                    }
+
+                    .isIniciado {
+                        color: #000;
+                        background-color: #a9dfbf;
+                    }
+
+                </style>
+
                 <!-- Tabla para mostrar los trámites -->
                 <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
-                             paginator="true" rows="10" paginatorPosition="bottom">
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             rowStyleClass="#{uitramiteLista.isAnulado(tramite) ? 'isAnulado' : 
+                                              uitramiteLista.isPendienteDoc(tramite) ? 'isPendienteDoc' : 
+                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado': ''}">
                     <p:column>
                         <f:facet name="header">Número Trámite</f:facet>
                         <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
@@ -252,7 +274,11 @@
 
                     <p:column>
                         <f:facet name="header">Estado Trámite</f:facet>
-                        <strong>#{tramite.nombreEstado}</strong>
+                        <strong>
+                            #{uitramiteLista.isAnulado(tramite) ? 'Anulado' :
+                              uitramiteLista.isPendienteDoc(tramite) ? 'Pendiente Documentación' :
+                              uitramiteLista.isIniciado(tramite) ? 'Iniciado' : ''}
+                        </strong>
                     </p:column>
 
                 </p:dataTable>
