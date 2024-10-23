@@ -422,24 +422,22 @@ public class ExpertoRegistrarTramite {
             criteriov3.setOperacion("=");
             criteriov3.setValor(null);
             criterioList.add(criteriov3);
+            
+            DTOCriterio criteriov4 = new DTOCriterio();
+            criteriov4.setAtributo("tipoTramite");
+            criteriov4.setOperacion("=");
+            criteriov4.setValor(tipoTramiteEncontrado);
+            criterioList.add(criteriov4);
 
             List<Object> versionesEncontradas = FachadaPersistencia.getInstance().buscar("Version", criterioList);
 
             if (versionesEncontradas == null || versionesEncontradas.isEmpty()) {
-                throw new RegistrarTramiteException("No se encontró una version vigente");
+                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene una version activa.");
             }
 
             Version versionEncontrada = (Version) versionesEncontradas.get(0);
 
-            boolean ttConVersionActiva = false;
-            if (versionEncontrada.getTipoTramite().getCodTipoTramite() == tipoTramiteEncontrado.getCodTipoTramite()) {
-                tramiteCreado.setVersion(versionEncontrada);
-                ttConVersionActiva = true;
-            }
-
-            if (!ttConVersionActiva) {
-                throw new RegistrarTramiteException("El tipo de trámite seleccionado no tiene una version activa.");
-            }
+            tramiteCreado.setVersion(versionEncontrada);
 
             criterioList.clear();
 
