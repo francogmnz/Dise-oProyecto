@@ -27,18 +27,26 @@
             <div class="box box-primary">
 
                 <!-- Filtros de búsqueda -->
-                <h:panelGrid columns="2" cellpadding="5">
+                <h:panelGrid columns="2" styleClass="consultorInput">
                     <h:outputLabel value="Código del Consultor: " for="codigoFiltro"/>
                     <p:inputText id="codigoFiltro" value="#{uiabmArticuloLista.codigoFiltro}" />
 
                     <h:outputLabel value="Nombre del Consultor: " for="nombreFiltro"/>
                     <p:inputText id="nombreFiltro" value="#{uiabmArticuloLista.nombreFiltro}" />
 
-                    <p:commandButton value="Buscar" action="#{uiabmArticuloLista.filtrar}" update=":tramitesTable" />
-                </h:panelGrid>
-
+              
                 <p:spacer height="10"/>
-
+ 
+            <h:outputLabel for="legajoConsultor" value="Código del Consultor: " />
+            <h:inputText id="legajoConsultor" value="#{uiCambioEstado.legajoConsultor}">
+                <f:convertNumber integerOnly="true" />
+            </h:inputText>
+            <p:commandButton 
+                value="Buscar Trámite" 
+                styleClass="btn-info" 
+                action="#{uiCambioEstado.cargarTramitesConsultor(consultor.legajoConsultor)}" 
+                />
+        </h:panelGrid>
                 <!-- Tabla de trámites vigentes -->
                 <p:dataTable id="tramitesTable" var="tramite" value="#{uiabmArticuloLista.buscarConsultor()}"
                              widgetVar="tramitesTableWidget" paginator="true" rows="10" 

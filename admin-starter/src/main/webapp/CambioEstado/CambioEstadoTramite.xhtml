@@ -1,58 +1,53 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head>
-    <title>Lista de Trámites del Consultor</title>
-</h:head>
-<h:body>
-    <h1>Trámites del Consultor</h1>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Lista de Trámites del Consultor</title>
+    </h:head>
+    <h:body>
+        <h1>Trámites del Consultor</h1>
 
-    <h:messages globalOnly="true" />
+        <h:messages globalOnly="true" />
 
-    <h:panelGrid columns="2" styleClass="consultorInput">
-        <h:outputLabel for="legajoConsultor" value="Código del Consultor: " />
-       <h:inputText id="legajoConsultor" value="#{uiCambioEstado.legajoConsultor}">
-    <f:convertNumber />
-</h:inputText>
-<h:commandButton value="Buscar Trámites" action="#{uiCambioEstado.buscarTramites}" actionListener="#{uiCambioEstado.buscarTramites}" />
-    </h:panelGrid>
+       
 
-    <br/>
+        <br/>
 
-    <h:panelGrid columns="2">
-        <h:outputLabel for="nombreConsultor" value="Nombre del Consultor: " />
-        <h:outputText id="nombreConsultor" value="#{uiCambioEstado.nombreConsultor}" />
-    </h:panelGrid>
+        <h:panelGrid columns="2">
+            <h:outputLabel for="nombreConsultor" value="Nombre del Consultor: " />
+            <h:outputText id="nombreConsultor" value="#{uiCambioEstado.nombreConsultor}" />
+        </h:panelGrid>
 
-    <br/><br/>
+        <br/><br/>
 
-    <h:dataTable value="#{uiCambioEstado.tramitesConsultor}" var="tramite" border="1" styleClass="tramitesTable">
-        <h:column>
-            <f:facet name="header">Número de Trámite</f:facet>
-            <h:outputText value="#{tramite.nroTramite}" />
-        </h:column>
-        
-        <h:column>
-            <f:facet name="header">Estado del Trámite</f:facet>
-            <h:outputText value="#{tramite.nombreEstadoTramite}" />
-        </h:column>
+        <h:dataTable value="#{uiCambioEstado.tramitesConsultor}" var="tramite" border="1" styleClass="tramitesTable">
+            <h:column>
+                <f:facet name="header">Número de Trámite</f:facet>
+                <h:outputText value="#{tramite.nroTramite}" />
+            </h:column>
 
-        <h:column>
-            <f:facet name="header">Código de Estado</f:facet>
-            <h:outputText value="#{tramite.codEstadoTramite}" />
-        </h:column>
+            <h:column>
+                <f:facet name="header">Estado del Trámite</f:facet>
+                <h:outputText value="#{tramite.nombreEstadoTramite}" />
+            </h:column>
 
-        <h:column>
-            <f:facet name="header">Fecha de Inicio</f:facet>
-            <h:outputText value="#{tramite.fechaInicioTramite}" />
-        </h:column>
+            <h:column>
+                <f:facet name="header">Código de Estado</f:facet>
+                <h:outputText value="#{tramite.codEstadoTramite}" />
+            </h:column>
 
-        <h:column>
-            <f:facet name="header">Fecha de Recepción</f:facet>
-            <h:outputText value="#{tramite.fechaRecepcionTramite}" />
-        </h:column>
-        
-    </h:dataTable>
-</h:body>
+            <h:column>
+                <f:facet name="header">Fecha de Inicio</f:facet>
+                <h:outputText value="#{tramite.fechaInicioTramite}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Fecha de Recepción</f:facet>
+                <h:outputText value="#{tramite.fechaRecepcionTramite}" />
+            </h:column>
+
+        </h:dataTable>
+    </h:body>
 
 </html>

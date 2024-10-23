@@ -19,80 +19,101 @@ import java.util.List;
 import utils.DTOCriterio;
 
 public class ExpertoCambioEstado {
+public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
+    // Iniciar transacción
+    FachadaPersistencia.getInstance().iniciarTransaccion();
+    List<DTOTramitesVigentes> dtoTramitesVigentesList = new ArrayList<>();
 
-    public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
-        // Iniciar transacción
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-        List<DTOTramitesVigentes> dtoTramitesVigentesList = new ArrayList<>();
+    try {
+        System.out.println("Legajo del consultor recibido: " + legajoConsultor);
 
-        try {
-            List<DTOCriterio> criterioList = new ArrayList<>();
-            DTOCriterio dto = new DTOCriterio();
-            dto.setAtributo("legajoConsultor");
-            dto.setOperacion("=");
-            dto.setValor(legajoConsultor);
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+        dto.setAtributo("legajoConsultor");
+        dto.setOperacion("=");
+        dto.setValor(legajoConsultor);
 
-            criterioList.add(dto);
-            List<Object> lConsultor = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
+        criterioList.add(dto);
 
-            if (lConsultor.isEmpty()) {
-                // Si no se encuentra el consultor, retornar null
-                return null;
-            }
+        DTOCriterio dto2 = new DTOCriterio();
+        dto2.setAtributo("fechaHoraBajaConsultor");
+        dto2.setOperacion("=");
+        dto2.setValor(null);
 
-            Consultor consultorEncontrado = (Consultor) lConsultor.get(0);
-            criterioList.clear();
+        criterioList.add(dto2);
 
-            // Crear criterio para buscar trámites del consultor
-            DTOCriterio criterio1 = new DTOCriterio();
-            criterio1.setAtributo("consultor");
-            criterio1.setOperacion("=");
-            criterio1.setValor(consultorEncontrado);
+        List<Object> lConsultor = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
 
-            criterioList.add(criterio1);
-
-            // Criterio para buscar trámites vigentes (fechaFinTramite es null)
-            DTOCriterio criterio2 = new DTOCriterio();
-            criterio2.setAtributo("fechaFinTramite");
-            criterio2.setOperacion("=");
-            criterio2.setValor(null);
-
-            criterioList.add(criterio2);
-
-            // Buscar trámites del consultor
-            List<Object> lTramites = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
-
-            DTOTramitesVigentes dtoTramitesVigentes = new DTOTramitesVigentes();
-            dtoTramitesVigentes.setCodConsultor(legajoConsultor); // Asignar código del consultor
-
-            // Agregar cada trámite encontrado al DTOTramitesVigentes
-            for (Object tramiteObj : lTramites) {
-                Tramite tramite = (Tramite) tramiteObj;
-                TramiteDTO dtoTramite = new TramiteDTO();
-                dtoTramite.setNroTramite(tramite.getNroTramite());
-                dtoTramite.setFechaInicioTramite(tramite.getFechaInicioTramite());
-                dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite());
-                dtoTramite.setEstadoTramite(tramite.getEstadoTramite());
-                dtoTramite.setNombreEstadoTramite(tramite.getEstadoTramite().getNombreEstadoTramite());
-
-                // Agregar el trámite al DTO
-                dtoTramitesVigentes.addTramite(dtoTramite);
-            }
-
-            dtoTramitesVigentesList.add(dtoTramitesVigentes); // Agregar DTO a la lista final
-
-            // Finalizar la transacción exitosamente
-            FachadaPersistencia.getInstance().finalizarTransaccion();
-        } catch (Exception e) {
-            // En caso de error, revertir la transacción
-            throw e; // Volver a lanzar la excepción
+        if (lConsultor.isEmpty()) {
+            System.out.println("No se encontró el consultor con legajo: " + legajoConsultor);
+            throw new CambioEstadoException("No se encontro la categoría seleccionada.");
         }
 
-        // Retornar la lista final de trámites vigentes
-        return dtoTramitesVigentesList;
+        Consultor consultorEncontrado = (Consultor) lConsultor.get(0);
+        System.out.println("Consultor encontrado: " + consultorEncontrado.getNombreConsultor());
+
+        criterioList.clear();
+        DTOCriterio criterio1 = new DTOCriterio();
+        criterio1.setAtributo("consultor");
+        criterio1.setOperacion("=");
+        criterio1.setValor(consultorEncontrado);
+
+        criterioList.add(criterio1);
+
+        DTOCriterio criterio2 = new DTOCriterio();
+        criterio2.setAtributo("fechaFinTramite");
+        criterio2.setOperacion("=");
+        criterio2.setValor(null);
+
+        criterioList.add(criterio2);
+
+        DTOCriterio criterio3 = new DTOCriterio();
+        criterio3.setAtributo("fechaAnulacionTramite");
+        criterio3.setOperacion("=");
+        criterio3.setValor(null);
+
+        criterioList.add(criterio3);
+
+        System.out.println("Criterios de búsqueda configurados: " + criterioList);
+
+        // Buscar trámites del consultor
+        List<Object> lTramites = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+        System.out.println("Trámites encontrados: " + lTramites.size());
+
+        DTOTramitesVigentes dtoTramitesVigentes = new DTOTramitesVigentes();
+        dtoTramitesVigentes.setCodConsultor(legajoConsultor); // Asignar código del consultor
+
+        // Agregar cada trámite encontrado al DTOTramitesVigentes
+        for (Object tramiteObj : lTramites) {
+            Tramite tramite = (Tramite) tramiteObj;
+            System.out.println("Trámite encontrado con número: " + tramite.getNroTramite());
+
+            TramiteDTO dtoTramite = new TramiteDTO();
+            dtoTramite.setNroTramite(tramite.getNroTramite());
+            dtoTramite.setFechaInicioTramite(tramite.getFechaInicioTramite());
+            dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite());
+            dtoTramite.setEstadoTramite(tramite.getEstadoTramite());
+            dtoTramite.setNombreEstadoTramite(tramite.getEstadoTramite().getNombreEstadoTramite());
+
+            // Agregar el trámite al DTO
+            dtoTramitesVigentes.addTramite(dtoTramite);
+        }
+
+        dtoTramitesVigentesList.add(dtoTramitesVigentes); // Agregar DTO a la lista final
+
+        // Finalizar la transacción exitosamente
+        FachadaPersistencia.getInstance().finalizarTransaccion();
+    } catch (Exception e) {
+        System.err.println("Error en la búsqueda de trámites: " + e.getMessage());
+        FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
-    public TramiteEstadoTramite cambiarEstado(int nroTramite) {
+    // Retornar la lista final de trámites vigentes
+    return dtoTramitesVigentesList;
+}
+
+
+    /* public TramiteEstadoTramite cambiarEstado(int nroTramite) {
         FachadaPersistencia.getInstance().iniciarTransaccion(); // Iniciar la transacción para la persistencia
         List<DTOCriterio> criterioList = new ArrayList<>();
 
@@ -210,7 +231,7 @@ public class ExpertoCambioEstado {
         }
         return null;
     }
-
+     */
     // Método para cambiar el estado del trámite
     /* public void cambiarEstado(int nroTramite, DTOEstadoOrigen estadoOrigen, DTOEstadoDestino estadoDestino, String descripcion) throws CambioEstadoException {
         // Obtener el trámite actual
