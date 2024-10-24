@@ -1,53 +1,55 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Lista de Trámites del Consultor</title>
-    </h:head>
-    <h:body>
-        <h1>Trámites del Consultor</h1>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="#{layoutMB.template}">
+    <ui:define name="title">
+        Lista de Trámites del Consultor
+    </ui:define>
 
-        <h:messages globalOnly="true" />
+    <ui:define name="body">
+        <h:form id="tramitesForm">
+            <p:messages id="globalMessages" showDetail="true" showSummary="false" />
+            
+            <p:panelGrid columns="2" styleClass="consultorInput">
+                <p:outputLabel for="legajoConsultor" value="Código del Consultor: " />
+                <p:inputText id="legajoConsultor" value="#{uiCambioEstado.legajoConsultor}">
+                    <f:convertNumber />
+                </p:inputText>
+                <p:commandButton value="Buscar Trámites" action="#{uiCambioEstado.buscarTramites}" update=":tramitesTable" />
+            </p:panelGrid>
 
-       
+            <p:panelGrid columns="2">
+                <p:outputLabel for="nombreConsultor" value="Nombre del Consultor: " />
+                <p:outputLabel id="nombreConsultor" value="#{uiCambioEstado.nombreConsultor}" />
+            </p:panelGrid>
 
-        <br/>
+            <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable">
+                <p:column headerText="Número de Trámite">
+                    <h:outputText value="#{tramite.nroTramite}" />
+                </p:column>
 
-        <h:panelGrid columns="2">
-            <h:outputLabel for="nombreConsultor" value="Nombre del Consultor: " />
-            <h:outputText id="nombreConsultor" value="#{uiCambioEstado.nombreConsultor}" />
-        </h:panelGrid>
+                <p:column headerText="Estado del Trámite">
+                    <h:outputText value="#{tramite.nombreEstadoTramite}" />
+                </p:column>
 
-        <br/><br/>
+                <p:column headerText="Código de Estado">
+                    <h:outputText value="#{tramite.codEstadoTramite}" />
+                </p:column>
 
-        <h:dataTable value="#{uiCambioEstado.tramitesConsultor}" var="tramite" border="1" styleClass="tramitesTable">
-            <h:column>
-                <f:facet name="header">Número de Trámite</f:facet>
-                <h:outputText value="#{tramite.nroTramite}" />
-            </h:column>
+                <p:column headerText="Fecha de Inicio">
+                    <h:outputText value="#{tramite.fechaInicioTramite}" />
+                </p:column>
 
-            <h:column>
-                <f:facet name="header">Estado del Trámite</f:facet>
-                <h:outputText value="#{tramite.nombreEstadoTramite}" />
-            </h:column>
+                <p:column headerText="Fecha de Recepción">
+                    <h:outputText value="#{tramite.fechaRecepcionTramite}" />
+                </p:column>
+               
+            </p:dataTable>
+          
+        </h:form>
+    </ui:define>
+</ui:composition>
 
-            <h:column>
-                <f:facet name="header">Código de Estado</f:facet>
-                <h:outputText value="#{tramite.codEstadoTramite}" />
-            </h:column>
-
-            <h:column>
-                <f:facet name="header">Fecha de Inicio</f:facet>
-                <h:outputText value="#{tramite.fechaInicioTramite}" />
-            </h:column>
-
-            <h:column>
-                <f:facet name="header">Fecha de Recepción</f:facet>
-                <h:outputText value="#{tramite.fechaRecepcionTramite}" />
-            </h:column>
-
-        </h:dataTable>
-    </h:body>
-
-</html>

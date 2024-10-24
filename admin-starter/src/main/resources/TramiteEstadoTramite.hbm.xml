@@ -13,7 +13,6 @@
         <property name="fechaHoraAltaTET" column="fecha_hora_alta_tet" type="timestamp"/>
 
         <property name="fechaHoraBajaTET" column="fecha_hora_baja_tet" type="timestamp"/>
-        <property name="contadorTET" column="contador_tet" type="int"/>
 
 
 

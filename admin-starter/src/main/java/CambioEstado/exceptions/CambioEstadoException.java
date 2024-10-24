@@ -4,10 +4,7 @@
  */
 package CambioEstado.exceptions;
 
-/**
- *
- * @author matis
- */
+
 public class CambioEstadoException extends Exception{
 
     public CambioEstadoException(String mensaje) {

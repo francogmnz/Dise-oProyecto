@@ -21,8 +21,8 @@
         <property name="fechaRecepcionTramite" column="fecha_recepcion_tramite" type="timestamp"/>
 
         <property name="nroTramite" column="nro_tramite" type="int"/>
-       
-        <property name="precioTramite" column="precio_tramite" type="int"/>
+
+        <property name="precioTramite" column="precio_tramite" type="double"/>
 
 
 
@@ -33,13 +33,13 @@
         <many-to-one name="consultor" class="entidades.Consultor" column="OIDConsultor" not-null="false"/>
 
         <!-- Relación ManyToOne con Cliente -->
-        <many-to-one name="cliente" class="entidades.Cliente" column="OIDCliente" not-null="false"/>        
+        <many-to-one name="cliente" class="entidades.Cliente" column="OIDCliente" not-null="true"/>        
         
         <!-- Relación ManyToOne con Version -->
         <many-to-one name="version" class="entidades.Version" column="OIDVersion" not-null="false"/>
 
         <!-- Relación ManyToOne con TipoTramite -->
-        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="false"/>
+        <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
 
         <!-- Relación OneToMany con TramiteEstadoTramite -->
         <bag name="tramiteEstadoTramite" table="tramite_estado_tramite">

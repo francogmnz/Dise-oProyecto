@@ -14,9 +14,18 @@ public class TramiteEstadoTramite extends Entidad {
     
     private Timestamp fechaHoraAltaTET;
     private Timestamp fechaHoraBajaTET;
-    private EstadoTramite estadoTramite;  
+    private EstadoTramite estadoTramite;
+    private int contadorTET;
 
     public TramiteEstadoTramite() {
+    }
+
+    public int getContadorTET() {
+        return contadorTET;
+    }
+
+    public void setContadorTET(int contadorTET) {
+        this.contadorTET = contadorTET;
     }
 
     public Timestamp getFechaHoraAltaTET() {

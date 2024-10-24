@@ -1,8 +1,13 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package ABMTipoTramite;
 
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
 import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
 import ABMTipoTramite.dtos.DocumentacionDTO;
+import ABMTipoTramite.*;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTOIn;
@@ -14,10 +19,17 @@ import entidades.TipoTramite;
 import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.hibernate.Hibernate;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
+/**
+ *
+ * @author licciardi
+ */
 public class ExpertoABMTipoTramite {
 
     /*

@@ -4,10 +4,6 @@
  */
 package CambioEstado.dtos;
 
-/**
- *
- * @author Franco
- */
 public class DTOMensajeExito {
     
 }

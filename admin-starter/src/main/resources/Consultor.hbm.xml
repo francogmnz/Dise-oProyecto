@@ -18,7 +18,7 @@
             <column name="nombre_consultor"/>
         </property>
 
-        <property name="nroMaximoTramites" type="int">
+        <property name="numMaximoTramites" type="int">
             <column name="nro_maximo_tramites"/>
         </property>
 

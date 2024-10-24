@@ -51,28 +51,31 @@ public class UICambioEstadoLista implements Serializable {
 
         // Lista para la grilla
         List<CambioEstadoGrillaUI> cambioEstadoGrilla = new ArrayList<>();
-
+        
         // Obtener los trámites vigentes del consultor filtrado
         List<DTOTramitesVigentes> dtoTramitesVigentesList = controladorCambioEstado.buscarTramites(codigoFiltro);
-
+        
         // Recorrer cada DTOTramitesVigentes
         for (DTOTramitesVigentes dtoTramitesVigentes : dtoTramitesVigentesList) {
+            
             // Recorrer cada trámite en el DTOTramitesVigentes
             for (TramiteDTO tramiteDTO : dtoTramitesVigentes.getTramites()) {
+                
                 // Crear un nuevo objeto para la interfaz de la grilla
                 CambioEstadoGrillaUI cambioEstadoGrillaUI = new CambioEstadoGrillaUI();
+                
                 // Setear los atributos del trámite en el objeto de la grilla
-                cambioEstadoGrillaUI.setCodEstadoTramite(tramiteDTO.getEstadoTramite().getCodEstadoTramite());
+                cambioEstadoGrillaUI.setCodEstadoTramite(tramiteDTO.getEstadoTramite().getCodEstadoTramite()); // Código del estado del trámite
                 cambioEstadoGrillaUI.setNombreEstadoTramite(tramiteDTO.getEstadoTramite().getNombreEstadoTramite());
-                cambioEstadoGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
-                cambioEstadoGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
-                cambioEstadoGrillaUI.setNroTramite(tramiteDTO.getNroTramite());
-
+                cambioEstadoGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite()); // Fecha de inicio del trámite
+                cambioEstadoGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite()); // Fecha de recepción
+                cambioEstadoGrillaUI.setNroTramite(tramiteDTO.getNroTramite()); // Número del trámite
+                
                 // Agregar el objeto a la lista que se mostrará en la grilla
                 cambioEstadoGrilla.add(cambioEstadoGrillaUI);
             }
         }
-
+        
         // Retornar la lista de objetos para mostrar en la grilla
         return cambioEstadoGrilla;
     }

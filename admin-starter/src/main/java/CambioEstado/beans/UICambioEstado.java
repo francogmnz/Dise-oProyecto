@@ -1,8 +1,12 @@
 package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
+import CambioEstado.ExpertoCambioEstado;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
+import CambioEstado.exceptions.CambioEstadoException;
+import entidades.TramiteEstadoTramite;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -34,6 +38,20 @@ public class UICambioEstado implements Serializable {
             cargarTramitesConsultor(); // Cargar trámites asociados al consultor
         }
     }
+    public String cambiarEstado(int nroTramite) {
+    try {
+        TramiteEstadoTramite nuevoEstado = controladorCambioEstado.cambiarEstado(nroTramite);
+        if (nuevoEstado != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Estado cambiado con éxito"));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No hay estados adicionales."));
+        }
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
+    }
+    return null; // Stay on the same page
+}
+
 
     // Método para cargar trámites al iniciar
     public void cargarTramitesConsultor() {
@@ -65,6 +83,21 @@ public class UICambioEstado implements Serializable {
             System.out.println("Por favor ingrese un código de consultor válido.");
         }
     }
+    
+    private List<TramiteEstadoTramite> historialEstados;
+
+// Getter for the history list
+public List<TramiteEstadoTramite> getHistorialEstados() {
+    return historialEstados;
+}
+
+// Method to fetch the history
+public void mostrarHistorial(int nroTramite) throws CambioEstadoException {
+    ExpertoCambioEstado experto = new ExpertoCambioEstado();
+    historialEstados = experto.obtenerHistorialEstados(nroTramite);
+}
+
+    
 
     // Getters y Setters
     public List<CambioEstadoGrillaUI> getTramitesConsultor() {
