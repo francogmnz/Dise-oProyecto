@@ -5,6 +5,7 @@ import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
 import ABMVersion.dtos.DTOVersionM;
+import ABMVersion.dtos.DTOVersionesDeTipo;
 import ABMVersion.dtos.VersionDTO;
 import ABMVersion.exceptions.VersionException;
 import entidades.Version;
@@ -52,6 +53,9 @@ public class ControladorABMVersion {
         Messages.create("Error al recuperar el historial de versiones.").error().detail(e.getMessage()).add();
         return null;// Retornar  vacía en caso de error
     }
+}
+public  List<DTOVersionesDeTipo> filtroTablaVersiones(int codTipoTramite, String nombreTipoTramite){
+return expertoABMVersion.filtroTablaVersiones(codTipoTramite, nombreTipoTramite);
 }
 
 }

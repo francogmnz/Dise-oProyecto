@@ -9,6 +9,7 @@ import ABMVersion.dtos.VersionDTO;
 import ABMVersion.dtos.DTOEstado;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
+import ABMVersion.dtos.DTOVersionesDeTipo;
 import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
@@ -23,6 +24,75 @@ import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
 public class ExpertoABMVersion {
+    
+    public List<DTOVersionesDeTipo> filtroTablaVersiones(int codTipoTramite, String nombreTipoTramite) {
+    List<DTOCriterio> lCriterio = new ArrayList<>();
+
+    if (codTipoTramite > 0) {
+        DTOCriterio unCriterio = new DTOCriterio();
+        unCriterio.setAtributo("codTipoTramite");
+        unCriterio.setOperacion("=");
+        unCriterio.setValor(codTipoTramite);
+        lCriterio.add(unCriterio);
+    }
+
+    if (nombreTipoTramite.trim().length() > 0) {
+        DTOCriterio unCriterio = new DTOCriterio();
+        unCriterio.setAtributo("nombreTipoTramite");
+        unCriterio.setOperacion("like");
+        unCriterio.setValor(nombreTipoTramite);
+        lCriterio.add(unCriterio);
+    }
+
+    List<Object> objetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", lCriterio);
+    List<DTOVersionesDeTipo> lisResultado = new ArrayList<>();
+
+    for (Object x : objetoList) {
+        TipoTramite tt = (TipoTramite) x;
+        DTOVersionesDeTipo dtolist = new DTOVersionesDeTipo();
+        dtolist.setCodTipoTramite(tt.getCodTipoTramite());
+        dtolist.setNombreTipoTramite(tt.getNombreTipoTramite());
+        dtolist.setFechaBajaTipoTramite(tt.getFechaHoraBajaTipoTramite());
+
+        List<DTOCriterio> lCriterio2 = new ArrayList<>();
+        DTOCriterio unCriterio2 = new DTOCriterio();
+        unCriterio2.setAtributo("tipoTramite");
+        unCriterio2.setOperacion("=");
+        unCriterio2.setValor(tt);
+        lCriterio2.add(unCriterio2);
+
+        List<Object> objetoList2 = FachadaPersistencia.getInstance().buscar("Version", lCriterio2);
+        List<Version> listversion = new ArrayList<>();
+
+        for (Object obj : objetoList2) {
+            if (obj instanceof Version) {
+                listversion.add((Version) obj);
+            } else {
+                System.err.println("El objeto no es una instancia de Version: " + obj);
+            }
+        }
+
+        Version ultVersion = null;
+        for (Version version : listversion) {
+            if (ultVersion == null || ultVersion.getFechaDesdeVersion().compareTo(version.getFechaDesdeVersion()) < 0) {
+                ultVersion = version;
+            }
+        }
+
+        if (ultVersion == null) {
+            dtolist.setNroVersion(0);
+            dtolist.setFechaDesdeVersion(null);
+        } else {
+            dtolist.setNroVersion(ultVersion.getNroVersion());
+            dtolist.setFechaDesdeVersion(ultVersion.getFechaDesdeVersion());
+        }
+        
+        lisResultado.add(dtolist);
+    }
+
+    return lisResultado;
+}
+
 
     public boolean estadoOrigenExiste(int codEstadoDestino, List<DTOEstadoOrigenIN> listaEstadosOrigen) {
         for (DTOEstadoOrigenIN estadoOrigen : listaEstadosOrigen) {
@@ -33,46 +103,72 @@ public class ExpertoABMVersion {
         return false;
     }
 
-    public List<DTOTipoTramiteVersion> mostrarVersion() {
-        // Inicia la transacción
-        FachadaPersistencia.getInstance().iniciarTransaccion();
+   public List<DTOTipoTramiteVersion> mostrarVersion() {
+    // Inicia la transacción
+    FachadaPersistencia.getInstance().iniciarTransaccion();
 
-        // Crea la lista de criterios para buscar solo las versiones activas
-        List<DTOCriterio> criterioList = new ArrayList<>();
+    // Busca todos los tipos de trámite
+    List<DTOCriterio> criterioTipoTramite = new ArrayList<>();
+    List<Object> lTiposTramite = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramite);
 
-        // Agrega un criterio para excluir versiones que tienen fecha de baja
-        DTOCriterio versionEncontrada = new DTOCriterio();
-        versionEncontrada.setAtributo("fechaBajaVersion");
-        versionEncontrada.setOperacion("=");
-        versionEncontrada.setValor(null);
-        criterioList.add(versionEncontrada);
-        // Busca todas las versiones en la base de datos
-        List<Object> lVersiones = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+    // Crea una lista para devolver los DTOs
+    List<DTOTipoTramiteVersion> dtoVersiones = new ArrayList<>();
 
-        // Crea una lista para devolver los DTOs
-        List<DTOTipoTramiteVersion> dtoVersiones = new ArrayList<>();
+    // Itera sobre los tipos de trámite
+    for (Object objTipoTramite : lTiposTramite) {
+        TipoTramite tipoTramite = (TipoTramite) objTipoTramite;
 
-        // Itera sobre los resultados y mapea los atributos al DTO
-        for (Object obj : lVersiones) {
-            Version version = (Version) obj;
+        // Crea los criterios para buscar solo las versiones activas para el tipo de trámite actual
+        List<DTOCriterio> criterioVersion = new ArrayList<>();
+        
+        DTOCriterio criterioTipo = new DTOCriterio();
+        criterioTipo.setAtributo("tipoTramite");
+        criterioTipo.setOperacion("=");
+        criterioTipo.setValor(tipoTramite);
+        criterioVersion.add(criterioTipo);
+        
+        DTOCriterio criterioFechaBaja = new DTOCriterio();
+        criterioFechaBaja.setAtributo("fechaBajaVersion");
+        criterioFechaBaja.setOperacion("=");
+        criterioFechaBaja.setValor(null);  // Solo versiones sin fecha de baja
+        criterioVersion.add(criterioFechaBaja);
 
-            DTOTipoTramiteVersion dto = new DTOTipoTramiteVersion();
-            dto.setNroVersion(version.getNroVersion());
-            dto.setFechaDesdeVersion(version.getFechaDesdeVersion());
-            dto.setFechaHastaVersion(version.getFechaHastaVersion());
-            dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
-            dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
+        // Busca las versiones activas del tipo de trámite actual
+        List<Object> lVersiones = FachadaPersistencia.getInstance().buscar("Version", criterioVersion);
 
-            // Agrega el DTO a la lista
-            dtoVersiones.add(dto);
+        // Si no hay versiones, agregar un DTO con valores por defecto
+        if (lVersiones.isEmpty()) {
+            DTOTipoTramiteVersion dtoSinVersion = new DTOTipoTramiteVersion();
+            dtoSinVersion.setCodTipoTramite(tipoTramite.getCodTipoTramite());
+            dtoSinVersion.setNombreTipoTramite(tipoTramite.getNombreTipoTramite());
+            dtoSinVersion.setNroVersion(0);  // Código de versión 0 indica que no hay versiones
+            dtoSinVersion.setFechaDesdeVersion(null);
+            dtoSinVersion.setFechaHastaVersion(null);
+            dtoVersiones.add(dtoSinVersion);
+        } else {
+            // Si hay versiones, agregar el DTO con la versión más reciente
+            for (Object objVersion : lVersiones) {
+                Version version = (Version) objVersion;
+                
+                DTOTipoTramiteVersion dto = new DTOTipoTramiteVersion();
+                dto.setNroVersion(version.getNroVersion());
+                dto.setFechaDesdeVersion(version.getFechaDesdeVersion());
+                dto.setFechaHastaVersion(version.getFechaHastaVersion());
+                dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
+                dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
+                
+                dtoVersiones.add(dto);
+            }
         }
-
-        // Finaliza la transacción
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-
-        // Devuelve la lista de versiones como DTOs
-        return dtoVersiones;
     }
+
+    // Finaliza la transacción
+    FachadaPersistencia.getInstance().finalizarTransaccion();
+
+    // Devuelve la lista de versiones como DTOs
+    return dtoVersiones;
+}
+
 
     public int obtenerUltimoNumeroVersion(int codTipoTramite) {
         FachadaPersistencia f = FachadaPersistencia.getInstance();

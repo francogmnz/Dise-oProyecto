@@ -5,6 +5,7 @@ import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
+import ABMVersion.dtos.DTOVersionesDeTipo;
 import ABMVersion.dtos.VersionDTO;
 import entidades.TipoTramite;
 import jakarta.faces.view.ViewScoped;
@@ -25,13 +26,15 @@ import utils.FachadaPersistencia;
 public class UIABMVersionLista implements Serializable {
 
     private ControladorABMVersion controladorABMVersion = new ControladorABMVersion();
-    private int nroVersionFiltro;
-    private String descripcionFiltro = "";
-    
+  
+
+     private int codigoFiltro = 0;
+    private String nombreFiltro = "";
     //agregado
     private int codTipoTramite;
     private String nombreTipoTramite;
     private List<DTODatosVersionH> datosVersionH;
+    
 
     public List<DTODatosVersionH> getDatosVersionH() {
         return datosVersionH;
@@ -68,24 +71,10 @@ public class UIABMVersionLista implements Serializable {
         this.controladorABMVersion = controladorABMVersion;
     }
 
-    public int getNroVersionFiltro() {
-        return nroVersionFiltro;
-    }
-
-    public void setNroVersionFiltro(int nroVersionFiltro) {
-        this.nroVersionFiltro = nroVersionFiltro;
-    }
-
-    public String getDescripcionFiltro() {
-        return descripcionFiltro;
-    }
-
-    public void setDescripcionFiltro(String descripcionFiltro) {
-        this.descripcionFiltro = descripcionFiltro;
-    }
+    
 
     public void filtrar() {
-        mostrarVersion();
+        
     }
 
     public void anularVersion(int codTipoTramite, int nroVersion) {
@@ -226,7 +215,23 @@ public class UIABMVersionLista implements Serializable {
 
 }
     
-    
+    public List<DTOVersionesDeTipo> buscarTipoTramiteVersion(){
+        System.out.println(codigoFiltro);
+        System.out.println(nombreFiltro);
+        List<DTOVersionesDeTipo> lisResultado = new ArrayList();
+        List<DTOVersionesDeTipo> listaDto = new ArrayList();
+        listaDto = controladorABMVersion.filtroTablaVersiones(codigoFiltro, nombreFiltro);
+        for (DTOVersionesDeTipo x: listaDto){
+            DTOVersionesDeTipo y = new DTOVersionesDeTipo();
+            y.setCodTipoTramite(x.getCodTipoTramite());
+            y.setNroVersion(x.getNroVersion());
+            y.setFechaBajaTipoTramite(x.getFechaBajaTipoTramite());
+            y.setFechaDesdeVersion(x.getFechaDesdeVersion());
+            y.setNombreTipoTramite(x.getNombreTipoTramite());
+            lisResultado.add(y);
+        }
+        return lisResultado;
+    }
     
     
 }

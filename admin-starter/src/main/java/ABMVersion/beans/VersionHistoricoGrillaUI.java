@@ -8,20 +8,11 @@ import ABMVersion.dtos.DTODatosVersionH;
 import java.util.List;
 
 
-
-
-
-
 public class VersionHistoricoGrillaUI {
-    
-    
     private String nombreTipoTramite;
     private int codTipoTramite;
     List<DTODatosVersionH> datosVersionH;
     
-    
-    
-
     public String getNombreTipoTramite() {
         return nombreTipoTramite;
     }

@@ -91,18 +91,36 @@
                 <!-- Filtros para la tabla -->
                 <p:separator/>
                 <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-6">
-                        <p:outputPanel>
-                            <h:outputText value="Número de Versión:"/>
-                            <p:spacer height="10"/>
-                            <p:inputText id="nroVersionFilter" style="width:150px"
-                                         placeholder="" value="#{uiabmVersionLista.nroVersionFiltro}" onfocus="Javascript:this.focus();this.select();">
-                                <p:ajax event="keyup" 
-                                        listener="#{uiabmVersionLista.filtrar()}" 
-                                        update="@form:grid1"/>
-                            </p:inputText>
-                        </p:outputPanel>
-                    </div>
+                      <!-- Filtro por Código de Tipo de Trámite -->
+    <div class="ui-g-12 ui-md-6">
+        <p:outputPanel>
+            <h:outputText value="Código de Tipo de Trámite:"/>
+            <p:spacer height="10"/>
+            <p:inputText id="codTipoTramiteFilter" style="width:150px"
+                         placeholder="" value="#{uiabmVersionLista.codTipoTramite}" 
+                         onfocus="Javascript:this.focus();this.select();">
+                <p:ajax event="keyup" 
+                        listener="#{uiabmVersionLista.filtrar()}" 
+                        update="@form:grid1"/>
+            </p:inputText>
+        </p:outputPanel>
+    </div>
+
+    <!-- Filtro por Nombre del Tipo de Trámite -->
+    <div class="ui-g-12 ui-md-6">
+        <p:outputPanel>
+            <h:outputText value="Nombre del Tipo de Trámite:"/>
+            <p:spacer height="10"/>
+            <p:inputText id="nombreTipoTramiteFilter" style="width:150px"
+                         placeholder="" value="#{uiabmVersionLista.nombreTipoTramite}" 
+                         onfocus="Javascript:this.focus();this.select();">
+                <p:ajax event="keyup" 
+                        listener="#{uiabmVersionLista.filtrar()}" 
+                        update="@form:grid1"/>
+            </p:inputText>
+        </p:outputPanel>
+    </div>
+
 
 
                 </div>
@@ -137,8 +155,11 @@
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Fecha Baja</f:facet>
-                            #{version.fechaBajaVersion}
+                        <f:facet name="header">Fecha Hasta</f:facet>
+                        <h:outputText value="#{version.fechaHastaVersion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+
                     </p:column>
 
                     <!--
