@@ -73,30 +73,63 @@ public class ExpertoABMEstadoTramite {
 
     public void agregarEstadoTramite(NuevoEstadoTramiteDTO nuevoEstadoTramiteDTO) throws EstadoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-
-        List<DTOCriterio> criterioList = new ArrayList<>();
+        
+        //Verifica si el codigo del estado ya existe
+        List<DTOCriterio> criterioCodigo = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
         dto.setAtributo("codEstadoTramite");
         dto.setOperacion("=");
         dto.setValor(nuevoEstadoTramiteDTO.getCodEstadoTramite());
 
-        criterioList.add(dto);
+        criterioCodigo.add(dto);
 
-        List lEstadoTramite = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+        List lEstadoTramite = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioCodigo);
 
         if (lEstadoTramite.size() > 0) {
             throw new EstadoTramiteException("El codigo de EstadoTramite ya existe");
-        } else {
-            EstadoTramite estadoTramite = new EstadoTramite();
-            estadoTramite.setCodEstadoTramite(nuevoEstadoTramiteDTO.getCodEstadoTramite());
-            estadoTramite.setNombreEstadoTramite(nuevoEstadoTramiteDTO.getNombreEstadoTramite());
-            estadoTramite.setDescripcionEstadoTramite(nuevoEstadoTramiteDTO.getDescripcionEstadoTramite());
-            estadoTramite.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
-
-            FachadaPersistencia.getInstance().guardar(estadoTramite);
-            FachadaPersistencia.getInstance().finalizarTransaccion();
         }
+        
+        //Verifica si el nombre del estado ya existe
+        List<DTOCriterio> criterioNombre = new ArrayList<>();
+        DTOCriterio dto2 = new DTOCriterio();
+
+        dto2.setAtributo("nombreEstadoTramite");
+        dto2.setOperacion("=");
+        dto2.setValor(nuevoEstadoTramiteDTO.getNombreEstadoTramite());
+
+        criterioNombre.add(dto2);
+
+        List lEstadoTramite2 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioNombre);
+
+        if (lEstadoTramite2.size() > 0) {
+            throw new EstadoTramiteException("El nombre del EstadoTramite ya existe");
+        }
+        
+        //Verifica si la descripcion del estado ya existe
+        List<DTOCriterio> criterioDesc = new ArrayList<>();
+        DTOCriterio dto3 = new DTOCriterio();
+
+        dto3.setAtributo("descripcionEstadoTramite");
+        dto3.setOperacion("=");
+        dto3.setValor(nuevoEstadoTramiteDTO.getDescripcionEstadoTramite());
+
+        criterioDesc.add(dto3);
+
+        List lEstadoTramite3 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioDesc);
+
+        if (lEstadoTramite3.size() > 0) {
+            throw new EstadoTramiteException("La descripcion de EstadoTramite ya existe");
+        }
+
+        EstadoTramite estadoTramite = new EstadoTramite();
+        estadoTramite.setCodEstadoTramite(nuevoEstadoTramiteDTO.getCodEstadoTramite());
+        estadoTramite.setNombreEstadoTramite(nuevoEstadoTramiteDTO.getNombreEstadoTramite());
+        estadoTramite.setDescripcionEstadoTramite(nuevoEstadoTramiteDTO.getDescripcionEstadoTramite());
+        estadoTramite.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
+
+        FachadaPersistencia.getInstance().guardar(estadoTramite);
+        FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
     public ModificarEstadoTramiteDTO buscarEstadoTramiteAModificar(int codEstadoTramite) throws EstadoTramiteException {
@@ -160,6 +193,39 @@ public class ExpertoABMEstadoTramite {
             for (ConfTipoTramiteEstadoTramite confTTET : confTTETList) {
                 verificarEstadoTramiteEnOrigenODestinoM(confTTET.getEstadoTramiteOrigen(), confTTET.getEstadoTramiteDestino(), codEstado);
             }
+        }
+        
+        //Verifica si el nombre del estado ya existe
+        List<DTOCriterio> criterioNombre = new ArrayList<>();
+        DTOCriterio dto5 = new DTOCriterio();
+
+        dto5.setAtributo("nombreEstadoTramite");
+        dto5.setOperacion("=");
+        dto5.setValor(modificarEstadoTramiteDTOIn.getNombreEstadoTramite());
+
+        criterioNombre.add(dto5);
+
+        List lEstadoTramite2 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioNombre);
+
+        if (lEstadoTramite2.size() > 0) {
+            throw new EstadoTramiteException("El nombre del EstadoTramite ya existe");
+        }
+        
+        
+        //Verifica si la descripcion del estado ya existe
+        List<DTOCriterio> criterioDesc = new ArrayList<>();
+        DTOCriterio dto6 = new DTOCriterio();
+
+        dto6.setAtributo("descripcionEstadoTramite");
+        dto6.setOperacion("=");
+        dto6.setValor(modificarEstadoTramiteDTOIn.getDescripcionEstadoTramite());
+
+        criterioDesc.add(dto6);
+
+        List lEstadoTramite3 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioDesc);
+
+        if (lEstadoTramite3.size() > 0) {
+            throw new EstadoTramiteException("La descripcion de EstadoTramite ya existe");
         }
 
         // Modificar el EstadoTramite si no hay problema
