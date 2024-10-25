@@ -41,8 +41,8 @@ public class ControladorABMVersion {
 }
 
 
-    public List<DTOTipoTramiteVersion> mostrarVersion() {
-        return expertoABMVersion.mostrarVersion();
+    public List<DTOTipoTramiteVersion> mostrarVersion(int codTipoTramite, String nombreTipoTramite) {
+        return expertoABMVersion.mostrarVersion(codTipoTramite, nombreTipoTramite);
     }
     
     public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) {
@@ -54,8 +54,6 @@ public class ControladorABMVersion {
         return null;// Retornar  vacía en caso de error
     }
 }
-public  List<DTOVersionesDeTipo> filtroTablaVersiones(int codTipoTramite, String nombreTipoTramite){
-return expertoABMVersion.filtroTablaVersiones(codTipoTramite, nombreTipoTramite);
-}
+
 
 }

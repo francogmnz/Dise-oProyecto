@@ -91,35 +91,35 @@
                 <!-- Filtros para la tabla -->
                 <p:separator/>
                 <div class="ui-g ui-fluid">
-                      <!-- Filtro por Código de Tipo de Trámite -->
-    <div class="ui-g-12 ui-md-6">
-        <p:outputPanel>
-            <h:outputText value="Código de Tipo de Trámite:"/>
-            <p:spacer height="10"/>
-            <p:inputText id="codTipoTramiteFilter" style="width:150px"
-                         placeholder="" value="#{uiabmVersionLista.codTipoTramite}" 
-                         onfocus="Javascript:this.focus();this.select();">
-                <p:ajax event="keyup" 
-                        listener="#{uiabmVersionLista.filtrar()}" 
-                        update="@form:grid1"/>
-            </p:inputText>
-        </p:outputPanel>
-    </div>
+                    <!-- Filtro por Código de Tipo de Trámite -->
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Código de Tipo de Trámite:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="codTipoTramiteFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.codigoFiltro}" 
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
 
-    <!-- Filtro por Nombre del Tipo de Trámite -->
-    <div class="ui-g-12 ui-md-6">
-        <p:outputPanel>
-            <h:outputText value="Nombre del Tipo de Trámite:"/>
-            <p:spacer height="10"/>
-            <p:inputText id="nombreTipoTramiteFilter" style="width:150px"
-                         placeholder="" value="#{uiabmVersionLista.nombreTipoTramite}" 
-                         onfocus="Javascript:this.focus();this.select();">
-                <p:ajax event="keyup" 
-                        listener="#{uiabmVersionLista.filtrar()}" 
-                        update="@form:grid1"/>
-            </p:inputText>
-        </p:outputPanel>
-    </div>
+                    <!-- Filtro por Nombre del Tipo de Trámite -->
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Nombre del Tipo de Trámite:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nombreTipoTramiteFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.nombreFiltro}" 
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
 
 
 
@@ -128,9 +128,6 @@
                 <!-- Tabla para mostrar la lista de Versiones -->
                 <p:spacer height="5"/>
                 <p:dataTable id="grid1" widgetVar="versionTable" value="#{uiabmVersionLista.mostrarVersion()}" var="version">
-
-
-
                     <p:column>
                         <f:facet name="header">Tipo Tramite</f:facet>
                             #{version.nombreTipoTramite}

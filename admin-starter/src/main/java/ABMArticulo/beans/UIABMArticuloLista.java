@@ -15,10 +15,6 @@ import java.util.List;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
 
-/**
- *
- * @author matis
- */
 @Named("uiabmArticuloLista")
 @ViewScoped
 public class UIABMArticuloLista implements Serializable {
