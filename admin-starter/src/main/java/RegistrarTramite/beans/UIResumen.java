@@ -375,7 +375,7 @@ public class UIResumen implements Serializable {
         TramiteDocumentacion td = controladorRegistrarTramite.buscarDocDescargar(codTD);
 
         file.setContenidoB64(td.getArchivoTD());
-        file.setNombre(td.getNombreTD());
+     //   file.setNombre(td.g());
 
         // Verifica si el archivo (fileEjemplo) no es nulo y tiene contenido en Base64
         if (file != null && file.getContenidoB64() != null) {

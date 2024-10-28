@@ -11,10 +11,19 @@ import java.sql.Timestamp;
  * @author licciardi
  */
 public class TramiteEstadoTramite extends Entidad {
-    
+
     private Timestamp fechaHoraAltaTET;
     private Timestamp fechaHoraBajaTET;
     private EstadoTramite estadoTramite;  // Relación ManyToOne con EstadoTramite
+    private int contadorTET;
+
+    public int getContadorTET() {
+        return contadorTET;
+    }
+
+    public void setContadorTET(int contadorTET) {
+        this.contadorTET = contadorTET;
+    }
 
     public TramiteEstadoTramite() {
     }
@@ -35,7 +44,6 @@ public class TramiteEstadoTramite extends Entidad {
         this.fechaHoraBajaTET = fechaHoraBajaTET;
     }
 
-
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
     }
@@ -43,9 +51,5 @@ public class TramiteEstadoTramite extends Entidad {
     public void setEstadoTramite(EstadoTramite estadoTramite) {
         this.estadoTramite = estadoTramite;
     }
-    
-    
-    
-    
-    
+
 }

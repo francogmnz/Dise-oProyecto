@@ -431,7 +431,7 @@ public class ExpertoRegistrarTramite {
         for (TramiteDocumentacion doc : tramiteElegido.getTramiteDocumentacion()) {
             DTODocumentacion resumenDoc = new DTODocumentacion();
             resumenDoc.setCodTD(doc.getCodTD());
-            resumenDoc.setNombreTD(doc.getNombreTD());
+           // resumenDoc.setNombreTD(doc.getNombreTD());
             resumenDoc.setNombreDocumentacion(doc.getDocumentacion().getNombreDocumentacion());
             resumenDoc.setFechaEntregaDoc(doc.getFechaEntregaTD());
             resumenDocList.add(resumenDoc);
@@ -546,7 +546,7 @@ public class ExpertoRegistrarTramite {
             if (tds.getCodTD() == codTD) {
                 System.out.println("Actualizando documentación para codTD: " + codTD);
                 tds.setArchivoTD(archivoTD.getContenidoB64());
-                tds.setNombreTD(archivoTD.getNombre());
+           //     tds.setNombreTD(archivoTD.getNombre());
                 tds.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
                 FachadaPersistencia.getInstance().merge(tds);
             } else {
@@ -589,7 +589,7 @@ public class ExpertoRegistrarTramite {
 
             // Asignar el consultor que tiene la menor cantidad de trámites asignados
             for (Consultor consultor : consultorList) {
-                int nroMaximoTramites = consultor.getNumMaximoTramites();
+            //    int nroMaximoTramites = consultor.getNumMaximoTramites();
 
                 // Crear criterio para contar trámites asignados
                 criterioListAgenda.clear();
@@ -603,7 +603,8 @@ public class ExpertoRegistrarTramite {
                 List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
                 int tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
 
-                if (tramitesAsignados < nroMaximoTramites && tramitesAsignados < menorCantidadTramites) {
+             //   if (tramitesAsignados < nroMaximoTramites && tramitesAsignados < menorCantidadTramites) 
+             {
                     menorCantidadTramites = tramitesAsignados;
                     consultorSeleccionado = consultor;
                 }
@@ -651,7 +652,7 @@ public class ExpertoRegistrarTramite {
             // Eliminar los datos de la documentación
             if (td != null) {
                 td.setArchivoTD(null);
-                td.setNombreTD(null);
+               // td.setNombreTD(null);
                 td.setFechaEntregaTD(null);
                
                 // Guardar los cambios en la base de datos

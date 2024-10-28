@@ -161,21 +161,25 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
 
             // Verificar la configuración de los estados de origen y destino
             for (ConfTipoTramiteEstadoTramite conf : confTTET) {
-                List<EstadoTramite> estadosOrigen = conf.getEstadoTramiteOrigen();
+                // Obtener un único estado de origen
+                EstadoTramite estadoOrigen = conf.getEstadoTramiteOrigen(); // Cambiado para trabajar con un único estado
+
                 boolean hayDestino = false;
 
-                // Iterar sobre los estados de origen
-                for (EstadoTramite estadoOrigen : estadosOrigen) {
-                    List<EstadoTramite> estadosDestino = conf.getEstadoTramiteDestino();
+                // Obtener los estados destino asociados a este estado de origen
+                List<EstadoTramite> estadosDestino = conf.getEstadoTramiteDestino();
 
-                    // Comprobar si hay un estado destino que coincida
-                    for (EstadoTramite estadoDestino : estadosDestino) {
-                        if (estadoOrigen.getCodEstadoTramite() == estadoDestino.getCodEstadoTramite()) {
-                            hayDestino = true;
-                            break;
-                        }
+                // Verificar si hay algún estado destino disponible
+                for (EstadoTramite estadoDestino : estadosDestino) {
+                    // Aquí puedes decidir el criterio de cambio, por ejemplo, si el estado actual coincide con el estado de origen
+                    if (estadoOrigen.equals(tramite.getEstadoTramite())) {
+                        // Si el estado actual del trámite coincide con el estado de origen configurado,
+                        // cambiamos a un nuevo estado de destino.
+                        hayDestino = true;
+                        break;
                     }
                 }
+
                 // Si no hay destino, el trámite finaliza
                 if (!hayDestino) {
                     tramite.setFechaFinTramite(new Timestamp(System.currentTimeMillis()));
@@ -195,7 +199,6 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
                     nuevoTET.setEstadoTramite(tramiteEstado.getEstadoTramite()); // Asigna el nuevo estado
                     nuevoTET.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
                     nuevoTET.setContadorTET(tramiteEstado.getContadorTET() + 1);
-
                     // Guardar el nuevo TET
                     FachadaPersistencia.getInstance().guardar(nuevoTET); // Guardar el nuevo estado en la BD
                     tramite.addTramiteEstadoTramite(nuevoTET); // Asociar el nuevo estado al trámite
