@@ -47,9 +47,9 @@ public class UIABMTipoTramite implements Serializable {
     //private List<Integer> documentacionesSeleccionadas;
     private List<Integer> documentacionesSeleccionadas;
     private List<DocumentacionDTO> documentacionesActivas;
-   
-    
 
+    
+   
     public boolean isInsert() {
         return insert;
     }
@@ -136,8 +136,20 @@ public class UIABMTipoTramite implements Serializable {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
         int codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite")); 
+        //categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        try {
         categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        } catch (TipoTramiteException e) {
+            Messages.create("Error").error().detail(e.getMessage()).add();
+            categoriasTipoTramiteActivas = new ArrayList<>();
+        }    
+        //documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+        try {
         documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+        } catch (TipoTramiteException e) {
+            Messages.create("Error").error().detail(e.getMessage()).add();
+            documentacionesActivas = new ArrayList<>();
+        }    
         
         insert = true;
 
@@ -157,8 +169,8 @@ public class UIABMTipoTramite implements Serializable {
             for (DocumentacionDTO doc : modificarTipoTramiteDTO.getDocumentacionesDTO()) {
                 documentacionesSeleccionadas.add(doc.getCodDocumentacion());
             }
-
-
+        
+            
         }
     }
 

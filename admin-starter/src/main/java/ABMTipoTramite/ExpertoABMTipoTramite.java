@@ -95,7 +95,7 @@ public class ExpertoABMTipoTramite {
     }
     
 
-    public List<DocumentacionDTO> obtenerDocumentacionesActivas(){
+    public List<DocumentacionDTO> obtenerDocumentacionesActivas() throws TipoTramiteException{
         List<DTOCriterio> criterioDocumentacionesActivasList = new ArrayList<>();
         DTOCriterio criterioPorFechaHoraBajaDocumentacion = new DTOCriterio();
         criterioPorFechaHoraBajaDocumentacion.setAtributo("fechaHoraBajaDocumentacion");
@@ -105,6 +105,11 @@ public class ExpertoABMTipoTramite {
         criterioDocumentacionesActivasList.add(criterioPorFechaHoraBajaDocumentacion);
         
         List documentacionObjetoList = FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionesActivasList);
+        
+        if (documentacionObjetoList.isEmpty()) {
+        throw new TipoTramiteException("No hay documentacion disponible para la seleccion.");
+        }    
+        
         List<DocumentacionDTO> documentacionesActivas = new ArrayList<>();
         
         for(Object x: documentacionObjetoList){
@@ -121,7 +126,7 @@ public class ExpertoABMTipoTramite {
         return documentacionesActivas;   
     }
     
-    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas(){
+    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() throws TipoTramiteException{
     
         List<DTOCriterio> criterioCategoriasActivasList = new ArrayList<>();
         DTOCriterio criterioPorFechaHoraBajaCategoriaTT = new DTOCriterio();
@@ -133,6 +138,11 @@ public class ExpertoABMTipoTramite {
         criterioCategoriasActivasList.add(criterioPorFechaHoraBajaCategoriaTT);
         
         List categoriaTTList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriasActivasList);
+        
+        if (categoriaTTList.isEmpty()) {
+        throw new TipoTramiteException("No hay categorias disponibles para la seleccion.");
+        }
+    
         List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas = new ArrayList<>();
         
         for (Object x: categoriaTTList){
@@ -435,10 +445,20 @@ public class ExpertoABMTipoTramite {
         if (tipoTramiteDTO.getPlazoEntregaDocumentacionTT() <= 0) {
             throw new TipoTramiteException("El plazo de entrega debe ser un entero mayor a cero.");
         }
+        
+        List<CategoriaTipoTramiteDTO> categoriasActivas = obtenerCategoriasTipoTramiteActivas();
+        if (categoriasActivas.isEmpty()) {
+            throw new TipoTramiteException("No hay categorías disponibles para la selección.");
+        }    
 
         if (tipoTramiteDTO.getCodCategoriaTipoTramite() <= 0) {
             throw new TipoTramiteException("Debe seleccionar una categoria.");
         }
+    
+        List<DocumentacionDTO> documentacionesActivas = obtenerDocumentacionesActivas();
+        if (documentacionesActivas.isEmpty()) {
+            throw new TipoTramiteException("No hay documentación disponible para la selección.");
+        }    
 
         if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
             throw new TipoTramiteException("Debe seleccionar al menos una documentacion.");

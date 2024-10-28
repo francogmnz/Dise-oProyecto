@@ -431,7 +431,8 @@ public class ExpertoRegistrarTramiteWeb {
         
         for(TipoTramiteListaPrecios ttlp: tipoTramiteListaPrecios){
             TipoTramite tipoTramite = ttlp.getTipoTramite();
-            System.out.println("el codigo del tramite es:" + tipoTramite.getCodTipoTramite());
+            System.out.println("el codigo del TipoTramite es:" + tipoTramite.getCodTipoTramite());
+            System.out.println("el codigo del TipoTramite relacionado es:" + tipoTramiteRelacionado.getCodTipoTramite());
             if(tipoTramite.getCodTipoTramite() == tipoTramiteRelacionado.getCodTipoTramite()){
                 nuevoTramite.setPrecioTramite(ttlp.getPrecioTipoTramite());
                 precioEncontrado = true;

@@ -8,6 +8,7 @@ package ABMTipoTramite.beans;
 import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.beans.*;
 import ABMTipoTramite.ControladorABMTipoTramite;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
 import jakarta.faces.view.ViewScoped;
@@ -86,10 +87,30 @@ public class UIABMTipoTramiteLista implements Serializable {
         return tipoTramitesGrilla;
     }
 
+//    public String irAgregarTipoTramite() {
+//        BeansUtils.guardarUrlAnterior();
+//        return "abmTipoTramite?faces-redirect=true&codTipoTramite=0"; // Usa '?faces-redirect=true' para hacer una redirección
+//    }
+
     public String irAgregarTipoTramite() {
-        BeansUtils.guardarUrlAnterior();
-        return "abmTipoTramite?faces-redirect=true&codTipoTramite=0"; // Usa '?faces-redirect=true' para hacer una redirección
+    try {
+
+        List<CategoriaTipoTramiteDTO> categoriasActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+
+        List<DocumentacionDTO> documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+
+        if (categoriasActivas.isEmpty() || documentacionesActivas.isEmpty()) {
+            Messages.create("Error").error().detail("No es posible agregar un nuevo Tipo de Trámite porque no hay categorías o documentaciones disponibles.").add();
+            return null; 
+        } else {
+            BeansUtils.guardarUrlAnterior();
+            return "abmTipoTramite?faces-redirect=true&codTipoTramite=0";
+        }
+    } catch (TipoTramiteException e) {
+        Messages.create("Error").error().detail(e.getMessage()).add();
+        return null; 
     }
+}
 
     
     public String irModificarTipoTramite(int codTipoTramite) {
