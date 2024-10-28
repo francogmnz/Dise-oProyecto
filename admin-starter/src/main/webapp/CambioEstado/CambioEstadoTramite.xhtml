@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="#{layoutMB.template}">
+    <ui:define name="title">
+        Lista de Trámites del Consultor
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="tramitesForm">
+            <p:messages id="globalMessages" showDetail="true" showSummary="false" />
+            
+            <p:panelGrid columns="2" styleClass="consultorInput">
+                <p:outputLabel for="legajoConsultor" value="Código del Consultor: " />
+                <p:inputText id="legajoConsultor" value="#{uiCambioEstado.legajoConsultor}">
+                    <f:convertNumber />
+                </p:inputText>
+                <p:commandButton value="Buscar Trámites" action="#{uiCambioEstado.buscarTramites}" update=":tramitesTable" />
+            </p:panelGrid>
+
+            <p:panelGrid columns="2">
+                <p:outputLabel for="nombreConsultor" value="Nombre del Consultor: " />
+                <p:outputLabel id="nombreConsultor" value="#{uiCambioEstado.nombreConsultor}" />
+            </p:panelGrid>
+
+            <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable">
+                <p:column headerText="Número de Trámite">
+                    <h:outputText value="#{tramite.nroTramite}" />
+                </p:column>
+
+                <p:column headerText="Estado del Trámite">
+                    <h:outputText value="#{tramite.nombreEstadoTramite}" />
+                </p:column>
+
+                <p:column headerText="Código de Estado">
+                    <h:outputText value="#{tramite.codEstadoTramite}" />
+                </p:column>
+
+                <p:column headerText="Fecha de Inicio">
+                    <h:outputText value="#{tramite.fechaInicioTramite}" />
+                </p:column>
+
+                <p:column headerText="Fecha de Recepción">
+                    <h:outputText value="#{tramite.fechaRecepcionTramite}" />
+                </p:column>
+               
+            </p:dataTable>
+          
+        </h:form>
+    </ui:define>
+</ui:composition>
+

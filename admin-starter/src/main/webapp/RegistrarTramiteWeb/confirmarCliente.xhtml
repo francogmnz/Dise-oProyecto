@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Gestión de Trámites - Confirmar Cliente</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloConfirmarCliente.css" />
+</h:head>
+<h:body>
+    <h:form id="formConfirmarCliente">
+        <div class="container-centralizado">
+            <h:panelGrid columns="1" styleClass="panel-principal">
+
+                <h1 class="titulo">Gestión de Trámites</h1>
+                
+                <div class="stepper-wrapper">
+                    <div class="stepper-item active">
+                      <div class="step-counter">1</div>
+                      <div class="step-name">Acceder</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">2</div>
+                      <div class="step-name">Categoria</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">3</div>
+                      <div class="step-name">Trámite</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">4</div>
+                      <div class="step-name">Confirmar</div>
+                    </div>
+                  </div>
+
+                <h2 class="subtitulo">BIENVENIDO:</h2>
+
+                <div class="info-cliente">
+                    <div class="info-item">
+                        <span class="label-cliente">Nombre:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.nombreCliente}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="label-cliente">Apellido:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.apellidoCliente}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="label-cliente">DNI:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.dniCliente}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="label-cliente">Mail:</span>
+                        <span class="dato-cliente">#{uiRegistrarTramiteWeb.mailCliente}</span>
+                    </div>
+                </div>
+                
+                <div class="checkbox-confirmar">
+                    <h:selectBooleanCheckbox id="confirmaCliente" value="#{uiRegistrarTramiteWeb.confirmaCliente}" />
+                    <h:outputLabel for="confirmaCliente" value="Confirmo que soy el cliente." />
+                </div>
+
+                <h:panelGroup rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}">
+                    <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
+                </h:panelGroup>
+
+
+
+                
+                <div class="botones-accion">
+                    <h:commandButton value="Continuar" action="#{uiRegistrarTramiteWeb.confirmarCliente}" styleClass="btn-confirmar">
+                        <f:ajax execute="@form" render="@form" />
+                    </h:commandButton>
+                    <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverIngresarDNI}" styleClass="btn-volver" />
+                </div>
+
+            </h:panelGrid>
+        </div>
+    </h:form>
+</h:body>
+</html>
