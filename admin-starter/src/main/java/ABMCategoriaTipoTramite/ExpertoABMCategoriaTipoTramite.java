@@ -200,12 +200,28 @@ public class ExpertoABMCategoriaTipoTramite {
         }
     }
         
-       
+    // Metodo para que quitemos espacios en blanco para la validacion.. ver si lo implementamos
+    /*
+    public static String eliminarEspaciosEnBlanco(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.trim().replaceAll("\\s{2,}", " ");
+    }
+    */
+        
     private void validarCategoriaTipoTramiteA(NuevaCategoriaTipoTramiteDTO categoriaDTO) throws CategoriaTipoTramiteException {
 
         if (categoriaDTO.getCodCategoriaTipoTramite() <= 0) {
             throw new CategoriaTipoTramiteException("El codigo debe ser un entero mayor a cero.");
         }
+        
+//        String nombreCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getNombreCategoriaTipoTramite());
+//        String descripcionCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getDescripcionCategoriaTipoTramite());
+//        String descripcionWebCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getDescripcionWebCategoriaTipoTramite());
+//        categoriaDTO.setNombreCategoriaTipoTramite(nombreCategoriaTipoTramite);
+//        categoriaDTO.setDescripcionCategoriaTipoTramite(descripcionCategoriaTipoTramite);
+//        categoriaDTO.setDescripcionWebCategoriaTipoTramite(descripcionWebCategoriaTipoTramite);
         
         String nombreCategoriaTipoTramite = categoriaDTO.getNombreCategoriaTipoTramite();
         if (nombreCategoriaTipoTramite == null || nombreCategoriaTipoTramite.trim().isEmpty() || nombreCategoriaTipoTramite.length() > 255) {
@@ -279,6 +295,13 @@ public class ExpertoABMCategoriaTipoTramite {
         
     private void validarCategoriaTipoTramiteM(ModificarCategoriaTipoTramiteDTOIn categoriaDTO) throws CategoriaTipoTramiteException {
 
+//        String nombreCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getNombreCategoriaTipoTramite());
+//        String descripcionCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getDescripcionCategoriaTipoTramite());
+//        String descripcionWebCategoriaTipoTramite = eliminarEspaciosEnBlanco(categoriaDTO.getDescripcionWebCategoriaTipoTramite());
+//        categoriaDTO.setNombreCategoriaTipoTramite(nombreCategoriaTipoTramite);
+//        categoriaDTO.setDescripcionCategoriaTipoTramite(descripcionCategoriaTipoTramite);
+//        categoriaDTO.setDescripcionWebCategoriaTipoTramite(descripcionWebCategoriaTipoTramite);
+        
         String nombreCategoriaTipoTramite = categoriaDTO.getNombreCategoriaTipoTramite();
         if (nombreCategoriaTipoTramite == null || nombreCategoriaTipoTramite.trim().isEmpty() || nombreCategoriaTipoTramite.length() > 255) {
             throw new CategoriaTipoTramiteException("El nombreCategoriaTipoTramite debe tener entre 1 y 255 caracteres.");

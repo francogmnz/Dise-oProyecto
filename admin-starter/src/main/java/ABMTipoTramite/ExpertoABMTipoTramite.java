@@ -19,6 +19,7 @@ import entidades.TipoTramite;
 import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,8 +209,13 @@ public class ExpertoABMTipoTramite {
             
             TipoTramiteDocumentacion tipoTramiteDocumentacion = new TipoTramiteDocumentacion();
             tipoTramiteDocumentacion.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
-            tipoTramiteDocumentacion.setFechaHoraBajaTTD(null);  
-            tipoTramiteDocumentacion.setFechaHastaTTD(null);
+            tipoTramiteDocumentacion.setFechaHoraBajaTTD(null); 
+            //Ver si dejamos esto como fechaHastaTTD antes estaba en null-
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, 6);
+            Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());     
+            //
+            tipoTramiteDocumentacion.setFechaHastaTTD(fechaHastaTTD);
             tipoTramiteDocumentacion.setDocumentacion(documentacion);
             
             FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacion);
@@ -355,8 +361,13 @@ public class ExpertoABMTipoTramite {
 
         TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
         tipoTramiteDocumentacionModificada.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
-        tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);  
-        tipoTramiteDocumentacionModificada.setFechaHastaTTD(null);
+        tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);
+        // Lo mismo que en el agregar - ver que hacemos - estana en null
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 6);
+        Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());
+        //
+        tipoTramiteDocumentacionModificada.setFechaHastaTTD(fechaHastaTTD);
         tipoTramiteDocumentacionModificada.setDocumentacion(documentacion);
 
         FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacionModificada);
@@ -421,12 +432,29 @@ public class ExpertoABMTipoTramite {
         }
     }
     
+    // Metodo para que quitemos espacios en blanco para la validacion.. ver si lo implementamos
+    /*
+    public static String eliminarEspaciosEnBlanco(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.trim().replaceAll("\\s{2,}", " ");
+    }
+    */
+        
     private void validarTipoTramiteA(NuevoTipoTramiteDTO tipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
 
         if (tipoTramiteDTO.getCodTipoTramite() <= 0) {
             throw new TipoTramiteException("El codigo debe ser un entero mayor a cero.");
         }
 
+//        String nombreTipoTramite = eliminarEspaciosEnBlanco(tipoTramiteDTO.getNombreTipoTramite());
+//        String descripcionTT = eliminarEspaciosEnBlanco(tipoTramiteDTO.getDescripcionTipoTramite());
+//        String descripcionWebTT = eliminarEspaciosEnBlanco(tipoTramiteDTO.getDescripcionWebTipoTramite());
+//        tipoTramiteDTO.setNombreTipoTramite(nombreTipoTramite);
+//        tipoTramiteDTO.setDescripcionTipoTramite(descripcionTT);
+//        tipoTramiteDTO.setDescripcionWebTipoTramite(descripcionWebTT);      
+         
         String nombreTipoTramite = tipoTramiteDTO.getNombreTipoTramite();
         if (nombreTipoTramite == null || nombreTipoTramite.trim().isEmpty() || nombreTipoTramite.length() > 255) {
             throw new TipoTramiteException("El nombre debe tener entre 1 y 255 caracteres.");
@@ -516,6 +544,14 @@ public class ExpertoABMTipoTramite {
         
     private void validarTipoTramiteM(ModificarTipoTramiteDTOIn tipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
 
+
+//        String nombreTipoTramite = eliminarEspaciosEnBlanco(tipoTramiteDTO.getNombreTipoTramite());
+//        String descripcionTT = eliminarEspaciosEnBlanco(tipoTramiteDTO.getDescripcionTipoTramite());
+//        String descripcionWebTT = eliminarEspaciosEnBlanco(tipoTramiteDTO.getDescripcionWebTipoTramite());
+//        tipoTramiteDTO.setNombreTipoTramite(nombreTipoTramite);
+//        tipoTramiteDTO.setDescripcionTipoTramite(descripcionTT);
+//        tipoTramiteDTO.setDescripcionWebTipoTramite(descripcionWebTT);        
+        
         String nombreTipoTramite = tipoTramiteDTO.getNombreTipoTramite();
         if (nombreTipoTramite == null || nombreTipoTramite.trim().isEmpty() || nombreTipoTramite.length() > 255) {
             throw new TipoTramiteException("El nombreTipoTramite debe tener entre 1 y 255 caracteres.");
