@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import utils.BeansUtils;
+import utils.fechaHoraActual;
 
 @Named("uitramiteLista")
 @ViewScoped
@@ -22,7 +23,7 @@ public class UITramiteLista implements Serializable {
     // filtros de la lista de tramites
     private int nroTramiteFiltro = 0;
     private int dniFiltro = 0;
-    private Date fechaRecepcionTramiteFiltro = new Timestamp(System.currentTimeMillis());
+    private Date fechaRecepcionTramiteFiltro = fechaHoraActual.obtenerFechaHoraActual();
     private String nombreEstadoFiltro = "";
     private String criterio = "";
 

@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
+import utils.fechaHoraActual;
 import utils.FachadaPersistencia;
 
 /**
@@ -126,7 +127,7 @@ public class ExpertoABMEstadoTramite {
         estadoTramite.setCodEstadoTramite(nuevoEstadoTramiteDTO.getCodEstadoTramite());
         estadoTramite.setNombreEstadoTramite(nuevoEstadoTramiteDTO.getNombreEstadoTramite());
         estadoTramite.setDescripcionEstadoTramite(nuevoEstadoTramiteDTO.getDescripcionEstadoTramite());
-        estadoTramite.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
+        estadoTramite.setFechaHoraAltaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().guardar(estadoTramite);
         FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -283,8 +284,8 @@ public class ExpertoABMEstadoTramite {
         }
 
         // Dar de baja el EstadoTramite
-        estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(new Timestamp(System.currentTimeMillis()));
-        FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
+        estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
+        FachadaPersistencia.getInstance().guardar(fechaHoraActual.obtenerFechaHoraActual());
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 

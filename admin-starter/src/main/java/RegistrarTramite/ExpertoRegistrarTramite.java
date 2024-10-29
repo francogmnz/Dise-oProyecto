@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoRegistrarTramite {
 
@@ -311,12 +312,19 @@ public class ExpertoRegistrarTramite {
 
             int nroTramite = generarNroTramite(); // Creo el nroTramite incremental
             tramiteCreado.setNroTramite(nroTramite);
-            tramiteCreado.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
+            tramiteCreado.setFechaRecepcionTramite(fechaHoraActual.obtenerFechaHoraActual());
             tramiteCreado.setFechaInicioTramite(null);
             tramiteCreado.setFechaFinTramite(null);
+            
+            if (clienteEncontrado == null && tipoTramiteEncontrado == null) {
+               throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente && TipoTramite no encontrado/s"); 
+            }
 
-            if (tipoTramiteEncontrado == null || clienteEncontrado == null) {
-                throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente || TipoTramite no encontrado/s");
+            if (tipoTramiteEncontrado == null) {
+                throw new RegistrarTramiteException("No se pudo registrar el trámite. TipoTramite no encontrado");
+            }
+            if (clienteEncontrado == null) {
+               throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente no encontrado"); 
             }
 
             tramiteCreado.setCliente(clienteEncontrado);
@@ -328,14 +336,14 @@ public class ExpertoRegistrarTramite {
             DTOCriterio fechaDesdeLP = new DTOCriterio();
             fechaDesdeLP.setAtributo("fechaHoraDesdeListaPrecios");
             fechaDesdeLP.setOperacion("<");
-            fechaDesdeLP.setValor(new Timestamp(System.currentTimeMillis()));
+            fechaDesdeLP.setValor(fechaHoraActual.obtenerFechaHoraActual());
             criterioList.add(fechaDesdeLP);
 
             // Criterio para fechaHoraHastaListaPrecios > fechaActual
             DTOCriterio fechaAltaLP = new DTOCriterio();
             fechaAltaLP.setAtributo("fechaHoraHastaListaPrecios");
             fechaAltaLP.setOperacion(">");
-            fechaAltaLP.setValor(new Timestamp(System.currentTimeMillis()));
+            fechaAltaLP.setValor(fechaHoraActual.obtenerFechaHoraActual());
             criterioList.add(fechaAltaLP);
 
             // Criterio para fechaHoraBajaListaPrecios == null
@@ -394,7 +402,7 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setEstadoTramite(estadoEncontrado); // setEstadoTramite(estadoEncontrado)
 
             TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite(); // :create() TramiteEstadoTramite
-            tramiteEstadoTramite.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+            tramiteEstadoTramite.setFechaHoraAltaTET(fechaHoraActual.obtenerFechaHoraActual());
             tramiteEstadoTramite.setFechaHoraBajaTET(null);
             tramiteEstadoTramite.setEstadoTramite(estadoEncontrado);
 
@@ -408,13 +416,13 @@ public class ExpertoRegistrarTramite {
             DTOCriterio criteriov1 = new DTOCriterio();
             criteriov1.setAtributo("fechaDesdeVersion");
             criteriov1.setOperacion("<");
-            criteriov1.setValor(new Timestamp(System.currentTimeMillis()));
+            criteriov1.setValor(fechaHoraActual.obtenerFechaHoraActual());
             criterioList.add(criteriov1);
 
             DTOCriterio criteriov2 = new DTOCriterio();
             criteriov2.setAtributo("fechaHastaVersion");
             criteriov2.setOperacion(">");
-            criteriov2.setValor(new Timestamp(System.currentTimeMillis()));
+            criteriov2.setValor(fechaHoraActual.obtenerFechaHoraActual());
             criterioList.add(criteriov2);
 
             DTOCriterio criteriov3 = new DTOCriterio();
@@ -523,7 +531,7 @@ public class ExpertoRegistrarTramite {
     public void anularTramite(int nroTramite) throws RegistrarTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
-        tramiteElegido.setFechaAnulacionTramite(new Timestamp(System.currentTimeMillis()));
+        tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().merge(tramiteElegido);
         FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -637,7 +645,7 @@ public class ExpertoRegistrarTramite {
 
                 tds.setArchivoTD(archivoTD.getContenidoB64());
                 tds.setNombreTD(archivoTD.getNombre());
-                tds.setFechaEntregaTD(new Timestamp(System.currentTimeMillis()));
+                tds.setFechaEntregaTD(fechaHoraActual.obtenerFechaHoraActual());
                 FachadaPersistencia.getInstance().merge(tds);
             } else {
                 System.out.println("codTD no coincide: " + tds.getCodTD());
@@ -656,13 +664,13 @@ public class ExpertoRegistrarTramite {
 
         // Solo asignar consultor si no se ha asignado ya y todas las documentaciones están presentadas
         if (todasPresentadas) {
-            tramiteElegido.setFechaPresentacionTotalDocumentacion(new Timestamp(System.currentTimeMillis()));
+            tramiteElegido.setFechaPresentacionTotalDocumentacion(fechaHoraActual.obtenerFechaHoraActual());
 
             List<DTOCriterio> criterioListAgenda = new ArrayList<>();
             DTOCriterio agendaCriterio1 = new DTOCriterio();
             agendaCriterio1.setAtributo("fechaAgenda");
             agendaCriterio1.setOperacion("<");
-            agendaCriterio1.setValor(new Timestamp(System.currentTimeMillis()));
+            agendaCriterio1.setValor(fechaHoraActual.obtenerFechaHoraActual());
             criterioListAgenda.add(agendaCriterio1);
 
             DTOCriterio agendaCriterio2 = new DTOCriterio();
@@ -701,7 +709,7 @@ public class ExpertoRegistrarTramite {
 
             if (consultorSeleccionado != null) {
                 tramiteElegido.setConsultor(consultorSeleccionado);
-                tramiteElegido.setFechaInicioTramite(new Timestamp(System.currentTimeMillis()));
+                tramiteElegido.setFechaInicioTramite(fechaHoraActual.obtenerFechaHoraActual());
 
                 // Guarda el tramiteElegido
                 FachadaPersistencia.getInstance().merge(tramiteElegido);
