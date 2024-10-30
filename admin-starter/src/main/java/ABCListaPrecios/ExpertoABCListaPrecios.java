@@ -18,8 +18,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.omnifaces.util.Messages;
@@ -28,6 +34,7 @@ import org.primefaces.model.StreamedContent;
 import utils.DTOCriterio;
 import utils.Errores;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoABCListaPrecios {
 
@@ -47,9 +54,6 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("La FechaHasta ingresada no es correcta intente nuevamente.");
         }
         List objetoList = FachadaPersistencia.getInstance().buscar("ListaPrecios", lCriterio);
-        if (objetoList.isEmpty()) {
-            
-        }
         List<ListaPreciosDTO> listasPreciosResultado = new ArrayList<>();
         for (Object x : objetoList) {
             ListaPrecios listaPrecios = (ListaPrecios) x;
@@ -213,7 +217,6 @@ public class ExpertoABCListaPrecios {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-//    BUSCA LA LISTA DE PRECIOS POR EL CODIGO EN PARAMETRO
         dto.setAtributo("codListaPrecios");
         dto.setOperacion("=");
         dto.setValor(codigo);
@@ -222,46 +225,90 @@ public class ExpertoABCListaPrecios {
 
         ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
 
+        listaPreciosEncontrada.getTipoTramiteListaPrecios().sort((tt1, tt2) -> {
+            return Integer.compare(tt2.getTipoTramite().getCodTipoTramite(), tt1.getTipoTramite().getCodTipoTramite());
+        }); //Para ordenar el excel por Codigo de manera Desc
+
         try {
-//            CREA EL ARCHIVO DE EXCEL SETEANDOLE LOS DATOS DE LA LISTA ENCONTRADA
             Workbook libro = new XSSFWorkbook();
             final String nombreArchivo = "./tmp.xlsx";
             Sheet hoja = libro.createSheet("Hoja 1");
 
+            // Crear estilo de centrado
+            CellStyle cellStyleCentrado = libro.createCellStyle();
+            cellStyleCentrado.setAlignment(HorizontalAlignment.CENTER);
+            cellStyleCentrado.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            // Estilo para encabezados (fondo azul marino y letras blancas)
+            CellStyle headerStyle = libro.createCellStyle();
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente blanca para los encabezados
+            Font headerFont = libro.createFont();
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(headerFont);
+
+            // Estilo para celdas de datos (fondo gris claro y letras negras)
+            CellStyle dataStyle = libro.createCellStyle();
+            dataStyle.setAlignment(HorizontalAlignment.CENTER);
+            dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            dataStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            dataStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente negra para los datos
+            Font dataFont = libro.createFont();
+            dataFont.setColor(IndexedColors.BLACK.getIndex());
+            dataStyle.setFont(dataFont);
+
+            // Crear encabezados
             Row headerRow = hoja.createRow(0);
-            Cell headerCell1 = headerRow.createCell(0);
-            headerCell1.setCellValue("codTipoTramite");
-            Cell headerCell2 = headerRow.createCell(1);
-            headerCell2.setCellValue("nombreTipoTramite");
-            Cell headerCell3 = headerRow.createCell(2);
-            headerCell3.setCellValue("descripcionTipoTramite");
-            Cell headerCell4 = headerRow.createCell(3);
-            headerCell4.setCellValue("precioTipoTramite");
-            Cell headerCell5 = headerRow.createCell(4);
-            headerCell5.setCellValue("nuevoPrecioTipoTramite");
+            String[] headers = {"codTipoTramite", "nombreTipoTramite", "descripcionTipoTramite", "precioTipoTramite", "nuevoPrecioTipoTramite"};
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(headers[i]);
+                headerCell.setCellStyle(headerStyle);
+            }
 
             List<TipoTramiteListaPrecios> detalles = listaPreciosEncontrada.getTipoTramiteListaPrecios();
 
+            // Crear filas con datos
             for (int j = 0; j < detalles.size(); j++) {
                 Row dataRow = hoja.createRow(j + 1);
+
                 Cell cell1 = dataRow.createCell(0);
                 cell1.setCellValue(detalles.get(j).getTipoTramite().getCodTipoTramite());
+                cell1.setCellStyle(dataStyle);
 
                 Cell cell2 = dataRow.createCell(1);
                 cell2.setCellValue(detalles.get(j).getTipoTramite().getNombreTipoTramite());
+                cell2.setCellStyle(dataStyle);
 
                 Cell cell3 = dataRow.createCell(2);
                 cell3.setCellValue(detalles.get(j).getTipoTramite().getDescripcionTipoTramite());
+                cell3.setCellStyle(dataStyle);
 
                 Cell cell4 = dataRow.createCell(3);
                 cell4.setCellValue(detalles.get(j).getPrecioTipoTramite());
+                cell4.setCellStyle(dataStyle);
 
                 Cell cell5 = dataRow.createCell(4);
-
+                cell5.setCellStyle(dataStyle);
             }
 
-            FileOutputStream outputStream;
-            outputStream = new FileOutputStream(nombreArchivo);
+            // Ajustar el ancho de las columnas excepto la columna de descripción
+            for (int i = 0; i < headers.length; i++) {
+                if (i == 2) {  // Fijar el ancho de la columna de descripción
+                    hoja.setColumnWidth(i, 40 * 256); // 200px en unidades de POI
+                } else {
+                    hoja.setColumnWidth(i, 22 * 256);
+                }
+            }
+
+            FileOutputStream outputStream = new FileOutputStream(nombreArchivo);
             libro.write(outputStream);
             libro.close();
             InputStream ie = new FileInputStream(nombreArchivo);
@@ -272,8 +319,7 @@ public class ExpertoABCListaPrecios {
                     .build();
 
         } catch (IOException ex) {
-            Logger.getLogger(UIABCListaPreciosLista.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIABCListaPreciosLista.class.getName()).log(Level.SEVERE, null, ex);
             Messages.create(ex.getMessage()).error().add();
         }
         return fileD;
@@ -297,7 +343,7 @@ public class ExpertoABCListaPrecios {
 //        VERIFICA SI ES LA LISTA ENCONTRADA ES LA ULTIMA LISTA DE PRECIOS
         if (codigo == ultiLP.getCodListaPrecios()) {
 //            LE SETEA LA FECHAHORABAJA
-            listaPreciosEncontrada.setFechaHoraBajaListaPrecios(new Timestamp(System.currentTimeMillis()));
+            listaPreciosEncontrada.setFechaHoraBajaListaPrecios(fechaHoraActual.obtenerFechaHoraActual());
         }
 
         Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();

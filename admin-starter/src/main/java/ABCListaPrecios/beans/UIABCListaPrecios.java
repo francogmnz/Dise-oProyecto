@@ -29,6 +29,7 @@ import org.omnifaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
 import utils.BeansUtils;
 import utils.Errores;
+import utils.fechaHoraActual;
 
 
 @Named("uiabmListaPrecios")
@@ -137,7 +138,7 @@ public class UIABCListaPrecios implements Serializable {
                 throw new ListaPreciosException("Codigo no valido");
             } else {
                 setCodListaPrecios(cod);
-                setFechaHoraDesdeListaPrecios(new Date());
+                setFechaHoraDesdeListaPrecios(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime()));
                 setFechaHoraHastaListaPrecios(null);
             }
         } catch (ListaPreciosException e) {
@@ -208,7 +209,7 @@ public class UIABCListaPrecios implements Serializable {
         if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() < 0) {
             err.agregarError("El Código debe ser un entero mayor o igual a 0.");
         }
-        if (getFechaHoraDesdeListaPrecios().before(new Date())) {
+        if (getFechaHoraDesdeListaPrecios().before(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime()))) {
             err.agregarError("FechaDesde no puede ser menor a la Fecha Actual. Intente nuevamente.");
         }
         // Verificamos si hay errores antes de continuar

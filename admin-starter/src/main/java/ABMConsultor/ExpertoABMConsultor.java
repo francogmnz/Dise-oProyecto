@@ -16,6 +16,7 @@ import java.util.List;
 import utils.DTOCriterio;
 import utils.Errores;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoABMConsultor {
 
@@ -158,8 +159,6 @@ public class ExpertoABMConsultor {
         dto2.setOperacion("=");
         dto2.setValor(null);
         
-        
-
         criterioList.add(dto2);
         Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
         int legajoEncontrado = consultorEncontrado.getLegajoConsultor();
@@ -195,8 +194,7 @@ public class ExpertoABMConsultor {
             }
         }
             
-
-        consultorEncontrado.setFechaHoraBajaConsultor(new Timestamp(System.currentTimeMillis()));
+        consultorEncontrado.setFechaHoraBajaConsultor(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();

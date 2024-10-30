@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoABMCliente {
 
@@ -201,7 +202,7 @@ public class ExpertoABMCliente {
             }
         }
 
-        clienteEncontrado.setFechaHoraBajaCliente(new Timestamp(System.currentTimeMillis()));
+        clienteEncontrado.setFechaHoraBajaCliente(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().guardar(clienteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();

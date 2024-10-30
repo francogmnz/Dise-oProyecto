@@ -15,13 +15,14 @@ import java.util.List;
 import org.omnifaces.util.Messages;
 import org.primefaces.model.StreamedContent;
 import utils.BeansUtils;
+import utils.fechaHoraActual;
 
 @Named("uiabmListaPreciosLista")
 @ViewScoped
 public class UIABCListaPreciosLista implements Serializable {
 
     private ControladorABCListaPrecios controladorABCListaPrecios = new ControladorABCListaPrecios();
-    private Date fechaHoraHastaListaPreciosFiltro = new Date();
+    private Date fechaHoraHastaListaPreciosFiltro = new Date(fechaHoraActual.obtenerFechaHoraActual().getTime());
     private String criterio = "";
 
 //    GETTERS Y SETTERS
@@ -174,7 +175,7 @@ public class UIABCListaPreciosLista implements Serializable {
 
 //    RENDERIZA EL BOTON DARDEBAJA SI ES LA ULTIMA LISTA DE PRECIOS, NO ESTA VIGENTE Y NO ES UNA LISTA PRECIOS PASADA
     public boolean habilitarBtnBaja(ListaPreciosGrillaUI listaEnviada) {
-        Timestamp hoy = new Timestamp(System.currentTimeMillis());
+        Timestamp hoy = fechaHoraActual.obtenerFechaHoraActual();
         if (listaEnviada.getFechaHoraBajaListaPrecios() == null && listaEnviada.getFechaHoraHastaListaPrecios().after(hoy) && !isLaActiva(listaEnviada)) {
             ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaListaNoNula();
             return ultimaLP.getCodListaPrecios() == listaEnviada.getCodListaPrecios();
@@ -190,7 +191,7 @@ public class UIABCListaPreciosLista implements Serializable {
             Timestamp fh = listaEnviada.getFechaHoraHastaListaPrecios();
             Timestamp fb = listaEnviada.getFechaHoraBajaListaPrecios();
             if (fb == null) {
-                Timestamp hoy = new Timestamp(System.currentTimeMillis());
+                Timestamp hoy = fechaHoraActual.obtenerFechaHoraActual();
                 if (fd.before(hoy) && fh.after(hoy)) {
                     return true;
                 }
@@ -202,22 +203,14 @@ public class UIABCListaPreciosLista implements Serializable {
     
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
     public boolean isAnulada(ListaPreciosGrillaUI listaEnviada) {
-        if (listaEnviada.getFechaHoraBajaListaPrecios() != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return listaEnviada.getFechaHoraBajaListaPrecios() != null;
     }
     
     
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES PASADA
     public boolean isPasada(ListaPreciosGrillaUI listaEnviada) {
-        Timestamp hoy = new Timestamp(System.currentTimeMillis());
-        if (listaEnviada.getFechaHoraDesdeListaPrecios().before(hoy)) {
-            return true;
-        } else {
-            return false;
-        }
+        Timestamp hoy = fechaHoraActual.obtenerFechaHoraActual();
+        return listaEnviada.getFechaHoraDesdeListaPrecios().before(hoy);
     }
 
 }

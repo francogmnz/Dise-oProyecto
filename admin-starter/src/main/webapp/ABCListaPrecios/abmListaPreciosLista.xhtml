@@ -31,6 +31,28 @@
                 background-color: #a5a3a3;
                 color: whitesmoke;
             }
+            /* Estilo para la tabla */
+            .tabla-estatica {
+                width: 500px;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-family: Arial, sans-serif;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Estilo de las filas y celdas */
+            .tabla-estatica td {
+                padding: 10px 15px;
+                text-align: center;
+                font-weight: 500;
+                color: #555;
+            }
+
+            /* Bordes de la tabla */
+            .tabla-estatica td {
+                border-bottom: 1px solid #ddd;
+            }
+            
         </style>
         <h:form>
             <p:focus context="@form"/>
@@ -50,16 +72,17 @@
                                                   onpaste="return false;"
                                                   oncopy="return false;"
                                                   oncut="return false;">
-                                    <p:ajax event="dateSelect" 
-                                            listener="#{uiabmListaPreciosLista.filtrar()}" 
-                                            update="@form:grid1" />
+                                        <p:ajax event="dateSelect" 
+                                                listener="#{uiabmListaPreciosLista.filtrar()}" 
+                                                update="@form:grid1" />
                                     </p:datePicker>
                                 </p:outputPanel>
                             </div>
+                            
                             <div class="ui-g-12 ui-md-1"/>  <!--                            //Rellenador-->
-
+                                                       
                             <!--COMBOBOX PARA ORDENAR-->
-                            <div class="ui-g-12 ui-md-4" style="display: inline-flex;flex-direction: column-reverse;">
+                            <div class="ui-g-12 ui-md-3" style="display: inline-flex;flex-direction: column-reverse;">
                                 <div class="ui-material">
                                     <p:selectOneMenu id="select" value="#{uiabmListaPreciosLista.criterio}" >
                                         <f:selectItem itemLabel="Seleccionar"/>
@@ -75,16 +98,52 @@
                                     <p:message for="select"/>
                                 </div>
                             </div>
-
-                            <div class="ui-g-12 ui-md-1"/>  <!--                            //Rellenador-->
-
+                            
+                            <div class="ui-g-12 ui-md-1"/>
+                            
+                            <!--BOTON DE GLOSARIO-->
+                            <div class="ui-g-12 ui-md-1" style="display: inline-flex;">                                     
+                                <p:commandButton icon="fa fa-question-circle" 
+                                                 title="Ver glosario" 
+                                                 oncomplete="PF('dlgGlosario').show();"
+                                                 update="@none"
+                                                 style="border:none; background: none; color: black; display: inline-block;
+                                                 vertical-align: middle; padding: 0; margin-left: 5px; width: 25px; height: auto;" 
+                                                 iconPos="left" />
+                                <p:dialog header="Glosario" widgetVar="dlgGlosario" 
+                                          modal="true" width="auto" height="auto" resizable="false"
+                                          style="overflow-y: auto; max-height: 1000px;">
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-12">
+                                            <table border="1" class="tabla-estatica">
+                                                <tr>
+                                                    <td class="laActiva">ACTIVA</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="deBaja">BAJA</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pasada">FINALIZADA</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>FUTURA</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>    
+                                </p:dialog>         
+                            </div>
+                                                        
+                            <!--BOTON DE AGREGAR NUEVA LISTA-->
                             <div class="ui-g-12 ui-md-3" style="display: inline-flex;">
                                 <p:commandButton value="Nueva Lista"  icon="fa fa-plus" action="#{uiabmListaPreciosLista.irAgregarListaPrecios()}"   styleClass="btn-primary"/>
                             </div>
+                                                   
                         </div>
                     </div>
                 </div>
                 <p:spacer height="5"/>
+                
                 <p:dataTable id="grid1" widgetVar="listaPreciosTable" value="#{uiabmListaPreciosLista.mostrarListasPrecios()}" var="listaPrecios" 
                              rowStyleClass="#{uiabmListaPreciosLista.isLaActiva(listaPrecios) ? 'laActiva' : uiabmListaPreciosLista.isAnulada(listaPrecios) ? 'deBaja' : uiabmListaPreciosLista.isPasada(listaPrecios) ? 'pasada':''}">
 
@@ -107,7 +166,7 @@
                         <f:facet name="header">Fecha Baja</f:facet>
                             #{listaPrecios.fechaHoraBajaListaPrecios}
                     </p:column>
-                   
+
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
