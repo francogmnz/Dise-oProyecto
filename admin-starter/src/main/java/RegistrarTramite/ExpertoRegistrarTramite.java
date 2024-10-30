@@ -192,6 +192,7 @@ public class ExpertoRegistrarTramite {
             dtoTramite.setNroTramite(tramite.getNroTramite());
             dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite());
             dtoTramite.setFechaAnulacion(tramite.getFechaAnulacionTramite());
+            dtoTramite.setFechaFinTramite(tramite.getFechaFinTramite());
             dtoTramite.setDni(tramite.getCliente().getDniCliente());
             dtoTramite.setCodTipoTramite(tramite.getTipoTramite().getCodTipoTramite());
             dtoTramite.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite());
@@ -452,15 +453,18 @@ public class ExpertoRegistrarTramite {
             // getTipoTramiteDocumentacion(): List<TipoTramiteDocumentacion>
             List<TipoTramiteDocumentacion> docList = tipoTramiteEncontrado.getTipoTramiteDocumentacion();
             // loop por cada TipoTramiteDocumentacion
-            for (TipoTramiteDocumentacion ttDoc : docList) {
-                Documentacion doc = ttDoc.getDocumentacion(); // getDocumentacion(): Documentacion
-                TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion(); // :create() TramiteDocumentacion
-                int cotTD = generarCodTD(); // codTD incremental
-                tramiteDocumentacion.setCodTD(cotTD);
-//            tramiteDocumentacion.setNombreTD(nombreTD);
-                tramiteDocumentacion.setDocumentacion(doc);
-                tramiteCreado.addTramiteDocumentacion(tramiteDocumentacion);
-                FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
+            for (TipoTramiteDocumentacion ttDoc : docList) { 
+                if(ttDoc.getFechaHoraBajaTTD() == null){
+                    Documentacion doc = ttDoc.getDocumentacion();
+                    TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion(); // :create() TramiteDocumentacion
+                    int cotTD = generarCodTD(); // codTD incremental
+                    tramiteDocumentacion.setCodTD(cotTD);
+                    //tramiteDocumentacion.setNombreTD(nombreTD);
+                    tramiteDocumentacion.setDocumentacion(doc);
+                    tramiteCreado.addTramiteDocumentacion(tramiteDocumentacion);
+                    FachadaPersistencia.getInstance().guardar(tramiteDocumentacion);
+                }// getDocumentacion(): Documentacion
+
             }
 
             FachadaPersistencia.getInstance().guardar(tramiteCreado); // guardar(Tramite)

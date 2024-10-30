@@ -226,17 +226,21 @@
                 <style type="text/css">
                     .isAnulado {
                         color: #000;
-                        background-color: #f1948a;
+                        background-color: #ff7884;
                     }
 
                     .isPendienteDoc {
                         color: #000;
-                        background-color: #f7dc6f;
+                        background-color: #f2ff7b;
                     }
 
                     .isIniciado {
                         color: #000;
-                        background-color: #a9dfbf;
+                        background-color: #7bff9a;
+                    }
+                    .isFinalizado{
+                        color: #000;
+                        background-color: #a5a3a3;
                     }
 
                 </style>
@@ -244,7 +248,8 @@
                 <!-- Tabla para mostrar los trámites -->
                 <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
                              paginator="true" rows="10" paginatorPosition="bottom"
-                             rowStyleClass="#{uitramiteLista.isAnulado(tramite) ? 'isAnulado' : 
+                             rowStyleClass="#{uitramiteLista.isFinalizado(tramite) ? 'isFinalizado' :
+                                              uitramiteLista.isAnulado(tramite) ? 'isAnulado' : 
                                               uitramiteLista.isPendienteDoc(tramite) ? 'isPendienteDoc' : 
                                               uitramiteLista.isIniciado(tramite) ? 'isIniciado': ''}">
                     <p:column>
@@ -271,13 +276,21 @@
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:column>
+                    
+                    <p:column>
+                        <f:facet name="header">Etapa Tramite</f:facet>
+                        <h:outputText value="#{tramite.nombreEstado}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
                     <p:column>
                         <f:facet name="header">Estado Trámite</f:facet>
                         <strong>
                             #{uitramiteLista.isAnulado(tramite) ? 'Anulado' :
                               uitramiteLista.isPendienteDoc(tramite) ? 'Pendiente Documentación' :
-                              uitramiteLista.isIniciado(tramite) ? 'Iniciado' : ''}
+                              uitramiteLista.isIniciado(tramite) ? 'Iniciado' : 
+                              uitramiteLista.isFinalizado(tramite) ? 'Finalizado' : ''}
                         </strong>
                     </p:column>
 

@@ -237,14 +237,18 @@ public class UITramiteLista implements Serializable {
     public boolean isAnulado(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaAnulacion() != null;
     }
-
+    
     public boolean isPendienteDoc(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null;
     }
-
+    
+    public boolean isFinalizado(TramiteGrillaUI tramiteFila) {
+        return tramiteFila.getFechaFinTramite() != null && tramiteFila.getFechaInicioTramite() != null;
+    }
+    
     public boolean isIniciado(TramiteGrillaUI tramiteFila) {
         // Si no es anulado y no es pendiente de documentación, devolver true
         return tramiteFila.getFechaInicioTramite() != null;
     }
-
+    
 }

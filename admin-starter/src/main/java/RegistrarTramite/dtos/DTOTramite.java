@@ -13,12 +13,23 @@ public class DTOTramite {
     private String nombreEstado;
     private Timestamp fechaAnulacion;
     private Timestamp fechaInicioTramite;
+    private Timestamp fechaFinTramite;
     
     private EstadoTramite estadoTramite;
 
     public int getNroTramite() {
         return nroTramite;
     }
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
+    }
+    
+    
 
     public void setNroTramite(int nroTramite) {
         this.nroTramite = nroTramite;
