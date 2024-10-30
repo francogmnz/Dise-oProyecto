@@ -120,11 +120,6 @@ public class UITramiteLista implements Serializable {
     // loop por cada DTOTramite desde la UI para mostrar los Tramites filtrados
     public List<TramiteGrillaUI> mostrarTramites() {
 
-//        System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
-//        System.out.println("fechaRecepcionTramiteFiltro: " + fechaRecepcionTramiteFiltro);
-//        System.out.println("dniFiltro: " + dniFiltro);
-//        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
-//        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
         if (fechaRecepcionTramiteFiltro != null) {
             Calendar calFiltro = Calendar.getInstance();
             calFiltro.setTime(fechaRecepcionTramiteFiltro);
@@ -148,6 +143,7 @@ public class UITramiteLista implements Serializable {
             // 
             tramiteGrillaUI.setFechaAnulacion(tramiteDTO.getFechaAnulacion());
             tramiteGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
+            tramiteGrillaUI.setFechaFinTramite(tramiteDTO.getFechaFinTramite());
 
             tramiteGrilla.add(tramiteGrillaUI);
         }
@@ -239,7 +235,7 @@ public class UITramiteLista implements Serializable {
     }
     
     public boolean isPendienteDoc(TramiteGrillaUI tramiteFila) {
-        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null;
+        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null && tramiteFila.getFechaFinTramite() == null;
     }
     
     public boolean isFinalizado(TramiteGrillaUI tramiteFila) {
@@ -248,7 +244,7 @@ public class UITramiteLista implements Serializable {
     
     public boolean isIniciado(TramiteGrillaUI tramiteFila) {
         // Si no es anulado y no es pendiente de documentación, devolver true
-        return tramiteFila.getFechaInicioTramite() != null;
+        return tramiteFila.getFechaInicioTramite() != null && tramiteFila.getFechaFinTramite() == null;
     }
     
 }

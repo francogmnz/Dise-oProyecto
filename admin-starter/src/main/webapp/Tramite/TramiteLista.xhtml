@@ -215,10 +215,41 @@
                             <f:selectItem itemLabel="Número Trámite Descendente" itemValue="codDesc" />
                             <p:ajax event="change" listener="#{uitramiteLista.mostrarTramites}" update="form1:grid1" />
                         </p:selectOneMenu>
+
+                        <!-- Botón de Glosario -->
+                                <p:commandButton icon="fa fa-question-circle" 
+                                                 title="Ver glosario lista" 
+                                                 oncomplete="PF('dlgGlosario').show();"
+                                                 update="@none"
+                                                 style="border:none; background: none; color: black; display: inline-block;
+                                                 padding: 0; width: 25px; height: auto; margin-top: 10px; margin-bottom: 0px" 
+                                                 iconPos="right" />
                     </div>
 
-                </div>
+                    <!-- Diálogo del glosario -->
+                    <p:dialog header="Glosario lista trámites" widgetVar="dlgGlosario" modal="true" width="auto" height="auto" resizable="false"
+                              style="overflow-y: auto; max-height: 1000px;">
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12">
+                                <table border="1" class="tabla-estatica">
+                                    <tr>
+                                        <td class="isAnulado">ANULADO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isPendienteDoc">PENDIENTE DOCUMENTACIÓN</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isIniciado">INICIADO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isFinalizado">FINALIZADO</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>    
+                    </p:dialog>
 
+                </div>
 
                 <p:spacer height="5"/>
 
@@ -276,7 +307,7 @@
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:column>
-                    
+
                     <p:column>
                         <f:facet name="header">Etapa Tramite</f:facet>
                         <h:outputText value="#{tramite.nombreEstado}">
@@ -292,8 +323,8 @@
                               uitramiteLista.isIniciado(tramite) ? 'Iniciado' : 
                               uitramiteLista.isFinalizado(tramite) ? 'Finalizado' : ''}
                         </strong>
-                    </p:column>
 
+                    </p:column>
                 </p:dataTable>
 
             </div>
