@@ -17,7 +17,7 @@
         Trabajar con Cliente
     </ui:define>
 
-        <ui:define name="body">
+    <ui:define name="body">
         <style type="text/css">
             .deBaja {
                 color: whitesmoke;
@@ -29,14 +29,25 @@
             <div class="box box-primary">
 
                 <div class="box-header with-border">
-                    <div id="main-buttons">
-
+                    <div class="ui-g-4 ui-md-2">
                         <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmClienteLista.irAgregarCliente()}"   styleClass="btn-primary"/>
                     </div>
+                    <div class="ui-g-4 ui-md-6"></div>
+                    <div class="ui-g-4 ui-md-4">
+                        <div class="ui-material">
+                            <p:selectOneMenu id="select" value="#{uiabmClienteLista.criterio}" >
+                                <f:selectItem itemLabel="Mostrar todos los clientes"/>
+                                <f:selectItem itemLabel="Clientes activos" itemValue="cliActivo"/>
+                                <f:selectItem itemLabel="Clientes inactivos" itemValue="cliInactivo"/>
+                                <p:ajax event="change" listener="#{uiabmClienteLista.buscarClientes()}" update="grid1" />
+                            </p:selectOneMenu>
+                            <p:outputLabel for="select" value="Filtrar por:"/>
+                            <p:message for="select"/>
+                        </div>
+                    </div>
                 </div>
-                <!-- Tabla para mostrar la lista de artículos -->
-                <p:separator/>
-
+                <p:spacer height="5"/>
+                <!-- Tabla para mostrar la lista de clientes -->
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-3">
                         <p:outputPanel>
@@ -122,7 +133,7 @@
                         <f:facet name="header">Fecha Baja</f:facet>
                             #{cliente.fechaHoraBajaCliente}
                     </p:column>
-                    
+
                     <p:column>
                         <f:facet name="header">Tramites activos</f:facet>
                             #{uiabmClienteLista.buscarTramitesCliente(cliente.dniCliente)}
