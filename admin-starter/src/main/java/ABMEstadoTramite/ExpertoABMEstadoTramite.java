@@ -257,8 +257,8 @@ public class ExpertoABMEstadoTramite {
 
         // Buscar versiones con fecha actual y sin fecha de baja
         DTOCriterio dto2 = new DTOCriterio();
-        dto2.setAtributo("fechaDesdeVersion");
-        dto2.setOperacion("<");
+        dto2.setAtributo("fechaHastaVersion");
+        dto2.setOperacion(">=");
         dto2.setValor(Timestamp.from(Instant.now()));    
 
         criterioList.add(dto2);
@@ -285,7 +285,7 @@ public class ExpertoABMEstadoTramite {
 
         // Dar de baja el EstadoTramite
         estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
-        FachadaPersistencia.getInstance().guardar(fechaHoraActual.obtenerFechaHoraActual());
+        FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
