@@ -113,6 +113,10 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("El código ya existe");
         }
 
+        if (nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
+            throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
+        }
+
         // Crear la nueva lista de precios
         ListaPrecios nuevaListaPrecios = new ListaPrecios();
         nuevaListaPrecios.setCodListaPrecios(nuevaListaPreciosDTO.getCodListaPrecios());
@@ -130,13 +134,13 @@ public class ExpertoABCListaPrecios {
                 criterio.setOperacion("=");
                 criterio.setValor(detalle.getCodTipoTramite());
                 criterioTipoTramite.add(criterio);
-                
+
                 DTOCriterio dto2 = new DTOCriterio();
                 dto2.setAtributo("fechaHoraBajaTipoTramite");
                 dto2.setOperacion("=");
                 dto2.setValor(null);
                 criterioTipoTramite.add(dto2);
-                
+
                 // Buscar el tipo de trámite
                 List tipoTramiteList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramite);
                 if (!tipoTramiteList.isEmpty()) {
@@ -153,8 +157,8 @@ public class ExpertoABCListaPrecios {
             }
         } else {
             // Si ya hay una lista anterior, ajustar la fecha de fin de la última lista
-            Timestamp FechaHoraHasta = ultimaListaPrecios.getFechaHoraHastaListaPrecios();
-            if (nuevaFechaHoraDesde.after(FechaHoraHasta) || nuevaFechaHoraDesde.before(FechaHoraHasta)) {
+
+            if (nuevaFechaHoraDesde.after(nuevaFechaHoraHasta) || nuevaFechaHoraDesde.before(nuevaFechaHoraHasta)) {
                 ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
             }
             FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);
