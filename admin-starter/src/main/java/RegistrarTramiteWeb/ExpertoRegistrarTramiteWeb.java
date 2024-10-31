@@ -40,6 +40,10 @@ public class ExpertoRegistrarTramiteWeb {
     private Tramite tramiteEnProceso;
     
     public DTOCliente buscarClienteIngresado(int dniCliente)  throws RegistrarTramiteWebException{
+        
+        if (dniCliente <= 0 || String.valueOf(dniCliente).length() > 8) {
+        throw new RegistrarTramiteWebException("El DNI debe ser un numero entero positivo de hasta 8 digitos.");
+        }          
         List<DTOCriterio> criterioBuscarClienteList = new ArrayList<>();
         DTOCriterio criterioDniIngresado = new DTOCriterio();
         
@@ -57,19 +61,16 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioBuscarClienteList.add(criterioFechaHoraBajaCliente);
         
-        //Cliente clienteIngresado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
-        try {
-            
-            cliente = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList).get(0);
-
-            
-            if (dniCliente != cliente.getDniCliente()) {
-                throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
-            }
-        } catch (IndexOutOfBoundsException e) {
-            
+        List<Object> clientes = FachadaPersistencia.getInstance().buscar("Cliente", criterioBuscarClienteList);
+        if (clientes == null || clientes.isEmpty()) {
             throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
         }
+        cliente = (Cliente) clientes.get(0);
+    
+        if (dniCliente != cliente.getDniCliente()) {
+            throw new RegistrarTramiteWebException("Cliente no encontrado, intente nuevamente.");
+        }
+         
         DTOCliente dtoCliente = new DTOCliente();
         dtoCliente.setDniCliente(cliente.getDniCliente());
         dtoCliente.setNombreCliente(cliente.getNombreCliente());
@@ -77,11 +78,11 @@ public class ExpertoRegistrarTramiteWeb {
         dtoCliente.setMailCliente(cliente.getMailCliente());
                 
         return dtoCliente;
-                
-        
+                 
     }
     
-    public List<DTOCategoriaTipoTramite> listarCategoriasTipoTramtite(){
+    public List<DTOCategoriaTipoTramite> listarCategoriasTipoTramtite() throws RegistrarTramiteWebException {
+        
         List<DTOCriterio> criterioListarCategoriasTTList = new ArrayList<>();
         DTOCriterio criterioFechaHoraBajaCTT = new DTOCriterio();
         
@@ -92,6 +93,11 @@ public class ExpertoRegistrarTramiteWeb {
         criterioListarCategoriasTTList.add(criterioFechaHoraBajaCTT);
         
         List categoriasTipoTramiteObjectList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioListarCategoriasTTList);
+        
+        if (categoriasTipoTramiteObjectList == null || categoriasTipoTramiteObjectList.isEmpty()) {
+            throw new RegistrarTramiteWebException("No hay categorias disponibles.");
+        }
+        
         List<DTOCategoriaTipoTramite> categoriasTipoTramiteAListar = new ArrayList<>();
         for(Object x: categoriasTipoTramiteObjectList){
             CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) x;
@@ -126,16 +132,14 @@ public class ExpertoRegistrarTramiteWeb {
         criterioFechaHoraBajaCTT.setValor(null);
         
         criterioCategoriaTTRelacionadaList.add(criterioFechaHoraBajaCTT);
-        
-        //CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaTTRelacionadaList).get(0);
-        
+            
         List<Object> categorias = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaTTRelacionadaList);
 
         if (categorias == null || categorias.isEmpty()) {
-            throw new RegistrarTramiteWebException("No se encontró la categoría seleccionada.");
+            throw new RegistrarTramiteWebException("No se encontro la categoria seleccionada.");
         }
 
-    CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) categorias.get(0);
+        CategoriaTipoTramite categoriaTipoTramiteRelacionada = (CategoriaTipoTramite) categorias.get(0);
         
         List<DTOCriterio> criterioTipoTramitesList = new ArrayList<>();
         DTOCriterio criterioFechaHoraBajaTT = new DTOCriterio();
@@ -155,6 +159,11 @@ public class ExpertoRegistrarTramiteWeb {
         criterioTipoTramitesList.add(criterioCategoriaTTRelacionada);
 
         List tipoTramitesObjectList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramitesList);
+        
+        if (tipoTramitesObjectList == null || tipoTramitesObjectList.isEmpty()) {
+        throw new RegistrarTramiteWebException("La categoria seleccionada no tiene TipoTramites relacionados.");
+        }
+        
         List<DTOTipoTramite> tipoTramitesAListar = new ArrayList<>();
         
         for(Object x: tipoTramitesObjectList){
@@ -189,11 +198,6 @@ public class ExpertoRegistrarTramiteWeb {
 
     }
    
-/*    
-    public static int generarNroTramite(int codTipoTramite) {
-        return (int) (System.currentTimeMillis() + codTipoTramite);
-    }
-*/
     public int generarNroTramite() {
         int ultimoNroTramite = buscarUltimoNroTramite();
         return ultimoNroTramite + 1;  
@@ -212,7 +216,6 @@ public class ExpertoRegistrarTramiteWeb {
         
         List<Object> tramiteList = FachadaPersistencia.getInstance().buscar("Tramite", criterioUltimoNroTramiteList);
 
-        // Si no hay tramite devuelvo 0 
         if (tramiteList == null || tramiteList.isEmpty()) {
             return 0;
         }
@@ -223,11 +226,12 @@ public class ExpertoRegistrarTramiteWeb {
         return ultimoTramite.getNroTramite();
     }
 
-    
+    /*
     public int generarCodTD() {
         int ultimoCodTD = buscarUltimoCodTD();
         return ultimoCodTD + 1;  
     }
+    */
     
     public static int buscarUltimoCodTD() {
 
@@ -255,12 +259,7 @@ public class ExpertoRegistrarTramiteWeb {
     }
     
     
-    public DTOResumen mostrarResumenTipoTramite(int codTipoTramite){
-        
-        TipoTramite tipoTramiteRelacionado = null;
-        EstadoTramite estadoTramite = null;
-        Version version = null;
-        ListaPrecios listaPrecios = null;
+    public DTOResumen mostrarResumenTipoTramite(int codTipoTramite) throws RegistrarTramiteWebException {
  
         List<DTOCriterio> criterioTipoTramiteRelacionadoList = new ArrayList<>();
         DTOCriterio criterioCodigoTT = new DTOCriterio();
@@ -280,19 +279,18 @@ public class ExpertoRegistrarTramiteWeb {
         criterioTipoTramiteRelacionadoList.add(criterioFechaHoraBajaTT);
         
         List<Object> tipoTramiteList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioTipoTramiteRelacionadoList);
-        if (tipoTramiteList != null && !tipoTramiteList.isEmpty()) {
-            tipoTramiteRelacionado = (TipoTramite) tipoTramiteList.get(0);
-        } else {
-            System.out.println("Error: No se encontró un TipoTramite con los criterios especificados.");
-            //return null;  // ver si meto un cartelito de error
+        
+        if (tipoTramiteList == null || tipoTramiteList.isEmpty()) {
+            throw new RegistrarTramiteWebException("No se encontro el TipoTrámite seleccionado.");
         }
+        TipoTramite tipoTramiteRelacionado = (TipoTramite) tipoTramiteList.get(0);
         
         List<DTOCriterio> criterioEstadoTramiteList = new ArrayList<>();
         DTOCriterio criterioNombreEstadoTramite = new DTOCriterio();
         
         criterioNombreEstadoTramite.setAtributo("nombreEstadoTramite");
         criterioNombreEstadoTramite.setOperacion("=");
-        criterioNombreEstadoTramite.setValor("Iniciado"); // ver q nombre quedo al final 
+        criterioNombreEstadoTramite.setValor("Iniciado"); 
         
         criterioEstadoTramiteList.add(criterioNombreEstadoTramite);
         
@@ -305,13 +303,13 @@ public class ExpertoRegistrarTramiteWeb {
         criterioEstadoTramiteList.add(criterioFechaHoraBajaET);
         
         List<Object> estadoTramiteList = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioEstadoTramiteList);
-        if (estadoTramiteList != null && !estadoTramiteList.isEmpty()) {
-            estadoTramite = (EstadoTramite) estadoTramiteList.get(0);
-        } else {
-            System.out.println("Error: No se encontró un EstadoTramite con los criterios especificados.");
-            //return null;  // ver si meto un cartelito de error
+        
+        if (estadoTramiteList == null || estadoTramiteList.isEmpty()) {
+            throw new RegistrarTramiteWebException("No se encontro un EstadoTrámite valido para iniciar el trámite.");
         }
         
+        EstadoTramite estadoTramite = (EstadoTramite) estadoTramiteList.get(0);
+    
         Tramite nuevoTramite = new Tramite();
         
         int nroTramite = generarNroTramite();
@@ -341,6 +339,14 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioUltimaVersionTTList.add(criterioFechaHastaVersion);
         
+        DTOCriterio criterioFechaBajaVersion = new DTOCriterio();
+        
+        criterioFechaBajaVersion.setAtributo("fechaBajaVersion");
+        criterioFechaBajaVersion.setOperacion("=");
+        criterioFechaBajaVersion.setValor(null);
+        
+        criterioUltimaVersionTTList.add(criterioFechaBajaVersion);
+         
         DTOCriterio criterioTTRelacionado = new DTOCriterio();
         
         criterioTTRelacionado.setAtributo("tipoTramite");
@@ -350,12 +356,13 @@ public class ExpertoRegistrarTramiteWeb {
         criterioUltimaVersionTTList.add(criterioTTRelacionado);
         
         List<Object> versionList = FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionTTList);
-        if (versionList != null && !versionList.isEmpty()) {
-            version = (Version) versionList.get(0);
-        } else {
-            System.out.println("Error: No se encontró una Versión con los criterios especificados.");
-            //return null;  // ver si meto un cartelito de error
+        
+        if (versionList == null || versionList.isEmpty()) {
+            throw new RegistrarTramiteWebException("No se encontro una version valida para el TipoTramite seleccionado.");
         }
+
+        Version version = (Version) versionList.get(0);
+        
         
         nuevoTramite.setVersion(version);
            
@@ -365,27 +372,25 @@ public class ExpertoRegistrarTramiteWeb {
         tramiteEstadoTramite.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
         tramiteEstadoTramite.setEstadoTramite(estadoTramite);
         
-        nuevoTramite.addTramiteEstadoTramite(tramiteEstadoTramite); //
+        nuevoTramite.addTramiteEstadoTramite(tramiteEstadoTramite); 
         
         List<TipoTramiteDocumentacion> tipoTramiteDocumentacion = tipoTramiteRelacionado.getTipoTramiteDocumentacion();
         
-        // comprobar este if, no estaba en secuencia 
+        int ultimoCodTD = buscarUltimoCodTD();
+
         for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacion){
             if (ttd.getFechaHoraBajaTTD() == null){
                 Documentacion documentacion = ttd.getDocumentacion();
                 TramiteDocumentacion tramiteDocumentacion = new TramiteDocumentacion();
-                
                 tramiteDocumentacion.setArchivoTD(null);
-                int nuevoCodTD = generarCodTD();
-                tramiteDocumentacion.setCodTD(nuevoCodTD);
+                ultimoCodTD++;
+                tramiteDocumentacion.setCodTD(ultimoCodTD);
                 tramiteDocumentacion.setFechaEntregaTD(null);
                 tramiteDocumentacion.setDocumentacion(documentacion);
                 
                 nuevoTramite.addTramiteDocumentacion(tramiteDocumentacion);
             }
-        
-            
-        
+  
         }
 
         List<DTOCriterio> criterioListaPreciosList = new ArrayList<>();
@@ -414,28 +419,35 @@ public class ExpertoRegistrarTramiteWeb {
         criterioListaPreciosList.add(criterioFechaHoraHastaLP); 
         
         List<Object> listaPreciosList = FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioListaPreciosList);
-        if (listaPreciosList != null && !listaPreciosList.isEmpty()) {
-            listaPrecios = (ListaPrecios) listaPreciosList.get(0);
-        } else {
-            System.out.println("Error: No se encontró una ListaPrecios con los criterios especificados.");
-            //return null;  ver si meto un cartelito de error
+        if (listaPreciosList == null || listaPreciosList.isEmpty()) {
+            throw new RegistrarTramiteWebException("No se encontro una Lista de Precios valida.");
         }
+
+        ListaPrecios listaPrecios = (ListaPrecios) listaPreciosList.get(0);
+        
         
         List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = listaPrecios.getTipoTramiteListaPrecios();
         
+        boolean precioEncontrado = false;
+        
         for(TipoTramiteListaPrecios ttlp: tipoTramiteListaPrecios){
             TipoTramite tipoTramite = ttlp.getTipoTramite();
-            System.out.println("el codigo del tramite es:" + tipoTramite.getCodTipoTramite());
+            System.out.println("el codigo del TipoTramite es:" + tipoTramite.getCodTipoTramite());
+            System.out.println("el codigo del TipoTramite relacionado es:" + tipoTramiteRelacionado.getCodTipoTramite());
             if(tipoTramite.getCodTipoTramite() == tipoTramiteRelacionado.getCodTipoTramite()){
                 nuevoTramite.setPrecioTramite(ttlp.getPrecioTipoTramite());
+                precioEncontrado = true;
+                break;
             }
         
         }
+        if (!precioEncontrado) {
+            throw new RegistrarTramiteWebException("El tipo de trámite seleccionado no tiene un precio asignado en la lista de precios activa.");
+        }
 
-        
         DTOResumen dtoResumen = new DTOResumen();
         
-        
+
         dtoResumen.setNombreCliente(nuevoTramite.getCliente().getNombreCliente());
         dtoResumen.setApellidoCliente(nuevoTramite.getCliente().getApellidoCliente());
         dtoResumen.setDniCliente(nuevoTramite.getCliente().getDniCliente());
@@ -451,19 +463,16 @@ public class ExpertoRegistrarTramiteWeb {
         
         return dtoResumen;
 
-        
-        
-       
+         
     }
      
     public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException {
         if (tramiteEnProceso == null) {
-            throw new RegistrarTramiteWebException("No hay un trámite en proceso para registrar.");
+            throw new RegistrarTramiteWebException("No hay un tramite en proceso para registrar.");
         }
 
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        //TipoTramite tipoTramiteRelacionado = tramiteEnProceso.getTipoTramite();
-        //tipoTramiteRelacionado.getTipoTramiteDocumentacion().size();
+
         for (TramiteEstadoTramite tramiteEstadoTramite : tramiteEnProceso.getTramiteEstadoTramite()) {
             FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
         } 
@@ -473,9 +482,9 @@ public class ExpertoRegistrarTramiteWeb {
         }        
 
         FachadaPersistencia.getInstance().guardar(tramiteEnProceso);
+        
         DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();
-
-        //List<DTODocumentacion> DTODocumentacionList = new ArrayList<>();    
+   
         int numeroTramiteObtenido = tramiteEnProceso.getNroTramite();
         
         
@@ -530,23 +539,14 @@ public class ExpertoRegistrarTramiteWeb {
                 }
             }        
         
-        
-        
-        
         int plazoEntregaDocumentacionTT = tipoTramiteEvitandoLazy.getPlazoEntregaDocumentacionTT();
         
-        
-
-        
-        
-        //DTONumeroTramite dtoNumeroTramite = new DTONumeroTramite();      
+         
         dtoNumeroTramite.setNumeroTramite(numeroTramiteObtenido);
         dtoNumeroTramite.setPlazoEntregaDocumentacionTT(plazoEntregaDocumentacionTT);
-        //dtoNumeroTramite.setDocumentaciones(DTODocumentacionList);
-        
+
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
-        // termino y vuelvo a null el tramite en proceso
         tramiteEnProceso = null;
 
         return dtoNumeroTramite;

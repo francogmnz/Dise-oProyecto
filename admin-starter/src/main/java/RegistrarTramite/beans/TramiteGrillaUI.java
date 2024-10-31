@@ -8,6 +8,7 @@ public class TramiteGrillaUI {
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacion;
     private Timestamp fechaInicioTramite;
+    private Timestamp fechaFinTramite;
     private String nombreTipoTramite;
     private int codTipoTramite;
     private String nombreEstado;
@@ -44,8 +45,14 @@ public class TramiteGrillaUI {
     public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
         this.fechaInicioTramite = fechaInicioTramite;
     }
-    
-    
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
+    }
 
     public String getNombreTipoTramite() {
         return nombreTipoTramite;

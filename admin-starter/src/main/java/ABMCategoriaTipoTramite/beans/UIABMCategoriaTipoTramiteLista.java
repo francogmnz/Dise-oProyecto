@@ -91,10 +91,10 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
     public void darDeBajaCategoriaTipoTramite(int codCategoriaTipoTramite){
         try {
             controladorABMCategoriaTipoTramite.darDeBajaCategoriaTipoTramite(codCategoriaTipoTramite);
-            Messages.create("Anulado").detail("Anulado").add();
+            Messages.create("Exito").detail("Categoría dada de baja correctamente.").add();
                     
         } catch (CategoriaTipoTramiteException e) {
-            Messages.create(e.getMessage()).fatal().add();
+            Messages.create("Error").error().detail(e.getMessage()).add();
         }
     }
     

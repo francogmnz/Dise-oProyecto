@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
+import utils.fechaHoraActual;
 import utils.FachadaPersistencia;
 
 /**
@@ -126,7 +127,7 @@ public class ExpertoABMEstadoTramite {
         estadoTramite.setCodEstadoTramite(nuevoEstadoTramiteDTO.getCodEstadoTramite());
         estadoTramite.setNombreEstadoTramite(nuevoEstadoTramiteDTO.getNombreEstadoTramite());
         estadoTramite.setDescripcionEstadoTramite(nuevoEstadoTramiteDTO.getDescripcionEstadoTramite());
-        estadoTramite.setFechaHoraAltaEstadoTramite(new Timestamp(System.currentTimeMillis()));
+        estadoTramite.setFechaHoraAltaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().guardar(estadoTramite);
         FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -256,8 +257,8 @@ public class ExpertoABMEstadoTramite {
 
         // Buscar versiones con fecha actual y sin fecha de baja
         DTOCriterio dto2 = new DTOCriterio();
-        dto2.setAtributo("fechaDesdeVersion");
-        dto2.setOperacion("<");
+        dto2.setAtributo("fechaHastaVersion");
+        dto2.setOperacion(">=");
         dto2.setValor(Timestamp.from(Instant.now()));    
 
         criterioList.add(dto2);
@@ -283,7 +284,7 @@ public class ExpertoABMEstadoTramite {
         }
 
         // Dar de baja el EstadoTramite
-        estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(new Timestamp(System.currentTimeMillis()));
+        estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }

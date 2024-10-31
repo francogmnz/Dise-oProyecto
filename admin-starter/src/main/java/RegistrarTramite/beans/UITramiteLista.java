@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import utils.BeansUtils;
+import utils.fechaHoraActual;
 
 @Named("uitramiteLista")
 @ViewScoped
@@ -22,7 +23,7 @@ public class UITramiteLista implements Serializable {
     // filtros de la lista de tramites
     private int nroTramiteFiltro = 0;
     private int dniFiltro = 0;
-    private Date fechaRecepcionTramiteFiltro = new Timestamp(System.currentTimeMillis());
+    private Date fechaRecepcionTramiteFiltro = fechaHoraActual.obtenerFechaHoraActual();
     private String nombreEstadoFiltro = "";
     private String criterio = "";
 
@@ -119,11 +120,6 @@ public class UITramiteLista implements Serializable {
     // loop por cada DTOTramite desde la UI para mostrar los Tramites filtrados
     public List<TramiteGrillaUI> mostrarTramites() {
 
-//        System.out.println("nroTramiteFiltro:" + nroTramiteFiltro);
-//        System.out.println("fechaRecepcionTramiteFiltro: " + fechaRecepcionTramiteFiltro);
-//        System.out.println("dniFiltro: " + dniFiltro);
-//        System.out.println("codTipoTramiteFiltro:" + codTipoTramiteFiltro);
-//        System.out.println("nombreEstadoFiltro:" + nombreEstadoFiltro);
         if (fechaRecepcionTramiteFiltro != null) {
             Calendar calFiltro = Calendar.getInstance();
             calFiltro.setTime(fechaRecepcionTramiteFiltro);
@@ -147,6 +143,7 @@ public class UITramiteLista implements Serializable {
             // 
             tramiteGrillaUI.setFechaAnulacion(tramiteDTO.getFechaAnulacion());
             tramiteGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
+            tramiteGrillaUI.setFechaFinTramite(tramiteDTO.getFechaFinTramite());
 
             tramiteGrilla.add(tramiteGrillaUI);
         }
@@ -236,14 +233,18 @@ public class UITramiteLista implements Serializable {
     public boolean isAnulado(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaAnulacion() != null;
     }
-
+    
     public boolean isPendienteDoc(TramiteGrillaUI tramiteFila) {
-        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null;
+        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null && tramiteFila.getFechaFinTramite() == null;
     }
-
+    
+    public boolean isFinalizado(TramiteGrillaUI tramiteFila) {
+        return tramiteFila.getFechaFinTramite() != null && tramiteFila.getFechaInicioTramite() != null;
+    }
+    
     public boolean isIniciado(TramiteGrillaUI tramiteFila) {
         // Si no es anulado y no es pendiente de documentación, devolver true
-        return tramiteFila.getFechaInicioTramite() != null;
+        return tramiteFila.getFechaInicioTramite() != null && tramiteFila.getFechaFinTramite() == null;
     }
-
+    
 }

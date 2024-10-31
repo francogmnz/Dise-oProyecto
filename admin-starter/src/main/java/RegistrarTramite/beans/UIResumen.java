@@ -84,6 +84,7 @@ public class UIResumen implements Serializable {
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
                     this.fechaInicioTramite = tramiteElegido.getFechaInicioTramite();
+                    this.fechaFinTramite = tramiteElegido.getFechaFinTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
                     if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
                         Calendar calendar = Calendar.getInstance();

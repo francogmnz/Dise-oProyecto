@@ -13,6 +13,7 @@ import RegistrarTramiteWeb.dtos.DTOResumen;
 import RegistrarTramiteWeb.dtos.DTOTipoTramite;
 import RegistrarTramiteWeb.exceptions.RegistrarTramiteWebException;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.IOException;
@@ -51,8 +52,9 @@ public class RegistrarTramiteWebUI implements Serializable {
     private int numeroTramite;
     private List<DTODocumentacion> documentaciones = new ArrayList<>();
 
-     
-    private String mensajeError;
+    private List<CategoriaGrillaUI> categoriasGrilla;
+    private List<TipoTramiteGrillaUI> tiposTramiteGrilla;
+
     
     public ControladorRegistrarTramiteWeb getControladorRegistrarTramiteWeb() {
         return controladorRegistrarTramiteWeb;
@@ -166,49 +168,78 @@ public class RegistrarTramiteWebUI implements Serializable {
         this.documentaciones = documentaciones;
     }
  
-    public String getMensajeError() {
-        return mensajeError;
+    public List<CategoriaGrillaUI> getCategoriasGrilla() {
+        return categoriasGrilla;
     }
 
-    public void setMensajeError(String mensajeError) {
-        this.mensajeError = mensajeError;
+    public void setCategoriasGrilla(List<CategoriaGrillaUI> categoriasGrilla) {
+        this.categoriasGrilla = categoriasGrilla;
+    }
+    
+    public List<TipoTramiteGrillaUI> getTiposTramiteGrilla() {
+        return tiposTramiteGrilla;
     }
 
+    public void setTiposTramiteGrilla(List<TipoTramiteGrillaUI> tiposTramiteGrilla) {
+        this.tiposTramiteGrilla = tiposTramiteGrilla;
+    }
+
+    public void cargarClienteBuscado() throws RegistrarTramiteWebException {
+        DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
+        if (clienteBuscado != null) {
+            dniCliente = clienteBuscado.getDniCliente();
+            nombreCliente = clienteBuscado.getNombreCliente();
+            apellidoCliente = clienteBuscado.getApellidoCliente();
+            mailCliente = clienteBuscado.getMailCliente();
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Cliente no encontrado."));
+        }
+    }    
     
     public String ingresarDNI() {
         try {
-            DTOCliente clienteBuscado = controladorRegistrarTramiteWeb.buscarClienteIngresado(dniCliente);
-            mensajeError = null;
-            if (clienteBuscado != null) {
-                dniCliente = clienteBuscado.getDniCliente();
-                nombreCliente = clienteBuscado.getNombreCliente();
-                apellidoCliente = clienteBuscado.getApellidoCliente();
-                mailCliente = clienteBuscado.getMailCliente();
-                                       
-                return "confirmarCliente?faces-redirect=true";
-            } else {
-                mensajeError = "Cliente no encontrado.";
-                return null; 
-            }
+            cargarClienteBuscado();
+            return "confirmarCliente?faces-redirect=true";
         } catch (RegistrarTramiteWebException e) {
-            mensajeError = e.getMessage();
-            return null; 
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+            return null;
         }
-    }  
+    }
  
     public String volverIngresarDNI() {
         resetearIngresarDNI();
         return "ingresarDNI?faces-redirect=true";
     }    
     
-    public String confirmarCliente() {
-        if (!confirmaCliente){
-            mensajeError = "Debe confirmar que usted es el cliente mostrado.";
-            return null;    
+    public void cargarCategoriasTipoTramite() throws RegistrarTramiteWebException {
+        categoriasGrilla = new ArrayList<>();
+        List<DTOCategoriaTipoTramite> categoriasTipoTramiteDTO = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
+        for (DTOCategoriaTipoTramite dtoCategoriaTT : categoriasTipoTramiteDTO) {
+            CategoriaGrillaUI categoriaUI = new CategoriaGrillaUI();
+            categoriaUI.setCodCategoriaTipoTramite(dtoCategoriaTT.getCodCategoriaTipoTramite());
+            categoriaUI.setNombreCategoriaTipoTramite(dtoCategoriaTT.getNombreCategoriaTipoTramite());
+            categoriaUI.setDescripcionCategoriaTipoTramite(dtoCategoriaTT.getDescripcionCategoriaTipoTramite());
+            categoriaUI.setDescripcionWebCategoriaTipoTramite(dtoCategoriaTT.getDescripcionWebCategoriaTipoTramite());
+            categoriasGrilla.add(categoriaUI);
         }
-        mensajeError = null;
-        listarCategoriasTipoTramite();
-        return "seleccionarCategoria?faces-redirect=true"; //?faces-redirect=true
+    }
+
+    public String confirmarCliente() {
+        if (!confirmaCliente) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Debe confirmar que usted es el cliente mostrado."));
+            return null;
+        }
+        try {
+            cargarCategoriasTipoTramite();
+            return "seleccionarCategoria?faces-redirect=true";
+        } catch (RegistrarTramiteWebException e) {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error - ", e.getMessage()));
+            return null;
+        }
     }
 
     public String volverConfirmarCliente() {
@@ -216,76 +247,68 @@ public class RegistrarTramiteWebUI implements Serializable {
         return "confirmarCliente?faces-redirect=true";
     }    
     
-
-    
-    public List<CategoriaGrillaUI> listarCategoriasTipoTramite() {
-        List<CategoriaGrillaUI> categoriasGrilla = new ArrayList<>();
-        try {
-            List<DTOCategoriaTipoTramite> categoriasTipoTramiteDTO = controladorRegistrarTramiteWeb.listarCategoriasTipoTramite();
-            for (DTOCategoriaTipoTramite DTOCategoriaTT : categoriasTipoTramiteDTO) {
-                
-                CategoriaGrillaUI categoriaUI = new CategoriaGrillaUI();
-                categoriaUI.setCodCategoriaTipoTramite(DTOCategoriaTT.getCodCategoriaTipoTramite());
-                categoriaUI.setNombreCategoriaTipoTramite(DTOCategoriaTT.getNombreCategoriaTipoTramite());
-                categoriaUI.setDescripcionCategoriaTipoTramite(DTOCategoriaTT.getDescripcionCategoriaTipoTramite());
-                categoriaUI.setDescripcionWebCategoriaTipoTramite(DTOCategoriaTT.getDescripcionWebCategoriaTipoTramite());
-
-                categoriasGrilla.add(categoriaUI);
-            }
-            mensajeError = null;
-        } catch (RegistrarTramiteWebException e) {
-            mensajeError = e.getMessage();
-            categoriasGrilla = new ArrayList<>();
+    public void cargarTiposTramites() throws RegistrarTramiteWebException {
+        tiposTramiteGrilla = new ArrayList<>();
+        List<DTOTipoTramite> tipoTramitesDTO = controladorRegistrarTramiteWeb.listarTipoTramites(codCategoriaSeleccionada);
+        for (DTOTipoTramite tipoTramiteDTO : tipoTramitesDTO) {
+            TipoTramiteGrillaUI tipoTramiteGrillaUI = new TipoTramiteGrillaUI();
+            tipoTramiteGrillaUI.setCodTipoTramite(tipoTramiteDTO.getCodTipoTramite());
+            tipoTramiteGrillaUI.setNombreTipoTramite(tipoTramiteDTO.getNombreTipoTramite());
+            tipoTramiteGrillaUI.setDescripcionTipoTramite(tipoTramiteDTO.getDescripcionTipoTramite());
+            tipoTramiteGrillaUI.setDescripcionWebTipoTramite(tipoTramiteDTO.getDescripcionWebTipoTramite());
+            tipoTramiteGrillaUI.setDocumentaciones(tipoTramiteDTO.getDocumentaciones());
+            tiposTramiteGrilla.add(tipoTramiteGrillaUI);
         }
-        return categoriasGrilla;
     }
     
     public String seleccionarCategoria() {
         if (codCategoriaSeleccionada != 0) {
-            listarTipoTramites();
-            return "seleccionarTipoTramite?faces-redirect=true"; //?faces-redirect=true
+            try {
+                cargarTiposTramites(); 
+                return "seleccionarTipoTramite?faces-redirect=true"; 
+            } catch (RegistrarTramiteWebException e) {
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+                return null;
+            }
         } else {
-            mensajeError = "Debe seleccionar una categoría.";
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Debe seleccionar una categoría."));            
             return null;
         }
-    }  
-    
+    }
+   
     public String volverSeleccionarCategoria() {
         resetearSeleccionarCategoria();
         return "seleccionarCategoria?faces-redirect=true";
     }    
     
+    public void cargarResumen() throws RegistrarTramiteWebException {
+        DTOResumen dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramiteSeleccionado);
 
-    
-    
-    public List<TipoTramiteGrillaUI> listarTipoTramites() {
-        List<TipoTramiteGrillaUI> tiposTramiteGrilla = new ArrayList<>();
-        try {
-            List<DTOTipoTramite> tipoTramitesDTO = controladorRegistrarTramiteWeb.listarTipoTramites(codCategoriaSeleccionada);
-            for (DTOTipoTramite tipoTramiteDTO : tipoTramitesDTO) {
-                TipoTramiteGrillaUI tipoTramiteGrilla = new TipoTramiteGrillaUI();
-                tipoTramiteGrilla.setCodTipoTramite(tipoTramiteDTO.getCodTipoTramite());
-                tipoTramiteGrilla.setNombreTipoTramite(tipoTramiteDTO.getNombreTipoTramite());
-                tipoTramiteGrilla.setDescripcionTipoTramite(tipoTramiteDTO.getDescripcionTipoTramite());
-                tipoTramiteGrilla.setDescripcionWebTipoTramite(tipoTramiteDTO.getDescripcionWebTipoTramite());
-                tipoTramiteGrilla.setDocumentaciones(tipoTramiteDTO.getDocumentaciones());
-
-                tiposTramiteGrilla.add(tipoTramiteGrilla);
-                
-            }
-        } catch (RegistrarTramiteWebException e) {
-            mensajeError = e.getMessage();
-            tiposTramiteGrilla = null;
-        }
-        return tiposTramiteGrilla;
+        dniCliente = dtoResumen.getDniCliente();
+        nombreCliente = dtoResumen.getNombreCliente();
+        apellidoCliente = dtoResumen.getApellidoCliente();
+        mailCliente = dtoResumen.getMailCliente();
+        nombreTipoTramite = dtoResumen.getNombreTipoTramite();
+        descripcionTipoTramite = dtoResumen.getDescripcionTipoTramite();
+        plazoEntregaDocumentacionTT = dtoResumen.getPlazoEntregaDocumentacionTT();
+        precioTramite = dtoResumen.getPrecioTramite();
     }
-    
+      
     public String seleccionarTipoTramite() {
         if (codTipoTramiteSeleccionado != 0) {
-            irAResumen();
-            return "mostrarResumen?faces-redirect=true"; //?faces-redirect=true
+            try {
+                cargarResumen(); 
+                return "mostrarResumen?faces-redirect=true";
+            } catch (RegistrarTramiteWebException e) {
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));           
+                return null;
+            }
         } else {
-            mensajeError = "Debe seleccionar un tipo de trámite.";
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Debe seleccionar un tipo de trámite."));             
             return null;
         }
     }
@@ -295,48 +318,25 @@ public class RegistrarTramiteWebUI implements Serializable {
         return "seleccionarTipoTramite?faces-redirect=true";
     }   
     
- 
-    public void irAResumen() {
-        try {
-            DTOResumen dtoResumen = controladorRegistrarTramiteWeb.mostrarResumenTipoTramite(codTipoTramiteSeleccionado);
-            
-            dniCliente = dtoResumen.getDniCliente();
-            nombreCliente = dtoResumen.getNombreCliente();
-            apellidoCliente = dtoResumen.getApellidoCliente();
-            mailCliente = dtoResumen.getMailCliente();
-            
-            nombreTipoTramite = dtoResumen.getNombreTipoTramite();
-            descripcionTipoTramite = dtoResumen.getDescripcionTipoTramite();
-            plazoEntregaDocumentacionTT = dtoResumen.getPlazoEntregaDocumentacionTT();
-            
-            precioTramite = dtoResumen.getPrecioTramite();
-            
+    public void cargarNumeroTramite() throws RegistrarTramiteWebException {
+        DTONumeroTramite dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
 
-            
-        } catch (RegistrarTramiteWebException e) {
-            mensajeError = e.getMessage();
-            //resumenUI = null;
-        }
-    }    
-
-
-    
-    
+        numeroTramite = dtoNumeroTramite.getNumeroTramite();
+        plazoEntregaDocumentacionTT = dtoNumeroTramite.getPlazoEntregaDocumentacionTT();
+        documentaciones = dtoNumeroTramite.getDocumentaciones();
+    }
+      
     public String confirmarTramite() {
         try {
-            DTONumeroTramite dtoNumeroTramite = controladorRegistrarTramiteWeb.registrarTramite();
-
-            numeroTramite = dtoNumeroTramite.getNumeroTramite();
-            plazoEntregaDocumentacionTT = dtoNumeroTramite.getPlazoEntregaDocumentacionTT();
-            documentaciones =dtoNumeroTramite.getDocumentaciones();
- 
-            return "mostrarNumeroTramite?faces-redirect=true"; //?faces-redirect=true
+            cargarNumeroTramite(); 
+            return "mostrarNumeroTramite?faces-redirect=true"; 
         } catch (RegistrarTramiteWebException e) {
-            mensajeError = e.getMessage();
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));            
             return null;
         }
     }
-    
+ 
     public void cancelar() throws IOException { 
         try {
             controladorRegistrarTramiteWeb.resetearEstado();
@@ -357,11 +357,12 @@ public class RegistrarTramiteWebUI implements Serializable {
         }
     }  
     
-    public void resetearEstado() {
+    private void resetearEstado() {
         dniCliente = 0;
         nombreCliente = null;
         apellidoCliente = null;
         mailCliente = null;
+        confirmaCliente = false;
         codCategoriaSeleccionada = 0;
         codTipoTramiteSeleccionado = 0;
         nombreTipoTramite = null;
@@ -370,46 +371,136 @@ public class RegistrarTramiteWebUI implements Serializable {
         precioTramite = 0.0;
         numeroTramite = 0;
         documentaciones.clear();
-        confirmaCliente = false;
-        mensajeError = null;
+        categoriasGrilla = new ArrayList<>();
+        tiposTramiteGrilla = new ArrayList<>();
     }
 
     private void resetearIngresarDNI() {
-        dniCliente = 0;
-        nombreCliente = null;
-        apellidoCliente = null;
-        mailCliente = null;
-        mensajeError = null;
+        resetearEstado();
     }
 
     private void resetearConfirmarCliente() {
         confirmaCliente = false;
         codCategoriaSeleccionada = 0;
         codTipoTramiteSeleccionado = 0;
-        mensajeError = null;
-
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
         precioTramite = 0.0;
+        numeroTramite = 0;
+        documentaciones.clear();
+        categoriasGrilla = new ArrayList<>();
+        tiposTramiteGrilla = new ArrayList<>();
     }
 
     private void resetearSeleccionarCategoria() {
+        codCategoriaSeleccionada = 0;
         codTipoTramiteSeleccionado = 0;
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
         precioTramite = 0.0;
-        mensajeError = null;
+        numeroTramite = 0;
         documentaciones.clear();
+        tiposTramiteGrilla = new ArrayList<>();
     }
 
     private void resetearSeleccionarTipoTramite() {
+        codTipoTramiteSeleccionado = 0;
         nombreTipoTramite = null;
         descripcionTipoTramite = null;
         plazoEntregaDocumentacionTT = 0;
         precioTramite = 0.0;
-        mensajeError = null;
+        numeroTramite = 0;
+        documentaciones.clear();
     }
+
+    public void verificarEstadoEnIngresarDNI() {
+        resetearEstado();
+    }
+    public void verificarEstadoEnConfirmarCliente() {
+        if (nombreCliente == null) {
+            resetearEstado();
+            redirect("ingresarDNI.jsf", "Debe ingresar su DNI antes de confirmar el cliente.");
+        }
+    }
+    public void verificarEstadoEnSeleccionarCategoria() {
+        if (nombreCliente == null) {
+            resetearEstado();
+            redirect("ingresarDNI.jsf", "Debe ingresar su DNI antes de seleccionar una categoria.");
+        } else if (!confirmaCliente) {
+            resetearConfirmarCliente();
+            redirect("confirmarCliente.jsf", "Debe confirmar que usted es el cliente antes de continuar.");
+        }
+    }
+
+    public void verificarEstadoEnSeleccionarTipoTramite() {
+        if (codCategoriaSeleccionada == 0) {
+            resetearSeleccionarCategoria();
+            redirect("seleccionarCategoria.jsf", "Debe seleccionar una categoria antes de elegir un tipo de tramite.");
+        }
+    }
+
+    public void verificarEstadoEnResumen() {
+        if (codTipoTramiteSeleccionado == 0) {
+            resetearSeleccionarTipoTramite();
+            redirect("seleccionarTipoTramite.jsf", "Debe seleccionar un tipo de tramite antes de ver el resumen.");
+        }
+    } 
+    
+    public void verificarEstadoEnMostrarNumeroTramite() {
+        if (numeroTramite == 0) {
+            resetearEstado();
+            redirect("ingresarDNI.jsf", "No hay un tramite registrado para mostrar. Por favor, inicie el proceso nuevamente.");
+        }
+    }
+
+    private void redirect(String pagina, String mensaje) {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (IOException e) {
+            Messages.create("Error al redirigir a " + pagina).fatal().add();
+        }
+        if (mensaje != null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_WARN, mensaje, null));
+        }
+    }
+
+// Borrar desde aqui - Casos de prueba Testing
+   
+    private int codigoCategoriaTTPrueba;
+    private int codTipoTramitePrueba;
+
+
+    public int getCodigoCategoriaTTPrueba() {
+        return codigoCategoriaTTPrueba;
+    }
+
+    public void setCodigoCategoriaTTPrueba(int codigoCategoriaTTPrueba) {
+        this.codigoCategoriaTTPrueba = codigoCategoriaTTPrueba;
+    }
+
+    public int getCodTipoTramitePrueba() {
+        return codTipoTramitePrueba;
+    }
+
+    public void setCodTipoTramitePrueba(int codTipoTramitePrueba) {
+        this.codTipoTramitePrueba = codTipoTramitePrueba;
+    }
+
+    public String probarSeleccionarCategoria() {
+
+        codCategoriaSeleccionada = codigoCategoriaTTPrueba;
+        return seleccionarCategoria();
+    }
+
+    public String probarSeleccionarTipoTramite() {
+
+        codTipoTramiteSeleccionado = codTipoTramitePrueba;
+        return seleccionarTipoTramite();
+    }
+
 
 }
