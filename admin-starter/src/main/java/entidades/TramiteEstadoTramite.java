@@ -1,21 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package entidades;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author licciardi
- */
 public class TramiteEstadoTramite extends Entidad {
-
-    private Timestamp fechaHoraAltaTET;
-    private Timestamp fechaHoraBajaTET;
-    private EstadoTramite estadoTramite;  // Relación ManyToOne con EstadoTramite
+    
+    private Timestamp fechaDesdeTET;
+    private Timestamp fechaHastaTET;
+    private EstadoTramite estadoTramite;
     private int contadorTET;
+
+    public TramiteEstadoTramite() {
+    }
 
     public int getContadorTET() {
         return contadorTET;
@@ -25,24 +21,23 @@ public class TramiteEstadoTramite extends Entidad {
         this.contadorTET = contadorTET;
     }
 
-    public TramiteEstadoTramite() {
+    public Timestamp getFechaDesdeTET() {
+        return fechaDesdeTET;
     }
 
-    public Timestamp getFechaHoraAltaTET() {
-        return fechaHoraAltaTET;
+    public void setFechaDesdeTET(Timestamp fechaDesdeTET) {
+        this.fechaDesdeTET = fechaDesdeTET;
     }
 
-    public void setFechaHoraAltaTET(Timestamp fechaHoraAltaTET) {
-        this.fechaHoraAltaTET = fechaHoraAltaTET;
+    public Timestamp getFechaHastaTET() {
+        return fechaHastaTET;
     }
 
-    public Timestamp getFechaHoraBajaTET() {
-        return fechaHoraBajaTET;
+    public void setFechaHastaTET(Timestamp fechaHastaTET) {
+        this.fechaHastaTET = fechaHastaTET;
     }
 
-    public void setFechaHoraBajaTET(Timestamp fechaHoraBajaTET) {
-        this.fechaHoraBajaTET = fechaHoraBajaTET;
-    }
+
 
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
@@ -51,5 +46,9 @@ public class TramiteEstadoTramite extends Entidad {
     public void setEstadoTramite(EstadoTramite estadoTramite) {
         this.estadoTramite = estadoTramite;
     }
-
+    
+    
+    
+    
+    
 }

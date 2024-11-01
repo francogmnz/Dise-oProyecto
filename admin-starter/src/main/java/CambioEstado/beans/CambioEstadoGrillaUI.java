@@ -1,6 +1,7 @@
 
 package CambioEstado.beans;
 
+import entidades.Consultor;
 import entidades.EstadoTramite;
 import java.sql.Timestamp;
 
@@ -9,8 +10,19 @@ public class CambioEstadoGrillaUI {
 
     private int codConsultor;
     private int nroTramite;
+    private Consultor consultor;
     private Timestamp fechaInicioTramite;
     private Timestamp  fechaRecepcionTramite;
+
+    public Consultor getConsultor() {
+        return consultor;
+    }
+
+    public void setConsultor(Consultor consultor) {
+        this.consultor = consultor;
+    }
+
+    
 
     public int getCodConsultor() {
         return codConsultor;

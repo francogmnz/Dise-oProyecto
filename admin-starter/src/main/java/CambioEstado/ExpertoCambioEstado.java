@@ -1,5 +1,7 @@
 package CambioEstado;
 
+import CambioEstado.dtos.DTOHistorialEstado;
+import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
@@ -94,8 +96,7 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
         FachadaPersistencia.getInstance().guardar(tramite);
     }
    
-    // Método para cambiar el estado del trámite
-    public TramiteEstadoTramite cambiarEstado(int nroTramite) {
+   public TramiteEstadoTramite cambiarEstado(int nroTramite) {
         FachadaPersistencia.getInstance().iniciarTransaccion(); // Iniciar la transacción para la persistencia
         List<DTOCriterio> criterioList = new ArrayList<>();
 
@@ -191,13 +192,13 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
 
             // Actualizar TramiteEstadoTramite (TET)
             for (TramiteEstadoTramite tramiteEstado : tramite.getTramiteEstadoTramite()) {
-                if (tramiteEstado.getFechaHoraAltaTET() == null) {
-                    tramiteEstado.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+                if (tramiteEstado.getFechaDesdeTET() == null) {
+                    tramiteEstado.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
 
                     // Crear nuevo estado del trámite (nuevo TET)
                     TramiteEstadoTramite nuevoTET = new TramiteEstadoTramite();
                     nuevoTET.setEstadoTramite(tramiteEstado.getEstadoTramite()); // Asigna el nuevo estado
-                    nuevoTET.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+                    nuevoTET.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
                     nuevoTET.setContadorTET(tramiteEstado.getContadorTET() + 1);
                     // Guardar el nuevo TET
                     FachadaPersistencia.getInstance().guardar(nuevoTET); // Guardar el nuevo estado en la BD
@@ -216,8 +217,7 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
         }
         return null;
     }
-    
-    public List<TramiteEstadoTramite> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException {
+    public List<DTOMostrarHistorial> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException {
     // Iniciar la transacción
     FachadaPersistencia.getInstance().iniciarTransaccion();
     
@@ -234,14 +234,41 @@ public List<DTOTramitesVigentes> buscarTramites(int legajoConsultor) {
     }
 
     Tramite tramite = (Tramite) tramites.get(0);
-
+    
     // Obtener el historial de estados
-    List<TramiteEstadoTramite> historialEstados = tramite.getTramiteEstadoTramite();
+    List<TramiteEstadoTramite> listaTramiteEstado = tramite.getTramiteEstadoTramite();
     
+    // Crear el DTO que contendrá la lista de historial
+    DTOMostrarHistorial dtoMostrarHistorial = new DTOMostrarHistorial();
+
+    // Recorrer los estados y llenar el DTO
+    for (TramiteEstadoTramite estadoTramite : listaTramiteEstado) {
+        EstadoTramite estado = estadoTramite.getEstadoTramite();
+        
+        // Crear nuevo objeto DTOHistorialEstado
+        DTOHistorialEstado dtoHistorial = new DTOHistorialEstado();
+        
+        // Setear los valores en el DTO desde estadoTramite y estado
+        dtoHistorial.setContador(estadoTramite.getContadorTET());
+        dtoHistorial.setFechaDesdeTET(estadoTramite.getFechaDesdeTET());
+        dtoHistorial.setFechaHastaTET(estadoTramite.getFechaHastaTET());
+        dtoHistorial.setNombreEstadoTramite(estado.getNombreEstadoTramite());
+        
+        // Añadir el DTOHistorialEstado a la lista de historial
+        dtoMostrarHistorial.addHistorialEstado(dtoHistorial);
+    }
+
+    // Crear la lista de DTOMostrarHistorial para retornar
+    List<DTOMostrarHistorial> listaHistorial = new ArrayList<>();
+    listaHistorial.add(dtoMostrarHistorial);
+
+    // Finalizar transacción
     FachadaPersistencia.getInstance().finalizarTransaccion();
-    
-    return historialEstados;
+
+    // Retornar la lista completa de DTOMostrarHistorial
+    return listaHistorial;
 }
+
 
 
         // Actualizar el estado del trámite

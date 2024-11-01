@@ -1,13 +1,22 @@
 package CambioEstado.dtos;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class DTOHistorialEstado {
     private String nombreEstadoTramite;
-    private LocalDateTime fechaDesdeTET;
-    private LocalDateTime fechaHastaTET;
+    private Timestamp fechaDesdeTET;
+    private Timestamp fechaHastaTET;
+    private int contador;
+
+    public int getContador() {
+        return contador;
+    }
 
     // Getters y Setters
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
 
     public String getNombreEstadoTramite() {
         return nombreEstadoTramite;
@@ -17,19 +26,21 @@ public class DTOHistorialEstado {
         this.nombreEstadoTramite = nombreEstadoTramite;
     }
 
-    public LocalDateTime getFechaDesdeTET() {
+    public Timestamp getFechaDesdeTET() {
         return fechaDesdeTET;
     }
 
-    public void setFechaDesdeTET(LocalDateTime fechaDesdeTET) {
+    public void setFechaDesdeTET(Timestamp fechaDesdeTET) {
         this.fechaDesdeTET = fechaDesdeTET;
     }
 
-    public LocalDateTime getFechaHastaTET() {
+    public Timestamp getFechaHastaTET() {
         return fechaHastaTET;
     }
 
-    public void setFechaHastaTET(LocalDateTime fechaHastaTET) {
+    public void setFechaHastaTET(Timestamp fechaHastaTET) {
         this.fechaHastaTET = fechaHastaTET;
     }
+
+
 }

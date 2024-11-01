@@ -1,13 +1,18 @@
 package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
+import CambioEstado.dtos.DTOHistorialEstado;
+import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
+import CambioEstado.exceptions.CambioEstadoException;
+import entidades.TramiteEstadoTramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import utils.BeansUtils;
 
 @Named("uicambioEstadoLista")
 @ViewScoped
@@ -16,7 +21,32 @@ public class UICambioEstadoLista implements Serializable {
     private ControladorCambioEstado controladorCambioEstado = new ControladorCambioEstado();
     private int codigoFiltro = 0;
     private String nombreFiltro = "";
+    private String nombreTramite;
+    private int nroTramite;
+    
+    private List<DTOHistorialEstado> listaHistorial = new ArrayList<>();
 
+public List<DTOHistorialEstado> getListaHistorial() {
+    return listaHistorial;
+}
+
+    public String getNombreTramite() {
+        return nombreTramite;
+    }
+
+    public void setNombreTramite(String nombreTramite) {
+        this.nombreTramite = nombreTramite;
+    }
+
+    public int getNroTramite() {
+        return nroTramite;
+    }
+
+    public void setNroTramite(int nroTramite) {
+        this.nroTramite = nroTramite;
+    }
+
+    
     public ControladorCambioEstado getControladorCambioEstado() {
         return controladorCambioEstado;
     }
@@ -44,6 +74,14 @@ public class UICambioEstadoLista implements Serializable {
     public void filtrar() {
         // Implementar lógica de filtrado según los filtros si es necesario
     }
+    
+    public String irMostrarHistorialEstados(int nroTramite) {
+    this.nroTramite = nroTramite; // Set it in case it's required on the next page
+        System.out.println("Hola");
+            
+    BeansUtils.guardarUrlAnterior();
+    return "/CambioEstado/HistorialTramite.xhtml?faces-redirect=true&nroTramite=" + nroTramite;
+}
 
     public List<CambioEstadoGrillaUI> buscarTramites() {
         System.out.println(codigoFiltro); // Código del consultor
@@ -79,6 +117,34 @@ public class UICambioEstadoLista implements Serializable {
         // Retornar la lista de objetos para mostrar en la grilla
         return cambioEstadoGrilla;
     }
+public List<DTOHistorialEstado> mostrarHistorialEstados() throws CambioEstadoException {
+    // Usar el valor de `nroTramite` almacenado en la clase
+    List<DTOMostrarHistorial> listaMostrarHistorial = controladorCambioEstado.obtenerHistorialEstados(this.nroTramite);
+
+    if (listaMostrarHistorial == null || listaMostrarHistorial.isEmpty()) {
+        System.out.println("No se encontró historial para el trámite: " + nroTramite);
+        return new ArrayList<>();
+    }
+
+    List<DTOHistorialEstado> listaHistorial = new ArrayList<>();
+
+    for (DTOMostrarHistorial mostrarHistorial : listaMostrarHistorial) {
+        listaHistorial.addAll(mostrarHistorial.getHistorialEstados());
+    }
+
+    for (DTOHistorialEstado estado : listaHistorial) {
+        System.out.println("Estado: " + estado.getNombreEstadoTramite());
+        System.out.println("Fecha Desde: " + estado.getFechaDesdeTET());
+        System.out.println("Fecha Hasta: " + estado.getFechaHastaTET());
+        System.out.println("Contador: " + estado.getContador());
+    }
+
+    return listaHistorial;
+}
+}
+        // Redirigir a la página de historial de versiones
+//        return versionHistoricoGrillaUI;
+  
 
 
 
@@ -101,4 +167,3 @@ public class UICambioEstadoLista implements Serializable {
 
         }
     }*/
-}

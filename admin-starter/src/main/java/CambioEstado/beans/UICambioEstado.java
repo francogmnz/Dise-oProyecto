@@ -92,10 +92,8 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
 }
 
 // Method to fetch the history
-public void mostrarHistorial(int nroTramite) throws CambioEstadoException {
-    ExpertoCambioEstado experto = new ExpertoCambioEstado();
-    historialEstados = experto.obtenerHistorialEstados(nroTramite);
-}
+
+
 
     
 

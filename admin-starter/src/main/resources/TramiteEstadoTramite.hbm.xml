@@ -10,9 +10,9 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="fechaHoraAltaTET" column="fecha_hora_alta_tet" type="timestamp"/>
+        <property name="fechaDesdeTET" column="fecha_desde_tet" type="timestamp"/>
 
-        <property name="fechaHoraBajaTET" column="fecha_hora_baja_tet" type="timestamp"/>
+        <property name="fechaHastaTET" column="fecha_hasta_tet" type="timestamp"/>
      
         <property name="contadorTET" column="contador_TET" type="int"/>
 
