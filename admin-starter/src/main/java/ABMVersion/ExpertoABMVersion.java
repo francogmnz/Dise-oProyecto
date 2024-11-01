@@ -299,10 +299,7 @@ public class ExpertoABMVersion {
                     // Guardar la configuración en la base de datos
 
                     //probando comprobacion de estado origen q no quede suelto 
-                    if (dtoO.getDtoEstadoDestinoList().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "El estado de origen " + dtoO.getCodEstadoTramite() + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return false;  // No continuar si algún estado está desconectado
-                    }
+                    
 
                     f.guardar(cttet);
                 } else {

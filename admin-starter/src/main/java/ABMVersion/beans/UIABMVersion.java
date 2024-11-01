@@ -246,7 +246,7 @@ public class UIABMVersion implements Serializable {
                     unE.setYpos(80);
                     lestados.add(unE);
                 }
-              
+
             }
             cargarJSON = gson.toJson(lestados);
         }
@@ -288,17 +288,18 @@ public class UIABMVersion implements Serializable {
             return;  // Si hay un error en el procesamiento del JSON, no continuar
         }
 
+        if (listaNodo.size() <= 1) {
+            JOptionPane.showMessageDialog(null, "La version debe de tener mas de un estado para continuar "
+                    + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         // Validar que los nodos tienen estados de destino conectados
         for (NodoIU unNodo : listaNodo) {
             DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
             ori.setCodEstadoTramite(unNodo.getCodigo());
 
             // Comprobación de que el estado de origen no quede suelto
-            if (unNodo.getDestinos().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "El estado de origen " + unNodo.getCodigo() + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;  // No continuar si algún estado está desconectado
-            }
-
             // Añadir los destinos al DTO de origen
             for (Integer i : unNodo.getDestinos()) {
                 DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();

@@ -3,6 +3,7 @@ package CambioEstado;
 import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.exceptions.CambioEstadoException;
+import entidades.EstadoTramite;
 import entidades.TramiteEstadoTramite;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,4 +25,7 @@ public class ControladorCambioEstado {
    public List<DTOMostrarHistorial> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException{
        return expertoCambioEstado.obtenerHistorialEstados(nroTramite);
    }
+
+
+
 }
