@@ -11,7 +11,18 @@ import org.primefaces.shaded.json.JSONObject;
 
 public class fechaHoraActual {
 
+    private static Timestamp cachedTimestamp = null;
+    private static long lastFetchTime = 0;
+    private static final long CACHE_DURATION = 60000; // 60 segundos (60000 ms)
+
     public static Timestamp obtenerFechaHoraActual() {
+        long currentTime = System.currentTimeMillis();
+        
+        // Verificar si el cache es válido
+        if (cachedTimestamp != null && (currentTime - lastFetchTime < CACHE_DURATION)) {
+            return cachedTimestamp; // Devolver el timestamp cacheado
+        }
+
         String url = "https://timeapi.io/api/Time/current/zone?timeZone=America/Argentina/Mendoza";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -29,7 +40,10 @@ public class fechaHoraActual {
             LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ISO_DATE_TIME);
 
             // Convertimos LocalDateTime a Timestamp
-            return Timestamp.valueOf(localDateTime);
+            cachedTimestamp = Timestamp.valueOf(localDateTime);
+            lastFetchTime = currentTime; // Actualizar el tiempo de última obtención
+
+            return cachedTimestamp;
 
         } catch (Exception e) {
             e.printStackTrace();
