@@ -7,7 +7,7 @@
     <artifactId>admin-starter</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>probando-cambioEstado</name>
+    <name>admin-starter</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

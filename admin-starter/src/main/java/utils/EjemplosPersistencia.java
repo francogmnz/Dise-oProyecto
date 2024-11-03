@@ -375,8 +375,8 @@ public class EjemplosPersistencia {
     FachadaPersistencia.getInstance().guardar(tramiteDoc2);
     
     TramiteEstadoTramite tet1 = new TramiteEstadoTramite();
-    tet1.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
-    tet1.setFechaHastaTET(null);  // Que no esten dados de baja
+    tet1.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+    tet1.setFechaHoraBajaTET(null);  // Que no esten dados de baja
     tet1.setEstadoTramite(etapaUno);
 
 
@@ -385,8 +385,8 @@ public class EjemplosPersistencia {
 
 
     TramiteEstadoTramite tet2 = new TramiteEstadoTramite();
-    tet2.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
-    tet2.setFechaHastaTET(null);  // Que no esten dados de baja
+    tet2.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+    tet2.setFechaHoraBajaTET(null);  // Que no esten dados de baja
     tet2.setEstadoTramite(etapaDos);
 
 

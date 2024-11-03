@@ -197,10 +197,8 @@
                                               style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
                             </p:column>
 
-                            <!-- Columna: Botón Agregar/Editar Entrega -->
+                            <!-- Columna: Agregar/Editar Entrega -->
                             <p:column style="text-align: center">
-<<<<<<< HEAD
-
                                 <f:facet name="header">Agregar</f:facet>
                                 <h:form id="form#{doc.codTD}">
                                     <h:inputHidden id="codTD" value="#{doc.codTD}" />
@@ -219,12 +217,12 @@
                             </p:column>
 
                             <!-- Columna: Botón de Descargar -->
->>>>>>> origin/union(grupos-1-2-4)
                             <p:column style="text-align: center">
                                 <f:facet name="header">Descarga</f:facet>
                                 <p:commandButton value="Descargar archivo" ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
-                                                 icon="pi pi-arrow-down"  styleClass="btn-success">
+                                                 icon="pi pi-arrow-down"  styleClass="btn-success"
+                                                 disabled="#{doc.fechaEntregaDoc == null}">
                                     <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
                                 </p:commandButton>    
                             </p:column>

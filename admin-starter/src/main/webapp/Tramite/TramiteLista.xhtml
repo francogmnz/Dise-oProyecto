@@ -24,7 +24,7 @@
                 <div class="box-header with-border">
                     <div id="main-buttons">
                         <p:commandButton value="Agregar trámite"  icon="fa fa-plus" action="#{uitramiteLista.irRegistrarTramite()}"
-                                         styleClass="btn-block btn-warning btn-lg"/>
+                                         styleClass="btn-warning btn-sm" style="padding: 5px 10px; font-size: 12px;"/>
                     </div>
                 </div>
 
@@ -75,7 +75,7 @@
 
                             <!-- Alineación ajustada -->
                             <p:outputPanel style="display: inline-block; vertical-align: middle;">
-                                <p:inputText id="codTipoTramiteFiltro" style="width:150px; display: inline-block;"
+                                <p:inputText id="codTipoTramiteInput" style="width:150px; display: inline-block;"
                                              placeholder="Código tipo trámite" 
                                              value="#{uitramiteLista.codTipoTramiteFiltro}"
                                              onfocus="Javascript:this.focus();this.select();">
@@ -89,7 +89,7 @@
                             <!-- Alineación del botón -->
                             <p:commandButton icon="fa fa-question-circle" 
                                              title="Ver filtros de Tipo trámite" 
-                                             action="#{uitramite.redirigirAfiltrosTipoTramite()}" 
+                                             oncomplete="PF('dlgFiltrosTipoTramite').show();" 
                                              update="@none"
                                              style="border:none; background: none; color: black; display: inline-block;
                                              vertical-align: middle; padding: 0; margin-left: 5px; width: auto; height: auto;" 
@@ -97,7 +97,86 @@
                         </p:outputPanel>
                     </div>
 
-
+                    <!-- Dialogo para filtros de Tipo Trámite -->
+                    <p:dialog header="Filtros de Tipo Trámite" widgetVar="dlgFiltrosTipoTramite" 
+                              modal="true" width="900px" height="auto" resizable="false" 
+                              style="overflow-y: auto; max-height: 1000px;">
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Código TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputNumber id="codTipoTramiteFiltro" style="width:150px"
+                                                   placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputNumber>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Categoría TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="nombreCategoriaTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Categoría" value="#{uitramiteLista.nombreCategoriaTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Nombre TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Nombre" value="#{uitramiteLista.nombreTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Descripción TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="descripcionTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Descripción" value="#{uitramiteLista.descripcionTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <p:spacer height="5"/>
+                        <!-- Tabla con barra de desplazamiento -->
+                        <p:dataTable id="grid1Dialog" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}" 
+                                     sortMode="multiple" scrollable="true" scrollHeight="200">
+                            <p:column sortBy="#{tipoTramite.codTipoTramite}">
+                                <f:facet name="header">Código</f:facet>
+                                    #{tipoTramite.codTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.nombreCategoriaTipoTramite}">
+                                <f:facet name="header">Categoría</f:facet>
+                                    #{tipoTramite.nombreCategoriaTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.nombreTipoTramite}">
+                                <f:facet name="header">Nombre</f:facet>
+                                    #{tipoTramite.nombreTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.descripcionTipoTramite}">
+                                <f:facet name="header">Descripción</f:facet>
+                                    #{tipoTramite.descripcionTipoTramite}
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
 
                     <div class="ui-g-12 ui-md-6">
                         <p:outputPanel>
