@@ -79,22 +79,22 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
 
     public String irAgregarCategoriaTipoTramite() {
         BeansUtils.guardarUrlAnterior();
-        return "abmCategoriaTipoTramite?faces-redirect=true&codCategoriaTipoTramite=0"; // Usa '?faces-redirect=true' para hacer una redirección
+        return "abmCategoriaTipoTramite?faces-redirect=true&codCategoriaTipoTramite=0"; 
     }
 
     
     public String irModificarCategoriaTipoTramite(int codCategoriaTipoTramite) {
         BeansUtils.guardarUrlAnterior();
-        return "abmCategoriaTipoTramite?faces-redirect=true&codCategoriaTipoTramite=" + codCategoriaTipoTramite; // Usa '?faces-redirect=true' para hacer una redirección
+        return "abmCategoriaTipoTramite?faces-redirect=true&codCategoriaTipoTramite=" + codCategoriaTipoTramite; 
     }
 
     public void darDeBajaCategoriaTipoTramite(int codCategoriaTipoTramite){
         try {
             controladorABMCategoriaTipoTramite.darDeBajaCategoriaTipoTramite(codCategoriaTipoTramite);
-            Messages.create("Anulado").detail("Anulado").add();;
+            Messages.create("Anulado").detail("Anulado").add();
                     
         } catch (CategoriaTipoTramiteException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create(e.getMessage()).fatal().add();
         }
     }
     

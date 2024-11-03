@@ -100,7 +100,7 @@ public class UIABMEstadoTramiteLista implements Serializable {
             Messages.create("Anulado").detail("Anulado").add();;
 
         } catch (EstadoTramiteException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create("Error!").error().detail("No se pudo eliminar el Estado porque está presente en el destino de una versión actual/posterior").add();
         }
     }
 

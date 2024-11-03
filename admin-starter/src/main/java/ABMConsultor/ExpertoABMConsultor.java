@@ -14,12 +14,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
-// import utils.Errores;
+import utils.Errores;
 import utils.FachadaPersistencia;
 
 public class ExpertoABMConsultor {
 
-   // private Errores err = new Errores();
+    private Errores err = new Errores();
 
     public List<DTOConsultor> buscarConsultores(int legajoConsultor, String nombreConsultor, int numMaximoTramites) {
         List<DTOCriterio> lCriterio = new ArrayList<DTOCriterio>();
@@ -48,7 +48,7 @@ public class ExpertoABMConsultor {
             DTOConsultor dtoConsultor = new DTOConsultor();
             dtoConsultor.setLegajoConsultor(consultor.getLegajoConsultor());
             dtoConsultor.setNombreConsultor(consultor.getNombreConsultor());
-        //    dtoConsultor.setNumMaximoTramites(consultor.getNumMaximoTramites());
+            dtoConsultor.setNumMaximoTramites(consultor.getNumMaximoTramites());
             dtoConsultor.setFechaHoraBajaConsultor(consultor.getFechaHoraBajaConsultor());
             consultoresResultado.add(dtoConsultor);
 
@@ -75,7 +75,7 @@ public class ExpertoABMConsultor {
             Consultor consultor = new Consultor();
             consultor.setLegajoConsultor(nuevoConsultorDTO.getLegajoConsultor());
             consultor.setNombreConsultor(nuevoConsultorDTO.getNombreConsultor());
-          //  consultor.setNumMaximoTramites(nuevoConsultorDTO.getNumMaximoTramites());
+            consultor.setNumMaximoTramites(nuevoConsultorDTO.getNumMaximoTramites());
 
             FachadaPersistencia.getInstance().guardar(consultor);
             FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -110,7 +110,7 @@ public class ExpertoABMConsultor {
             }
             dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
             dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
-           // dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
+            dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
             return dtoModificacionDatos;
         } catch (Exception e) {
             // Maneja la excepción
@@ -135,7 +135,7 @@ public class ExpertoABMConsultor {
 
         consultorEncontrado.setLegajoConsultor(dtoModificacionDatosIn.getLegajoConsultor());
         consultorEncontrado.setNombreConsultor(dtoModificacionDatosIn.getNombreConsultor());
-      //  consultorEncontrado.setNumMaximoTramites(dtoModificacionDatosIn.getNumMaximoTramites());
+        consultorEncontrado.setNumMaximoTramites(dtoModificacionDatosIn.getNumMaximoTramites());
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();

@@ -4,16 +4,16 @@
  */
 package ABMTipoTramite;
 
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.*;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTOIn;
 import ABMTipoTramite.dtos.NuevoTipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,38 +28,28 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.buscarTipoTramites(codTipoTramite, nombreTipoTramite);
     }
     
+    public List<DocumentacionDTO> obtenerDocumentacionesActivas() {
+        return expertoABMTipoTramite.obtenerDocumentacionesActivas();
+    }
     public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() {
         return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
     }
 
-    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO) throws TipoTramiteException {
-        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO);
+    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO,List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+        expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);
     }
 
     public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
         return expertoABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
     }
 
-    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn) {
-        expertoABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn);
+    public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
+        expertoABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn, documentacionesSeleccionadasDTO);
     }
 
     public void darDeBajaTipoTramite(int codTipoTramite) throws TipoTramiteException {
         expertoABMTipoTramite.darDeBajaTipoTramite(codTipoTramite);
     }
 
-   public void redirigirAModificarVersion(int codTipoTramite, int nroVersion) {
-    try {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = context.getExternalContext();
-        
-        // Construir la URL para redirigir a la página de modificación de versión
-        String url = externalContext.getRequestContextPath() + "/modificarVersion.xhtml?codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion;
-        externalContext.redirect(url);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-
+    
 }

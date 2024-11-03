@@ -8,25 +8,19 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author licciardi
+ */
 public class Version extends Entidad {
-
     private int nroVersion;
     private String descripcionVersion;
     private Timestamp fechaBajaVersion;
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
-    private String dibujo;
     
-
-    public String getDibujo() {
-        return dibujo;
-    }
-
-    public void setDibujo(String dibujo) {
-        this.dibujo = dibujo;
-    }
     private TipoTramite tipoTramite;
-    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  // Relación OneToMany con ConfTipoTramiteEstadoTramite
+    private List<ConfTipoTramiteEstadoTramite> confTipoTramiteEstadoTramite = new ArrayList<>();  
 
     public Version() {
     }
@@ -88,7 +82,7 @@ public class Version extends Entidad {
     }
 
     public void addConfTipoTramiteEstadoTramite(ConfTipoTramiteEstadoTramite cttet) {
-        confTipoTramiteEstadoTramite.add(cttet);
-    }
-
+        confTipoTramiteEstadoTramite.add(cttet);   
+}  
+    
 }

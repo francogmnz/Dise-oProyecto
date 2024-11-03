@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ABMTipoTramite.beans;
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMDocumentacion.dtos.DocumentacionDTO;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.beans.*;
 import utils.BeansUtils;
 import ABMTipoTramite.ControladorABMTipoTramite;
@@ -17,6 +20,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
 
@@ -40,8 +44,11 @@ public class UIABMTipoTramite implements Serializable {
     private int plazoEntregaDocumentacionTT;
     private int codCategoriaTipoTramite;
     private List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas;
+    //private List<Integer> documentacionesSeleccionadas;
+    private List<Integer> documentacionesSeleccionadas;
+    private List<DocumentacionDTO> documentacionesActivas;
+   
     
-
 
     public boolean isInsert() {
         return insert;
@@ -107,9 +114,21 @@ public class UIABMTipoTramite implements Serializable {
         this.categoriasTipoTramiteActivas = categoriasTipoTramiteActivas;
     }
 
+    public List<Integer> getDocumentacionesSeleccionadas() {
+        return documentacionesSeleccionadas;
+    }
 
+    public void setDocumentacionesSeleccionadas(List<Integer> documentacionesSeleccionadas) {
+        this.documentacionesSeleccionadas = documentacionesSeleccionadas;
+    }
 
-    
+    public List<DocumentacionDTO> getDocumentacionesActivas() {
+        return documentacionesActivas;
+    }
+
+    public void setDocumentacionesActivas(List<DocumentacionDTO> documentacionesActivas) {
+        this.documentacionesActivas = documentacionesActivas;
+    }
 
     public UIABMTipoTramite() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -118,6 +137,7 @@ public class UIABMTipoTramite implements Serializable {
 
         int codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite")); 
         categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
         
         insert = true;
 
@@ -132,6 +152,11 @@ public class UIABMTipoTramite implements Serializable {
             setPlazoEntregaDocumentacionTT(modificarTipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             
             setCodCategoriaTipoTramite(modificarTipoTramiteDTO.getCodCategoriaTipoTramite());
+            
+            documentacionesSeleccionadas = new ArrayList<>();
+            for (DocumentacionDTO doc : modificarTipoTramiteDTO.getDocumentacionesDTO()) {
+                documentacionesSeleccionadas.add(doc.getCodDocumentacion());
+            }
 
 
         }
@@ -151,7 +176,17 @@ public class UIABMTipoTramite implements Serializable {
                 
                 modificarTipoTramiteDTOIn.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
                 
-                controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn);
+                List<DocumentacionDTO> documentacionesSeleccionadasDTO = new ArrayList<>();
+                for(Integer codDocumentacion: documentacionesSeleccionadas){
+                    for(DocumentacionDTO documentacionDTO: documentacionesActivas){
+                        if(documentacionDTO.getCodDocumentacion() == codDocumentacion){
+                            documentacionesSeleccionadasDTO.add(documentacionDTO);
+                            break;
+                        }
+                    }
+                }
+                
+                controladorABMTipoTramite.modificarTipoTramite(modificarTipoTramiteDTOIn,documentacionesSeleccionadasDTO);
                 return BeansUtils.redirectToPreviousPage();
             }
             else
@@ -164,8 +199,18 @@ public class UIABMTipoTramite implements Serializable {
                 nuevoTipoTramiteDTO.setPlazoEntregaDocumentacionTT(getPlazoEntregaDocumentacionTT());
                 
                 nuevoTipoTramiteDTO.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
+                
+                List<DocumentacionDTO> documentacionesSeleccionadasDTO = new ArrayList<>();
+                for(Integer codDocumentacion: documentacionesSeleccionadas){
+                    for(DocumentacionDTO documentacionDTO: documentacionesActivas){
+                        if(documentacionDTO.getCodDocumentacion() == codDocumentacion){
+                            documentacionesSeleccionadasDTO.add(documentacionDTO);
+                            break;
+                        }
+                    }
+                }
                         
-                controladorABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO);
+                controladorABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);
 
             }
             return BeansUtils.redirectToPreviousPage();

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
-// import utils.Errores;
+import utils.Errores;
 
 @Named("uiabmCliente")
 @ViewScoped
@@ -26,7 +26,7 @@ public class UIABMCliente implements Serializable {
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
-   /* private Errores err = new Errores(); */
+    private Errores err = new Errores();
 
     public boolean isInsert() {
         return insert;
@@ -113,7 +113,7 @@ public class UIABMCliente implements Serializable {
 
     }
 
-   /* public String agregarCliente() {
+    public String agregarCliente() {
 //        VALIDACIONES
         if (String.valueOf(getDniCliente()).isEmpty() || getDniCliente() <= 0) {
             err.agregarError("El DNI debe ser mayor a 0.");
@@ -160,5 +160,5 @@ public class UIABMCliente implements Serializable {
             err.mostrarErrores();
         }
         return "";
-    }  */
+    }
 }

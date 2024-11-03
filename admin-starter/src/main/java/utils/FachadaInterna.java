@@ -7,6 +7,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import org.hibernate.criterion.Order;
 
 public class FachadaInterna {
 
@@ -23,13 +24,12 @@ public class FachadaInterna {
         return fachadaInterna;
     }
 
-     List<Object> buscar(String claseABuscar, List<DTOCriterio> criterioList) {
-        if (HibernateUtil.getSession().getTransaction().isActive())
-        {
+    List<Object> buscar(String claseABuscar, List<DTOCriterio> criterioList) {
+        if (HibernateUtil.getSession().getTransaction().isActive()) {
             HibernateUtil.getSession().getTransaction().commit();
         }
         HibernateUtil.getSession().beginTransaction();
-        
+
         Criteria cr = null;
         try {
             cr = HibernateUtil.getSession().createCriteria(Class.forName(paqueteEntidades + "." + claseABuscar), claseABuscar.toLowerCase());
@@ -58,11 +58,17 @@ public class FachadaInterna {
                     case ">=":
                         cr.add(Restrictions.conjunction(Restrictions.ge(atributo, valor)));
                         break;
+                    case "desc":  // Para el orden descendente y obtener el nroTramite
+                        cr.addOrder(Order.desc(atributo));
+                        break;
+                    case "asc":  // Para el orden asc y obtener el nroTramite
+                        cr.addOrder(Order.asc(atributo));
+                        break;
                     case "<>":
                         cr.add(Restrictions.conjunction(Restrictions.ne(atributo, valor)));
                         break;
                     case "like":
-                        cr.add(Restrictions.conjunction(Restrictions.ilike(atributo,(String)valor,MatchMode.ANYWHERE)));
+                        cr.add(Restrictions.conjunction(Restrictions.ilike(atributo, (String) valor, MatchMode.ANYWHERE)));
                         break;
                     case "contains":
                         // atributo tiene que se igual al nombre de la lista contenedora
@@ -85,9 +91,18 @@ public class FachadaInterna {
         HibernateUtil.getSession().flush();
     }
 
+    void merge(Object objeto) {
+        HibernateUtil.getSession().merge(objeto);
+        HibernateUtil.getSession().flush();
+    }
+
+    void refrescar(Object objeto) {
+        HibernateUtil.getSession().refresh(objeto);
+        HibernateUtil.getSession().flush();
+    }
+
     void iniciarTransaccion() {
-        if (HibernateUtil.getSession().getTransaction().isActive())
-        {
+        if (HibernateUtil.getSession().getTransaction().isActive()) {
             HibernateUtil.getSession().getTransaction().commit();
         }
         HibernateUtil.getSession().beginTransaction();
@@ -98,13 +113,5 @@ public class FachadaInterna {
         HibernateUtil.getSession().getTransaction().commit();
         HibernateUtil.getSession().close();
     }
-    void merge(Object objeto) {
-        HibernateUtil.getSession().merge(objeto);
-        HibernateUtil.getSession().flush();
-    }
 
-    void refrescar(Object objeto) {
-        HibernateUtil.getSession().refresh(objeto);
-        HibernateUtil.getSession().flush();
-    }
 }

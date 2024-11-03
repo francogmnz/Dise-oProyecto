@@ -13,8 +13,6 @@
         <property name="fechaDesdeTET" column="fecha_desde_tet" type="timestamp"/>
 
         <property name="fechaHastaTET" column="fecha_hasta_tet" type="timestamp"/>
-     
-        <property name="contadorTET" column="contador_TET" type="int"/>
 
 
 

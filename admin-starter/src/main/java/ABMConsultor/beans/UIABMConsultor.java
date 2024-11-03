@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import utils.BeansUtils;
-// import utils.Errores;
+import utils.Errores;
 
 @Named("uiabmConsultor")
 @ViewScoped
@@ -25,7 +25,7 @@ public class UIABMConsultor implements Serializable {
     private String nombreConsultor;
     private int legajoConsultor;
     private int numMaximoTramites;
- //   private Errores err = new Errores();
+    private Errores err = new Errores();
 
     public ControladorABMConsultor getControladorABMConsultor() {
         return controladorABMConsultor;
@@ -103,7 +103,7 @@ public class UIABMConsultor implements Serializable {
 
     }
 
-   /* public void agregarConsultor() throws ConsultorException {
+    public void agregarConsultor() throws ConsultorException {
 
         if (getLegajoConsultor() < 0) {
             err.agregarError("El Legajo debe ser un entero mayor a 0.");
@@ -137,5 +137,5 @@ public class UIABMConsultor implements Serializable {
         }
         err.mostrarErrores();
     }
-*/
+
 }

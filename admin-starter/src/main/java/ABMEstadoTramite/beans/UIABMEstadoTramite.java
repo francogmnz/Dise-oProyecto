@@ -63,15 +63,6 @@ public class UIABMEstadoTramite implements Serializable {
     public void setCodEstadoTramite(int codEstadoTramite) {
         this.codEstadoTramite = codEstadoTramite;
     }
-     private String descripcionFiltro;
-
-    public String getDescripcionFiltro() {
-        return descripcionFiltro;
-    }
-
-    public void setDescripcionFiltro(String descripcionFiltro) {
-        this.descripcionFiltro = descripcionFiltro;
-    }
 
     public String getDescripcionEstadoTramite() {
         return descripcionEstadoTramite;
@@ -95,7 +86,6 @@ public class UIABMEstadoTramite implements Serializable {
             setCodEstadoTramite(modificarEstadoTramiteDTO.getCodEstadoTramite());
             setDescripcionEstadoTramite(modificarEstadoTramiteDTO.getDescripcionEstadoTramite());
         }
-        nombreEstadoTramite = "<b>hola mundo</b>";
     }
 
     public String agregarEstadoTramite() {

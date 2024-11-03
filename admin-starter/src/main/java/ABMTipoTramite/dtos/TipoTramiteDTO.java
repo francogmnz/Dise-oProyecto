@@ -4,9 +4,13 @@
  */
 package ABMTipoTramite.dtos;
 
+//import ABMDocumentacion.dtos.DocumentacionDTO;
 import ABMTipoTramite.dtos.*;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import entidades.CategoriaTipoTramite;
+import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
@@ -21,7 +25,7 @@ public class TipoTramiteDTO {
     private String nombreTipoTramite;
     private int plazoEntregaDocumentacionTT;
     private CategoriaTipoTramite categoriaTipoTramite;
-    private int nroVersion;
+    private List<DocumentacionDTO> documentacionesDTO;
 
 
     public int getCodTipoTramite() {
@@ -81,7 +85,13 @@ public class TipoTramiteDTO {
     }
 
 
-    
-    
-    
+    public List<DocumentacionDTO> getDocumentacionesDTO() {
+        return documentacionesDTO;
+    }
+
+    public void setDocumentacionesDTO(List<DocumentacionDTO> documentacionDTO) {
+        this.documentacionesDTO = documentacionDTO;
+    }
+
+     
 }

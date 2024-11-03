@@ -4,7 +4,9 @@
  */
 package ABMTipoTramite;
 
-import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+//import ABMCategoriaTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.CategoriaTipoTramiteDTO;
+import ABMTipoTramite.dtos.DocumentacionDTO;
 import ABMTipoTramite.*;
 import ABMTipoTramite.dtos.TipoTramiteDTO;
 import ABMTipoTramite.dtos.ModificarTipoTramiteDTO;
@@ -12,11 +14,15 @@ import ABMTipoTramite.dtos.ModificarTipoTramiteDTOIn;
 import ABMTipoTramite.dtos.NuevoTipoTramiteDTO;
 import ABMTipoTramite.exceptions.TipoTramiteException;
 import entidades.CategoriaTipoTramite;
+import entidades.Documentacion;
 import entidades.TipoTramite;
-import entidades.Version;
+import entidades.TipoTramiteDocumentacion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.hibernate.Hibernate;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
@@ -25,32 +31,104 @@ import utils.FachadaPersistencia;
  * @author licciardi
  */
 public class ExpertoABMTipoTramite {
-    
+
+    /*
+    // Este buscar tipoTramite de esta manera se debe al fetch join 
     public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
         
-        List<DTOCriterio> primerCriterio = new ArrayList<DTOCriterio>();
+        List<DTOCriterio> criterioBuscarTipoTramiteList = new ArrayList<DTOCriterio>();
         
         if (codTipoTramite > 0) {
-            DTOCriterio criterio1 = new DTOCriterio();
-            criterio1.setAtributo("codTipoTramite");
-            criterio1.setOperacion("=");
-            criterio1.setValor(codTipoTramite); 
-            primerCriterio.add(criterio1);
+            DTOCriterio criterioPorCodigoTT = new DTOCriterio();
+            criterioPorCodigoTT.setAtributo("codTipoTramite");
+            criterioPorCodigoTT.setOperacion("=");
+            criterioPorCodigoTT.setValor(codTipoTramite); 
+            criterioBuscarTipoTramiteList.add(criterioPorCodigoTT);
         }
 
         if (nombreTipoTramite.trim().length() > 0) {
-            DTOCriterio criterio2 = new DTOCriterio();
-            criterio2.setAtributo("nombreTipoTramite");
-            criterio2.setOperacion("like");
-            criterio2.setValor(nombreTipoTramite);
-            primerCriterio.add(criterio2);
+            DTOCriterio criterioPorNombreTT = new DTOCriterio();
+            criterioPorNombreTT.setAtributo("nombreTipoTramite");
+            criterioPorNombreTT.setOperacion("like");
+            criterioPorNombreTT.setValor(nombreTipoTramite);
+            criterioBuscarTipoTramiteList.add(criterioPorNombreTT);
         }
-        
 
-        List objetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", primerCriterio);
+        List TipoTramiteObjetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTipoTramiteList);
+        Map<Integer,TipoTramiteDTO> tipoTramiteMap = new HashMap<>();
+        
+                
+        for (Object x : TipoTramiteObjetoList) {
+            TipoTramite tipoTramite = (TipoTramite) x;
+            TipoTramiteDTO tipoTramiteDTO = tipoTramiteMap.getOrDefault(tipoTramite.getCodTipoTramite(), new TipoTramiteDTO());
+
+            
+            if(!tipoTramiteMap.containsKey(tipoTramite.getCodTipoTramite())){
+            tipoTramiteDTO.setCodTipoTramite(tipoTramite.getCodTipoTramite());
+            tipoTramiteDTO.setNombreTipoTramite(tipoTramite.getNombreTipoTramite());
+            tipoTramiteDTO.setDescripcionTipoTramite(tipoTramite.getDescripcionTipoTramite());
+            tipoTramiteDTO.setDescripcionWebTipoTramite(tipoTramite.getDescripcionWebTipoTramite());
+            tipoTramiteDTO.setFechaHoraBajaTipoTramite(tipoTramite.getFechaHoraBajaTipoTramite());
+            tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
+            tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
+            }
+            
+            List<TipoTramiteDocumentacion> listaTTD = tipoTramite.getTipoTramiteDocumentacion();
+            List<DocumentacionDTO> documentacionesDTO = new ArrayList<>();            
+           
+            for(TipoTramiteDocumentacion ttd: listaTTD){
+                if(ttd.getFechaHoraBajaTTD() == null){
+                    
+                    Documentacion documentacion = ttd.getDocumentacion();
+                    
+                    DocumentacionDTO docDTO = new DocumentacionDTO();
+                    
+                    docDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
+                    docDTO.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+                    
+                    documentacionesDTO.add(docDTO);
+                    
+  
+                    
+                }
+            }
+            
+            tipoTramiteDTO.setDocumentacionesDTO(documentacionesDTO);
+           
+            tipoTramiteMap.put(tipoTramite.getCodTipoTramite(), tipoTramiteDTO);
+        }
+
+        return new ArrayList<>(tipoTramiteMap.values());
+ 
+    }
+    
+    */
+    
+    //Buscar tipoTramite sin fetch Join
+    public List<TipoTramiteDTO> buscarTipoTramites(int codTipoTramite, String nombreTipoTramite){
+        
+        List<DTOCriterio> criterioBuscarTipoTramiteList = new ArrayList<DTOCriterio>();
+        
+        if (codTipoTramite > 0) {
+            DTOCriterio criterioPorCodigoTT = new DTOCriterio();
+            criterioPorCodigoTT.setAtributo("codTipoTramite");
+            criterioPorCodigoTT.setOperacion("=");
+            criterioPorCodigoTT.setValor(codTipoTramite); 
+            criterioBuscarTipoTramiteList.add(criterioPorCodigoTT);
+        }
+
+        if (nombreTipoTramite.trim().length() > 0) {
+            DTOCriterio criterioPorNombreTT = new DTOCriterio();
+            criterioPorNombreTT.setAtributo("nombreTipoTramite");
+            criterioPorNombreTT.setOperacion("like");
+            criterioPorNombreTT.setValor(nombreTipoTramite);
+            criterioBuscarTipoTramiteList.add(criterioPorNombreTT);
+        }
+
+        List TipoTramiteObjetoList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTipoTramiteList);
         List<TipoTramiteDTO> tipoTramiteResultado = new ArrayList<>();
 
-        for (Object x : objetoList) {
+        for (Object x : TipoTramiteObjetoList) {
             TipoTramite tipoTramite = (TipoTramite) x;
             TipoTramiteDTO tipoTramiteDTO = new TipoTramiteDTO();
             tipoTramiteDTO.setCodTipoTramite(tipoTramite.getCodTipoTramite());
@@ -61,55 +139,76 @@ public class ExpertoABMTipoTramite {
             tipoTramiteDTO.setPlazoEntregaDocumentacionTT(tipoTramite.getPlazoEntregaDocumentacionTT());
             tipoTramiteDTO.setCategoriaTipoTramite(tipoTramite.getCategoriaTipoTramite()); 
             
+            List<TipoTramiteDocumentacion> listaTTD = tipoTramite.getTipoTramiteDocumentacion();
+            List<DocumentacionDTO> documentacionesDTO = new ArrayList<>();            
+           
+            for(TipoTramiteDocumentacion ttd: listaTTD){
+                if(ttd.getFechaHoraBajaTTD() == null){
+                    
+                    Documentacion documentacion = ttd.getDocumentacion();
+                    DocumentacionDTO docDTO = new DocumentacionDTO();
+                    
+                    docDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
+                    docDTO.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+                    
+                    documentacionesDTO.add(docDTO);
+                    
+  
+                    
+                }
+            }
+            
+            tipoTramiteDTO.setDocumentacionesDTO(documentacionesDTO);
+           
             tipoTramiteResultado.add(tipoTramiteDTO);
         }
-       /*primerCriterio.clear();
-        List<DTOCriterio> criterioVersion = new ArrayList<DTOCriterio>();
-        DTOCriterio criterioPorFechaBajaTT = new DTOCriterio();
-        criterioPorFechaBajaTT.setAtributo("fechaBajaVersion");
-        criterioPorFechaBajaTT.setOperacion("=");
-        criterioPorFechaBajaTT.setValor(null);
 
-        criterioVersion.add(criterioPorFechaBajaTT);
-
-        DTOCriterio criterioPorFechaDesdeVersion = new DTOCriterio();
-        criterioPorFechaDesdeVersion.setAtributo("fechaDesdeVersion");
-        criterioPorFechaDesdeVersion.setOperacion("<");
-        criterioPorFechaDesdeVersion.setValor(new Timestamp(System.currentTimeMillis()));
-        criterioVersion.add(criterioPorFechaDesdeVersion);
-
-        DTOCriterio criterioPorFechaHastaVersion = new DTOCriterio();
-        criterioPorFechaHastaVersion.setAtributo("fechaHastaVersion");
-        criterioPorFechaHastaVersion.setOperacion(">");
-        criterioPorFechaHastaVersion.setValor(new Timestamp(System.currentTimeMillis()));
-        criterioVersion.add(criterioPorFechaHastaVersion);
-
-        List versionObjetoList = FachadaPersistencia.getInstance().buscar("Version", criterioVersion);
-
-        for(Object x: versionObjetoList){
-        Version version = (Version) x;
-
-        } */
         return tipoTramiteResultado;
     
     }
     
 
+    public List<DocumentacionDTO> obtenerDocumentacionesActivas(){
+        List<DTOCriterio> criterioDocumentacionesActivasList = new ArrayList<>();
+        DTOCriterio criterioPorFechaHoraBajaDocumentacion = new DTOCriterio();
+        criterioPorFechaHoraBajaDocumentacion.setAtributo("fechaHoraBajaDocumentacion");
+        criterioPorFechaHoraBajaDocumentacion.setOperacion("=");
+        criterioPorFechaHoraBajaDocumentacion.setValor(null);
+        
+        criterioDocumentacionesActivasList.add(criterioPorFechaHoraBajaDocumentacion);
+        
+        List documentacionObjetoList = FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionesActivasList);
+        List<DocumentacionDTO> documentacionesActivas = new ArrayList<>();
+        
+        for(Object x: documentacionObjetoList){
+        Documentacion documentacion = (Documentacion) x;
+        DocumentacionDTO documentacionDTO = new DocumentacionDTO();
+        documentacionDTO.setCodDocumentacion(documentacion.getCodDocumentacion());
+        documentacionDTO.setNombreDocumentacion(documentacion.getNombreDocumentacion());
+        documentacionDTO.setDescripcionDocumentacion(documentacion.getDescripcionDocumentacion());
+        //documentacionDTO.setFechaHoraBajaDocumentacion(documentacion.getFechaHoraBajaDocumentacion());
+        
+        documentacionesActivas.add(documentacionDTO);
+        
+        }    
+        return documentacionesActivas;   
+    }
+    
     public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas(){
     
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        List<DTOCriterio> criterioCategoriasActivasList = new ArrayList<>();
+        DTOCriterio criterioPorFechaHoraBajaCategoriaTT = new DTOCriterio();
         
-        dto.setAtributo("fechaHoraBajaCategoriaTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(null);
+        criterioPorFechaHoraBajaCategoriaTT.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        criterioPorFechaHoraBajaCategoriaTT.setOperacion("=");
+        criterioPorFechaHoraBajaCategoriaTT.setValor(null);
         
-        criterioList.add(dto);
+        criterioCategoriasActivasList.add(criterioPorFechaHoraBajaCategoriaTT);
         
-        List objetoList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList);
+        List categoriaTTList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriasActivasList);
         List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas = new ArrayList<>();
         
-        for (Object x: objetoList){
+        for (Object x: categoriaTTList){
         CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) x;
         CategoriaTipoTramiteDTO categoriaTipoTramiteDTO = new CategoriaTipoTramiteDTO();
         categoriaTipoTramiteDTO.setCodCategoriaTipoTramite(categoriaTipoTramite.getCodCategoriaTipoTramite());
@@ -125,19 +224,28 @@ public class ExpertoABMTipoTramite {
         return categoriasTipoTramiteActivas;
     }
     
-    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO) throws TipoTramiteException {
+    public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO, List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
+            
+        Integer codigoParaValidacion = (Integer) nuevoTipoTramiteDTO.getCodCategoriaTipoTramite();
+        if(codigoParaValidacion == null) {
+            throw new TipoTramiteException("Debe seleccionar una categoría.");
+        }
 
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
+            throw new TipoTramiteException("Debe seleccionar al menos una documentación.");
+        }        
 
-        dto.setAtributo("codTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(nuevoTipoTramiteDTO.getCodTipoTramite());
+        List<DTOCriterio> criterioAgregarTTList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoTT = new DTOCriterio();
 
-        criterioList.add(dto);
+        criterioPorCodigoTT.setAtributo("codTipoTramite");
+        criterioPorCodigoTT.setOperacion("=");
+        criterioPorCodigoTT.setValor(nuevoTipoTramiteDTO.getCodTipoTramite());
 
-        List lTipoTramite = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+        criterioAgregarTTList.add(criterioPorCodigoTT);
+
+        List lTipoTramite = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioAgregarTTList);
 
         if (lTipoTramite.size() > 0) {
             throw new TipoTramiteException("El codigo TipoTramite ya existe");
@@ -150,35 +258,66 @@ public class ExpertoABMTipoTramite {
             tipoTramite.setDescripcionWebTipoTramite(nuevoTipoTramiteDTO.getDescripcionWebTipoTramite());
             tipoTramite.setPlazoEntregaDocumentacionTT(nuevoTipoTramiteDTO.getPlazoEntregaDocumentacionTT());
             
-            List<DTOCriterio> categoriaCriterioList = new ArrayList<>();
-            DTOCriterio categoriaDto = new DTOCriterio();
+            List<DTOCriterio> criterioCategoriaList = new ArrayList<>();
+            DTOCriterio criterioPorCodigoCTT = new DTOCriterio();
         
-            categoriaDto.setAtributo("codCategoriaTipoTramite");
-            categoriaDto.setOperacion("=");
-            categoriaDto.setValor(nuevoTipoTramiteDTO.getCodCategoriaTipoTramite());
+            criterioPorCodigoCTT.setAtributo("codCategoriaTipoTramite");
+            criterioPorCodigoCTT.setOperacion("=");
+            criterioPorCodigoCTT.setValor(nuevoTipoTramiteDTO.getCodCategoriaTipoTramite());
         
-            categoriaCriterioList.add(categoriaDto);
+            criterioCategoriaList.add(criterioPorCodigoCTT);
         
-            CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", categoriaCriterioList).get(0);
+            CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaList).get(0);
         
             tipoTramite.setCategoriaTipoTramite(categoriaTipoTramite);
             
+
+            List<TipoTramiteDocumentacion> listaTipoTramiteDocumentacion = new ArrayList<>();
+            
+            
+            for(DocumentacionDTO documentacionDTO: documentacionesSeleccionadasDTO){
+            
+                
+            List<DTOCriterio> criterioDocumentacionList = new ArrayList<>();
+            DTOCriterio criterioCodigoDocumentacion = new DTOCriterio();
+            criterioCodigoDocumentacion.setAtributo("codDocumentacion");
+            criterioCodigoDocumentacion.setOperacion("=");
+            criterioCodigoDocumentacion.setValor(documentacionDTO.getCodDocumentacion());
+            
+            criterioDocumentacionList.add(criterioCodigoDocumentacion);
+            
+            Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
+            
+            TipoTramiteDocumentacion tipoTramiteDocumentacion = new TipoTramiteDocumentacion();
+            tipoTramiteDocumentacion.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+            tipoTramiteDocumentacion.setFechaHoraBajaTTD(null);  
+            tipoTramiteDocumentacion.setFechaHastaTTD(null);
+            tipoTramiteDocumentacion.setDocumentacion(documentacion);
+            
+            FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacion);
+            
+            listaTipoTramiteDocumentacion.add(tipoTramiteDocumentacion);
+            }
+            
+            tipoTramite.setTipoTramiteDocumentacion(listaTipoTramiteDocumentacion);
+            
             FachadaPersistencia.getInstance().guardar(tipoTramite);
+
             FachadaPersistencia.getInstance().finalizarTransaccion();
         }
     }
     
         public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        List<DTOCriterio> criterioBuscarTTModificarList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoTT = new DTOCriterio();
 
-        dto.setAtributo("codTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(codTipoTramite);
+        criterioPorCodigoTT.setAtributo("codTipoTramite");
+        criterioPorCodigoTT.setOperacion("=");
+        criterioPorCodigoTT.setValor(codTipoTramite);
 
-        criterioList.add(dto);
+        criterioBuscarTTModificarList.add(criterioPorCodigoTT);
 
-        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
+        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTTModificarList).get(0);
 
         ModificarTipoTramiteDTO modificarTipoTramiteDTO = new ModificarTipoTramiteDTO();
         modificarTipoTramiteDTO.setCodTipoTramite(tipoTramiteEncontrada.getCodTipoTramite());
@@ -191,23 +330,44 @@ public class ExpertoABMTipoTramite {
         modificarTipoTramiteDTO.setCodCategoriaTipoTramite(tipoTramiteEncontrada.getCategoriaTipoTramite().getCodCategoriaTipoTramite());
         }
         
+        List<DocumentacionDTO> documentacionesRelacionadasDTO = new ArrayList<>();
+        for(TipoTramiteDocumentacion ttd: tipoTramiteEncontrada.getTipoTramiteDocumentacion()){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                DocumentacionDTO docDTO = new DocumentacionDTO();
+                docDTO.setCodDocumentacion(ttd.getDocumentacion().getCodDocumentacion());
+                docDTO.setNombreDocumentacion(ttd.getDocumentacion().getNombreDocumentacion());
+                documentacionesRelacionadasDTO.add(docDTO);                
+            }
+        }
+        
+        modificarTipoTramiteDTO.setDocumentacionesDTO(documentacionesRelacionadasDTO);
+        
         return modificarTipoTramiteDTO;
     }
 
         
-        public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn){
+        public void modificarTipoTramite(ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn,List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        Integer codigoParaValidacion = (Integer) modificarTipoTramiteDTOIn.getCodCategoriaTipoTramite();
+        if(codigoParaValidacion == null) {
+            throw new TipoTramiteException("Debe seleccionar una categoría.");
+        }
+
+        if (documentacionesSeleccionadasDTO == null || documentacionesSeleccionadasDTO.isEmpty()) {
+            throw new TipoTramiteException("Debe seleccionar al menos una documentación.");
+        }           
         
-        dto.setAtributo("codTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(modificarTipoTramiteDTOIn.getCodTipoTramite());
+        List<DTOCriterio> criterioModificarTTList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoTT = new DTOCriterio();
+        
+        criterioPorCodigoTT.setAtributo("codTipoTramite");
+        criterioPorCodigoTT.setOperacion("=");
+        criterioPorCodigoTT.setValor(modificarTipoTramiteDTOIn.getCodTipoTramite());
 
-        criterioList.add(dto);
+        criterioModificarTTList.add(criterioPorCodigoTT);
 
-        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
+        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioModificarTTList).get(0);
         
         tipoTramiteEncontrada.setCodTipoTramite(modificarTipoTramiteDTOIn.getCodTipoTramite());
         tipoTramiteEncontrada.setNombreTipoTramite(modificarTipoTramiteDTOIn.getNombreTipoTramite());
@@ -215,45 +375,131 @@ public class ExpertoABMTipoTramite {
         tipoTramiteEncontrada.setDescripcionWebTipoTramite(modificarTipoTramiteDTOIn.getDescripcionWebTipoTramite());
         tipoTramiteEncontrada.setPlazoEntregaDocumentacionTT(modificarTipoTramiteDTOIn.getPlazoEntregaDocumentacionTT());
         
-        List<DTOCriterio> categoriaCriterioList2 = new ArrayList<>();
-        DTOCriterio categoriaDto2 = new DTOCriterio();
+        List<DTOCriterio> criterioCategoriaList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoCTT = new DTOCriterio();
         
-        categoriaDto2.setAtributo("codCategoriaTipoTramite");
-        categoriaDto2.setOperacion("=");
-        categoriaDto2.setValor(modificarTipoTramiteDTOIn.getCodCategoriaTipoTramite());
+        criterioPorCodigoCTT.setAtributo("codCategoriaTipoTramite");
+        criterioPorCodigoCTT.setOperacion("=");
+        criterioPorCodigoCTT.setValor(modificarTipoTramiteDTOIn.getCodCategoriaTipoTramite());
         
-        categoriaCriterioList2.add(categoriaDto2);
+        criterioCategoriaList.add(criterioPorCodigoCTT);
         
-        CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", categoriaCriterioList2).get(0);
+        CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaList).get(0);
         
         tipoTramiteEncontrada.setCategoriaTipoTramite(categoriaTipoTramite);
-   
+
         
+        List<TipoTramiteDocumentacion> tipoTramiteDocumentacionRelacionada = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
+        
+        /*
+        List<Integer> codDocumentacionesExistentes = new ArrayList<>();
+        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                codDocumentacionesExistentes.add(ttd.getDocumentacion().getCodDocumentacion());
+            }
+        }
+        
+        List<Integer> codDocumentacionesSeleccionadas = new ArrayList<>();
+        for(DocumentacionDTO docDTO: documentacionesSeleccionadasDTO){
+            codDocumentacionesSeleccionadas.add(docDTO.getCodDocumentacion());
+        }
+        
+        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
+            if(ttd.getFechaHoraBajaTTD() == null){
+                Integer codDocExistente = ttd.getDocumentacion().getCodDocumentacion();
+                if(!codDocumentacionesSeleccionadas.contains(codDocExistente)){
+                    ttd.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+                    FachadaPersistencia.getInstance().guardar(ttd);
+                }
+            }
+        
+        }
+        */
+        
+        for(TipoTramiteDocumentacion ttdr: tipoTramiteDocumentacionRelacionada){
+            ttdr.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+            FachadaPersistencia.getInstance().guardar(ttdr);
+        }
+        
+        for(DocumentacionDTO documentacionModificadaDTO: documentacionesSeleccionadasDTO){
+
+        List<DTOCriterio> criterioDocumentacionList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoDocumentacion = new DTOCriterio();
+        criterioPorCodigoDocumentacion.setAtributo("codDocumentacion");
+        criterioPorCodigoDocumentacion.setOperacion("=");
+        criterioPorCodigoDocumentacion.setValor(documentacionModificadaDTO.getCodDocumentacion());
+
+        criterioDocumentacionList.add(criterioPorCodigoDocumentacion);
+
+        Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
+
+        TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
+        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+        tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);  
+        tipoTramiteDocumentacionModificada.setFechaHastaTTD(null);
+        tipoTramiteDocumentacionModificada.setDocumentacion(documentacion);
+
+        FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacionModificada);
+
+        tipoTramiteEncontrada.addTipoTramiteDocumentacion(tipoTramiteDocumentacionModificada);
+        }
+
+
+
         FachadaPersistencia.getInstance().guardar(tipoTramiteEncontrada);
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-     
-        
+        FachadaPersistencia.getInstance().finalizarTransaccion();        
+             
     }
     
         
         public void darDeBajaTipoTramite(int codTipoTramite) throws TipoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
         
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
+        List<DTOCriterio> criterioBajaTTList = new ArrayList<>();
+        DTOCriterio criterioPorCodigoTT = new DTOCriterio();
         
-        dto.setAtributo("codTipoTramite");
-        dto.setOperacion("=");
-        dto.setValor(codTipoTramite);
+        criterioPorCodigoTT.setAtributo("codTipoTramite");
+        criterioPorCodigoTT.setOperacion("=");
+        criterioPorCodigoTT.setValor(codTipoTramite);
         
-        criterioList.add(dto);
+        criterioBajaTTList.add(criterioPorCodigoTT);
         
-        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList).get(0);
+        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBajaTTList).get(0);
+        
+    
+        List<DTOCriterio> criterioTramiteList = new ArrayList<>();
+        DTOCriterio criterioTipoTramiteRelacionado = new DTOCriterio();
+        criterioTipoTramiteRelacionado.setAtributo("tipoTramite");
+        criterioTipoTramiteRelacionado.setOperacion("=");
+        criterioTipoTramiteRelacionado.setValor(tipoTramiteEncontrada);
+        
+        criterioTramiteList.add(criterioTipoTramiteRelacionado);
+
+        DTOCriterio criterioTramiteActivo = new DTOCriterio();
+        criterioTramiteActivo.setAtributo("fechaFinTramite");
+        criterioTramiteActivo.setOperacion("=");
+        criterioTramiteActivo.setValor(null);
+        
+        criterioTramiteList.add(criterioTramiteActivo);
+
+        List tramitesRelacionadosActivos = FachadaPersistencia.getInstance().buscar("Tramite", criterioTramiteList);
+
+        
+        if (!tramitesRelacionadosActivos.isEmpty()) {
+            //FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw new TipoTramiteException("No se puede dar de baja el TipoTramite porque hay Trámites activos relacionados.");
+        } else{
+            List<TipoTramiteDocumentacion> listaTipoTramiteDocumentacionABajar = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
+            for(TipoTramiteDocumentacion ttd: listaTipoTramiteDocumentacionABajar){
+                ttd.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+                FachadaPersistencia.getInstance().guardar(ttd);
+            }
         
         tipoTramiteEncontrada.setFechaHoraBajaTipoTramite(new Timestamp(System.currentTimeMillis()));
         
         FachadaPersistencia.getInstance().guardar(tipoTramiteEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
+        }
     }
     
 }
