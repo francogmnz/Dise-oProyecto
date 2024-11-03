@@ -87,7 +87,6 @@ public class UIABMCategoriaTipoTramite implements Serializable {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
         int codCategoriaTipoTramite = Integer.parseInt(request.getParameter("codCategoriaTipoTramite")); 
-        
         insert = true;
 
         if (codCategoriaTipoTramite > 0) {
@@ -115,6 +114,7 @@ public class UIABMCategoriaTipoTramite implements Serializable {
                 modificarCategoriaTipoTramiteDTOIn.setDescripcionWebCategoriaTipoTramite(getDescripcionWebCategoriaTipoTramite());
                 
                 controladorABMCategoriaTipoTramite.modificarCategoriaTipoTramite(modificarCategoriaTipoTramiteDTOIn);
+                Messages.create("Éxito").detail("Categoria modificada correctamente.").add();
                 return BeansUtils.redirectToPreviousPage();
             }
             else
@@ -126,14 +126,15 @@ public class UIABMCategoriaTipoTramite implements Serializable {
                 nuevaCategoriaTipoTramiteDTO.setDescripcionWebCategoriaTipoTramite(getDescripcionWebCategoriaTipoTramite());        
                         
                 controladorABMCategoriaTipoTramite.agregarCategoriaTipoTramite(nuevaCategoriaTipoTramiteDTO);
+                Messages.create("Exito").detail("Categoria agregada correctamente.").add();
+                return BeansUtils.redirectToPreviousPage();
 
             }
-            return BeansUtils.redirectToPreviousPage();
-        }
-        
-        catch (CategoriaTipoTramiteException e) {
-                Messages.create(e.getMessage()).fatal().add();
-                return "";
+   
+        }catch (CategoriaTipoTramiteException e) {
+            Messages.create("Error").error().detail(e.getMessage()).add();
+            return null;
+    
          }
     }
 

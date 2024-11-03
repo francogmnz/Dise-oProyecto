@@ -4,7 +4,6 @@
  */
 package ABMEstadoTramite.beans;
 
-import ABMEstado.beans.EstadoGrillaUI;
 import ABMEstadoTramite.ControladorABMEstadoTramite;
 import ABMEstadoTramite.dtos.EstadoTramiteDTO;
 import ABMEstadoTramite.exceptions.EstadoTramiteException;

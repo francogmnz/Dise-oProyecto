@@ -20,7 +20,7 @@ import org.omnifaces.util.Messages;
 @Named("uiabmEstado")
 @ViewScoped
 
-public class UIABMEstado implements Serializable{
+public class UIABMDocumentacion implements Serializable{
 
     private ControladorABMEstado controladorABMEstado = new ControladorABMEstado();
     private boolean insert;
@@ -51,7 +51,7 @@ public class UIABMEstado implements Serializable{
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
-    public UIABMEstado() {
+    public UIABMDocumentacion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();

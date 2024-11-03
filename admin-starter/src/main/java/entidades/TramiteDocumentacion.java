@@ -14,7 +14,7 @@ import java.util.Date;
 public class TramiteDocumentacion extends Entidad {
     
     
-    private String archivoTD; // ver xq es tipo file 
+    private String archivoTD; 
     private int codTD;
     private Timestamp fechaEntregaTD;
     private Documentacion documentacion;

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Tramite extends Entidad {
     
-    //Ver si usar Date o Timestamp como en el resto 
+     
    
     private Timestamp fechaAnulacionTramite;
     private Timestamp fechaFinTramite;

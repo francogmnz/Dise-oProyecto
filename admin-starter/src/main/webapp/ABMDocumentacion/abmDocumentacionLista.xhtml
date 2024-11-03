@@ -1,15 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
--->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
     <ui:define name="metadata">
-        <ui:param name="title" value="Trabajar con Articulo"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+        <ui:param name="title" value="Trabajar con Documentacion"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
 
         <style type="text/css">
             .ui-datatable .ui-datatable-header {
@@ -19,7 +14,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     </ui:define>
 
     <ui:define name="description">
-        Trabajar con Articulo
+        Trabajar con Documentacion
     </ui:define>
 
     <ui:define name="body">
@@ -30,80 +25,91 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <div class="box-header with-border">
                     <div id="main-buttons">
 
-                        <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmArticuloLista.irAgregarArticulo()}"   styleClass="btn-primary"/>
+                        <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmDocumentacionLista.irAgregarDocumentacion()}"   styleClass="btn-primary"/>
                     </div>
                 </div>
-                <!-- Tabla para mostrar la lista de artículos -->
+                <!-- Tabla para mostrar la lista de doc -->
                 <p:separator/>
 
                 <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g-12 ui-md-3">
                         <p:outputPanel>
                             <h:outputText value="Código:"/>
                             <p:spacer height="10"/>
                             <p:inputText id="codFilter"  style="width:150px"
-                                         placeholder="" value="#{uiabmArticuloLista.codigoFiltro}" onfocus="Javascript:this.focus();this.select();">
+                                         placeholder="" value="#{uiabmDocumentacionLista.codigoFiltro}" onfocus="Javascript:this.focus();this.select();">
                                 <p:ajax event="keyup" 
-                                        listener="#{uiabmArticuloLista.filtrar()}" 
+                                        listener="#{uiabmDocumentacionLista.filtrar()}" 
                                         update="@form:grid1"
                                         />
+
                             </p:inputText>
 
-                        </p:outputPanel> </div>
+                        </p:outputPanel> 
+                    </div>
 
-                    <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g-12 ui-md-4">
                         <p:outputPanel>
-                            <h:outputText value="Descripción:"/>
+                            <h:outputText value="Nombre:"/>
                             <p:spacer height="10"/>
                             <p:inputText id="nomFilter"  style="width:150px"
-                                         placeholder="" value="#{uiabmArticuloLista.nombreFiltro}">
+                                         placeholder="" value="#{uiabmDocumentacionLista.nombreFiltro}">
                                 <p:ajax event="keyup" 
-                                        listener="#{uiabmArticuloLista.filtrar()}" 
+                                        listener="#{uiabmDocumentacionLista.filtrar()}" 
                                         update="@form:grid1"
                                         />
 
                             </p:inputText>
                         </p:outputPanel> 
                     </div>
+                    
+                    <div class="ui-g-12 ui-md-5">
+                        <p:outputPanel>
+                            <h:outputText value="Descripcion:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="descFilter"  style="width:80%"
+                                         placeholder="" value="#{uiabmDocumentacionLista.descripcionFiltro}">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmDocumentacionLista.filtrar()}" 
+                                        update="@form:grid1"
+                                        />
+
+                            </p:inputText>
+                        </p:outputPanel> 
+                    </div>
+                    
                 </div>
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="articuloTable" value="#{uiabmArticuloLista.buscarArticulos()}" var="articulo" >
+                <p:dataTable id="grid1" widgetVar="documentacionTable" value="#{uiabmDocumentacionLista.buscarDocumentaciones()}" var="documentacion" >
 
                     <p:column>
                         <f:facet name="header">Código</f:facet>
-                            #{articulo.codigo}
+                            #{documentacion.codDocumentacion}
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Nombre</f:facet>
-                            #{articulo.nombre}
+                            #{documentacion.nombreDocumentacion}
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Estado</f:facet>
-                            #{articulo.estado.nombre}
+                        <f:facet name="header">Descripción</f:facet>
+                            #{documentacion.descripcionDocumentacion}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Fecha Alta</f:facet>
-                            #{articulo.fechaAlta}
-                    </p:column>
-
-
+                    
                     <p:column>
                         <f:facet name="header">Fecha Baja</f:facet>
-                            #{articulo.fechaBaja}
+                            #{documentacion.fechaHoraBajaDocumentacion}
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmArticuloLista.irModificarArticulo(articulo.codigo)}" disabled="#{articulo.fechaBaja != null}">
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmDocumentacionLista.irModificarDocumentacion(documentacion.codDocumentacion)}" disabled="#{documentacion.fechaHoraBajaDocumentacion != null}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmArticuloLista.darDeBajaArticulo(articulo.codigo)}" disabled="#{articulo.fechaBaja != null}">
-
-                            <p:confirm header="Anulación de #{articulo.codigo} #{articulo.nombre}" message="¿Está seguro?" icon="ui-icon-alert"/>
-
+                        <p:commandButton value="Eliminar" styleClass="btn-dSSanger" update="@form" actionListener="#{uiabmDocumentacionLista.darDeBajaDocumentacion(documentacion.codDocumentacion)}" disabled="#{documentacion.fechaHoraBajaDocumentacion != null}">
+                            <p:confirm header="Anulación de #{documentacion.codDocumentacion} #{documentacion.nombreDocumentacion}" message="¿Está seguro?" icon="ui-icon-alert"/>
                         </p:commandButton>
 
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">

@@ -28,10 +28,10 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.buscarTipoTramites(codTipoTramite, nombreTipoTramite);
     }
     
-    public List<DocumentacionDTO> obtenerDocumentacionesActivas() {
+    public List<DocumentacionDTO> obtenerDocumentacionesActivas() throws TipoTramiteException {
         return expertoABMTipoTramite.obtenerDocumentacionesActivas();
     }
-    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() {
+    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() throws TipoTramiteException {
         return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
     }
 

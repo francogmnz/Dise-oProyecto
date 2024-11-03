@@ -5,7 +5,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{uiRegistrarTramiteWeb.verificarEstadoEnResumen}" />
+</f:metadata>      
 <h:head>
     <title>Resumen del Trámite</title>
     <link rel="stylesheet" type="text/css" href="#{resource['css/estiloMostrarResumen.css']}" />
@@ -15,7 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <div class="container-resumen">
 
             <h1 class="titulo-resumen">Resumen del Trámite</h1>
-
+            <h:messages id="messages" globalOnly="true" showSummary="true" showDetail="false" styleClass="error-message" />
 
             <div class="stepper-wrapper">
                     <div class="stepper-item completed">
@@ -71,7 +76,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverSeleccionarTipoTramite}" styleClass="btn-volver" />
             </h:panelGroup>
 
-            <h:outputText value="#{uiRegistrarTramiteWeb.mensajeError}" rendered="#{not empty uiRegistrarTramiteWeb.mensajeError}" styleClass="error-message" />
         </div>
     </h:form>
 </h:body>

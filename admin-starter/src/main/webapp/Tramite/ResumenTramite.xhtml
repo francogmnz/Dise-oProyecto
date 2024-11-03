@@ -61,7 +61,19 @@
                             <h:panelGroup>
                                 <h:outputLabel value="Fecha Anulación:" style="font-weight:700;"/>
                                 <h:outputText value=" #{uiresumen.fechaAnulacionTramite}" 
-                                              style="color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
+                                              style="font-weight:700; color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Inicio:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaInicioTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaInicioTramite != null ? 'green' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Fin:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaFinTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaFinTramite != null ? 'red' : 'black'};"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
@@ -187,39 +199,27 @@
 
                             <!-- Columna: Botón Agregar/Editar Entrega -->
                             <p:column style="text-align: center">
-                                <f:facet name="header">Agregar/Editar Entrega</f:facet>
-                                <div class="card custom-upload">
-                                    <h:form id="frmSingle#{doc.codTD}">
-                                        <!-- Campo oculto para enviar el codTD -->
-                                        <h:inputHidden id="codTD" value="#{uiresumen.codTD}"/>
+<<<<<<< HEAD
 
-                                        <!-- Componente fileUpload -->
-                                        <p:fileUpload listener="#{uiresumen.handleFileUpload}" 
-                                                      mode="advanced" 
-                                                      dragDropSupport="true" 
-                                                      auto="true"
-                                                      onstart="showBar()" 
-                                                      oncomplete="PF('msgDialog').show(); window.location.reload();"
-                                                      update="@form"
-                                                      multiple="true"
-                                                      sizeLimit="10000000"
-                                                      allowTypes="/(\.|\/)(gif|jpe?jpe?g|png|pdf|txt)$/"
-                                                      disabled="#{uiresumen.fileUploadDisabled}">
-                                        </p:fileUpload>
-
-                                        <!-- Botón para seleccionar el archivo y actualizar el codTD -->
-                                        <p:commandButton value="Validar"
-                                                         actionListener="#{uiresumen.setCodTD(doc.codTD)}"
-                                                         update="@form"
-                                                         process="@this"
-                                                         oncomplete="PF('msgDialog').hide();"
-                                                         disabled="#{uiresumen.fechaAnulacionTramite != null}">
-                                        </p:commandButton>
-                                    </h:form>
-
-                                </div>
+                                <f:facet name="header">Agregar</f:facet>
+                                <h:form id="form#{doc.codTD}">
+                                    <h:inputHidden id="codTD" value="#{doc.codTD}" />
+                                    <p:fileUpload 
+                                        listener="#{uiresumen.handleFileUpload}" 
+                                        mode="advanced" 
+                                        dragDropSupport="true" 
+                                        auto="true"
+                                        multiple="false" 
+                                        sizeLimit="10000000"
+                                        allowTypes="/(\.|\/)(pdf|txt|jpg)$/"
+                                        oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);"
+                                        disabled="#{doc.fechaEntregaDoc != null || uiresumen.fechaAnulacionTramite != null}">
+                                    </p:fileUpload>
+                                </h:form>
                             </p:column>
 
+                            <!-- Columna: Botón de Descargar -->
+>>>>>>> origin/union(grupos-1-2-4)
                             <p:column style="text-align: center">
                                 <f:facet name="header">Descarga</f:facet>
                                 <p:commandButton value="Descargar archivo" ajax="false"
@@ -236,12 +236,18 @@
                                                  actionListener="#{uiresumen.eliminarArchivo(doc.codTD)}"
                                                  icon="pi pi-trash"
                                                  update="tablaDoc"
-                                                 oncomplete="PF('msgDialog').show();"
+                                                 oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);"
                                                  disabled="#{doc.fechaEntregaDoc == null}">
+                                    <p:confirm header="Confirmación" message="¿Desea eliminar #{doc.nombreDocumentacion}?" icon="ui-icon-alert"/>
                                 </p:commandButton> 
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350"
+                                                 style="border: 1px solid red; background-color: #f0f0f0;">
+                                    <h:panelGroup style="display: flex; justify-content: space-between; margin-top: 0; padding-top: 0;">
+                                        <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes btn-danger ui-button-flat" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
+                                    </h:panelGroup>
+                                </p:confirmDialog>
                             </p:column>
-
-
                         </p:dataTable>
                     </p:panel>
                 </p:tab>

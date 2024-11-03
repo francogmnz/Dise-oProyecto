@@ -1,6 +1,9 @@
-
-
+import entidades.Tramite;
+import java.util.ArrayList;
+import java.util.List;
+import utils.DTOCriterio;
 import utils.EjemplosPersistencia;
+import utils.FachadaPersistencia;
 
 public class Main {
 
@@ -8,8 +11,6 @@ public class Main {
         
 //        EjemplosPersistencia ejemplos = new EjemplosPersistencia();
 //        ejemplos.crearElementos2();
-        
-        System.out.println("Funcionando");
     }
 
 }

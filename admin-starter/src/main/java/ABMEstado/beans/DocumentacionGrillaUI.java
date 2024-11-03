@@ -3,7 +3,7 @@ package ABMEstado.beans;
 import java.sql.Timestamp;
 
 // Clase usada para mostrar los estados en la grilla al iniciar el CU ABMEstados
-public class EstadoGrillaUI {
+public class DocumentacionGrillaUI {
     private int codigo;
     private String nombre;
     private Timestamp fechaAlta;

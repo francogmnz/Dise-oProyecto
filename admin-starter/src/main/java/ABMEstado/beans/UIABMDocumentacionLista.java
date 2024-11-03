@@ -18,7 +18,7 @@ import org.primefaces.PrimeFaces;
 
 @Named("uiabmEstadoLista")
 @ViewScoped
-public class UIABMEstadoLista implements Serializable {
+public class UIABMDocumentacionLista implements Serializable {
 
     private ControladorABMEstado controladorABMEstado = new ControladorABMEstado();
     private int codigoFiltro=0;
@@ -52,13 +52,13 @@ public class UIABMEstadoLista implements Serializable {
 
     }
 
-    public List<EstadoGrillaUI> buscarEstados(){
+    public List<DocumentacionGrillaUI> buscarEstados(){
         System.out.println(codigoFiltro);
         System.out.println(nombreFiltro);
-        List<EstadoGrillaUI> estadosGrilla = new ArrayList<>();
+        List<DocumentacionGrillaUI> estadosGrilla = new ArrayList<>();
         List<EstadoDTO> estadosDTO = controladorABMEstado.buscarEstados(codigoFiltro,nombreFiltro);
         for (EstadoDTO estadoDTO : estadosDTO) {
-            EstadoGrillaUI estadoGrillaUI = new EstadoGrillaUI();
+            DocumentacionGrillaUI estadoGrillaUI = new DocumentacionGrillaUI();
             estadoGrillaUI.setCodigo(estadoDTO.getCodigo());
             estadoGrillaUI.setNombre(estadoDTO.getNombre());
             estadoGrillaUI.setFechaAlta(estadoDTO.getFechaAlta());

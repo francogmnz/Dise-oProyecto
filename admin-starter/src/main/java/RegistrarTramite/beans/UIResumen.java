@@ -42,6 +42,8 @@ public class UIResumen implements Serializable {
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacionTramite;
+    private Timestamp fechaInicioTramite;
+    private Timestamp fechaFinTramite;
     private int plazoDocumentacion;
     private int codTipoTramite;
     private String nombreTipoTramite;
@@ -79,6 +81,8 @@ public class UIResumen implements Serializable {
                     this.nroTramite = tramiteElegido.getNroTramite();
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
+                    this.fechaInicioTramite = tramiteElegido.getFechaInicioTramite();
+                    this.fechaFinTramite = tramiteElegido.getFechaFinTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
                     if (fechaRecepcionTramite != null && plazoDocumentacion > 0) {
                         Calendar calendar = Calendar.getInstance();
@@ -128,6 +132,22 @@ public class UIResumen implements Serializable {
 
     public void setFechaRecepcionTramite(Timestamp fechaRecepcionTramite) {
         this.fechaRecepcionTramite = fechaRecepcionTramite;
+    }
+
+    public Timestamp getFechaInicioTramite() {
+        return fechaInicioTramite;
+    }
+
+    public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
+        this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    public Timestamp getFechaFinTramite() {
+        return fechaFinTramite;
+    }
+
+    public void setFechaFinTramite(Timestamp fechaFinTramite) {
+        this.fechaFinTramite = fechaFinTramite;
     }
 
     public int getPlazoDocumentacion() {
@@ -322,10 +342,12 @@ public class UIResumen implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         try {
             System.out.println("codTD recibido: " + codTD);
-            FacesMessage message = new FacesMessage("Exitoso", event.getFile().getFileName() + " subido.");
+            FacesMessage message = new FacesMessage("Exitoso // ", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
-            // Convertir el archivo a Base64 y almacenar
+<<<<<<< HEAD
+            // Continuar con la lógica de subida de archivo
+>>>>>>> origin/union(grupos-1-2-4)
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
 
@@ -349,7 +371,7 @@ public class UIResumen implements Serializable {
 
             // Mensaje de éxito
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Archivo eliminado", "El archivo ha sido eliminado correctamente."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Archivo eliminado // ", "El archivo ha sido eliminado correctamente."));
         } catch (Exception e) {
             // Manejo de errores
             FacesContext.getCurrentInstance().addMessage(null,

@@ -215,6 +215,106 @@ body {
     margin-bottom: 10px;
 }
 
+/*Borrar de aqui a */
+/* Área oculta */
+/* Botón en la esquina inferior derecha */
+.area-oculta {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.boton-oculto {
+    background-color: #007bff; /* Azul primario */
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.boton-oculto .icono-herramienta {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.boton-oculto:hover {
+    background-color: #0056b3;
+}
+
+/* Panel de prueba */
+.panel-prueba {
+    position: fixed;
+    bottom: 80px; /* Ajusta según necesidad */
+    right: 20px;
+    background-color: #ffe6e6; 
+    padding: 20px;
+    border: 1px solid #ddd; /* Borde gris claro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    width: 320px;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+}
+
+
+.label-prueba {
+    color: #555; /* Texto gris oscuro */
+    font-size: 1em;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-prueba {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.botones-panel {
+    text-align: right;
+}
+
+.btn-probar, .btn-cerrar {
+    background-color: #E57373; /* Botón azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.btn-cerrar {
+    background-color: #6c757d; /* Botón gris */
+}
+
+.btn-probar:hover {
+    background-color: #DE7373;
+}
+
+.btn-cerrar:hover {
+    background-color: #5a6268;
+}
+
+
+/*Aqui -- test */
+
 /* Responsividad */
 @media screen and (max-width: 992px) {
     .categoria-item {

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
--->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
@@ -15,55 +11,50 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <ui:param name="renderFormAsterisks" value="true"/>
     </ui:define>
     <ui:define name="title">
-        Agregar Articulo
+        Agregar Documentacion
     </ui:define>
     <ui:define name="body">
 
         <h:form id="form" prependId="false">
 
             <p:panel styleClass="box-primary card">
-                <!-- Campo de entrada para el código del artículo -->
+
+                <!-- Campo de entrada para el código de la documentación -->
                 <div class="ui-g ui-fluid">
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="codigo" value="Código del Articulo:" />
+                            <p:outputLabel for="codigoDoc" value="Código de la Documentacion:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:inputText id="codigo" value="#{uiabmArticulo.codigo}" style="width: 150px;" disabled="#{!uiabmArticulo.insert}" 
+                            <p:inputText id="codigoDoc" value="#{uiabmDocumentacion.codDocumentacion}" style="width: 150px;" disabled="#{!uiabmDocumentacion.insert}" 
                                          >
 
-                            </p:inputText><p:message id="codigoMSG" for="codigo"/>
+                            </p:inputText><p:message id="codigoMSG" for="codigoDoc"/>
                         </div>
                     </div>       
-
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="nombre" value="Nombre del Articulo:" />
+                            <p:outputLabel for="nombreDoc" value="Nombre de la Documentación:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11"> 
-                            <p:inputText id="nombre" value="#{uiabmArticulo.nombre}" />
+                            <p:inputText id="nombreDoc" value="#{uiabmDocumentacion.nombreDocumentacion}" />
+                        </div>
+                    </div>   
+                    
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="descripcionDoc" value="Descripción de la Documentación:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:inputText id="descripcionDoc" value="#{uiabmDocumentacion.descripcionDocumentacion}" />
                         </div>
                     </div>   
 
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
-                        <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="estadoMenu" value="Estado del Articulo:" />
-                        </div>
-
-                        <div class="ui-sm-12 ui-g-11"> 
-                            <p:selectOneMenu id="estadoMenu" value="#{uiabmArticulo.estadoSeleccionado}">
-                                <f:selectItems value="#{uiabmArticulo.estadosDisponibles}"
-                                               var="estado"
-                                               itemValue="#{estado.OID}"
-                                               itemLabel="#{estado.nombre}" />
-                            </p:selectOneMenu>
-                        </div>
-                    </div> 
-
-                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-4">
-                            <!-- Botón para agregar artículo -->
-                            <p:commandButton value="Agregar" action="#{uiabmArticulo.agregarArticulo()}" icon="fa fa-check"
+
+                            <!-- Botón para agregar doc -->
+                            <p:commandButton value="Agregar" action="#{uiabmDocumentacion.agregarDocumentacion()}" icon="fa fa-check"
                                              styleClass=" btn-primary" /> 
                         </div>
                     </div>   
