@@ -368,8 +368,8 @@ public class ExpertoRegistrarTramiteWeb {
            
         TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
         
-        tramiteEstadoTramite.setFechaHoraBajaTET(null);
-        tramiteEstadoTramite.setFechaHoraAltaTET(new Timestamp(System.currentTimeMillis()));
+        tramiteEstadoTramite.setFechaHastaTET(null);
+        tramiteEstadoTramite.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
         tramiteEstadoTramite.setEstadoTramite(estadoTramite);
         
         nuevoTramite.addTramiteEstadoTramite(tramiteEstadoTramite); 

@@ -74,7 +74,7 @@ public class ExpertoABMEstadoTramite {
 
     public void agregarEstadoTramite(NuevoEstadoTramiteDTO nuevoEstadoTramiteDTO) throws EstadoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
+
         //Verifica si el codigo del estado ya existe
         List<DTOCriterio> criterioCodigo = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
@@ -90,7 +90,7 @@ public class ExpertoABMEstadoTramite {
         if (lEstadoTramite.size() > 0) {
             throw new EstadoTramiteException("El codigo de EstadoTramite ya existe");
         }
-        
+
         //Verifica si el nombre del estado ya existe
         List<DTOCriterio> criterioNombre = new ArrayList<>();
         DTOCriterio dto2 = new DTOCriterio();
@@ -106,7 +106,7 @@ public class ExpertoABMEstadoTramite {
         if (lEstadoTramite2.size() > 0) {
             throw new EstadoTramiteException("El nombre del EstadoTramite ya existe");
         }
-        
+
         //Verifica si la descripcion del estado ya existe
         List<DTOCriterio> criterioDesc = new ArrayList<>();
         DTOCriterio dto3 = new DTOCriterio();
@@ -155,9 +155,9 @@ public class ExpertoABMEstadoTramite {
 
     public void modificarEstadoTramite(ModificarEstadoTramiteDTOIn modificarEstadoTramiteDTOIn) throws EstadoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
+
         int codEstado = modificarEstadoTramiteDTOIn.getCodEstadoTramite();
-        
+
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
@@ -195,7 +195,7 @@ public class ExpertoABMEstadoTramite {
                 verificarEstadoTramiteEnOrigenODestinoM(confTTET.getEstadoTramiteOrigen(), confTTET.getEstadoTramiteDestino(), codEstado);
             }
         }
-        
+
         //Verifica si el nombre del estado ya existe
         List<DTOCriterio> criterioNombre = new ArrayList<>();
         DTOCriterio dto5 = new DTOCriterio();
@@ -211,8 +211,7 @@ public class ExpertoABMEstadoTramite {
         if (lEstadoTramite2.size() > 0) {
             throw new EstadoTramiteException("El nombre del EstadoTramite ya existe");
         }
-        
-        
+
         //Verifica si la descripcion del estado ya existe
         List<DTOCriterio> criterioDesc = new ArrayList<>();
         DTOCriterio dto6 = new DTOCriterio();
@@ -237,8 +236,8 @@ public class ExpertoABMEstadoTramite {
         // Guardar los cambios
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
-    }   
-    
+    }
+
     public void darDeBajaEstadoTramite(int codEstadoTramite) throws EstadoTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
@@ -259,7 +258,7 @@ public class ExpertoABMEstadoTramite {
         DTOCriterio dto2 = new DTOCriterio();
         dto2.setAtributo("fechaHastaVersion");
         dto2.setOperacion(">=");
-        dto2.setValor(Timestamp.from(Instant.now()));    
+        dto2.setValor(Timestamp.from(Instant.now()));
 
         criterioList.add(dto2);
 
@@ -289,12 +288,10 @@ public class ExpertoABMEstadoTramite {
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 
-    private void verificarEstadoTramiteEnOrigenODestino(List<EstadoTramite> estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
-        // Verificar si el estado está en la lista de origen
-        for (EstadoTramite estado : estadoTramiteOrigen) {
-            if (estado.getCodEstadoTramite() == codEstadoTramite) {
-                throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en el origen de una versión actual/posterior");
-            }
+    private void verificarEstadoTramiteEnOrigenODestino(EstadoTramite estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
+        // Verificar si el estado está en la lista de origen     
+        if (estadoTramiteOrigen.getCodEstadoTramite() == codEstadoTramite) {
+            throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en el origen de una versión actual/posterior");
         }
 
         // Verificar si el estado está en la lista de destino
@@ -304,12 +301,11 @@ public class ExpertoABMEstadoTramite {
             }
         }
     }
-        private void verificarEstadoTramiteEnOrigenODestinoM(List<EstadoTramite> estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
+
+    private void verificarEstadoTramiteEnOrigenODestinoM(EstadoTramite estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
         // Verificar si el estado está en la lista de origen
-        for (EstadoTramite estado : estadoTramiteOrigen) {
-            if (estado.getCodEstadoTramite() == codEstadoTramite) {
-                throw new EstadoTramiteException("No se pudo modficar el Estado porque está presente en el origen de una versión actual/posterior");
-            }
+        if (estadoTramiteOrigen.getCodEstadoTramite() == codEstadoTramite) {
+            throw new EstadoTramiteException("No se pudo modficar el Estado porque está presente en el origen de una versión actual/posterior");
         }
 
         // Verificar si el estado está en la lista de destino

@@ -19,7 +19,8 @@
         <property name="fechaDesdeVersion" column="fecha_desde_version" type="timestamp"/>
 
         <property name="fechaHastaVersion" column="fecha_hasta_version" type="timestamp"/>
-
+        
+        <property name="dibujo" column="dibujo" type="text"/>
         <!-- Relación ManyToOne con TipoTramite -->
         <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="false"/>
 

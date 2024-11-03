@@ -403,8 +403,8 @@ public class ExpertoRegistrarTramite {
             tramiteCreado.setEstadoTramite(estadoEncontrado); // setEstadoTramite(estadoEncontrado)
 
             TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite(); // :create() TramiteEstadoTramite
-            tramiteEstadoTramite.setFechaHoraAltaTET(fechaHoraActual.obtenerFechaHoraActual());
-            tramiteEstadoTramite.setFechaHoraBajaTET(null);
+            tramiteEstadoTramite.setFechaDesdeTET(fechaHoraActual.obtenerFechaHoraActual());
+            tramiteEstadoTramite.setFechaHastaTET(null);
             tramiteEstadoTramite.setEstadoTramite(estadoEncontrado);
 
             tramiteCreado.addTramiteEstadoTramite(tramiteEstadoTramite);
@@ -682,6 +682,7 @@ public class ExpertoRegistrarTramite {
             agendaCriterio2.setOperacion("=");
             agendaCriterio2.setValor(null);
             criterioListAgenda.add(agendaCriterio2);
+            //FALTA CARTEL POR SI AGENDA ES VACIO
 
             AgendaConsultor agenda = (AgendaConsultor) FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda).get(0);
             List<Consultor> consultorList = agenda.getConsultores();

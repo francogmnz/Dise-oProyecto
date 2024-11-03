@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="#{layoutMB.template}">
+
+    <f:metadata>
+    <f:viewParam name="nroTramite" value="#{uicambioEstadoLista.nroTramite}" />
+    <f:event type="preRenderView" listener="#{uicambioEstadoLista.mostrarHistorialEstados}" />
+</f:metadata>
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Historial de Estados"/> 
+    </ui:define>
+
+    <ui:define name="description">
+        Historial de Estados
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="historicoForm">
+            <h1>Historial de Estados</h1>
+
+            <h:outputText value="Historial de: #{uicambioEstadoLista.nombreTramite} (Código: #{uicambioEstadoLista.nroTramite})" style="font-weight: bold;" />
+
+            <p:growl id="messages" showDetail="true" />
+
+            <p:dataTable value="#{uicambioEstadoLista.listaHistorial}" var="estado">
+    <p:column headerText="Estado">
+        <h:outputText value="#{estado.nombreEstadoTramite}" />
+    </p:column>
+    <p:column headerText="Fecha Desde">
+        <h:outputText value="#{estado.fechaDesdeTET}" />
+    </p:column>
+    <p:column headerText="Fecha Hasta">
+        <h:outputText value="#{estado.fechaHastaTET}" />
+    </p:column>
+    <p:column headerText="Contador">
+        <h:outputText value="#{estado.contador}" />
+    </p:column>
+</p:dataTable>
+
+            <p:commandButton value="Volver" action="uicambioEstadoLista.xhtml?faces-redirect=true" icon="pi pi-arrow-left" style="margin-top: 20px;" />
+        </h:form>
+    </ui:define>
+</ui:composition>

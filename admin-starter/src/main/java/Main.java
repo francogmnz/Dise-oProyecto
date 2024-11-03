@@ -2,7 +2,7 @@ import entidades.Tramite;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
-import utils.EjemplosPersistencia;
+
 import utils.FachadaPersistencia;
 
 public class Main {
