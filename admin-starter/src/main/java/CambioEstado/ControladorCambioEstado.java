@@ -18,7 +18,7 @@ public class ControladorCambioEstado {
     // Asegurarse de que no se devuelva null
     return (tramites != null) ? tramites : new ArrayList<>(); // Devuelve una lista vacía si es null
 } 
-   public TramiteEstadoTramite cambiarEstado(int nroTramite){
+   public EstadoTramite cambiarEstado(int nroTramite){
    return expertoCambioEstado.cambiarEstado(nroTramite);
    }
    

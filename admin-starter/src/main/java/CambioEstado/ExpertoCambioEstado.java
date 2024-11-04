@@ -5,6 +5,9 @@ import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
+import Version.beans.NodoIU;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.Consultor;
@@ -97,69 +100,49 @@ public class ExpertoCambioEstado {
         FachadaPersistencia.getInstance().guardar(tramite);
     }
 
-    public TramiteEstadoTramite cambiarEstado(int nroTramite) {
+    public EstadoTramite cambiarEstado(int nroTramite) {
+        // Iniciar transacción
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        List<DTOCriterio> criterioList = new ArrayList<>();
-
-        DTOCriterio dto = new DTOCriterio();
-        dto.setAtributo("nroTramite");
-        dto.setOperacion("=");
-        dto.setValor(nroTramite);
-        criterioList.add(dto);
 
         try {
-            // Buscar el trámite en la base de datos
-            List<?> result = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
-            Tramite tramite = result.stream()
-                    .filter(obj -> obj instanceof Tramite)
-                    .map(obj -> (Tramite) obj)
-                    .findFirst()
-                    .orElseThrow(() -> new CambioEstadoException("Trámite no encontrado."));
+            // Obtener el trámite por su número
+            Tramite tramite = obtenerTramitePorNumero(nroTramite);
 
-            if (nroTramite != tramite.getNroTramite()) {
-                throw new CambioEstadoException("Trámite no encontrado, intente nuevamente.");
+            if (tramite == null) {
+                throw new CambioEstadoException("Trámite no encontrado.");
             }
 
-            Timestamp fechaRecepcionTramite = tramite.getFechaRecepcionTramite();
-
-            // Crear criterios para buscar la versión vigente
-            criterioList.clear();
-            DTOCriterio criterioFechaDesde = new DTOCriterio();
-            criterioFechaDesde.setAtributo("fechaDesdeVersion");
-            criterioFechaDesde.setOperacion("<=");
-            criterioFechaDesde.setValor(fechaRecepcionTramite);
-            criterioList.add(criterioFechaDesde);
-
-            DTOCriterio criterioFechaHasta = new DTOCriterio();
-            criterioFechaHasta.setAtributo("fechaHastaVersion");
-            criterioFechaHasta.setOperacion(">");
-            criterioFechaHasta.setValor(fechaRecepcionTramite);
-            criterioList.add(criterioFechaHasta);
-
-            DTOCriterio criterioFechaBaja = new DTOCriterio();
-            criterioFechaBaja.setAtributo("fechaBajaVersion");
-            criterioFechaBaja.setOperacion("=");
-            criterioFechaBaja.setValor(null);
-            criterioList.add(criterioFechaBaja);
-
-            EstadoTramite estadoActual = tramite.getEstadoTramite();
+            // Obtener la versión del trámite y su JSON de dibujo
             Version version = tramite.getVersion();
-            
-            //Gson gsonito = (Gson)version.getDibujo();
-            
-            List<ConfTipoTramiteEstadoTramite> confTTET = version.getConfTipoTramiteEstadoTramite();
+            String dibujoJSON = version.getDibujo();
 
-            // Lógica para cambiar el estado
-            EstadoTramite nuevoEstado = obtenerNuevoEstado(estadoActual, confTTET);
-            if (nuevoEstado == null) {
-                // Finalizar trámite si no hay más estados de destino
+            // Deserializar el JSON en una lista de NodoIU
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<NodoIU> nodos = objectMapper.readValue(dibujoJSON, new TypeReference<List<NodoIU>>() {
+            });
+
+            // Obtener el estado actual del trámite
+            int estadoActualCodigo = tramite.getEstadoTramite().getCodEstadoTramite();
+
+            // Buscar el nodo que representa el estado actual
+            NodoIU nodoActual = nodos.stream()
+                    .filter(n -> n.getCodigo() == estadoActualCodigo)
+                    .findFirst()
+                    .orElse(null);
+
+            if (nodoActual == null || nodoActual.getDestinos().isEmpty()) {
+                // Si no hay destinos, se considera el fin del trámite
                 tramite.setFechaFinTramite(new Timestamp(System.currentTimeMillis()));
                 FachadaPersistencia.getInstance().guardar(tramite);
                 FachadaPersistencia.getInstance().finalizarTransaccion();
                 return null;
             }
 
-            // Registrar el nuevo estado en TramiteEstadoTramite (TET)
+            // Obtener el siguiente estado de destino
+            int nuevoEstadoCodigo = nodoActual.getDestinos().get(0); // Toma el primer destino
+            EstadoTramite nuevoEstado = obtenerEstadoPorCodigo(nuevoEstadoCodigo);
+
+            // Registrar el cambio de estado
             TramiteEstadoTramite nuevoTET = new TramiteEstadoTramite();
             nuevoTET.setEstadoTramite(nuevoEstado);
             nuevoTET.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
@@ -168,38 +151,65 @@ public class ExpertoCambioEstado {
             // Guardar el nuevo estado del trámite
             FachadaPersistencia.getInstance().guardar(nuevoTET);
             tramite.addTramiteEstadoTramite(nuevoTET);
-            tramite.setEstadoTramite(nuevoEstado); // Actualiza el estado en el trámite
+            tramite.setEstadoTramite(nuevoEstado);
 
             FachadaPersistencia.getInstance().guardar(tramite);
             FachadaPersistencia.getInstance().finalizarTransaccion();
 
-            return nuevoTET;
+            return nuevoEstado;
 
         } catch (Exception e) {
-            FachadaPersistencia.getInstance().finalizarTransaccion(); // Rollback en caso de error
+            FachadaPersistencia.getInstance().finalizarTransaccion();
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
-// Método auxiliar para obtener el próximo estado de destino según la configuración
-    private EstadoTramite obtenerNuevoEstado(EstadoTramite estadoActual, List<ConfTipoTramiteEstadoTramite> confTTET) {
-        for (ConfTipoTramiteEstadoTramite conf : confTTET) {
-            if (conf.getEstadoTramiteOrigen().equals(estadoActual)) {
-                List<EstadoTramite> estadosDestino = conf.getEstadoTramiteDestino();
-                return estadosDestino.isEmpty() ? null : estadosDestino.get(0); // Retorna el primer destino
-            }
-        }
-        return null;
+// Método para obtener el trámite por número
+    private Tramite obtenerTramitePorNumero(int nroTramite) {
+        List<DTOCriterio> criterioList = new ArrayList<>();
+
+        DTOCriterio dto = new DTOCriterio();
+        dto.setAtributo("nroTramite");
+        dto.setOperacion("=");
+        dto.setValor(nroTramite);
+        criterioList.add(dto);
+
+        List<?> result = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+
+        return result.stream()
+                .filter(obj -> obj instanceof Tramite)
+                .map(obj -> (Tramite) obj)
+                .findFirst()
+                .orElse(null);  // Devuelve null si no se encuentra el trámite
+    }
+
+    private EstadoTramite obtenerEstadoPorCodigo(int codigo) {
+        List<DTOCriterio> criterioList = new ArrayList<>();
+
+        DTOCriterio dto = new DTOCriterio();
+        dto.setAtributo("codEstadoTramite");
+        dto.setOperacion("=");
+        dto.setValor(codigo);
+        criterioList.add(dto);
+
+        List<?> result = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+
+        return result.stream()
+                .filter(obj -> obj instanceof EstadoTramite)
+                .map(obj -> (EstadoTramite) obj)
+                .findFirst()
+                .orElse(null);  // Devuelve null si no se encuentra el estado
     }
 
 // Método auxiliar para obtener el contador TET actual
-    private int obtenerContadorTET(Tramite tramite) {
+private int obtenerContadorTET(Tramite tramite) {
         return tramite.getTramiteEstadoTramite().stream()
                 .mapToInt(TramiteEstadoTramite::getContadorTET)
                 .max()
-                .orElse(0);
+                .orElse(0);  // Devuelve 0 si no hay ningún estado previo
     }
+
 
     public List<DTOMostrarHistorial> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException {
         // Iniciar la transacción
