@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="entidades.TipoTramite" table="tipo_tramite">
+
+        <id name="OID" type="string">
+            <column name="OIDTipoTramite"/>
+            <generator class="uuid2"/>
+        </id>
+
+        <property name="codTipoTramite" type="int">
+            <column name="cod_tipo_tramite"/>
+        </property>
+
+        <property name="descripcionTipoTramite" type="string">
+            <column name="descripcion_tipo_tramite"/>
+        </property>
+
+        <property name="descripcionWebTipoTramite" type="string">
+            <column name="descripcion_web_tipo_tramite"/>
+        </property>
+
+        <property name="fechaHoraBajaTipoTramite" column="fecha_hora_baja_tipo_tramite" type="timestamp"/>
+
+        <property name="nombreTipoTramite" type="string">
+            <column name="nombre_tipo_tramite"/>
+        </property>
+
+        <property name="plazoEntregaDocumentacionTT" type="int">
+            <column name="plazo_entrega_documentacion_tt"/>
+        </property>
+
+        <!-- Relación ManyToOne con CategoriaTipoTramite -->
+        <many-to-one name="categoriaTipoTramite" class="entidades.CategoriaTipoTramite" column="OIDCategoriaTipoTramite" not-null="false"/>
+        
+        <!-- Relación OneToMany con TipoTramiteDocumentacion -->
+        <bag name="tipoTramiteDocumentacion" table="tipo_tramite_documentacion" cascade="none" inverse="false" lazy="false"> <!-- era none -->
+            <key column="OIDTipoTramite" not-null="false"/> <!-- Cambiar el false a true dsp -->
+            <one-to-many class="entidades.TipoTramiteDocumentacion"/>
+        </bag>
+
+        
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ul class="sidebar-menu tree" data-widget="tree">
+        <li>
+            <p:link outcome="/index" onclick="clearBreadCrumbs()">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </p:link>
+        </li>
+        <li class="header">
+            General
+        </li>
+        <li>
+            <p:link outcome="/ABMConsultor/abmConsultorLista.xhtml?faces-redirect=true">
+                <i class="fa fa-user"></i>
+                <span>Consultores</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/ABMCliente/abmClienteLista.xhtml?faces-redirect=true">
+                <i class="fa fa-user"></i>
+                <span>Clientes</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/ABMAgenda/abmAgendaLista.xhtml?faces-redirect=true">
+                <i class="fa fa-calendar"></i>
+                <span>Agenda</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/ABMVersion/abmVersionLista.xhtml?faces-redirect=true">
+                <i class="fa fa-vimeo"></i> 
+                <span>Lista de Versiones</span>
+            </p:link>
+        </li>
+
+        <li>
+            <p:link outcome="/CambioEstado/CambioEstadoTramiteLista.xhtml?faces-redirect=true">
+                <i class="fa fa-adjust"></i>
+                <span>Cambio de estado</span>
+            </p:link>
+        </li>
+
+        <li>
+            <p:link outcome="/ABCListaPrecios/abmListaPreciosLista.xhtml?faces-redirect=true">
+                <i class="fa fa-money"></i>
+                <span>Lista de Precios</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/ABMEstadoTramite/abmEstadoTramiteLista.xhtml?faces-redirect=true">
+                <i class="fa fa-adjust"></i>
+                <span>Estado Tramite</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/ABMCategoriaTipoTramite/abmCategoriaTipoTramiteLista.xhtml?faces-redirect=true">
+                <i class="fa fa-cubes"></i>
+                <span>CategoriaTipoTramite</span>
+            </p:link>
+        </li>
+        
+        <li>
+            <p:link outcome="/ABMTipoTramite/abmTipoTramiteLista.xhtml?faces-redirect=true">
+                <i class="fa fa-bars"></i>
+                <span>TipoTramite</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/RegistrarTramiteWeb/ingresarDNI.xhtml?faces-redirect=true">
+                <i class="fa fa-id-card"></i> 
+                <span>Registrar Trámite Web</span>
+            </p:link>
+        </li>        
+        <li>
+            <p:link outcome="/ABMDocumentacion/abmDocumentacionLista.xhtml?faces-redirect=true">
+                <i class="fa fa-newspaper-o"></i> 
+                <span>Documentacion</span>
+            </p:link>
+        </li>
+    </ul>
+
+</ui:composition>

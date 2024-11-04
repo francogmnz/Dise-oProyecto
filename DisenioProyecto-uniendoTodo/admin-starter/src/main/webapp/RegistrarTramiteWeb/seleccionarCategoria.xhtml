@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{uiRegistrarTramiteWeb.verificarEstadoEnSeleccionarCategoria}" />
+</f:metadata> 
+<h:head>
+    <title>Seleccionar Categoría</title>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/estiloCategoria.css" />
+    <script type="text/javascript">
+        function mostrarPanelPrueba() {
+            document.getElementById('panelPrueba').style.display = 'block';
+        }
+        function ocultarPanelPrueba() {
+            document.getElementById('panelPrueba').style.display = 'none';
+        }
+    </script>    
+</h:head>
+<h:body>
+    <h:form>
+    <div class="container">
+        <h1 class="titulo">Gestión de Trámites</h1>
+        <h:messages id="messages" globalOnly="true" showSummary="true" showDetail="false" styleClass="error-message" />
+        <div class="stepper-wrapper">
+                    <div class="stepper-item completed">
+                      <div class="step-counter">1</div>
+                      <div class="step-name">Acceder</div>
+                    </div>
+                    <div class="stepper-item active">
+                      <div class="step-counter">2</div>
+                      <div class="step-name">Categoria</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">3</div>
+                      <div class="step-name">Trámite</div>
+                    </div>
+                    <div class="stepper-item">
+                      <div class="step-counter">4</div>
+                      <div class="step-name">Confirmar</div>
+                    </div>
+                  </div>
+
+        <p class="subtitulo-lindo">Seleccione la categoría de trámite que desea realizar:</p>
+
+        <div class="categorias-grid">
+            <ui:repeat value="#{uiRegistrarTramiteWeb.categoriasGrilla}" var="categoria">
+                <div class="categoria-item">
+                    <div class="categoria-header">
+                        <h2>#{categoria.nombreCategoriaTipoTramite}</h2>
+                    </div>
+                    <div class="categoria-body">
+                        <p><strong>Descripción:</strong> #{categoria.descripcionCategoriaTipoTramite}</p>
+                        <hr class="divisoria" />
+                        <p><strong>Descripción Web:</strong> #{categoria.descripcionWebCategoriaTipoTramite}</p>
+                    </div>
+                    <h:commandButton value="Seleccionar" action="#{uiRegistrarTramiteWeb.seleccionarCategoria}" styleClass="btn-seleccionar">
+                        <f:setPropertyActionListener target="#{uiRegistrarTramiteWeb.codCategoriaSeleccionada}" value="#{categoria.codCategoriaTipoTramite}" />
+                    </h:commandButton>
+                </div>
+            </ui:repeat>
+        </div>
+
+        <h:commandButton value="Volver" action="#{uiRegistrarTramiteWeb.volverConfirmarCliente}" styleClass="btn-volver" />
+    </div>
+      
+        <!-- Borrar desde aqui -->    
+        <!-- Área sensible para mostrar el panel -->
+        <div class="area-oculta">
+            <h:commandButton value="" styleClass="boton-invisible" onclick="mostrarPanelPrueba(); return false;" />
+        </div>
+
+        <!-- Panel que aparece al hacer clic en el área oculta -->
+        <div id="panelPrueba" class="panel-prueba" style="display: none;">
+            <h:outputLabel for="inputPrueba" value="codCategoriaTipoTramite a probar:" class="label-prueba" />
+            <h:inputText id="inputPrueba" value="#{uiRegistrarTramiteWeb.codigoCategoriaTTPrueba}" class="input-prueba" />
+            <h:commandButton value="Probar" action="#{uiRegistrarTramiteWeb.probarSeleccionarCategoria}" styleClass="btn-probar" />
+            <h:commandButton value="Cerrar" onclick="ocultarPanelPrueba(); return false;" styleClass="btn-cerrar" />
+        </div>
+
+        <!-- Hasta aqui -->
+
+    </h:form>
+</h:body>
+</html>
