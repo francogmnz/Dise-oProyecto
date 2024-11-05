@@ -9,6 +9,7 @@ public class TramiteDTO {
     private int codTipoTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaInicioTramite;
+    private String nombreConsultor;
     private String nombreTipoTramite;
     private int codEstadoTramite;
     private String nombreEstadoTramite;
@@ -17,11 +18,22 @@ public class TramiteDTO {
     public int getNroTramite() {
         return nroTramite;
     }
+   
 
     public void setNroTramite(int nroTramite) {
         this.nroTramite = nroTramite;
     }
 
+    public String getNombreConsultor() {
+        return nombreConsultor;
+    }
+
+    public void setNombreConsultor(String nombreConsultor) {
+        this.nombreConsultor = nombreConsultor;
+    }
+
+    
+    
     public int getCodTipoTramite() {
         return codTipoTramite;
     }

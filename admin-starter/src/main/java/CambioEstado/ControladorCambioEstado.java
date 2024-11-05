@@ -1,5 +1,6 @@
 package CambioEstado;
 
+import CambioEstado.dtos.DTOEstadoOrigenCE;
 import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.exceptions.CambioEstadoException;
@@ -24,6 +25,9 @@ public class ControladorCambioEstado {
    
    public List<DTOMostrarHistorial> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException{
        return expertoCambioEstado.obtenerHistorialEstados(nroTramite);
+   }
+   public DTOEstadoOrigenCE mostrarEstadosPosibles(int nroTramite) throws CambioEstadoException {
+       return expertoCambioEstado.mostrarEstadosPosibles(nroTramite);
    }
 
 

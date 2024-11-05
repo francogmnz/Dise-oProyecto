@@ -1,5 +1,9 @@
 package CambioEstado;
 
+import CambioEstado.dtos.DTOEstadoDestinoCE;
+import CambioEstado.dtos.DTOEstadoOrigen;
+import CambioEstado.dtos.DTOEstadoOrigenCE;
+import CambioEstado.dtos.DTOEstadosVersion;
 import CambioEstado.dtos.DTOHistorialEstado;
 import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
@@ -96,9 +100,60 @@ public class ExpertoCambioEstado {
     }
 // Método para guardar el trámite actualizado
 
+    public DTOEstadoOrigenCE mostrarEstadosPosibles(int nroTramite) throws CambioEstadoException {
+
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+        dto.setAtributo("nroTramite");
+        dto.setOperacion("=");
+        dto.setValor(nroTramite);
+
+
+        List tramites = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+
+        if (tramites == null || tramites.isEmpty()) {
+            throw new CambioEstadoException("El tramite no existe");
+        }
+
+        Tramite tramiteElegido = (Tramite) tramites.get(0);
+
+        EstadoTramite estadoOrigen = tramiteElegido.getEstadoTramite();
+        
+        DTOEstadoOrigenCE estadoOrigenDTO = new DTOEstadoOrigenCE();
+        estadoOrigenDTO.setCodEstadoOrigen(estadoOrigen.getCodEstadoTramite());
+        estadoOrigenDTO.setNombreEstadoOrigen(estadoOrigen.getNombreEstadoTramite());
+
+
+        Version versionTramite = tramiteElegido.getVersion();
+        List<ConfTipoTramiteEstadoTramite> listaConfiguraciones = versionTramite.getConfTipoTramiteEstadoTramite();
+
+
+        List<DTOEstadoDestinoCE> estadosDestinoList = new ArrayList<>();
+
+        for (ConfTipoTramiteEstadoTramite config : listaConfiguraciones) {
+            List<EstadoTramite> estadosDestinos = config.getEstadoTramiteDestino();
+            for(EstadoTramite estado: estadosDestinos){
+                if(estado.getCodEstadoTramite() != estadoOrigen.getCodEstadoTramite() 
+                        && estado.getFechaHoraBajaEstadoTramite() == null){
+                    DTOEstadoDestinoCE estadoDestinoDTO = new DTOEstadoDestinoCE();
+                    estadoDestinoDTO.setCodEstadoDestino(estado.getCodEstadoTramite());
+                    estadoDestinoDTO.setNombreEstadoDestino(estado.getNombreEstadoTramite());
+                    estadosDestinoList.add(estadoDestinoDTO);
+                }
+            }       
+        }
+        estadoOrigenDTO.addEstadosDestinos(estadosDestinoList);
+
+        return estadoOrigenDTO;
+    }   
+    
+    
     private void guardarTramite(TramiteDTO tramite) {
         FachadaPersistencia.getInstance().guardar(tramite);
     }
+    
+    
+    
 
     public EstadoTramite cambiarEstado(int nroTramite) {
         // Iniciar transacción

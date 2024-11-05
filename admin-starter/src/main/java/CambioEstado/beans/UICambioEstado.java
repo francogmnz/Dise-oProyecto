@@ -2,6 +2,7 @@ package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
 import CambioEstado.ExpertoCambioEstado;
+import CambioEstado.dtos.DTOEstadoOrigenCE;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
@@ -41,7 +42,7 @@ public class UICambioEstado implements Serializable {
     }
     public String cambiarEstado(int nroTramite) {
     try {
-        EstadoTramite nuevoEstado = controladorCambioEstado.cambiarEstado(nroTramite);
+       DTOEstadoOrigenCE nuevoEstado = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
         if (nuevoEstado != null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Estado cambiado con éxito"));
         } else {
