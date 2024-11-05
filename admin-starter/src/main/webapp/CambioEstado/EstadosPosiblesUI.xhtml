@@ -9,10 +9,48 @@
 
     <ui:define name="metadata">
         <ui:param name="title" value="Mostrar Estados Posibles"/>
-        
         <style type="text/css">
             .ui-datatable .ui-datatable-header {
-                text-align: right !important;
+                text-align: center !important;
+                font-weight: bold;
+            }
+            .box-primary {
+                border: 1px solid #dcdcdc;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #f9f9f9;
+            }
+            .box-header {
+                background-color: #4CAF50;
+                color: #fff;
+                padding: 10px;
+                border-radius: 5px 5px 0 0;
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .ui-panelgrid td {
+                padding: 10px;
+                vertical-align: top;
+            }
+            .ui-panelgrid label {
+                font-weight: bold;
+                color: #333;
+            }
+            .ui-datatable table {
+                width: 100%;
+            }
+            .estado-label {
+                font-weight: bold;
+                color: #333;
+                width: 100%;
+                text-align: center;
+                padding-right: 1px;
+            }
+            .estado-value {
+                color: #555;
+                text-align: left;
             }
         </style>
     </ui:define>
@@ -25,18 +63,19 @@
         <h:form>
             <div class="box box-primary">
                 
-                <div class="box-header with-border">
-                    <h:outputText value="Estados Posibles para el Trámite" styleClass="ui-widget-header"/>
+                <div class="box-header">
+                    <h:outputText value="Estados Posibles para el Trámite"/>
                 </div>
 
                 <!-- Panel para mostrar el estado origen -->
-                <h:panelGrid columns="2" cellpadding="5" style="margin-bottom: 20px;">
-                    <h:outputLabel value="Código Estado Origen:" />
-                    <h:outputText value="#{uiCambioEstado.codEstadoOrigen}" />
+                <h:panelGrid columns="2" cellpadding="5" style="margin: 20px 0; width: 100%;">
+                    <h:outputLabel value="Código Estado Origen:" styleClass="estado-label"/>
+                    <h:outputText value="#{uiCambioEstado.codEstadoOrigen}" styleClass="estado-value"/>
 
-                    <h:outputLabel value="Nombre Estado Origen:" />
-                    <h:outputText value="#{uiCambioEstado.nombreEstadoOrigen}" />
+                    <h:outputLabel value="Nombre Estado Origen:" styleClass="estado-label"/>
+                    <h:outputText value="#{uiCambioEstado.nombreEstadoOrigen}" styleClass="estado-value"/>
                 </h:panelGrid>
+
 
                 <!-- Tabla para mostrar los estados destino -->
                 <p:dataTable id="gridEstadosPosibles" value="#{uiCambioEstado.mostrarEstadosPosibles(uiCambioEstado.nroTramite)}" 
@@ -45,12 +84,12 @@
 
                     <p:column>
                         <f:facet name="header">Código Estado Destino</f:facet>
-                        #{estadoDestino.codEstadoTramite}
+                        <h:outputText value="#{estadoDestino.codEstadoTramite}" />
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Nombre Estado Destino</f:facet>
-                        #{estadoDestino.nombreEstadoTramite}
+                        <h:outputText value="#{estadoDestino.nombreEstadoTramite}" />
                     </p:column>
 
                 </p:dataTable>

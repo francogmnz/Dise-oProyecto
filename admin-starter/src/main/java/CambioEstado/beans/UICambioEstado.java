@@ -9,6 +9,7 @@ import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
 import entidades.EstadoTramite;
 import entidades.TramiteEstadoTramite;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -46,11 +47,20 @@ public class UICambioEstado implements Serializable {
             cargarTramitesConsultor(); // Cargar trámites asociados al consultor
         }
     }
+    
+    @PostConstruct
+    public void init() {
+        mostrarEstadosPosibles(nroTramite);
+    }
+    
     public List<GrillaEstadosUI> mostrarEstadosPosibles(int nroTramite) {
     try {
         DTOEstadoOrigenCE estadoOrigen = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
-        nombreEstadoOrigen = estadoOrigen.getNombreEstadoOrigen();
-        codEstadoOrigen = estadoOrigen.getCodEstadoOrigen();
+        
+        this.nombreEstadoOrigen = estadoOrigen.getNombreEstadoOrigen();
+        System.out.println("Nombre: " + nombreEstadoOrigen);
+        this.codEstadoOrigen = estadoOrigen.getCodEstadoOrigen();
+        System.out.println("Codigo: " + codEstadoOrigen);
         
         List<GrillaEstadosUI> grillaEstados = new ArrayList<>();
         List<DTOEstadoDestinoCE> estadosDestino = estadoOrigen.getEstadosDestinos();
