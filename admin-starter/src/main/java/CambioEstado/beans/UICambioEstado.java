@@ -2,6 +2,7 @@ package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
 import CambioEstado.ExpertoCambioEstado;
+import CambioEstado.dtos.DTOEstadoDestinoCE;
 import CambioEstado.dtos.DTOEstadoOrigenCE;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import utils.BeansUtils;
 
 @Named("uiCambioEstado")
 @ViewScoped
@@ -27,6 +29,10 @@ public class UICambioEstado implements Serializable {
     private int legajoConsultor;  // Código del consultor para filtrar los trámites
     private String nombreConsultor;  // Nombre del consultor (si es necesario usarlo)
     private List<CambioEstadoGrillaUI> tramitesConsultor;  // Lista de trámites para mostrar
+    private String nombreEstadoOrigen;
+    private int codEstadoOrigen;
+    private int nroTramite;
+    
 
     public UICambioEstado() throws IOException {
         // Inicialización y obtención de parámetros de la request
@@ -40,21 +46,34 @@ public class UICambioEstado implements Serializable {
             cargarTramitesConsultor(); // Cargar trámites asociados al consultor
         }
     }
-    public String cambiarEstado(int nroTramite) {
+    public List<GrillaEstadosUI> mostrarEstadosPosibles(int nroTramite) {
     try {
-       DTOEstadoOrigenCE nuevoEstado = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
-        if (nuevoEstado != null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Estado cambiado con éxito"));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No hay estados adicionales."));
+        DTOEstadoOrigenCE estadoOrigen = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
+        nombreEstadoOrigen = estadoOrigen.getNombreEstadoOrigen();
+        codEstadoOrigen = estadoOrigen.getCodEstadoOrigen();
+        
+        List<GrillaEstadosUI> grillaEstados = new ArrayList<>();
+        List<DTOEstadoDestinoCE> estadosDestino = estadoOrigen.getEstadosDestinos();
+        for(DTOEstadoDestinoCE estado: estadosDestino){
+            GrillaEstadosUI grillaUI = new GrillaEstadosUI();
+            grillaUI.setCodEstadoTramite(estado.getCodEstadoDestino());
+            grillaUI.setNombreEstadoTramite(estado.getNombreEstadoDestino());
+            grillaEstados.add(grillaUI);
         }
+        return grillaEstados;
+
     } catch (Exception e) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
     }
-    return null; // Stay on the same page
+    return new ArrayList<>(); // Stay on the same page
 }
 
+public String irMostrarEstado(int nroTramite) {
+    this.nroTramite = nroTramite; // Guarda el nroTramite en una variable de instancia si no está definido ya en el bean
+    return "EstadosPosiblesUI.xhtml?faces-redirect=true";
+}
 
+     
     // Método para cargar trámites al iniciar
     public void cargarTramitesConsultor() {
         tramitesConsultor = new ArrayList<>();
@@ -119,4 +138,30 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
     public void setNombreConsultor(String nombreConsultor) {
         this.nombreConsultor = nombreConsultor;
     }
+
+    public String getNombreEstadoOrigen() {
+        return nombreEstadoOrigen;
+    }
+
+    public void setNombreEstadoOrigen(String nombreEstadoOrigen) {
+        this.nombreEstadoOrigen = nombreEstadoOrigen;
+    }
+
+    public int getCodEstadoOrigen() {
+        return codEstadoOrigen;
+    }
+
+    public void setCodEstadoOrigen(int codEstadoOrigen) {
+        this.codEstadoOrigen = codEstadoOrigen;
+    }
+
+    public int getNroTramite() {
+        return nroTramite;
+    }
+
+    public void setNroTramite(int nroTramite) {
+        this.nroTramite = nroTramite;
+    }
+    
+    
 }

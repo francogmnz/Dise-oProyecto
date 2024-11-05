@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" 
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Mostrar Estados Posibles"/>
+        
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Visualización de Estados Posibles
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <div class="box box-primary">
+                
+                <div class="box-header with-border">
+                    <h:outputText value="Estados Posibles para el Trámite" styleClass="ui-widget-header"/>
+                </div>
+
+                <!-- Panel para mostrar el estado origen -->
+                <h:panelGrid columns="2" cellpadding="5" style="margin-bottom: 20px;">
+                    <h:outputLabel value="Código Estado Origen:" />
+                    <h:outputText value="#{uiCambioEstado.codEstadoOrigen}" />
+
+                    <h:outputLabel value="Nombre Estado Origen:" />
+                    <h:outputText value="#{uiCambioEstado.nombreEstadoOrigen}" />
+                </h:panelGrid>
+
+                <!-- Tabla para mostrar los estados destino -->
+                <p:dataTable id="gridEstadosPosibles" value="#{uiCambioEstado.mostrarEstadosPosibles(uiCambioEstado.nroTramite)}" 
+                             var="estadoDestino" rowKey="#{estadoDestino.codEstadoTramite}" 
+                             style="width:100%;" widgetVar="estadosPosiblesTable">
+
+                    <p:column>
+                        <f:facet name="header">Código Estado Destino</f:facet>
+                        #{estadoDestino.codEstadoTramite}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Nombre Estado Destino</f:facet>
+                        #{estadoDestino.nombreEstadoTramite}
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
