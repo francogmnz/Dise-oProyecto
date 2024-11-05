@@ -73,12 +73,17 @@ public class ExpertoABMEstadoTramite {
     }
 
     public void agregarEstadoTramite(NuevoEstadoTramiteDTO nuevoEstadoTramiteDTO) throws EstadoTramiteException {
+
+        if (nuevoEstadoTramiteDTO.getCodEstadoTramite() <= 0) {
+            throw new EstadoTramiteException("El código del estado trámite debe ser mayor a 0.");
+        }
+
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         //Verifica si el codigo del estado ya existe
         List<DTOCriterio> criterioCodigo = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
 
+        DTOCriterio dto = new DTOCriterio();
         dto.setAtributo("codEstadoTramite");
         dto.setOperacion("=");
         dto.setValor(nuevoEstadoTramiteDTO.getCodEstadoTramite());

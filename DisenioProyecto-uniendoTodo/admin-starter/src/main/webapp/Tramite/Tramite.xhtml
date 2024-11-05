@@ -36,7 +36,7 @@
                             <p:keyFilter mask="pint"/>
                             <p:ajax event="blur" update="nombreCliente, apellidoCliente, mailCliente" listener="#{uitramite.obtenerCliente()}" />
                         </p:inputText>
-                        <p:message id="codigoMSG" for="dni" />
+                        <p:message id="dniMSG" for="dni" style="width: 100px" />
                     </div>
 
 
@@ -69,6 +69,7 @@
                                 <p:keyFilter mask="pint"/>
                                 <p:ajax event="blur" update="nombreTipoTramite" listener="#{uitramite.obtenerTipoTramite()}" />
                             </p:inputText>
+                            <p:message id="codTipoTramiteMSG" for="codTipoTramite" style="width: 100px" />
                         </div>
 
                         <!-- Botón de ayuda -->
@@ -178,7 +179,7 @@
 
                         <!-- Botón de Confirmar -->
                         <div>
-                            <p:commandButton value="Confirmar" action="#{uitramite.registrarTramite()}"
+                            <p:commandButton value="Confirmar" action="#{uitramite.registrarTramite()}" update="form"
                                              icon="fa fa-check" styleClass="btn-success btn-block" style="width: 180px;" />
                         </div>
                     </div>

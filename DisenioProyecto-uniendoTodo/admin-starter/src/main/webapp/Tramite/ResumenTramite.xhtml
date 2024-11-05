@@ -149,6 +149,7 @@
                                 <h:outputLabel value="Legajo:" style="font-weight:700;"/>
                                 <h:outputText value=" #{uiresumen.legajoConsultor != 0 ? uiresumen.legajoConsultor : 'Sin asignar'}" />
                             </h:panelGroup>
+
                         </h:panelGrid>
                     </p:panel>
 
@@ -210,11 +211,15 @@
                                         multiple="false" 
                                         sizeLimit="10000000"
                                         allowTypes="/(\.|\/)(pdf|txt|jpg)$/"
-                                        oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);"
-                                        disabled="#{doc.fechaEntregaDoc != null || uiresumen.fechaAnulacionTramite != null}">
+                                        disabled="#{doc.fechaEntregaDoc != null || uiresumen.fechaAnulacionTramite != null}"
+                                        update="messages"
+                                        oncomplete="setTimeout(function() { window.location.reload(true); }, 3500);">
                                     </p:fileUpload>
                                 </h:form>
                             </p:column>
+
+                            <!-- Sección de mensajes para mostrar notificaciones -->
+                            <p:messages id="messages" showDetail="true" closable="true"/>
 
                             <!-- Columna: Botón de Descargar -->
                             <p:column style="text-align: center">

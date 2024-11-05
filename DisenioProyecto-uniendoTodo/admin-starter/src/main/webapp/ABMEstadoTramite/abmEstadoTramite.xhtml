@@ -11,7 +11,7 @@
         <ui:param name="renderFormAsterisks" value="true"/>
     </ui:define>
     <ui:define name="title">
-        Agregar Estado Tramite
+        Trabajar con Estado Tramite
     </ui:define>
     <ui:define name="body">
 
@@ -31,7 +31,7 @@
                             </p:inputText><p:message id="codigoMSG" for="codEstadoTramite"/>
                         </div>
                     </div>       
-                    
+
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
                         <div class="ui-sm-12 ui-g-11">
                             <p:outputLabel for="nombreEstadoTramite" value="Nombre del Estado Tramite:" />
@@ -57,10 +57,15 @@
                                              styleClass=" btn-primary" /> 
                         </div>
                     </div>   
-
-
                 </div>
+
             </p:panel>
+            <!-- Botón de Volver Atrás -->
+            <div class="ui-g-12 ui-md-12" style="display: flex; justify-content: left; margin-top: 20px;">
+                    <p:commandButton value="Volver Atrás" onclick="window.history.back();"
+                                     styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
+            </div>
+
         </h:form>
 
     </ui:define>
