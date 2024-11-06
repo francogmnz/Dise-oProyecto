@@ -528,7 +528,7 @@ public class ExpertoRegistrarTramite {
         }
 
         resumenDTO.setResumenDoc(resumenDocList);
-
+        
         return resumenDTO;
     }
 
