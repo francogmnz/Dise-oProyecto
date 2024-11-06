@@ -56,10 +56,16 @@
                     </p:column>
 
                 </p:dataTable>
-
+                
                 <p:commandButton value="Cambiar Estado" actionListener="#{uiCambioEstado.cambiarEstado}"
                                  update="@form" process="@this gridEstadosPosibles"
                                  oncomplete="if (!args.validationFailed) { PF('estadosPosiblesTable').clearSelection(); }" />
+                
+                <br>
+                    
+                </br>
+                
+                <p:commandButton value="Volver" action="#{uiCambioEstado.volverPantallaTramiteConsultor()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
 
             </div>
         </h:form>

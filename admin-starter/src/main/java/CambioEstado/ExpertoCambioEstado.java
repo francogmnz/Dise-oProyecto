@@ -24,6 +24,7 @@ import utils.FachadaPersistencia;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
+import utils.fechaHoraActual;
 
 public class ExpertoCambioEstado {
 
@@ -202,12 +203,27 @@ public class ExpertoCambioEstado {
             tramiteEstadoTramite.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
             tramiteEstadoTramite.setFechaHastaTET(null);
             tramiteEstadoTramite.setEstadoTramite(estadoDestino);
-            
-              
-            FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
             tramite.setEstadoTramite(estadoDestino);
             tramite.addTramiteEstadoTramite(tramiteEstadoTramite);
-
+            
+            //Le seteo la fechaHasta al EstadoAnterior
+            List<TramiteEstadoTramite> tetList = tramite.getTramiteEstadoTramite();
+            for(TramiteEstadoTramite tet: tetList){
+                if(tet.getFechaHastaTET() == null){
+                    tet.setFechaHastaTET(fechaHoraActual.obtenerFechaHoraActual());
+                }
+            }
+            
+            //Busco si es el ultimo estado
+            Version versionUltimoTramite = tramite.getVersion();
+            List<ConfTipoTramiteEstadoTramite> listaConfig = versionUltimoTramite.getConfTipoTramiteEstadoTramite();
+            for(ConfTipoTramiteEstadoTramite config: listaConfig){
+                if(config.getEstadoTramiteDestino().isEmpty()){
+                    tramite.setFechaFinTramite(fechaHoraActual.obtenerFechaHoraActual());
+                }
+            }
+            
+            FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
             FachadaPersistencia.getInstance().guardar(tramite);
             FachadaPersistencia.getInstance().finalizarTransaccion();
 
@@ -281,14 +297,7 @@ private int obtenerContadorTET(Tramite tramite) {
 
         Tramite tramite = (Tramite) tramites.get(0);
 
-        List<DTOCriterio> criterioHistorial = new ArrayList<>();
-        DTOCriterio dtoHistorial = new DTOCriterio();
-        dtoHistorial.setAtributo("tramite");
-        dtoHistorial.setOperacion("=");
-        dtoHistorial.setValor(tramite);
-        criterioHistorial.add(dtoHistorial);
-
-        List<Object> historialEstados = FachadaPersistencia.getInstance().buscar("TramiteEstadoTramite", criterioHistorial);
+        List<TramiteEstadoTramite> historialEstados = tramite.getTramiteEstadoTramite();
 
         if (historialEstados == null || historialEstados.isEmpty()) {
             throw new CambioEstadoException("No hay historial de estados para el trámite");
@@ -296,18 +305,17 @@ private int obtenerContadorTET(Tramite tramite) {
 
  
         List<DTOHistorialEstado> dtoHistorialEstados = new ArrayList<>();
-        for (Object tet : historialEstados) {
-            
-            TramiteEstadoTramite historialTET = (TramiteEstadoTramite) tet;         
+        for (TramiteEstadoTramite tet : historialEstados) {
+        
             DTOHistorialEstado dtoHistorialEstado = new DTOHistorialEstado();
-            dtoHistorialEstado.setNombreEstadoTramite(historialTET.getEstadoTramite().getNombreEstadoTramite());
-            dtoHistorialEstado.setFechaDesdeTET(historialTET.getFechaDesdeTET());
-            dtoHistorialEstado.setFechaHastaTET(historialTET.getFechaHastaTET());
-            dtoHistorialEstado.setContador(historialTET.getContadorTET());
+            dtoHistorialEstado.setNombreEstadoTramite(tet.getEstadoTramite().getNombreEstadoTramite());
+            dtoHistorialEstado.setFechaDesdeTET(tet.getFechaDesdeTET());
+            dtoHistorialEstado.setFechaHastaTET(tet.getFechaHastaTET());
+            dtoHistorialEstado.setContador(tet.getContadorTET());
             dtoHistorialEstados.add(dtoHistorialEstado);
         }
 
         return dtoHistorialEstados;
-}
+    }
 
 }

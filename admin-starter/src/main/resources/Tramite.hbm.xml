@@ -36,13 +36,13 @@
         <many-to-one name="cliente" class="entidades.Cliente" column="OIDCliente" not-null="true"/>        
         
         <!-- Relación ManyToOne con Version -->
-        <many-to-one name="version" class="entidades.Version" column="OIDVersion" not-null="false"/>
+        <many-to-one name="version" class="entidades.Version" column="OIDVersion" not-null="false" lazy="false"/>
 
         <!-- Relación ManyToOne con TipoTramite -->
         <many-to-one name="tipoTramite" class="entidades.TipoTramite" column="OIDTipoTramite" not-null="true"/>
 
         <!-- Relación OneToMany con TramiteEstadoTramite -->
-        <bag name="tramiteEstadoTramite" table="tramite_estado_tramite">
+        <bag name="tramiteEstadoTramite" table="tramite_estado_tramite" lazy="false">
             <key column="OIDTramite" not-null = "false"/>
             <one-to-many class="entidades.TramiteEstadoTramite"/>
         </bag>

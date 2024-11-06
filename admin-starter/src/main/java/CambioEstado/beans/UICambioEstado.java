@@ -213,5 +213,9 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
         this.nroTramite = nroTramite;
     }
     
+    public void volverPantallaTramiteConsultor() throws IOException{
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/admin/CambioEstado/CambioEstadoTramiteLista.jsf");
+    }
+    
     
 }

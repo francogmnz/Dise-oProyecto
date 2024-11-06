@@ -146,6 +146,10 @@ public class UICambioEstadoLista implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al obtener historial de estados", e.getMessage()));
         }
     }
+    public void volverPantallaTramiteConsultor(){
+        BeansUtils.redirectToPreviousPage();
+    }
+    
 }
         // Redirigir a la página de historial de versiones
 //        return versionHistoricoGrillaUI;

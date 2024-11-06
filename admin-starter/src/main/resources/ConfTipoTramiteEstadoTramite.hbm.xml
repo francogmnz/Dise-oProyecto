@@ -23,10 +23,10 @@
         </property>
 
         <!-- Relación ManyToOne con EstadoTramite (origen) -->
-        <many-to-one name="estadoTramiteOrigen" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false"/>
+        <many-to-one name="estadoTramiteOrigen" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false" lazy="false"/>
 
         <!-- Relación OneToMany con EstadoTramite (destino) -->
-        <bag name="estadoTramiteDestino" table="config_estado_tramite" cascade="none">
+        <bag name="estadoTramiteDestino" table="config_estado_tramite" cascade="none" lazy="false">
             <key column="OIDConfTipoTramiteEstadoTramiteDestino" not-null="false"/>
             <many-to-many class="entidades.EstadoTramite"/>
         </bag>
