@@ -155,9 +155,9 @@ public class UIABMTipoTramiteLista implements Serializable {
             }
         }
         switch (criterio) {
-            case "categoriasTTActivas":                
+            case "tipoTramitesActivos":                
                 return tipoTramitesActivos;
-            case "categoriasTTInactivas":
+            case "tipoTramitesTInactivos":
                 return tipoTramitesTInactivos;
             default:
                 return tipoTramitesGrilla;
