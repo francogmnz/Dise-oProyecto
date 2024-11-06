@@ -26,6 +26,7 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
     private ControladorABMCategoriaTipoTramite controladorABMCategoriaTipoTramite = new ControladorABMCategoriaTipoTramite();
     private int codCategoriaTipoTramiteFiltro=0;
     private String nombreCategoriaTipoTramiteFiltro="";
+    private String criterio = "";
 
     public ControladorABMCategoriaTipoTramite getControladorABMCategoriaTipoTramite() {
         return controladorABMCategoriaTipoTramite;
@@ -50,10 +51,16 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
     public void setNombreCategoriaTipoTramiteFiltro(String nombreCategoriaTipoTramiteFiltro) {
         this.nombreCategoriaTipoTramiteFiltro = nombreCategoriaTipoTramiteFiltro;
     }
-    
-    
 
+    public String getCriterio() {
+        return criterio;
+    }
+
+    public void setCriterio(String criterio) {
+        this.criterio = criterio;
+    }
     
+      
     public void filtrar()
     {
 
@@ -74,7 +81,7 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
 
             categoriasTipoTramiteGrilla.add(categoriaTipoTramiteGrillaUI);
         }
-        return categoriasTipoTramiteGrilla;
+        return filtrarCategorias(categoriasTipoTramiteGrilla);
     }
 
     public String irAgregarCategoriaTipoTramite() {
@@ -98,4 +105,32 @@ public class UIABMCategoriaTipoTramiteLista implements Serializable {
         }
     }
     
+    
+    public boolean isAnulada(CategoriaTipoTramiteGrillaUI categoriaEnviada) {
+        if (categoriaEnviada.getFechaHoraBajaCategoriaTipoTramite() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }    
+    
+    public List<CategoriaTipoTramiteGrillaUI> filtrarCategorias(List<CategoriaTipoTramiteGrillaUI> categoriasGrilla) {
+        List<CategoriaTipoTramiteGrillaUI> categoriasTTActivas = new ArrayList<>();
+        List<CategoriaTipoTramiteGrillaUI> categoriasTTInactivas = new ArrayList<>();
+        for (CategoriaTipoTramiteGrillaUI categoria : categoriasGrilla) {
+            if (categoria.getFechaHoraBajaCategoriaTipoTramite() == null) {
+                categoriasTTActivas.add(categoria);
+            } else {
+                categoriasTTInactivas.add(categoria);
+            }
+        }
+        switch (criterio) {
+            case "categoriasTTActivas":                
+                return categoriasTTActivas;
+            case "categoriasTTInactivas":
+                return categoriasTTInactivas;
+            default:
+                return categoriasGrilla;
+        }
+    }    
 }

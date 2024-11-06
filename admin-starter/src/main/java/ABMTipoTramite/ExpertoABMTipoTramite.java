@@ -26,6 +26,7 @@ import java.util.Map;
 import org.hibernate.Hibernate;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 /**
  *
@@ -208,7 +209,7 @@ public class ExpertoABMTipoTramite {
             Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
             
             TipoTramiteDocumentacion tipoTramiteDocumentacion = new TipoTramiteDocumentacion();
-            tipoTramiteDocumentacion.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+            tipoTramiteDocumentacion.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());
             tipoTramiteDocumentacion.setFechaHoraBajaTTD(null); 
             //Ver si dejamos esto como fechaHastaTTD antes estaba en null-
             Calendar calendar = Calendar.getInstance();
@@ -334,7 +335,7 @@ public class ExpertoABMTipoTramite {
             if(ttd.getFechaHoraBajaTTD() == null){
                 Integer codDocExistente = ttd.getDocumentacion().getCodDocumentacion();
                 if(!codDocumentacionesSeleccionadas.contains(codDocExistente)){
-                    ttd.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+                    ttd.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
                     FachadaPersistencia.getInstance().guardar(ttd);
                 }
             }
@@ -343,7 +344,7 @@ public class ExpertoABMTipoTramite {
         */
         
         for(TipoTramiteDocumentacion ttdr: tipoTramiteDocumentacionRelacionada){
-            ttdr.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+            ttdr.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
             FachadaPersistencia.getInstance().guardar(ttdr);
         }
         
@@ -360,7 +361,7 @@ public class ExpertoABMTipoTramite {
         Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
 
         TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
-        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(new Timestamp(System.currentTimeMillis()));
+        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());
         tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);
         // Lo mismo que en el agregar - ver que hacemos - estana en null
         Calendar calendar = Calendar.getInstance();
@@ -421,11 +422,11 @@ public class ExpertoABMTipoTramite {
         } else{
             List<TipoTramiteDocumentacion> listaTipoTramiteDocumentacionABajar = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
             for(TipoTramiteDocumentacion ttd: listaTipoTramiteDocumentacionABajar){
-                ttd.setFechaHoraBajaTTD(new Timestamp(System.currentTimeMillis()));
+                ttd.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
                 FachadaPersistencia.getInstance().guardar(ttd);
             }
         
-        tipoTramiteEncontrada.setFechaHoraBajaTipoTramite(new Timestamp(System.currentTimeMillis()));
+        tipoTramiteEncontrada.setFechaHoraBajaTipoTramite(fechaHoraActual.obtenerFechaHoraActual());
         
         FachadaPersistencia.getInstance().guardar(tipoTramiteEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();

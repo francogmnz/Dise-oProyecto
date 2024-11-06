@@ -19,16 +19,35 @@
     </ui:define>
 
     <ui:define name="body">
+    <style type="text/css">
+    .deBaja {
+        color: whitesmoke;
+        background-color: #ff7884;
+    }
+    </style>      
     <h:form>
         <p:focus context="@form"/>
             <div class="box box-primary">
                         
-                     <div class="box-header with-border">
-                         <div id="main-buttons">
-
-                             <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmTipoTramiteLista.irAgregarTipoTramite()}"   styleClass="btn-primary" update=":globalMessages" ajax="false"/>
-                               </div>
-                      </div>
+                
+        <div class="box-header with-border">
+            <div class="ui-g-4 ui-md-2">
+                <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmTipoTramiteLista.irAgregarTipoTramite()}"   styleClass="btn-primary" update=":globalMessages" ajax="false"/>
+            </div>
+            <div class="ui-g-4 ui-md-6"></div>
+            <div class="ui-g-4 ui-md-4">
+                <div class="ui-material">
+                    <p:selectOneMenu id="select" value="#{uiabmTipoTramiteLista.criterio}" >
+                        <f:selectItem itemLabel="Mostrar todos los tipoTramite"/>
+                        <f:selectItem itemLabel="TipoTramite activos" itemValue="tipoTramitesActivos"/>
+                        <f:selectItem itemLabel="TipoTramite inactivos" itemValue="tipoTramitesTInactivos"/>
+                        <p:ajax event="change" listener="#{uiabmTipoTramiteLista.buscarTipoTramites()}" update="grid1" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="select" value="Filtrar por:"/>
+                    <p:message for="select"/>
+                </div>
+            </div>
+        </div>        
         <!-- Tabla para mostrar la lista de Tipo Tramites -->
          <p:separator/>
 
@@ -64,8 +83,9 @@
                    </div>
                    </div>
             <p:spacer height="5"/>
-            <p:dataTable id="grid1" widgetVar="tipoTramiteTable" value="#{uiabmTipoTramiteLista.buscarTipoTramites()}" var="tipoTramite" rowKey="#{tipoTramite.codTipoTramite}" >
-
+            <p:dataTable id="grid1" widgetVar="tipoTramiteTable" value="#{uiabmTipoTramiteLista.buscarTipoTramites()}" var="tipoTramite" rowKey="#{tipoTramite.codTipoTramite}" 
+                         rowStyleClass="#{uiabmTipoTramiteLista.isAnulada(tipoTramite) ? 'deBaja' : ''}">
+           
             <p:column>
                 <f:facet name="header">Código TipoTramite</f:facet>
                 #{tipoTramite.codTipoTramite}

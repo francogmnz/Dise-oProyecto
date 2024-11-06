@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 /**
  *
@@ -317,7 +318,7 @@ public class ExpertoRegistrarTramiteWeb {
         nuevoTramite.setCliente(cliente);
         nuevoTramite.setTipoTramite(tipoTramiteRelacionado);
         nuevoTramite.setEstadoTramite(estadoTramite);
-        nuevoTramite.setFechaRecepcionTramite(new Timestamp(System.currentTimeMillis()));
+        nuevoTramite.setFechaRecepcionTramite(fechaHoraActual.obtenerFechaHoraActual());
         nuevoTramite.setFechaInicioTramite(null);
         nuevoTramite.setFechaFinTramite(null);
         nuevoTramite.setFechaAnulacionTramite(null);
@@ -327,7 +328,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioFechaDesdeVersion.setAtributo("fechaDesdeVersion");
         criterioFechaDesdeVersion.setOperacion("<");
-        criterioFechaDesdeVersion.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioFechaDesdeVersion.setValor(fechaHoraActual.obtenerFechaHoraActual());
         
         criterioUltimaVersionTTList.add(criterioFechaDesdeVersion);
         
@@ -335,7 +336,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioFechaHastaVersion.setAtributo("fechaHastaVersion");
         criterioFechaHastaVersion.setOperacion(">");
-        criterioFechaHastaVersion.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioFechaHastaVersion.setValor(fechaHoraActual.obtenerFechaHoraActual());
         
         criterioUltimaVersionTTList.add(criterioFechaHastaVersion);
         
@@ -369,7 +370,7 @@ public class ExpertoRegistrarTramiteWeb {
         TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
         
         tramiteEstadoTramite.setFechaHastaTET(null);
-        tramiteEstadoTramite.setFechaDesdeTET(new Timestamp(System.currentTimeMillis()));
+        tramiteEstadoTramite.setFechaDesdeTET(fechaHoraActual.obtenerFechaHoraActual());
         tramiteEstadoTramite.setEstadoTramite(estadoTramite);
         
         nuevoTramite.addTramiteEstadoTramite(tramiteEstadoTramite); 
@@ -406,7 +407,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioFechaHoraDesdeLP.setAtributo("fechaHoraDesdeListaPrecios");
         criterioFechaHoraDesdeLP.setOperacion("<");
-        criterioFechaHoraDesdeLP.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioFechaHoraDesdeLP.setValor(fechaHoraActual.obtenerFechaHoraActual());
         
         criterioListaPreciosList.add(criterioFechaHoraDesdeLP);
 
@@ -414,7 +415,7 @@ public class ExpertoRegistrarTramiteWeb {
         
         criterioFechaHoraHastaLP.setAtributo("fechaHoraHastaListaPrecios");
         criterioFechaHoraHastaLP.setOperacion(">");
-        criterioFechaHoraHastaLP.setValor(new Timestamp(System.currentTimeMillis()));
+        criterioFechaHoraHastaLP.setValor(fechaHoraActual.obtenerFechaHoraActual());
         
         criterioListaPreciosList.add(criterioFechaHoraHastaLP); 
         

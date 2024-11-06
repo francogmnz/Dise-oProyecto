@@ -30,6 +30,7 @@ public class UIABMTipoTramiteLista implements Serializable {
     private ControladorABMTipoTramite controladorABMTipoTramite = new ControladorABMTipoTramite();
     private int codTipoTramiteFiltro=0;
     private String nombreTipoTramiteFiltro="";
+    private String criterio = "";
 
     public ControladorABMTipoTramite getControladorABMTipoTramite() {
         return controladorABMTipoTramite;
@@ -54,9 +55,15 @@ public class UIABMTipoTramiteLista implements Serializable {
     public void setNombreTipoTramiteFiltro(String nombreTipoTramiteFiltro) {
         this.nombreTipoTramiteFiltro = nombreTipoTramiteFiltro;
     }
-    
-    
 
+    public String getCriterio() {
+        return criterio;
+    }
+
+    public void setCriterio(String criterio) {
+        this.criterio = criterio;
+    }
+    
     
     public void filtrar()
     {
@@ -84,7 +91,7 @@ public class UIABMTipoTramiteLista implements Serializable {
 
             tipoTramitesGrilla.add(tipoTramiteGrillaUI);
         }
-        return tipoTramitesGrilla;
+        return filtrarTipoTramites(tipoTramitesGrilla);
     }
 
 //    public String irAgregarTipoTramite() {
@@ -127,5 +134,34 @@ public class UIABMTipoTramiteLista implements Serializable {
             Messages.create("Error").error().detail(e.getMessage()).add();
         }
     }
+ 
+    
+    public boolean isAnulada(TipoTramiteGrillaUI tipoTramiteEnviado) {
+        if (tipoTramiteEnviado.getFechaHoraBajaTipoTramite() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }    
+    
+    public List<TipoTramiteGrillaUI> filtrarTipoTramites(List<TipoTramiteGrillaUI> tipoTramitesGrilla) {
+        List<TipoTramiteGrillaUI> tipoTramitesActivos = new ArrayList<>();
+        List<TipoTramiteGrillaUI> tipoTramitesTInactivos = new ArrayList<>();
+        for (TipoTramiteGrillaUI tipoTramite : tipoTramitesGrilla) {
+            if (tipoTramite.getFechaHoraBajaTipoTramite() == null) {
+                tipoTramitesActivos.add(tipoTramite);
+            } else {
+                tipoTramitesTInactivos.add(tipoTramite);
+            }
+        }
+        switch (criterio) {
+            case "categoriasTTActivas":                
+                return tipoTramitesActivos;
+            case "categoriasTTInactivas":
+                return tipoTramitesTInactivos;
+            default:
+                return tipoTramitesGrilla;
+        }
+    }      
     
 }

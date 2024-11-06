@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 /**
  *
@@ -193,7 +194,7 @@ public class ExpertoABMCategoriaTipoTramite {
         } else{
 
         
-        categoriaTipoTramiteEncontrada.setFechaHoraBajaCategoriaTipoTramite(new Timestamp(System.currentTimeMillis()));
+        categoriaTipoTramiteEncontrada.setFechaHoraBajaCategoriaTipoTramite(fechaHoraActual.obtenerFechaHoraActual());
         
         FachadaPersistencia.getInstance().guardar(categoriaTipoTramiteEncontrada);
         FachadaPersistencia.getInstance().finalizarTransaccion();
