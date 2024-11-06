@@ -1,6 +1,7 @@
 package CambioEstado;
 
 import CambioEstado.dtos.DTOEstadoOrigenCE;
+import CambioEstado.dtos.DTOHistorialEstado;
 import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.exceptions.CambioEstadoException;
@@ -19,17 +20,16 @@ public class ControladorCambioEstado {
     // Asegurarse de que no se devuelva null
     return (tramites != null) ? tramites : new ArrayList<>(); // Devuelve una lista vacía si es null
 } 
-   public EstadoTramite cambiarEstado(int nroTramite){
-   return expertoCambioEstado.cambiarEstado(nroTramite);
-   }
    
-   public List<DTOMostrarHistorial> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException{
+   public List<DTOHistorialEstado> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException{
        return expertoCambioEstado.obtenerHistorialEstados(nroTramite);
    }
    public DTOEstadoOrigenCE mostrarEstadosPosibles(int nroTramite) throws CambioEstadoException {
        return expertoCambioEstado.mostrarEstadosPosibles(nroTramite);
    }
 
-
+   public void cambiarEstado(int nroTramite, int codEstadoDestino) throws CambioEstadoException {
+        expertoCambioEstado.cambiarEstado(nroTramite,codEstadoDestino);
+   }
 
 }

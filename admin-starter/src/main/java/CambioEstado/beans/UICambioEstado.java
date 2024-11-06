@@ -33,7 +33,8 @@ public class UICambioEstado implements Serializable {
     private String nombreEstadoOrigen;
     private int codEstadoOrigen;
     private int nroTramite;
-    
+    private List<GrillaEstadosUI> estadosDestinoList;
+    private GrillaEstadosUI estadoDestinoSeleccionado;
 
     public UICambioEstado() throws IOException {
         // Inicialización y obtención de parámetros de la request
@@ -50,39 +51,61 @@ public class UICambioEstado implements Serializable {
     
     @PostConstruct
     public void init() {
-        mostrarEstadosPosibles(nroTramite);
     }
-    
-    public List<GrillaEstadosUI> mostrarEstadosPosibles(int nroTramite) {
-    try {
-        DTOEstadoOrigenCE estadoOrigen = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
-        
-        this.nombreEstadoOrigen = estadoOrigen.getNombreEstadoOrigen();
-        System.out.println("Nombre: " + nombreEstadoOrigen);
-        this.codEstadoOrigen = estadoOrigen.getCodEstadoOrigen();
-        System.out.println("Codigo: " + codEstadoOrigen);
-        
-        List<GrillaEstadosUI> grillaEstados = new ArrayList<>();
-        List<DTOEstadoDestinoCE> estadosDestino = estadoOrigen.getEstadosDestinos();
-        for(DTOEstadoDestinoCE estado: estadosDestino){
-            GrillaEstadosUI grillaUI = new GrillaEstadosUI();
-            grillaUI.setCodEstadoTramite(estado.getCodEstadoDestino());
-            grillaUI.setNombreEstadoTramite(estado.getNombreEstadoDestino());
-            grillaEstados.add(grillaUI);
+
+    public void onPreRenderView() {
+        System.out.println("Valor de nroTramite en onPreRenderView: " + nroTramite);
+        if (nroTramite > 0) {
+            mostrarEstadosPosibles(nroTramite);
         }
-        return grillaEstados;
-
-    } catch (Exception e) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
     }
-    return new ArrayList<>(); // Stay on the same page
-}
 
-public String irMostrarEstado(int nroTramite) {
-    this.nroTramite = nroTramite; // Guarda el nroTramite en una variable de instancia si no está definido ya en el bean
-    return "EstadosPosiblesUI.xhtml?faces-redirect=true";
-}
+    
+    public void mostrarEstadosPosibles(int nroTramite) {
+        try {
+            DTOEstadoOrigenCE estadoOrigen = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
 
+            this.nombreEstadoOrigen = estadoOrigen.getNombreEstadoOrigen();
+            System.out.println("Nombre: " + nombreEstadoOrigen);
+            this.codEstadoOrigen = estadoOrigen.getCodEstadoOrigen();
+            System.out.println("Codigo: " + codEstadoOrigen);
+
+            estadosDestinoList = new ArrayList<>();
+            List<DTOEstadoDestinoCE> estadosDestino = estadoOrigen.getEstadosDestinos();
+            for (DTOEstadoDestinoCE estado : estadosDestino) {
+                GrillaEstadosUI grillaUI = new GrillaEstadosUI();
+                grillaUI.setCodEstadoTramite(estado.getCodEstadoDestino());
+                grillaUI.setNombreEstadoTramite(estado.getNombreEstadoDestino());
+                estadosDestinoList.add(grillaUI);
+            }
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al mostrar estados", e.getMessage()));
+        }
+    }
+
+    public String irMostrarEstado(int nroTramite) {
+        return "EstadosPosiblesUI.xhtml?faces-redirect=true&nroTramite=" + nroTramite;
+    }
+
+    public void cambiarEstado() {
+        try {
+            if (estadoDestinoSeleccionado != null) {
+                controladorCambioEstado.cambiarEstado(nroTramite, estadoDestinoSeleccionado.getCodEstadoTramite());
+
+
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Estado cambiado con exito", null));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe seleccionar un estado destino", null));
+            }
+        } catch (CambioEstadoException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
+        }
+    }
      
     // Método para cargar trámites al iniciar
     public void cargarTramitesConsultor() {
@@ -129,6 +152,23 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
     
 
     // Getters y Setters
+
+    public List<GrillaEstadosUI> getEstadosDestinoList() {
+        return estadosDestinoList;
+    }
+
+    public void setEstadosDestinoList(List<GrillaEstadosUI> estadosDestinoList) {
+        this.estadosDestinoList = estadosDestinoList;
+    }
+    
+    
+    public GrillaEstadosUI getEstadoDestinoSeleccionado() {
+        return estadoDestinoSeleccionado;
+    }
+
+    public void setEstadoDestinoSeleccionado(GrillaEstadosUI estadoDestinoSeleccionado) {
+        this.estadoDestinoSeleccionado = estadoDestinoSeleccionado;
+    }    
     public List<CambioEstadoGrillaUI> getTramitesConsultor() {
         return tramitesConsultor;
     }

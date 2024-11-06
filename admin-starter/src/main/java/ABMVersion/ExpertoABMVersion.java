@@ -351,10 +351,19 @@ public class ExpertoABMVersion {
                     return false;  // Detener el flujo si hay un hueco
                 }
 
+                // Recorrer la lista de versiones existentes para verificar si hay coincidencia de fechas
+                for (Version version : listVersion) {
+                    // Comprobar si las fechas de la nueva versión coinciden con alguna versión existente
+                    if (FDNv.equals(version.getFechaDesdeVersion()) && FHNv.equals(version.getFechaHastaVersion())) {
+                        JOptionPane.showMessageDialog(null, "Error: Ya existe una versión vigente con las mismas fechas 'desde' y 'hasta'.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;  // Detener el flujo si las fechas coinciden
+                    }
+                }
                 // Si todas las validaciones son correctas, actualizar la última versión (opcional)
                 // ultVersion.setFechaHastaVersion(FDNv); // Solo si es necesario
             }
 
+            
             // Guardar la versión
             f.guardar(nueva);
             f.finalizarTransaccion();

@@ -2,60 +2,21 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" 
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core" 
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
                 template="#{layoutMB.template}">
 
+    <f:metadata>
+        <f:viewParam name="nroTramite" value="#{uiCambioEstado.nroTramite}" />
+        <f:event type="preRenderView" listener="#{uiCambioEstado.onPreRenderView}" />
+    </f:metadata>
+
+
     <ui:define name="metadata">
-        <ui:param name="title" value="Mostrar Estados Posibles"/>
-        <style type="text/css">
-            .ui-datatable .ui-datatable-header {
-                text-align: center !important;
-                font-weight: bold;
-            }
-            .box-primary {
-                border: 1px solid #dcdcdc;
-                border-radius: 8px;
-                padding: 15px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                background-color: #f9f9f9;
-            }
-            .box-header {
-                background-color: #4CAF50;
-                color: #fff;
-                padding: 10px;
-                border-radius: 5px 5px 0 0;
-                text-align: center;
-                font-size: 18px;
-                font-weight: bold;
-            }
-            .ui-panelgrid td {
-                padding: 10px;
-                vertical-align: top;
-            }
-            .ui-panelgrid label {
-                font-weight: bold;
-                color: #333;
-            }
-            .ui-datatable table {
-                width: 100%;
-            }
-            .estado-label {
-                font-weight: bold;
-                color: #333;
-                width: 100%;
-                text-align: center;
-                padding-right: 1px;
-            }
-            .estado-value {
-                color: #555;
-                text-align: left;
-            }
-        </style>
     </ui:define>
 
-    <ui:define name="description">
+ <ui:define name="description">
         Visualización de Estados Posibles
     </ui:define>
 
@@ -67,7 +28,7 @@
                     <h:outputText value="Estados Posibles para el Trámite"/>
                 </div>
 
-                <!-- Panel para mostrar el estado origen -->
+
                 <h:panelGrid columns="2" cellpadding="5" style="margin: 20px 0; width: 100%;">
                     <h:outputLabel value="Código Estado Origen:" styleClass="estado-label"/>
                     <h:outputText value="#{uiCambioEstado.codEstadoOrigen}" styleClass="estado-value"/>
@@ -77,10 +38,12 @@
                 </h:panelGrid>
 
 
-                <!-- Tabla para mostrar los estados destino -->
-                <p:dataTable id="gridEstadosPosibles" value="#{uiCambioEstado.mostrarEstadosPosibles(uiCambioEstado.nroTramite)}" 
-                             var="estadoDestino" rowKey="#{estadoDestino.codEstadoTramite}" 
+                <p:dataTable id="gridEstadosPosibles" value="#{uiCambioEstado.estadosDestinoList}" 
+                             var="estadoDestino" selection="#{uiCambioEstado.estadoDestinoSeleccionado}"
+                             rowKey="#{estadoDestino.codEstadoTramite}" selectionMode="single"
                              style="width:100%;" widgetVar="estadosPosiblesTable">
+
+                    <p:column selectionMode="single" style="width:4%" />
 
                     <p:column>
                         <f:facet name="header">Código Estado Destino</f:facet>
@@ -93,6 +56,11 @@
                     </p:column>
 
                 </p:dataTable>
+
+                <p:commandButton value="Cambiar Estado" actionListener="#{uiCambioEstado.cambiarEstado}"
+                                 update="@form" process="@this gridEstadosPosibles"
+                                 oncomplete="if (!args.validationFailed) { PF('estadosPosiblesTable').clearSelection(); }" />
+
             </div>
         </h:form>
     </ui:define>

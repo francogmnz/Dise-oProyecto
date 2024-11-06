@@ -7,6 +7,8 @@ import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
 import entidades.TramiteEstadoTramite;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -24,12 +26,17 @@ public class UICambioEstadoLista implements Serializable {
     private String nombreTramite;
     private int nroTramite;
     
-    private List<DTOHistorialEstado> listaHistorial = new ArrayList<>();
+    private List<CambioEstadoHistoricoGrillaUI> historialEstadosList = new ArrayList<>();
 
-public List<DTOHistorialEstado> getListaHistorial() {
-    return listaHistorial;
-}
+    
+    public List<CambioEstadoHistoricoGrillaUI> getHistorialEstadosList() {
+        return historialEstadosList;
+    }
 
+    public void setHistorialEstadosList(List<CambioEstadoHistoricoGrillaUI> historialEstadosList) {
+        this.historialEstadosList = historialEstadosList;
+    }
+    
     public String getNombreTramite() {
         return nombreTramite;
     }
@@ -117,30 +124,28 @@ public List<DTOHistorialEstado> getListaHistorial() {
         // Retornar la lista de objetos para mostrar en la grilla
         return cambioEstadoGrilla;
     }
-public List<DTOHistorialEstado> mostrarHistorialEstados() throws CambioEstadoException {
-    // Usar el valor de `nroTramite` almacenado en la clase
-    List<DTOMostrarHistorial> listaMostrarHistorial = controladorCambioEstado.obtenerHistorialEstados(this.nroTramite);
+    
+ 
+    public void mostrarHistorialEstados(int nroTramite) {
+        try {
+            List<DTOHistorialEstado> dtoHistorial = controladorCambioEstado.obtenerHistorialEstados(nroTramite);
 
-    if (listaMostrarHistorial == null || listaMostrarHistorial.isEmpty()) {
-        System.out.println("No se encontró historial para el trámite: " + nroTramite);
-        return new ArrayList<>();
+            historialEstadosList = new ArrayList<>();
+
+            for (DTOHistorialEstado dto : dtoHistorial) {
+                CambioEstadoHistoricoGrillaUI grillaUI = new CambioEstadoHistoricoGrillaUI();
+                grillaUI.setNombreEstadoTramite(dto.getNombreEstadoTramite());
+                grillaUI.setFechaDesdeTET(dto.getFechaDesdeTET());
+                grillaUI.setFechaHastaTET(dto.getFechaHastaTET());
+                grillaUI.setContador(dto.getContador());
+                grillaUI.setNroTramite(nroTramite);
+                historialEstadosList.add(grillaUI);
+            }
+        } catch (CambioEstadoException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al obtener historial de estados", e.getMessage()));
+        }
     }
-
-    List<DTOHistorialEstado> listaHistorial = new ArrayList<>();
-
-    for (DTOMostrarHistorial mostrarHistorial : listaMostrarHistorial) {
-        listaHistorial.addAll(mostrarHistorial.getHistorialEstados());
-    }
-
-    for (DTOHistorialEstado estado : listaHistorial) {
-        System.out.println("Estado: " + estado.getNombreEstadoTramite());
-        System.out.println("Fecha Desde: " + estado.getFechaDesdeTET());
-        System.out.println("Fecha Hasta: " + estado.getFechaHastaTET());
-        System.out.println("Contador: " + estado.getContador());
-    }
-
-    return listaHistorial;
-}
 }
         // Redirigir a la página de historial de versiones
 //        return versionHistoricoGrillaUI;
