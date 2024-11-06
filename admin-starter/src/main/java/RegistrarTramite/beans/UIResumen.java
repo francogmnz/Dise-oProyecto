@@ -346,7 +346,7 @@ public class UIResumen implements Serializable {
         this.fileUploadDisabled = fileUploadDisabled;
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleFileUpload(FileUploadEvent event) throws Exception {
         try {
             // Obtener el componente asociado al campo codTD dentro del mismo formulario del archivo subido
             UIInput codTDInput = (UIInput) event.getComponent().findComponent("codTD");
@@ -374,9 +374,10 @@ public class UIResumen implements Serializable {
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
             this.file = fileU;
 
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();  // Manejar errores apropiadamente
+        } catch (RegistrarTramiteException e) {
+            throw new RegistrarTramiteException("");
         }
+       
     }
 
     public void eliminarArchivo(int codTD) {

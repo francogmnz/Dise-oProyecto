@@ -9,6 +9,7 @@ import ABMEstadoTramite.dtos.ModificarEstadoTramiteDTO;
 import ABMEstadoTramite.dtos.ModificarEstadoTramiteDTOIn;
 import ABMEstadoTramite.dtos.NuevoEstadoTramiteDTO;
 import ABMEstadoTramite.exceptions.EstadoTramiteException;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -86,6 +87,7 @@ public class UIABMEstadoTramite implements Serializable {
             setCodEstadoTramite(modificarEstadoTramiteDTO.getCodEstadoTramite());
             setDescripcionEstadoTramite(modificarEstadoTramiteDTO.getDescripcionEstadoTramite());
         }
+        
     }
 
     public String agregarEstadoTramite() {

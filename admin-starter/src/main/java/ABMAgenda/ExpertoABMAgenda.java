@@ -10,6 +10,8 @@ import ABMAgenda.dtos.DTODatosInicialesAgendaIn;
 import entidades.Consultor;
 import ABMAgenda.exceptions.AgendaException;
 import entidades.AgendaConsultor;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 

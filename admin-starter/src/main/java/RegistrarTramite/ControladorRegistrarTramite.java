@@ -71,7 +71,7 @@ public class ControladorRegistrarTramite {
         return expertoRegistrarTramite.buscarTipoTramite(codTipoTramite, nombreTipoTramite, nombreCategoria, descTipoTramite);
     }
 
-    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite) {
+    public void registrarDocumentacion(int codTD, DTOFile archivoTD, int nroTramite) throws RegistrarTramiteException {
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD, nroTramite);
     }
 
