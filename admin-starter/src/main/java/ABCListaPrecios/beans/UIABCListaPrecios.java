@@ -212,6 +212,9 @@ public class UIABCListaPrecios implements Serializable {
         if (getFechaHoraDesdeListaPrecios().before(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime()))) {
             err.agregarError("FechaDesde no puede ser menor a la Fecha Actual. Intente nuevamente.");
         }
+        if (getFechaHoraHastaListaPrecios().before(getFechaHoraDesdeListaPrecios())) {
+            err.agregarError("FechaHasta no puede ser menor a la Fecha Desde. Intente nuevamente.");
+        }
         // Verificamos si hay errores antes de continuar
         if (!err.getErrores().isEmpty()) {
             err.mostrarErrores();

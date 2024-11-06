@@ -113,9 +113,7 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("El código ya existe");
         }
 
-        if (nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraDesdeListaPrecios())) {
-            throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
-        }
+        
 
         // Crear la nueva lista de precios
         ListaPrecios nuevaListaPrecios = new ListaPrecios();
@@ -157,6 +155,10 @@ public class ExpertoABCListaPrecios {
             }
         } else {
             // Si ya hay una lista anterior, ajustar la fecha de fin de la última lista
+            
+            if (!(nuevaFechaHoraDesde.after(ultimaListaPrecios.getFechaHoraDesdeListaPrecios()))) {
+            throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
+        }
 
             if (nuevaFechaHoraDesde.after(nuevaFechaHoraHasta) || nuevaFechaHoraDesde.before(nuevaFechaHoraHasta)) {
                 ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
@@ -172,7 +174,9 @@ public class ExpertoABCListaPrecios {
             criterioList.add(dto);
 
             List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
-
+            if (objetoList2.isEmpty()){
+            throw new ListaPreciosException("No hay tipos tramites activos actualmente");
+            }
             for (Object x : objetoList2) {
                 TipoTramite tipoTramite = (TipoTramite) x;
                 TipoTramiteListaPrecios nuevoTipoTramiteListaPrecios = new TipoTramiteListaPrecios();
