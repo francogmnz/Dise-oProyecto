@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="#{layoutMB.template}"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="metadata">
+        <!-- Incluimos solo el archivo JavaScript aquí -->
+        <script src="#{request.contextPath}/resources/js/agenda.js"></script>
+    </ui:define>
+
+    <ui:define name="title">
+        Agenda de Consultores
+    </ui:define>
+
+    <ui:define name="body">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+                height: 100vh;
+            }
+            #consultores {
+                width: 20%;
+                background-color: #f0f0f0;
+                padding: 20px;
+                box-sizing: border-box;
+                border-right: 1px solid #ccc;
+            }
+            #container {
+                display: flex;
+                width: 80%;
+                padding: 20px;
+                box-sizing: border-box;
+                overflow-x: auto;
+                white-space: nowrap;
+                height: 100%;
+            }
+            .column {
+                flex-grow: 1;
+                background-color: lightblue;
+                display: inline-block;
+                border: 1px solid black;
+                vertical-align: top;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            li {
+                margin: 5px;
+                padding: 5px;
+                list-style-type: none;
+                cursor: move;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .dropzone {
+                overflow-y: auto;
+                flex-grow: 1; 
+                border: 2px dashed lightgray;
+                background-color: #f9f9f9;
+                transition: background-color 0.3s, border-color 0.3s;
+            }
+            h3 {
+                background: blue;
+                width: 100%;
+                text-align: center;
+                color: #fff;
+                padding: 5px;
+                flex-shrink: 0;
+            }
+            .listaConsultores {
+                list-style: none;
+            }
+            .listaConsultores li:hover {
+                background: #ccc;
+            }
+            .dropzone.over {
+                border-color: green;
+                background-color: #e0ffe0;
+            }
+            .remove-btn {
+                background-color: red;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+        
+        <!-- Agregamos el JSON como un atributo data en el formulario -->
+        <h:form id="agendaForm">
+            <input type="hidden" id="consultoresPorSemanaJson" value="#{uiABMAgendaBean.consultoresPorSemanaJson}" />
+
+            <div style="display: flex; flex-direction: row; height: 100%;">
+                <!-- Lista de Consultores -->
+                <div id="consultores">
+                    <h3>Consultores Disponibles</h3>
+                    <ul id="consultoresDisponibles" class="listaConsultores">
+                        <ui:repeat value="#{uiABMAgendaBean.consultores}" var="consultor">
+                            <li id="consultor-#{consultor.legajoConsultor}" draggable="true" ondragstart="dragStart(event)">
+                                <label for="person#{consultor.legajoConsultor}">#{consultor.nombreConsultor}</label>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </div>
+
+                <!-- Semanas -->
+                <div id="container">
+                    <ui:repeat value="#{uiABMAgendaBean.semanasLi}" var="semana">
+                        <div class="column dropzone" id="semana-#{semana.nroSemana}"  
+                             data-semana="#{semana.nroSemana}"
+                             ondragover="allowDrop(event)" 
+                             ondrop="drop(event)" 
+                             ondragleave="dragLeave(event)">
+                            <h3>Semana #{semana.nroSemana}</h3>
+                            <ul>
+ 
+                            <!-- Consultores asignados en esta semana -->
+                            <ui:repeat value="#{uiABMAgendaBean.consultoresPorSemana[semana.nroSemana]}" var="consultorEnSemana">
+                            <li id="consultor-#{consultorEnSemana.legajoConsultor}-asignado" draggable="true" ondragstart="dragStart(event)">
+                                    #{consultorEnSemana.nombreConsultor}
+                                <button type="button" class="remove-btn" 
+                                    onclick="removerConsultorDeSemana('#{semana.nroSemana}', '#{consultorEnSemana.legajoConsultor}')">
+                                    x
+                                </button>
+
+                                </li>
+                            </ui:repeat>
+
+                            </ul>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </div>
+            
+            <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" onclick="prepareAssignmentsData();">
+               <f:ajax execute="@form" render="@form"/>
+           </h:commandButton>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <f:metadata />
+        <ui:param name="renderFormAsterisks" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+        Versión
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form" prependId="false">
+            <p:panel styleClass="box-primary card">
+                <div class="ui-g ui-fluid">
+                    <!-- Número de Versión -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="nroVersion" value="Número de Versión:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <h:outputText id="nroVersion" value="#{uiabmVersion.nroVersion}" style="width: 150px;" />
+                            <p:message id="nroVersionMSG" for="nroVersion" />
+                        </div>
+                    </div>
+
+                    <!-- Descripción de la Versión -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="descripcionVersion" value="Descripción de la Versión:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:inputText id="descripcionVersion" value="#{uiabmVersion.descripcionVersion}" required="true" />
+                            <p:message id="descripcionVersionMSG" for="descripcionVersion"/>
+                        </div>
+                    </div>
+
+                    <!-- Fecha Desde de la Versión -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="fechaDesdeVersion" value="Fecha Desde de la Versión:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:calendar id="fechaDesdeVersion" value="#{uiabmVersion.fechaDesdeVersion}" required="true" />
+                            <p:message id="fechaDesdeVersionMSG" for="fechaDesdeVersion"/>
+                        </div>
+                    </div>
+
+                    <!-- Fecha Hasta de la Versión -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:outputLabel for="fechaHastaVersion" value="Fecha Hasta de la Versión:" />
+                        </div>
+                        <div class="ui-sm-12 ui-g-11">
+                            <p:calendar id="fechaHastaVersion" value="#{uiabmVersion.fechaHastaVersion}" required="true" />
+                            <p:message id="fechaHastaVersionMSG" for="fechaHastaVersion"/>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Guardar -->
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad">
+                        <p:commandButton id="guardarBean2" value="Agregar nueva versión 2" 
+                                         action="#{uiabmVersion.confirmar()}" 
+                                         icon="fa fa-check"
+                                         styleClass="btn-primary"  
+                                         update="@form" 
+                                         style="visibility: visible"/> 
+                    </div>
+                </div>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

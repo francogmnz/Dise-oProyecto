@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Trabajar con Version"/> <!-- Crear automáticamente el breadcrumb y el título de la página cuando se proporciona el parámetro 'title'. -->
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+            .icon-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 10px;
+                font-size: 14px;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: auto; /* Asegura que el botón se ajuste al contenido */
+                overflow: visible; /* Permite que todo el contenido sea visible */
+            }
+
+            .icon-button i {
+                margin-right: 5px; /* Espacio entre el ícono y el texto */
+            }
+
+            .btn-info {
+                background-color: #17a2b8;
+            }
+
+            .btn-danger {
+                background-color: #dc3545;
+            }
+
+            /* Asegúrate de que no se estén aplicando límites al ancho o al desbordamiento */
+            .p-datatable .ui-button {
+                white-space: nowrap !important; /* Evita que el texto se corte */
+                overflow: visible !important; /* Asegura que el contenido no se corte */
+            }
+
+            .ui-button {
+                padding: 0 5px !important; /* Ajusta el padding si los botones son demasiado grandes */
+                display: inline-flex; /* Asegura la alineación adecuada */
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-circle {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0;
+                background-color: grey; /* Color gris */
+                color: white;
+                border: none;
+            }
+
+            .btn-modificar {
+                background-color: grey;
+            }
+
+            .btn-eliminar {
+                background-color: grey;
+            }
+
+            .btn-historial {
+                background-color: grey;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Trabajar con Version
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+                <!-- Filtros para la tabla -->
+                <p:separator/>
+                <div class="ui-g ui-fluid">
+                    <!-- Filtro por Código de Tipo de Trámite -->
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Código de Tipo de Trámite:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="codTipoTramiteFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.codigoFiltro}" 
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                    <!-- Filtro por Nombre del Tipo de Trámite -->
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Nombre del Tipo de Trámite:"/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nombreTipoTramiteFilter" style="width:150px"
+                                         placeholder="" value="#{uiabmVersionLista.nombreFiltro}" 
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uiabmVersionLista.filtrar()}" 
+                                        update="@form:grid1"/>
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+
+
+                </div>
+
+                <!-- Tabla para mostrar la lista de Versiones -->
+                <p:spacer height="5"/>
+                <p:dataTable id="grid1" widgetVar="versionTable" value="#{uiabmVersionLista.mostrarVersion()}" var="version">
+                    <p:column>
+                        <f:facet name="header">Tipo Tramite</f:facet>
+                            #{version.nombreTipoTramite}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Codigo de Tipo Tramite</f:facet>
+                            #{version.codTipoTramite}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Número de Versión</f:facet>
+                            #{version.nroVersion}
+
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Desde</f:facet>
+                        <h:outputText value="#{version.fechaDesdeVersion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Hasta</f:facet>
+                        <h:outputText value="#{version.fechaHastaVersion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+
+                    </p:column>
+
+                    <!--
+                    <p:column>
+                        <f:facet name="header">Tipo de Trámite</f:facet>
+                    #{version.tipoTramite.nombreTipoTramite}
+            </p:column>
+                    -->    
+                    <!--                    <p:column>
+                                            <f:facet name="header">Acciones</f:facet>
+                                            <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmVersionLista.irModificarVersion(version.nroVersion)}" disabled="#{version.fechaBajaVersion != null}">
+                                                <f:ajax render="@form"/>
+                                            </p:commandButton>
+                                            <p:spacer width="5"/>
+                                            <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmVersionLista.darDeBajaVersion(version.nroVersion)}" disabled="#{version.fechaBajaVersion != null}">
+                                                <p:confirm header="Anulación de #{version.nroVersion}" message="¿Está seguro?" icon="ui-icon-alert"/>
+                                            </p:commandButton>
+                                            <p:commandButton value="Historial" styleClass="btn-info" update="@form">
+                                                
+                                            </p:commandButton>
+                    
+                                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                                                <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                                                 icon="fa fa-check"/>
+                                                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                                                 icon="fa fa-close"/>
+                                            </p:confirmDialog>
+                                        </p:column>-->
+                    <p:column>
+                        <f:facet name="header">Acciones</f:facet>
+
+                        <!-- Botón Modificar en forma circular con ícono de lápiz -->
+                        <p:commandButton styleClass="btn-circle btn-modificar" icon="fa fa-pencil"
+                                         action="#{uiabmVersionLista.irConfigurarTipoTramite(version.codTipoTramite)}"
+                                         disabled="#{version.codTipoTramite == null}">
+                            <f:ajax render="@form"/>
+                        </p:commandButton>
+
+                        <p:spacer width="5"/>
+
+                        <p:commandButton styleClass="btn-circle btn-eliminar" 
+                                         icon="fa fa-trash" 
+                                         action="#{uiabmVersionLista.anularVersion(version.codTipoTramite, version.nroVersion)}"
+                                         update="grid1" >
+                            <p:confirm header="Anulación de #{version.codTipoTramite}" 
+                                       message="¿Está seguro?" 
+                                       icon="ui-icon-alert"/>
+                        </p:commandButton>
+
+
+                        <p:spacer width="5"/>
+
+                        <!-- Botón Historial en forma circular con ícono de historial/papel -->
+                        <p:commandButton 
+                            styleClass="btn-circle btn-historial" 
+                            icon="fa fa-history" 
+                            action="#{uiabmVersionLista.irMostrarHistoricoVersiones(version.codTipoTramite)}"
+                            process="@this" 
+                            update="@form" 
+                            oncomplete="if (!args.validationFailed) { 
+                            // Opcionalmente puedes mostrar un mensaje de éxito o realizar otra acción
+                            Messages.addGlobalInfo('Redirigiendo al historial de versiones.');
+                            }">
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                            <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check"/>
+                            <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close"/>
+                        </p:confirmDialog>
+                    </p:column>
+
+
+
+
+
+                </p:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Gestión de Trámites"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. --> 
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Gestión de Trámites
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+
+                <p:separator/>
+
+                <div class="ui-g ui-fluid">
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Codigo TipoTramite:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputNumber id="codTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint" />
+                                <p:ajax event="change" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputNumber>
+                        </p:outputPanel>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Categoría TipoTramite:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nombreCategoriaTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Categoria" value="#{uitramiteLista.nombreCategoriaTipoTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Nombre TipoTramite:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Nombre" value="#{uitramiteLista.nombreTipoTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Descripcion TipoTramite:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="descripcionTipoTramiteFiltro" style="width:150px"
+                                         placeholder="Descripcion" value="#{uitramiteLista.descripcionTipoTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:ajax event="keyup" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                </div>
+
+                <p:spacer height="5"/>
+
+                <p:dataTable id="grid1" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}">
+
+                    <p:column sortBy="#{tipoTramite.codTipoTramite}">
+                        <f:facet name="header">Código</f:facet>
+                            #{tipoTramite.codTipoTramite}
+                    </p:column>
+
+                    <p:column sortBy="#{nombreCategoriaTipoTramite}">
+                        <f:facet name="header">Categoría</f:facet>
+                            #{tipoTramite.nombreCategoriaTipoTramite}
+                    </p:column>
+
+                    <p:column sortBy="#{tipoTramite.nombreTipoTramite}">
+                        <f:facet name="header">Nombre</f:facet>
+                            #{tipoTramite.nombreTipoTramite}
+                    </p:column>
+
+                    <p:column sortBy="#{tipoTramite.descripcionTipoTramite}">
+                        <f:facet name="header">Descripción</f:facet>
+                            #{tipoTramite.descripcionTipoTramite}
+                    </p:column>
+
+                     
+                </p:dataTable>
+
+            </div>
+
+            <div class="col-sm-12 col-md-3">
+                <p:commandButton value="Volver Atrás" onclick="window.history.back();"
+                                 styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

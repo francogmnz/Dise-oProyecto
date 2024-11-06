@@ -1,0 +1,324 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 24, 2024, 4:23:59 PM
+    Author     : licciardi
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.formulario-dni {
+    width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.panel-grid {
+    width: 100%;
+}
+
+.label-dni {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.input-dni {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.btn-continuar {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-continuar:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Estilos para la página de confirmación */
+
+.formulario-confirmacion {
+    width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.panel-grid-confirmacion {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-weight: bold;
+    color: #495057;
+    padding: 10px 0;
+}
+
+.text {
+    padding: 10px 0;
+}
+
+.botones-confirmacion {
+    text-align: center;
+}
+
+.btn-continuar, .btn-cancelar {
+    width: 150px;
+    padding: 12px;
+    font-size: 16px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-continuar {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-continuar:hover {
+    background-color: #218838;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+}
+
+/* Estilos para las tarjetas de categoría */
+
+.categoria-card {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+}
+
+.categoria-card h2 {
+    margin-top: 0;
+    color: #343a40;
+}
+
+.categoria-card p {
+    margin: 10px 0;
+    color: #495057;
+}
+
+.btn-seleccionar {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-seleccionar:hover {
+    background-color: #0056b3;
+}
+/* Estilos para las tarjetas de TipoTrámite */
+
+.tipo-tramite-card {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #e9ecef;
+}
+
+.tipo-tramite-card h2 {
+    margin-top: 0;
+    color: #343a40;
+}
+
+.tipo-tramite-card p {
+    margin: 10px 0;
+    color: #495057;
+}
+
+.documentacion {
+    margin-top: 15px;
+}
+
+.documentacion h3 {
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.documentacion ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.btn-seleccionar {
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-seleccionar:hover {
+    background-color: #138496;
+}
+
+
+/* Estilos para la página de resumen del trámite */
+
+.formulario-resumen {
+    width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-resumen h1, .formulario-resumen h2 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.panel-grid-resumen {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-weight: bold;
+    color: #495057;
+    padding: 10px 0;
+}
+
+.text {
+    padding: 10px 0;
+}
+
+.botones {
+    text-align: center;
+}
+
+.btn-confirmar, .btn-cancelar {
+    width: 200px;
+    padding: 12px;
+    font-size: 16px;
+    margin: 10px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-confirmar {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-confirmar:hover {
+    background-color: #218838;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+/* Estilos para la página de número de trámite */
+
+.formulario-numero-tramite {
+    width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-numero-tramite h1 {
+    margin-bottom: 20px;
+    color: #28a745;
+}
+
+.panel-numero-tramite p {
+    font-size: 18px;
+    color: #343a40;
+}
+
+.panel-numero-tramite h2 {
+    font-size: 36px;
+    color: #007bff;
+    margin-top: 10px;
+}
+
+.btn-inicio {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn-inicio:hover {
+    background-color: #0056b3;
+}

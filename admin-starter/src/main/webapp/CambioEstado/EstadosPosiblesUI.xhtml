@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <f:metadata>
+        <f:viewParam name="nroTramite" value="#{uiCambioEstado.nroTramite}" />
+        <f:event type="preRenderView" listener="#{uiCambioEstado.onPreRenderView}" />
+    </f:metadata>
+
+
+    <ui:define name="metadata">
+    </ui:define>
+
+ <ui:define name="description">
+        Visualización de Estados Posibles
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <div class="box box-primary">
+                
+                <div class="box-header">
+                    <h:outputText value="Estados Posibles para el Trámite"/>
+                </div>
+
+
+                <h:panelGrid columns="2" cellpadding="5" style="margin: 20px 0; width: 100%;">
+                    <h:outputLabel value="Código Estado Origen:" styleClass="estado-label"/>
+                    <h:outputText value="#{uiCambioEstado.codEstadoOrigen}" styleClass="estado-value"/>
+
+                    <h:outputLabel value="Nombre Estado Origen:" styleClass="estado-label"/>
+                    <h:outputText value="#{uiCambioEstado.nombreEstadoOrigen}" styleClass="estado-value"/>
+                </h:panelGrid>
+
+
+                <p:dataTable id="gridEstadosPosibles" value="#{uiCambioEstado.estadosDestinoList}" 
+                             var="estadoDestino" selection="#{uiCambioEstado.estadoDestinoSeleccionado}"
+                             rowKey="#{estadoDestino.codEstadoTramite}" selectionMode="single"
+                             style="width:100%;" widgetVar="estadosPosiblesTable">
+
+                    <p:column selectionMode="single" style="width:4%" />
+
+                    <p:column>
+                        <f:facet name="header">Código Estado Destino</f:facet>
+                        <h:outputText value="#{estadoDestino.codEstadoTramite}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Nombre Estado Destino</f:facet>
+                        <h:outputText value="#{estadoDestino.nombreEstadoTramite}" />
+                    </p:column>
+
+                </p:dataTable>
+                
+                <p:commandButton value="Cambiar Estado" actionListener="#{uiCambioEstado.cambiarEstado}"
+                                 update="@form" process="@this gridEstadosPosibles"
+                                 oncomplete="if (!args.validationFailed) { PF('estadosPosiblesTable').clearSelection(); }" />
+                
+                <br>
+                    
+                </br>
+                
+                <p:commandButton value="Volver" action="#{uiCambioEstado.volverPantallaTramiteConsultor()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

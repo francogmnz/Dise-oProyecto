@@ -1,0 +1,64 @@
+/* Fuente general */
+body, .box-primary {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+/* Centrar el título y el botón */
+h1, h2, h3, .ui-panel .ui-panel-title {
+    text-align: center;
+    color: #5A67D8; /* Cambia el color a uno más bonito */
+}
+
+/* Centrando botones */
+button, .ui-button {
+    display: block;
+    margin: 0 auto;
+    background-color: #4CAF50; /* Color verde atractivo */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+}
+
+button:hover, .ui-button:hover {
+    background-color: #45a049;
+}
+
+/* Fondo de panel y sombra */
+.box-primary {
+    background-color: #F7FAFC; /* Fondo suave */
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Estilo para los input fields */
+input, .ui-inputfield {
+    border-radius: 5px;
+    border: 1px solid #CBD5E0;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+p:calendar {
+    border-radius: 5px;
+}
+
+/* Colores para etiquetas y texto */
+.ui-outputlabel, .ui-inputtext, .ui-calendar {
+    color: #2D3748;
+}
+
+/* Color para bordes y botones */
+.ui-button {
+    background-color: #3182CE; /* Azul */
+    border-color: #3182CE;
+}
+
+.ui-button:hover {
+    background-color: #2B6CB0;
+    border-color: #2B6CB0;
+}
