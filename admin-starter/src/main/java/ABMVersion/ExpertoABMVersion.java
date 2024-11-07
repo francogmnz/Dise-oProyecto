@@ -14,6 +14,7 @@ import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
+import entidades.Tramite;
 import entidades.Version;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoABMVersion {
 
@@ -108,6 +110,76 @@ public class ExpertoABMVersion {
         return dtoVersiones;
     }
 
+    public static Version buscarUltimaVersionActiva(int codTipoTramite) {
+        // Testear to
+        List<DTOCriterio> tipoTramiteCriterioList = new ArrayList<>();
+        
+        DTOCriterio criterioTipoTramite = new DTOCriterio();
+        criterioTipoTramite.setAtributo("codTipoTramite");
+        criterioTipoTramite.setOperacion("=");
+        criterioTipoTramite.setValor(codTipoTramite);
+        tipoTramiteCriterioList.add(criterioTipoTramite);
+        
+        // Verificación de que encuentre un tipoTramite
+        List<Object> tipoTramites = FachadaPersistencia.getInstance().buscar("TipoTramite", tipoTramiteCriterioList);
+        
+        if(tipoTramites.isEmpty()) {
+            System.out.println("No se encontró TipoTramite con codTipoTramite: " + codTipoTramite);
+            return null;
+        }
+        TipoTramite tipoTramiteEncontrado = (TipoTramite) tipoTramites.get(0);
+        System.out.println("TipoTramite encontrado: " + tipoTramiteEncontrado.getNombreTipoTramite());
+        
+        
+        
+        List<DTOCriterio> criterioUltimaVersionList = new ArrayList<>();
+        DTOCriterio criterioNroVersion = new DTOCriterio();
+        criterioNroVersion.setAtributo("nroVersion");
+        criterioNroVersion.setOperacion("desc"); 
+
+        criterioUltimaVersionList.add(criterioNroVersion);
+        
+        DTOCriterio criterioBajaVersion = new DTOCriterio();
+        criterioBajaVersion.setAtributo("fechaBajaVersion");
+        criterioBajaVersion.setOperacion("=");
+        criterioBajaVersion.setValor(null);
+        
+        criterioUltimaVersionList.add(criterioBajaVersion);
+        
+        DTOCriterio criterioTTVersion = new DTOCriterio();
+        criterioTTVersion.setAtributo("tipoTramite");
+        criterioTTVersion.setOperacion("=");
+        criterioTTVersion.setValor(tipoTramiteEncontrado);
+        
+        criterioUltimaVersionList.add(criterioTTVersion);
+        
+        DTOCriterio criterioFechaDesdeVersion = new DTOCriterio();
+        criterioFechaDesdeVersion.setAtributo("fechaDesdeVersion");
+        criterioFechaDesdeVersion.setOperacion("<");
+        criterioFechaDesdeVersion.setValor(fechaHoraActual.obtenerFechaHoraActual());
+        
+        criterioUltimaVersionList.add(criterioFechaDesdeVersion);
+        
+        DTOCriterio criterioFechaHastaVersion = new DTOCriterio();
+        
+        criterioFechaHastaVersion.setAtributo("fechaHastaVersion");
+        criterioFechaHastaVersion.setOperacion(">");
+        criterioFechaHastaVersion.setValor(fechaHoraActual.obtenerFechaHoraActual());
+        
+        criterioUltimaVersionList.add(criterioFechaHastaVersion);        
+        
+        
+        List<Object> versionList = FachadaPersistencia.getInstance().buscar("Version", criterioUltimaVersionList);
+
+        if (versionList == null || versionList.isEmpty()) {
+            return null;
+        }
+
+        Version ultimaVersion = (Version) versionList.get(0);
+
+        return ultimaVersion;
+    }    
+    
     public int obtenerUltimoNumeroVersion(int codTipoTramite) {
         FachadaPersistencia f = FachadaPersistencia.getInstance();
 
@@ -147,7 +219,7 @@ public class ExpertoABMVersion {
             lc.add(cFechaBaja);
 
             List<Object> versiones = f.buscar("Version", lc);
-
+            
             System.out.println("Versiones encontradas: " + versiones.size()); // Depuración
 
             if (!versiones.isEmpty()) {
@@ -169,15 +241,66 @@ public class ExpertoABMVersion {
         return 0;
     }
 
-    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) {
+    public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) throws VersionException {
         FachadaPersistencia f = FachadaPersistencia.getInstance();
         f.iniciarTransaccion();
         Version nueva = new Version();
 
         // Establecer la versión de forma autoincremental
         int codTipoTramite = dtoDatosVersion.getCodTipoTramite();
-        int ultimoNumeroVersion = obtenerUltimoNumeroVersion(codTipoTramite);
+        int ultimoNumeroVersion = obtenerUltimoNumeroVersion(codTipoTramite); // int ultimoNumeroVersion = buscarUltimaVersion(codTipoTramite).getNroVersion();
         int nuevoNumeroVersion = ultimoNumeroVersion + 1;
+        
+        // Testear
+        Version ultimaVersionActiva = buscarUltimaVersionActiva(codTipoTramite);
+        TipoTramite tipoTramiteRelacionadoAUltimaVersionActiva = ultimaVersionActiva.getTipoTramite();
+        List<DTOCriterio> tramiteActivoVerificacionList = new ArrayList<>();
+        
+        DTOCriterio criterioVersionTramite = new DTOCriterio();
+        criterioVersionTramite.setAtributo("version");
+        criterioVersionTramite.setOperacion("");
+        criterioVersionTramite.setValor(ultimaVersionActiva);
+        
+        tramiteActivoVerificacionList.add(criterioVersionTramite);
+        
+        DTOCriterio criterioFechaFinTramite = new DTOCriterio();
+        criterioFechaFinTramite.setAtributo("fechaFinTramite");
+        criterioFechaFinTramite.setOperacion("null");
+        criterioFechaFinTramite.setValor(null);
+        
+        tramiteActivoVerificacionList.add(criterioFechaFinTramite);
+        
+        DTOCriterio criterioTipoTramite = new DTOCriterio();
+        criterioTipoTramite.setAtributo("tipoTramite");
+        criterioTipoTramite.setOperacion("=");
+        criterioTipoTramite.setValor(tipoTramiteRelacionadoAUltimaVersionActiva);
+        tramiteActivoVerificacionList.add(criterioTipoTramite);
+        
+        List<Object> tramitesActivo = FachadaPersistencia.getInstance().buscar("Tramite", tramiteActivoVerificacionList);
+        
+        if(!tramitesActivo.isEmpty()){
+            for(Object x: tramitesActivo){
+                Tramite tramiteA = (Tramite) x;
+                Version versionAsociada = tramiteA.getVersion();
+                
+                //Timestamp fechaDesdeVersion = versionAsociada.getFechaDesdeVersion();
+                Timestamp fechaHastaVersion = versionAsociada.getFechaHastaVersion();
+                Timestamp fechaDesdeDTODatosVersionIn = new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()+ 60000);
+                
+                System.out.println("Tramite " + tramiteA.getNroTramite());
+                System.out.println("Fecha Hasta Version activa " + fechaHastaVersion) ;
+                System.out.println("Fecha Desde Version DTO " + fechaDesdeDTODatosVersionIn) ;
+                
+                
+                if(fechaHastaVersion != null && !fechaHastaVersion.before(fechaDesdeDTODatosVersionIn)){
+                JOptionPane.showMessageDialog(null, "No se puede modificar porque hay tramite en curso", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;  
+                }
+                 
+            }
+
+        }
+              
         nueva.setNroVersion(nuevoNumeroVersion);
         // Configurar los demás atributos de la versión
         nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
@@ -363,7 +486,7 @@ public class ExpertoABMVersion {
                 // ultVersion.setFechaHastaVersion(FDNv); // Solo si es necesario
             }
 
-            
+          
             // Guardar la versión
             f.guardar(nueva);
             f.finalizarTransaccion();
