@@ -388,7 +388,7 @@ public class ExpertoRegistrarTramite {
         fechaHoraBajaET = " + null): List<Object> */
             DTOCriterio criterioEstado = new DTOCriterio();
             criterioEstado.setAtributo("nombreEstadoTramite");
-            criterioEstado.setOperacion("like");
+            criterioEstado.setOperacion("=");
             criterioEstado.setValor("Iniciado");
 
             criterioList.add(criterioEstado);
@@ -497,6 +497,7 @@ public class ExpertoRegistrarTramite {
         resumenDTO.setNroTramite(tramiteElegido.getNroTramite());
         resumenDTO.setFechaRecepcionTramite(tramiteElegido.getFechaRecepcionTramite());
         resumenDTO.setFechaAnulacionTramite(tramiteElegido.getFechaAnulacionTramite());
+        resumenDTO.setFechaPresentacionTotalDocumentacion(tramiteElegido.getFechaPresentacionTotalDocumentacion());
         resumenDTO.setFechaInicioTramite(tramiteElegido.getFechaInicioTramite());
         resumenDTO.setFechaFinTramite(tramiteElegido.getFechaFinTramite());
         resumenDTO.setPlazoDocumentacion(tramiteElegido.getTipoTramite().getPlazoEntregaDocumentacionTT());
@@ -528,7 +529,7 @@ public class ExpertoRegistrarTramite {
         }
 
         resumenDTO.setResumenDoc(resumenDocList);
-        
+
         return resumenDTO;
     }
 
@@ -670,17 +671,11 @@ public class ExpertoRegistrarTramite {
 
                 List<DTOCriterio> criterioListAgenda = new ArrayList<>();
                 DTOCriterio agendaCriterio1 = new DTOCriterio();
-                agendaCriterio1.setAtributo("fechaDesdeSemana");
-                agendaCriterio1.setOperacion("<");
+                agendaCriterio1.setAtributo("fechaHastaSemana");
+                agendaCriterio1.setOperacion(">");
                 agendaCriterio1.setValor(fechaHoraActual.obtenerFechaHoraActual());
                 criterioListAgenda.add(agendaCriterio1);
 
-//            DTOCriterio agendaCriterio2 = new DTOCriterio();
-//            agendaCriterio2.setAtributo("fechaBajaAgendaConsultor");
-//            agendaCriterio2.setOperacion("=");
-//            agendaCriterio2.setValor(null);
-//            criterioListAgenda.add(agendaCriterio2);
-//            AgendaConsultor agenda = (AgendaConsultor) FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda).get(0);
                 List<Object> agendas = FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda);
                 if (agendas.isEmpty()) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay agendas disponibles para asignar un consultor."));
@@ -701,22 +696,23 @@ public class ExpertoRegistrarTramite {
 
                 for (Consultor consultor : consultorList) {
 
-                    criterioListAgenda.clear();
-                    DTOCriterio consuCriterio = new DTOCriterio();
-                    consuCriterio.setAtributo("consultor");
-                    consuCriterio.setOperacion("=");
-                    consuCriterio.setValor(consultor);
-                    criterioListAgenda.add(consuCriterio);
+                    if (consultor.getFechaHoraBajaConsultor() == null) {
+                        criterioListAgenda.clear();
+                        DTOCriterio consuCriterio = new DTOCriterio();
+                        consuCriterio.setAtributo("consultor");
+                        consuCriterio.setOperacion("=");
+                        consuCriterio.setValor(consultor);
+                        criterioListAgenda.add(consuCriterio);
 
-                    // Buscar trámites asociados a este consultor
-                    List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
-                    int tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
+                        // Buscar trámites asociados a este consultor
+                        List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
+                        int tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
 
-                    if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
-                        menorCantidadTramites = tramitesAsignados;
-                        consultorSeleccionado = consultor;
+                        if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
+                            menorCantidadTramites = tramitesAsignados;
+                            consultorSeleccionado = consultor;
+                        }
                     }
-
                 }
 
                 if (consultorSeleccionado == null) {

@@ -25,7 +25,7 @@
 
             <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable">
                 <p:column headerText="Nombre del Consultor">
-                    <h:outputText value="#{tramite.consultor.nombreConsultor}" />
+                    <h:outputText value="#{tramite.nombreConsultor}" />
                 </p:column>
                 
                 <p:column headerText="Número de Trámite">
@@ -33,7 +33,7 @@
                 </p:column>
 
                 <p:column headerText="Estado del Trámite">
-                    <h:outputText value="#{estadoTramite}" />
+                    <h:outputText value="#{tramite.nombreEstadoTramite}" />
                 </p:column>
 
                 <p:column headerText="Código de Estado">

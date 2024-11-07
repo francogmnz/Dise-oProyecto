@@ -44,6 +44,7 @@ public class UIResumen implements Serializable {
     private int nroTramite;
     private Timestamp fechaRecepcionTramite;
     private Timestamp fechaAnulacionTramite;
+    private Timestamp fechaPresentacionTotalDocumentacion;
     private Timestamp fechaInicioTramite;
     private Timestamp fechaFinTramite;
     private int plazoDocumentacion;
@@ -83,6 +84,7 @@ public class UIResumen implements Serializable {
                     this.nroTramite = tramiteElegido.getNroTramite();
                     this.fechaRecepcionTramite = tramiteElegido.getFechaRecepcionTramite();
                     this.fechaAnulacionTramite = tramiteElegido.getFechaAnulacionTramite();
+                    this.fechaPresentacionTotalDocumentacion = tramiteElegido.getFechaPresentacionTotalDocumentacion();
                     this.fechaInicioTramite = tramiteElegido.getFechaInicioTramite();
                     this.fechaFinTramite = tramiteElegido.getFechaFinTramite();
                     this.plazoDocumentacion = tramiteElegido.getPlazoDocumentacion();
@@ -256,6 +258,14 @@ public class UIResumen implements Serializable {
         this.fechaEntregaDoc = fechaEntregaDoc;
     }
 
+    public Timestamp getFechaPresentacionTotalDocumentacion() {
+        return fechaPresentacionTotalDocumentacion;
+    }
+
+    public void setFechaPresentacionTotalDocumentacion(Timestamp fechaPresentacionTotalDocumentacion) {
+        this.fechaPresentacionTotalDocumentacion = fechaPresentacionTotalDocumentacion;
+    }
+    
     public void setMailCliente(String mailCliente) {
         this.mailCliente = mailCliente;
     }

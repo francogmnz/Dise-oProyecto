@@ -82,7 +82,9 @@ public class ExpertoCambioEstado {
                 dtoTramite.setFechaRecepcionTramite(tramite.getFechaRecepcionTramite());
                 dtoTramite.setEstadoTramite(tramite.getEstadoTramite());
                 dtoTramite.setNombreEstadoTramite(tramite.getEstadoTramite().getNombreEstadoTramite());
-
+                dtoTramite.setConsultor(tramite.getConsultor());
+                dtoTramite.setNombreConsultor(consultorEncontrado.getNombreConsultor());
+                
                 // Agregar el trámite al DTO
                 dtoTramitesVigentes.addTramite(dtoTramite);
             }

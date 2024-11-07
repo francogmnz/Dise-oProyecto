@@ -115,6 +115,7 @@ public class UICambioEstadoLista implements Serializable {
                 cambioEstadoGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite()); // Fecha de inicio del trámite
                 cambioEstadoGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite()); // Fecha de recepción
                 cambioEstadoGrillaUI.setNroTramite(tramiteDTO.getNroTramite()); // Número del trámite
+                cambioEstadoGrillaUI.setNombreConsultor(tramiteDTO.getConsultor().getNombreConsultor());
                 
                 // Agregar el objeto a la lista que se mostrará en la grilla
                 cambioEstadoGrilla.add(cambioEstadoGrillaUI);

@@ -140,10 +140,10 @@ public class UITramiteLista implements Serializable {
             tramiteGrillaUI.setCodTipoTramite(tramiteDTO.getCodTipoTramite());
             tramiteGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
 
-            // 
             tramiteGrillaUI.setFechaAnulacion(tramiteDTO.getFechaAnulacion());
             tramiteGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite());
             tramiteGrillaUI.setFechaFinTramite(tramiteDTO.getFechaFinTramite());
+            tramiteGrillaUI.setFechaPresentacionTotalDocumentacion(tramiteDTO.getFechaPresentacionTotalDocumentacion());
 
             tramiteGrilla.add(tramiteGrillaUI);
         }
@@ -233,18 +233,24 @@ public class UITramiteLista implements Serializable {
     public boolean isAnulado(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaAnulacion() != null;
     }
-    
+
     public boolean isPendienteDoc(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaAnulacion() == null && tramiteFila.getFechaFinTramite() == null;
     }
-    
+
     public boolean isFinalizado(TramiteGrillaUI tramiteFila) {
         return tramiteFila.getFechaFinTramite() != null && tramiteFila.getFechaInicioTramite() != null;
     }
-    
+
     public boolean isIniciado(TramiteGrillaUI tramiteFila) {
         // Si no es anulado y no es pendiente de documentación, devolver true
         return tramiteFila.getFechaInicioTramite() != null && tramiteFila.getFechaFinTramite() == null;
     }
-    
+
+    public boolean isPendienteConsultor(TramiteGrillaUI tramiteFila) {
+        // El trámite está pendiente de consultor si se presentó toda la documentación, no ha iniciado,
+        // y no está finalizado ni anulado
+        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaPresentacionTotalDocumentacion() != null;
+    }
+
 }

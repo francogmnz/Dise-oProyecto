@@ -65,6 +65,12 @@
                             </h:panelGroup>
 
                             <h:panelGroup>
+                                <h:outputLabel value="Fecha Presentación Total Documentación:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaPresentacionTotalDocumentacion}" 
+                                              style="font-weight:700;"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
                                 <h:outputLabel value="Fecha Inicio:" style="font-weight:700;"/>
                                 <h:outputText value=" #{uiresumen.fechaInicioTramite}" 
                                               style="font-weight:700; color: #{uiresumen.fechaInicioTramite != null ? 'green' : 'black'};"/>
@@ -73,7 +79,7 @@
                             <h:panelGroup>
                                 <h:outputLabel value="Fecha Fin:" style="font-weight:700;"/>
                                 <h:outputText value=" #{uiresumen.fechaFinTramite}" 
-                                              style="font-weight:700; color: #{uiresumen.fechaFinTramite != null ? 'red' : 'black'};"/>
+                                              style="font-weight:700; color: #{uiresumen.fechaFinTramite != null ? 'grey' : 'black'};"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
@@ -156,7 +162,7 @@
                     <!-- Botón de Anular -->
                     <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="margin-top: 8px; width:160px; height:36px;" 
                                      actionListener="#{uiresumen.anularTramite(nroTramite)}" 
-                                     disabled="#{uiresumen.fechaAnulacionTramite != null}" 
+                                     disabled="#{uiresumen.fechaAnulacionTramite != null || uiresumen.fechaFinTramite != null}" 
                                      update="@form" 
                                      oncomplete="if (!args.validationFailed) window.location.reload();">
                         <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" 

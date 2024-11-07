@@ -11,6 +11,7 @@ public class CambioEstadoGrillaUI {
     private int codConsultor;
     private int nroTramite;
     private Consultor consultor;
+    private String nombreConsultor;
     private Timestamp fechaInicioTramite;
     private Timestamp  fechaRecepcionTramite;
 
@@ -22,7 +23,13 @@ public class CambioEstadoGrillaUI {
         this.consultor = consultor;
     }
 
-    
+    public String getNombreConsultor() {
+        return nombreConsultor;
+    }
+
+    public void setNombreConsultor(String nombreConsultor) {
+        this.nombreConsultor = nombreConsultor;
+    }
 
     public int getCodConsultor() {
         return codConsultor;

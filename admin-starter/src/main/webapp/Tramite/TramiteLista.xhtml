@@ -217,13 +217,13 @@
                         </p:selectOneMenu>
 
                         <!-- Botón de Glosario -->
-                                <p:commandButton icon="fa fa-question-circle" 
-                                                 title="Ver glosario lista" 
-                                                 oncomplete="PF('dlgGlosario').show();"
-                                                 update="@none"
-                                                 style="border:none; background: none; color: black; display: inline-block;
-                                                 padding: 0; width: 25px; height: auto; margin-top: 10px; margin-bottom: 0px" 
-                                                 iconPos="right" />
+                        <p:commandButton icon="fa fa-question-circle" 
+                                         title="Ver glosario lista" 
+                                         oncomplete="PF('dlgGlosario').show();"
+                                         update="@none"
+                                         style="border:none; background: none; color: black; display: inline-block;
+                                         padding: 0; width: 25px; height: auto; margin-top: 10px; margin-bottom: 0px" 
+                                         iconPos="right" />
                     </div>
 
                     <!-- Diálogo del glosario -->
@@ -243,6 +243,9 @@
                                     </tr>
                                     <tr>
                                         <td class="isFinalizado">FINALIZADO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isPendienteConsultor">PENDIENTE CONSULTOR</td>
                                     </tr>
                                 </table>
                             </div>
@@ -274,15 +277,20 @@
                         background-color: #a5a3a3;
                     }
 
+                    .isPendienteConsultor {
+                        color: #000;
+                        background-color: #bfac5c;
+                    }
+
                 </style>
 
                 <!-- Tabla para mostrar los trámites -->
                 <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
                              paginator="true" rows="10" paginatorPosition="bottom"
                              rowStyleClass="#{uitramiteLista.isFinalizado(tramite) ? 'isFinalizado' :
-                                              uitramiteLista.isAnulado(tramite) ? 'isAnulado' : 
+                                              uitramiteLista.isAnulado(tramite) ? 'isAnulado' :
                                               uitramiteLista.isPendienteDoc(tramite) ? 'isPendienteDoc' : 
-                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado': ''}">
+                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado' : 'isPendienteConsultor'}">
                     <p:column>
                         <f:facet name="header">Número Trámite</f:facet>
                         <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
@@ -310,15 +318,14 @@
 
                     <p:column>
                         <f:facet name="header">Etapa Tramite</f:facet>
-                        <h:outputText value="#{tramite.nombreEstado}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
+                            #{tramite.nombreEstado}
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">Estado Trámite</f:facet>
                         <strong>
                             #{uitramiteLista.isAnulado(tramite) ? 'Anulado' :
+                              uitramiteLista.isPendienteConsultor(tramite) ? 'Pendiente Consultor' :
                               uitramiteLista.isPendienteDoc(tramite) ? 'Pendiente Documentación' :
                               uitramiteLista.isIniciado(tramite) ? 'Iniciado' : 
                               uitramiteLista.isFinalizado(tramite) ? 'Finalizado' : ''}

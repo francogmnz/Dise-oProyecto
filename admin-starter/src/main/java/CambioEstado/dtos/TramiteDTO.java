@@ -1,5 +1,6 @@
 package CambioEstado.dtos;
 
+import entidades.Consultor;
 import entidades.EstadoTramite;
 import java.sql.Timestamp;
 
@@ -14,6 +15,7 @@ public class TramiteDTO {
     private int codEstadoTramite;
     private String nombreEstadoTramite;
     private EstadoTramite estadoTramite;
+    private Consultor consultor;
 
     public int getNroTramite() {
         return nroTramite;
@@ -24,6 +26,14 @@ public class TramiteDTO {
         this.nroTramite = nroTramite;
     }
 
+    public Consultor getConsultor() {
+        return consultor;
+    }
+
+    public void setConsultor(Consultor consultor) {
+        this.consultor = consultor;
+    }
+
     public String getNombreConsultor() {
         return nombreConsultor;
     }
@@ -31,8 +41,6 @@ public class TramiteDTO {
     public void setNombreConsultor(String nombreConsultor) {
         this.nombreConsultor = nombreConsultor;
     }
-
-    
     
     public int getCodTipoTramite() {
         return codTipoTramite;
