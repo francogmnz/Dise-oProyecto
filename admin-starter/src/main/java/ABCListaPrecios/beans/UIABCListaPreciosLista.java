@@ -53,6 +53,9 @@ public class UIABCListaPreciosLista implements Serializable {
     public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
         return controladorABCListaPrecios.exportarListaPrecios(codigo);
     }
+     public StreamedContent plantillaListaPrecio()  {
+        return controladorABCListaPrecios.plantillaListaPrecio();
+     }
 
     public void filtrar() {
     }

@@ -130,7 +130,11 @@
                                                 </tr>
                                             </table>
                                         </div>
-                                    </div>    
+                                    </div>
+                                    <p:commandButton value="Plantilla" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                     icon="pi pi-arrow-down"  styleClass="btn-success">
+                                        <p:fileDownload value="#{uiabmListaPreciosLista.plantillaListaPrecio()}"/> 
+                                    </p:commandButton>
                                 </p:dialog>         
                             </div>
                                                         

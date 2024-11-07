@@ -332,6 +332,123 @@ public class ExpertoABCListaPrecios {
         }
         return fileD;
     }
+    
+    public StreamedContent plantillaListaPrecios(){
+        
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+        dto.setAtributo("fechaHoraBajaTipoTramite");
+        dto.setOperacion("=");
+        dto.setValor(null);
+
+        criterioList.add(dto);
+
+        List objectList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+        List<TipoTramite> tiposTramites = new ArrayList<>();
+        
+        for (Object x : objectList) {
+            TipoTramite tipoTramite = (TipoTramite) x;
+            tiposTramites.add(tipoTramite);
+        }
+        
+         tiposTramites.sort((tt1, tt2) -> {
+            return Integer.compare(tt2.getCodTipoTramite(), tt1.getCodTipoTramite());
+        }); //Para ordenar el excel por Codigo de manera Desc
+
+        try {
+            Workbook libro = new XSSFWorkbook();
+            final String nombreArchivo = "./tmp.xlsx";
+            Sheet hoja = libro.createSheet("Hoja 1");
+
+            // Crear estilo de centrado
+            CellStyle cellStyleCentrado = libro.createCellStyle();
+            cellStyleCentrado.setAlignment(HorizontalAlignment.CENTER);
+            cellStyleCentrado.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            // Estilo para encabezados (fondo azul marino y letras blancas)
+            CellStyle headerStyle = libro.createCellStyle();
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente blanca para los encabezados
+            Font headerFont = libro.createFont();
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(headerFont);
+
+            // Estilo para celdas de datos (fondo gris claro y letras negras)
+            CellStyle dataStyle = libro.createCellStyle();
+            dataStyle.setAlignment(HorizontalAlignment.CENTER);
+            dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            dataStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            dataStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente negra para los datos
+            Font dataFont = libro.createFont();
+            dataFont.setColor(IndexedColors.BLACK.getIndex());
+            dataStyle.setFont(dataFont);
+
+            // Crear encabezados
+            Row headerRow = hoja.createRow(0);
+            String[] headers = {"codTipoTramite", "nombreTipoTramite", "descripcionTipoTramite", "precioTipoTramite", "nuevoPrecioTipoTramite"};
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(headers[i]);
+                headerCell.setCellStyle(headerStyle);
+            }
+
+            // Crear filas con datos
+            for (int j = 0; j < tiposTramites.size(); j++) {
+                Row dataRow = hoja.createRow(j + 1);
+
+                Cell cell1 = dataRow.createCell(0);
+                cell1.setCellValue(tiposTramites.get(j).getCodTipoTramite());
+                cell1.setCellStyle(dataStyle);
+
+                Cell cell2 = dataRow.createCell(1);
+                cell2.setCellValue(tiposTramites.get(j).getNombreTipoTramite());
+                cell2.setCellStyle(dataStyle);
+
+                Cell cell3 = dataRow.createCell(2);
+                cell3.setCellValue(tiposTramites.get(j).getDescripcionTipoTramite());
+                cell3.setCellStyle(dataStyle);
+
+                Cell cell4 = dataRow.createCell(3);
+                cell4.setCellValue(0);
+                cell4.setCellStyle(dataStyle);
+
+                Cell cell5 = dataRow.createCell(4);
+                cell5.setCellStyle(dataStyle);
+            }
+
+            // Ajustar el ancho de las columnas excepto la columna de descripción
+            for (int i = 0; i < headers.length; i++) {
+                if (i == 2) {  // Fijar el ancho de la columna de descripción
+                    hoja.setColumnWidth(i, 40 * 256); // 200px en unidades de POI
+                } else {
+                    hoja.setColumnWidth(i, 22 * 256);
+                }
+            }
+
+            FileOutputStream outputStream = new FileOutputStream(nombreArchivo);
+            libro.write(outputStream);
+            libro.close();
+            InputStream ie = new FileInputStream(nombreArchivo);
+            fileD = DefaultStreamedContent.builder()
+                    .name("PlantillaListaPrecios.xlsx")
+                    .contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    .stream(() -> ie)
+                    .build();
+
+        } catch (IOException ex) {
+            Logger.getLogger(UIABCListaPreciosLista.class.getName()).log(Level.SEVERE, null, ex);
+            Messages.create(ex.getMessage()).error().add();
+        }
+        return fileD;
+        
+    }
 
     public void darDeBajaListaPrecios(int codigo) {
         FachadaPersistencia.getInstance().iniciarTransaccion();

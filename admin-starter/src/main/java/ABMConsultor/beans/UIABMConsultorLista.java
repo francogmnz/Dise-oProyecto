@@ -131,7 +131,7 @@ public class UIABMConsultorLista implements Serializable {
         unCriterio = new DTOCriterio();
 
         unCriterio.setAtributo("fechaFinTramite");
-        unCriterio.setOperacion("!=");
+        unCriterio.setOperacion("=");
         unCriterio.setValor(null);
 
         lCriterio.add(unCriterio);
@@ -139,7 +139,7 @@ public class UIABMConsultorLista implements Serializable {
         DTOCriterio unCriterio2 = new DTOCriterio();
 
         unCriterio2.setAtributo("fechaAnulacionTramite");
-        unCriterio2.setOperacion("!=");
+        unCriterio2.setOperacion("=");
         unCriterio2.setValor(null);
 
         lCriterio.add(unCriterio2);

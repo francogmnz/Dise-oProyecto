@@ -31,5 +31,8 @@ public class ControladorABCListaPrecios {
     public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
         return expertoABCListaPrecios.exportarListaPrecios(codigo);
     }
+     public StreamedContent plantillaListaPrecio() {
+        return expertoABCListaPrecios.plantillaListaPrecios();
+    }
 
 }

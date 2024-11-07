@@ -317,20 +317,8 @@
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Etapa Tramite</f:facet>
+                        <f:facet name="header">Estado Tramite</f:facet>
                             #{tramite.nombreEstado}
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">Estado Trámite</f:facet>
-                        <strong>
-                            #{uitramiteLista.isAnulado(tramite) ? 'Anulado' :
-                              uitramiteLista.isPendienteConsultor(tramite) ? 'Pendiente Consultor' :
-                              uitramiteLista.isPendienteDoc(tramite) ? 'Pendiente Documentación' :
-                              uitramiteLista.isIniciado(tramite) ? 'Iniciado' : 
-                              uitramiteLista.isFinalizado(tramite) ? 'Finalizado' : ''}
-                        </strong>
-
                     </p:column>
                 </p:dataTable>
 

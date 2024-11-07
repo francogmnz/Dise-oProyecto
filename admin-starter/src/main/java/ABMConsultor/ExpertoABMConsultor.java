@@ -168,13 +168,13 @@ public class ExpertoABMConsultor {
         dto = new DTOCriterio();
 
         dto.setAtributo("fechaFinTramite");
-        dto.setOperacion("!=");
+        dto.setOperacion("=");
         dto.setValor(null);
         
         criterioList.add(dto);
         
         dto2.setAtributo("fechaAnulacionTramite");
-        dto2.setOperacion("!=");
+        dto2.setOperacion("=");
         dto2.setValor(null);
 
         criterioList.add(dto2);
