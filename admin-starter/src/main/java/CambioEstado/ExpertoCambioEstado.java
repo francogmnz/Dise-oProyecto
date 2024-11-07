@@ -183,6 +183,8 @@ public class ExpertoCambioEstado {
 
             Tramite tramite = (Tramite) tramites.get(0);
 
+            EstadoTramite estadoOrigen = tramite.getEstadoTramite();
+            
             criterioList.clear();
             dto = new DTOCriterio();
             dto.setAtributo("codEstadoTramite");
@@ -215,13 +217,21 @@ public class ExpertoCambioEstado {
             }
             
             //Busco si es el ultimo estado
+            boolean esEstadoFinal = true;
             Version versionUltimoTramite = tramite.getVersion();
             List<ConfTipoTramiteEstadoTramite> listaConfig = versionUltimoTramite.getConfTipoTramiteEstadoTramite();
-            for(ConfTipoTramiteEstadoTramite config: listaConfig){
-                if(config.getEstadoTramiteDestino().isEmpty()){
-                    tramite.setFechaFinTramite(fechaHoraActual.obtenerFechaHoraActual());
+            for (ConfTipoTramiteEstadoTramite config : listaConfig) {
+                if (config.getEstadoTramiteOrigen().getCodEstadoTramite() == estadoDestino.getCodEstadoTramite()) {
+                    if (!config.getEstadoTramiteDestino().isEmpty()) {
+                    esEstadoFinal = false;
+                    break;
+                    } 
                 }
             }
+        
+            if (esEstadoFinal) {
+                tramite.setFechaFinTramite(fechaHoraActual.obtenerFechaHoraActual());
+            }     
             
             FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
             FachadaPersistencia.getInstance().guardar(tramite);

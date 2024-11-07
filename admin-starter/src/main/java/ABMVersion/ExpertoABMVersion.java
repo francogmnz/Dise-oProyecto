@@ -253,28 +253,28 @@ public class ExpertoABMVersion {
         
         // Testear
         Version ultimaVersionActiva = buscarUltimaVersionActiva(codTipoTramite);
-        TipoTramite tipoTramiteRelacionadoAUltimaVersionActiva = ultimaVersionActiva.getTipoTramite();
+        //TipoTramite tipoTramiteRelacionadoAUltimaVersionActiva = ultimaVersionActiva.getTipoTramite();
         List<DTOCriterio> tramiteActivoVerificacionList = new ArrayList<>();
         
         DTOCriterio criterioVersionTramite = new DTOCriterio();
         criterioVersionTramite.setAtributo("version");
-        criterioVersionTramite.setOperacion("");
+        criterioVersionTramite.setOperacion("=");
         criterioVersionTramite.setValor(ultimaVersionActiva);
         
         tramiteActivoVerificacionList.add(criterioVersionTramite);
         
         DTOCriterio criterioFechaFinTramite = new DTOCriterio();
         criterioFechaFinTramite.setAtributo("fechaFinTramite");
-        criterioFechaFinTramite.setOperacion("null");
+        criterioFechaFinTramite.setOperacion("=");
         criterioFechaFinTramite.setValor(null);
         
         tramiteActivoVerificacionList.add(criterioFechaFinTramite);
         
-        DTOCriterio criterioTipoTramite = new DTOCriterio();
-        criterioTipoTramite.setAtributo("tipoTramite");
-        criterioTipoTramite.setOperacion("=");
-        criterioTipoTramite.setValor(tipoTramiteRelacionadoAUltimaVersionActiva);
-        tramiteActivoVerificacionList.add(criterioTipoTramite);
+        //DTOCriterio criterioTipoTramite = new DTOCriterio();
+        //criterioTipoTramite.setAtributo("tipoTramite");
+        //criterioTipoTramite.setOperacion("=");
+        //criterioTipoTramite.setValor(tipoTramiteRelacionadoAUltimaVersionActiva);
+        //tramiteActivoVerificacionList.add(criterioTipoTramite);
         
         List<Object> tramitesActivo = FachadaPersistencia.getInstance().buscar("Tramite", tramiteActivoVerificacionList);
         
@@ -474,6 +474,7 @@ public class ExpertoABMVersion {
                     return false;  // Detener el flujo si hay un hueco
                 }
 
+                /*
                 // Recorrer la lista de versiones existentes para verificar si hay coincidencia de fechas
                 for (Version version : listVersion) {
                     // Comprobar si las fechas de la nueva versión coinciden con alguna versión existente
@@ -484,6 +485,7 @@ public class ExpertoABMVersion {
                 }
                 // Si todas las validaciones son correctas, actualizar la última versión (opcional)
                 // ultVersion.setFechaHastaVersion(FDNv); // Solo si es necesario
+                */
             }
 
           
