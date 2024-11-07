@@ -183,8 +183,7 @@ public class ExpertoCambioEstado {
 
             Tramite tramite = (Tramite) tramites.get(0);
 
-            EstadoTramite estadoOrigen = tramite.getEstadoTramite();
-            
+          
             criterioList.clear();
             dto = new DTOCriterio();
             dto.setAtributo("codEstadoTramite");
@@ -231,6 +230,7 @@ public class ExpertoCambioEstado {
         
             if (esEstadoFinal) {
                 tramite.setFechaFinTramite(fechaHoraActual.obtenerFechaHoraActual());
+                tramite.setConsultor(null);
             }     
             
             FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
