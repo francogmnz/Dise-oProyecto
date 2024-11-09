@@ -7,6 +7,8 @@ package ABMEstadoTramite.beans;
 import ABMEstadoTramite.ControladorABMEstadoTramite;
 import ABMEstadoTramite.dtos.EstadoTramiteDTO;
 import ABMEstadoTramite.exceptions.EstadoTramiteException;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -99,7 +101,8 @@ public class UIABMEstadoTramiteLista implements Serializable {
             Messages.create("Anulado").detail("Anulado").add();;
 
         } catch (EstadoTramiteException e) {
-            Messages.create("Error!").error().detail("No se pudo eliminar el Estado porque está presente en el destino de una versión actual/posterior").add();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
         }
     }
 

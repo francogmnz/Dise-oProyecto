@@ -321,6 +321,29 @@ public class ExpertoRegistrarTramite {
             if (clienteEncontrado == null && tipoTramiteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente && TipoTramite no encontrado/s");
             }
+            
+            List<DTOCriterio> clienteTT = new ArrayList<>();
+            DTOCriterio tramiteCliente = new DTOCriterio();
+            tramiteCliente.setAtributo("cliente");
+            tramiteCliente.setOperacion("=");
+            tramiteCliente.setValor(clienteEncontrado);
+            
+            List tramitesCliente = FachadaPersistencia.getInstance().buscar("Tramite", clienteTT);
+            for(Object tC:tramitesCliente){
+                int tc = 0;
+                Tramite t = (Tramite) tC;
+                if(t.getTipoTramite().getNombreTipoTramite() == tipoTramiteEncontrado.getNombreTipoTramite() 
+                        && t.getFechaFinTramite() == null){
+                    tc++;
+                }if(t.getTipoTramite().getNombreTipoTramite() == tipoTramiteEncontrado.getNombreTipoTramite() 
+                        && t.getFechaAnulacionTramite() == null){
+                    tc++;
+                }
+                if(tc > 0){
+                    throw new RegistrarTramiteException("El Cliente ya tiene ese TipoTramite en Curso");
+                }
+                
+            }
 
             if (tipoTramiteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. TipoTramite no encontrado");

@@ -166,14 +166,14 @@ public class ExpertoABMEstadoTramite {
         criterioList.add(dto);
 
         EstadoTramite estadoTramiteEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
-
+      
         criterioList.clear();
 
         // Buscar versiones activas (fecha desde menor a ahora y sin fecha de baja)
         DTOCriterio dto2 = new DTOCriterio();
         dto2.setAtributo("fechaDesdeVersion");
         dto2.setOperacion("<");
-        dto2.setValor(Timestamp.from(Instant.now()));
+        dto2.setValor(fechaHoraActual.obtenerFechaHoraActual());
         criterioList.add(dto2);
 
         DTOCriterio dto4 = new DTOCriterio();
@@ -192,6 +192,10 @@ public class ExpertoABMEstadoTramite {
             for (ConfTipoTramiteEstadoTramite confTTET : confTTETList) {
                 verificarEstadoTramiteEnOrigenODestinoM(confTTET.getEstadoTramiteOrigen(), confTTET.getEstadoTramiteDestino(), codEstadoTramite);
             }
+        }
+        
+        if(estadoTramiteEncontrado.getNombreEstadoTramite() == "Iniciado"){
+            throw new EstadoTramiteException("No se puede modificar el Estado Iniciado");
         }
 
         //Verifica si el nombre del estado ya existe
@@ -250,13 +254,17 @@ public class ExpertoABMEstadoTramite {
 
         EstadoTramite estadoTramiteEncontrado = (EstadoTramite) FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList).get(0);
 
+        if(estadoTramiteEncontrado.getNombreEstadoTramite() == "Iniciado" || estadoTramiteEncontrado.getCodEstadoTramite() == 1){
+            throw new EstadoTramiteException("No se puede dar de baja el Estado Iniciado");
+        }
+        
         criterioList.clear();
 
         // Buscar versiones con fecha actual y sin fecha de baja
         DTOCriterio dto2 = new DTOCriterio();
         dto2.setAtributo("fechaHastaVersion");
         dto2.setOperacion(">=");
-        dto2.setValor(Timestamp.from(Instant.now()));
+        dto2.setValor(fechaHoraActual.obtenerFechaHoraActual());
 
         criterioList.add(dto2);
 
@@ -268,6 +276,7 @@ public class ExpertoABMEstadoTramite {
         criterioList.add(dto3);
 
         List<Object> objetoList = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+       
 
         // Verificar cada versión
         for (Object o : objetoList) {
@@ -279,7 +288,7 @@ public class ExpertoABMEstadoTramite {
                 verificarEstadoTramiteEnOrigenODestino(confTTET.getEstadoTramiteOrigen(), confTTET.getEstadoTramiteDestino(), codEstadoTramite);
             }
         }
-
+        
         // Dar de baja el EstadoTramite
         estadoTramiteEncontrado.setFechaHoraBajaEstadoTramite(fechaHoraActual.obtenerFechaHoraActual());
         FachadaPersistencia.getInstance().guardar(estadoTramiteEncontrado);
