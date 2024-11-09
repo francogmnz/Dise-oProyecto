@@ -31,7 +31,6 @@ import utils.BeansUtils;
 import utils.Errores;
 import utils.fechaHoraActual;
 
-
 @Named("uiabmListaPrecios")
 @ViewScoped
 public class UIABCListaPrecios implements Serializable {
@@ -44,7 +43,6 @@ public class UIABCListaPrecios implements Serializable {
     private List<DetalleListaPreciosDTO> detalles = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     private Errores err = new Errores();
-    
 
 // GETTERS y SETTERS
     public ControladorABCListaPrecios getControladorABCListaPrecios() {
@@ -138,7 +136,7 @@ public class UIABCListaPrecios implements Serializable {
                 throw new ListaPreciosException("Codigo no valido");
             } else {
                 setCodListaPrecios(cod);
-                setFechaHoraDesdeListaPrecios(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime()));
+                setFechaHoraDesdeListaPrecios(new Date());
                 setFechaHoraHastaListaPrecios(null);
             }
         } catch (ListaPreciosException e) {
@@ -171,7 +169,7 @@ public class UIABCListaPrecios implements Serializable {
             while (row != null) {
                 DetalleListaPreciosDTO detalle = new DetalleListaPreciosDTO();
                 Cell cell = row.getCell(0);
-                Cell cell2 = row.getCell(4);
+                Cell cell2 = row.getCell(1);
 
                 if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
                     break;
@@ -180,13 +178,13 @@ public class UIABCListaPrecios implements Serializable {
                 if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                     int codTipoTramite = (int) cell.getNumericCellValue();
                     detalle.setCodTipoTramite(codTipoTramite);
-//                    Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
+                    Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
                 }
 
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
                     double nuevoPrecioTipoTramite = cell2.getNumericCellValue();
                     detalle.setNuevoPrecioTipoTramite(nuevoPrecioTipoTramite);
-//                    Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
+                    Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
                 }
 
                 detalles.add(detalle);
@@ -209,11 +207,12 @@ public class UIABCListaPrecios implements Serializable {
         if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() < 0) {
             err.agregarError("El Código debe ser un entero mayor o igual a 0.");
         }
-        if (getFechaHoraDesdeListaPrecios().before(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime()))) {
+
+        if (getFechaHoraDesdeListaPrecios().before(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime() - 600000))) {
             err.agregarError("FechaDesde no puede ser menor a la Fecha Actual. Intente nuevamente.");
         }
-        if (getFechaHoraHastaListaPrecios().before(getFechaHoraDesdeListaPrecios())) {
-            err.agregarError("FechaHasta no puede ser menor a la Fecha Desde. Intente nuevamente.");
+        if (getFechaHoraHastaListaPrecios() == null) {
+            err.agregarError("Debe Ingresar una FechaHasta.");
         }
         // Verificamos si hay errores antes de continuar
         if (!err.getErrores().isEmpty()) {

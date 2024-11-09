@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.omnifaces.util.Messages;
 import org.primefaces.model.DefaultStreamedContent;
@@ -89,7 +90,7 @@ public class ExpertoABCListaPrecios {
         return ultimaListaPrecios;
     }
 
-    public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
+public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
         err.getErrores().clear();
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
@@ -113,14 +114,24 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("El código ya existe");
         }
 
-        
-
         // Crear la nueva lista de precios
         ListaPrecios nuevaListaPrecios = new ListaPrecios();
         nuevaListaPrecios.setCodListaPrecios(nuevaListaPreciosDTO.getCodListaPrecios());
         nuevaListaPrecios.setFechaHoraDesdeListaPrecios(nuevaListaPreciosDTO.getFechaHoraDesdeListaPrecios());
         nuevaListaPrecios.setFechaHoraHastaListaPrecios(nuevaListaPreciosDTO.getFechaHoraHastaListaPrecios());
 
+        // Procesar los precios de los trámites en base a la nueva lista o la última lista existente
+        criterioList.clear();
+        dto = new DTOCriterio();
+        dto.setAtributo("fechaHoraBajaTipoTramite");
+        dto.setOperacion("=");
+        dto.setValor(null);
+        criterioList.add(dto);
+
+        List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
+        if (objetoList2.isEmpty()) {
+            throw new ListaPreciosException("No hay tipos tramites activos actualmente");
+        }
         // Verificar si es la primera lista de precios (no hay lista previa)
         if (ultimaListaPrecios == null) {
             // Setear directamente los precios del detalle en la nueva lista
@@ -155,28 +166,16 @@ public class ExpertoABCListaPrecios {
             }
         } else {
             // Si ya hay una lista anterior, ajustar la fecha de fin de la última lista
-            
+
             if (!(nuevaFechaHoraDesde.after(ultimaListaPrecios.getFechaHoraDesdeListaPrecios()))) {
-            throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
-        }
+                throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
+            }
 
             if (nuevaFechaHoraDesde.after(nuevaFechaHoraHasta) || nuevaFechaHoraDesde.before(nuevaFechaHoraHasta)) {
                 ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
             }
             FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);
 
-            // Procesar los precios de los trámites en base a la nueva lista o la última lista existente
-            criterioList.clear();
-            dto = new DTOCriterio();
-            dto.setAtributo("fechaHoraBajaTipoTramite");
-            dto.setOperacion("=");
-            dto.setValor(null);
-            criterioList.add(dto);
-
-            List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
-            if (objetoList2.isEmpty()){
-            throw new ListaPreciosException("No hay tipos tramites activos actualmente");
-            }
             for (Object x : objetoList2) {
                 TipoTramite tipoTramite = (TipoTramite) x;
                 TipoTramiteListaPrecios nuevoTipoTramiteListaPrecios = new TipoTramiteListaPrecios();
@@ -247,6 +246,18 @@ public class ExpertoABCListaPrecios {
             cellStyleCentrado.setAlignment(HorizontalAlignment.CENTER);
             cellStyleCentrado.setVerticalAlignment(VerticalAlignment.CENTER);
 
+            //Estilo encabezado Exportacion
+            CellStyle headerStyleEEx = libro.createCellStyle();
+            headerStyleEEx.setAlignment(HorizontalAlignment.CENTER);
+            headerStyleEEx.setVerticalAlignment(VerticalAlignment.CENTER);
+            headerStyleEEx.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+            headerStyleEEx.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente blanca para los encabezados
+            Font headerFontEEx = libro.createFont();
+            headerFontEEx.setColor(IndexedColors.WHITE.getIndex());
+            headerStyleEEx.setFont(headerFontEEx);
+
             // Estilo para encabezados (fondo azul marino y letras blancas)
             CellStyle headerStyle = libro.createCellStyle();
             headerStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -272,7 +283,17 @@ public class ExpertoABCListaPrecios {
             dataStyle.setFont(dataFont);
 
             // Crear encabezados
-            Row headerRow = hoja.createRow(0);
+            Row row = hoja.createRow(0);
+
+            // Crear una celda en la fila
+            Cell cell = row.createCell(0);
+            cell.setCellValue("Lista Precios N° " + listaPreciosEncontrada.getCodListaPrecios() + " - Desde: " + listaPreciosEncontrada.getFechaHoraDesdeListaPrecios() + " , Hasta: " + listaPreciosEncontrada.getFechaHoraHastaListaPrecios());
+
+            // Unir celdas desde la celda (0,0) hasta la celda (0,3)
+            hoja.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+            cell.setCellStyle(headerStyleEEx);
+
+            Row headerRow = hoja.createRow(1);
             String[] headers = {"codTipoTramite", "nombreTipoTramite", "descripcionTipoTramite", "precioTipoTramite", "nuevoPrecioTipoTramite"};
 
             for (int i = 0; i < headers.length; i++) {
@@ -281,26 +302,62 @@ public class ExpertoABCListaPrecios {
                 headerCell.setCellStyle(headerStyle);
             }
 
+//            List<TipoTramiteListaPrecios> detalles = listaPreciosEncontrada.getTipoTramiteListaPrecios();
+            // Procesar los precios de los trámites en base a la nueva lista o la última lista existente
+            criterioList.clear();
+            dto = new DTOCriterio();
+            dto.setAtributo("fechaHoraBajaTipoTramite");
+            dto.setOperacion("=");
+            dto.setValor(null);
+            criterioList.add(dto);
+
+            List objetoList2 = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
             List<TipoTramiteListaPrecios> detalles = listaPreciosEncontrada.getTipoTramiteListaPrecios();
+            List<TipoTramiteListaPrecios> detallesNuevosTT = new ArrayList<>();
+
+            for (Object x : objetoList2) {
+                TipoTramite tipoTramite = (TipoTramite) x;
+                int codTipoTramite = tipoTramite.getCodTipoTramite();
+
+                // Buscar si el TipoTramite ya existe en detalles
+                boolean encontrado = false;
+                for (TipoTramiteListaPrecios detalle : detalles) {
+                    if (detalle.getTipoTramite().getCodTipoTramite() == codTipoTramite) {
+                        encontrado = true;
+                        detallesNuevosTT.add(detalle);
+                        break;
+                    }
+                }
+
+                // Si no se encontró, creamos un nuevo detalle con precio 0
+                if (!encontrado) {
+                    TipoTramiteListaPrecios detalleNuevo = new TipoTramiteListaPrecios();
+                    detalleNuevo.setTipoTramite(tipoTramite);
+                    detalleNuevo.setPrecioTipoTramite(0);
+                    detallesNuevosTT.add(detalleNuevo);
+                }
+            }
+
+            listaPreciosEncontrada.setTipoTramiteListaPrecios(detallesNuevosTT);
 
             // Crear filas con datos
-            for (int j = 0; j < detalles.size(); j++) {
-                Row dataRow = hoja.createRow(j + 1);
+            for (int j = 0; j < detallesNuevosTT.size(); j++) {
+                Row dataRow = hoja.createRow(j + 2);
 
                 Cell cell1 = dataRow.createCell(0);
-                cell1.setCellValue(detalles.get(j).getTipoTramite().getCodTipoTramite());
+                cell1.setCellValue(detallesNuevosTT.get(j).getTipoTramite().getCodTipoTramite());
                 cell1.setCellStyle(dataStyle);
 
                 Cell cell2 = dataRow.createCell(1);
-                cell2.setCellValue(detalles.get(j).getTipoTramite().getNombreTipoTramite());
+                cell2.setCellValue(detallesNuevosTT.get(j).getTipoTramite().getNombreTipoTramite());
                 cell2.setCellStyle(dataStyle);
 
                 Cell cell3 = dataRow.createCell(2);
-                cell3.setCellValue(detalles.get(j).getTipoTramite().getDescripcionTipoTramite());
+                cell3.setCellValue(detallesNuevosTT.get(j).getTipoTramite().getDescripcionTipoTramite());
                 cell3.setCellStyle(dataStyle);
 
                 Cell cell4 = dataRow.createCell(3);
-                cell4.setCellValue(detalles.get(j).getPrecioTipoTramite());
+                cell4.setCellValue(detallesNuevosTT.get(j).getPrecioTipoTramite());
                 cell4.setCellStyle(dataStyle);
 
                 Cell cell5 = dataRow.createCell(4);
@@ -326,15 +383,16 @@ public class ExpertoABCListaPrecios {
                     .stream(() -> ie)
                     .build();
 
+            FachadaPersistencia.getInstance().finalizarTransaccion();
         } catch (IOException ex) {
             Logger.getLogger(UIABCListaPreciosLista.class.getName()).log(Level.SEVERE, null, ex);
             Messages.create(ex.getMessage()).error().add();
         }
         return fileD;
     }
-    
-    public StreamedContent plantillaListaPrecios(){
-        
+
+    public StreamedContent plantillaListaPrecios() {
+
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
         dto.setAtributo("fechaHoraBajaTipoTramite");
@@ -345,13 +403,13 @@ public class ExpertoABCListaPrecios {
 
         List objectList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioList);
         List<TipoTramite> tiposTramites = new ArrayList<>();
-        
+
         for (Object x : objectList) {
             TipoTramite tipoTramite = (TipoTramite) x;
             tiposTramites.add(tipoTramite);
         }
-        
-         tiposTramites.sort((tt1, tt2) -> {
+
+        tiposTramites.sort((tt1, tt2) -> {
             return Integer.compare(tt2.getCodTipoTramite(), tt1.getCodTipoTramite());
         }); //Para ordenar el excel por Codigo de manera Desc
 
@@ -364,6 +422,18 @@ public class ExpertoABCListaPrecios {
             CellStyle cellStyleCentrado = libro.createCellStyle();
             cellStyleCentrado.setAlignment(HorizontalAlignment.CENTER);
             cellStyleCentrado.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            //Estilo encabezado Exportacion
+            CellStyle headerStyleEEx = libro.createCellStyle();
+            headerStyleEEx.setAlignment(HorizontalAlignment.CENTER);
+            headerStyleEEx.setVerticalAlignment(VerticalAlignment.CENTER);
+            headerStyleEEx.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+            headerStyleEEx.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // Crear fuente blanca para los encabezados
+            Font headerFontEEx = libro.createFont();
+            headerFontEEx.setColor(IndexedColors.WHITE.getIndex());
+            headerStyleEEx.setFont(headerFontEEx);
 
             // Estilo para encabezados (fondo azul marino y letras blancas)
             CellStyle headerStyle = libro.createCellStyle();
@@ -390,7 +460,19 @@ public class ExpertoABCListaPrecios {
             dataStyle.setFont(dataFont);
 
             // Crear encabezados
-            Row headerRow = hoja.createRow(0);
+//            Row encabezadoLPExportada = hoja.createRow(0);
+//            Cell headerCellEncabezado = encabezadoLPExportada.createCell(0);
+            Row row = hoja.createRow(0);
+
+            // Crear una celda en la fila
+            Cell cell = row.createCell(0);
+            cell.setCellValue("Plantilla Lista Precios");
+
+            // Unir celdas desde la celda (0,0) hasta la celda (0,3)
+            hoja.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+            cell.setCellStyle(headerStyleEEx);
+
+            Row headerRow = hoja.createRow(1);
             String[] headers = {"codTipoTramite", "nombreTipoTramite", "descripcionTipoTramite", "precioTipoTramite", "nuevoPrecioTipoTramite"};
 
             for (int i = 0; i < headers.length; i++) {
@@ -401,7 +483,7 @@ public class ExpertoABCListaPrecios {
 
             // Crear filas con datos
             for (int j = 0; j < tiposTramites.size(); j++) {
-                Row dataRow = hoja.createRow(j + 1);
+                Row dataRow = hoja.createRow(j + 2);
 
                 Cell cell1 = dataRow.createCell(0);
                 cell1.setCellValue(tiposTramites.get(j).getCodTipoTramite());
@@ -447,7 +529,7 @@ public class ExpertoABCListaPrecios {
             Messages.create(ex.getMessage()).error().add();
         }
         return fileD;
-        
+
     }
 
     public void darDeBajaListaPrecios(int codigo) {
@@ -466,22 +548,32 @@ public class ExpertoABCListaPrecios {
         ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
         ListaPrecios ultiLP = buscarUltimaListaNoNula();
 //        VERIFICA SI ES LA LISTA ENCONTRADA ES LA ULTIMA LISTA DE PRECIOS
-        if (codigo == ultiLP.getCodListaPrecios()) {
-//            LE SETEA LA FECHAHORABAJA
+        if (ultiLP == null) {
             listaPreciosEncontrada.setFechaHoraBajaListaPrecios(fechaHoraActual.obtenerFechaHoraActual());
-        }
+            FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
+        } else {
+//        VERIFICA SI ES LA LISTA ENCONTRADA ES LA ULTIMA LISTA DE PRECIOS
+            if (codigo == ultiLP.getCodListaPrecios()) {
+//            LE SETEA LA FECHAHORABAJA
+                listaPreciosEncontrada.setFechaHoraBajaListaPrecios(fechaHoraActual.obtenerFechaHoraActual());
+            }
 
-        Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();
-        FachadaPersistencia.getInstance().iniciarTransaccion();
-        FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
+            Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();
+            FachadaPersistencia.getInstance().iniciarTransaccion();
+            FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
 
 //        VUELVE A BUSCAR LA ULTIMA LISTA PARA SETEARLE LA FECHAHORAHASTA IGUAL A FECHAHORAHASTA DE LA LISTA QUE DIMOS DE BAJA
-        ListaPrecios ultiLP2 = buscarUltimaListaNoNula();
+            ListaPrecios ultiLP2 = buscarUltimaListaNoNula();
 
-        ultiLP2.setFechaHoraHastaListaPrecios(fh);
-        FachadaPersistencia.getInstance().guardar(ultiLP2);
-        FachadaPersistencia.getInstance().finalizarTransaccion();
+            if (ultiLP2 != null) {
+                ultiLP2.setFechaHoraHastaListaPrecios(fh);
+                FachadaPersistencia.getInstance().guardar(ultiLP2);
+            }
 
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+
+        }
     }
-
 }
+
+
