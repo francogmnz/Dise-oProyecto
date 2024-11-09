@@ -29,27 +29,53 @@
             <p:growl id="messages" showDetail="true"/>
 
             <p:dataTable value="#{uiabmVersionLista.datosVersionH}" var="version" styleClass="table-style" rows="10" paginator="true" 
-                         emptyMessage="No hay versiones históricas disponibles.">
+                         emptyMessage="No hay versiones históricas disponibles." id="tablaVersiones">
+
                 <p:column headerText="Número de Versión">
                     <h:outputText value="#{version.nroVersion}" />
                 </p:column>
 
                 <p:column headerText="Fecha Desde">
                     <h:outputText value="#{version.fechaDesdeVersion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
                     </h:outputText>
                 </p:column>
 
                 <p:column headerText="Fecha Hasta">
                     <h:outputText value="#{version.fechaHastaVersion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
                     </h:outputText>
                 </p:column>
 
-                <p:column headerText="Descripción">
+                <p:column headerText="Fecha Baja de la version">
+                    <h:outputText value="#{version.fechaBajaVersion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Descripción de la versión">
                     <h:outputText value="#{version.descripcionVersion}" />
+                </p:column>
+
+                <!-- Botón de Anular en cada fila -->
+                <p:column headerText="Dar de baja version">
+                    <p:commandButton styleClass="btn-circle btn-eliminar" 
+                                     icon="fa fa-trash"
+                                     disabled="#{version.fechaBajaVersion != null}"
+                                     actionListener="#{uiabmVersionLista.anularVersion(version.codTipoTramite, version.nroVersion)}" 
+                                     update="tablaVersiones">
+                        <p:confirm header="Anulación de #{version.nroVersion}" 
+                                   message="¿Está seguro?" 
+                                   icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check"/>
+                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close"/>
+                    </p:confirmDialog>
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton value="Volver" action="uiabmVersionLista.xhtml?faces-redirect=true" icon="pi pi-arrow-left" style="margin-top: 20px;"/>
+            <p:commandButton value="Volver" action="#{uiabmVersionLista.volverPantallaVersion()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
         </h:form>
     </ui:define>
 </ui:composition>

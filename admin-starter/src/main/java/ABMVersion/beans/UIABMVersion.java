@@ -21,6 +21,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import org.omnifaces.util.Messages;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.primefaces.PrimeFaces;
 
 @Named("uiabmVersion")
 @ViewScoped
@@ -196,7 +198,7 @@ public class UIABMVersion implements Serializable {
         this.nodosPosibles = nodosPosibles;
     }
 
-    public UIABMVersion() {
+ public UIABMVersion() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -256,14 +258,14 @@ public class UIABMVersion implements Serializable {
     public void confirmar() throws VersionException {
         // La fecha hasta no puede ser menor que la fecha desde
         if (fechaHastaVersion.before(fechaDesdeVersion)) {
-            JOptionPane.showMessageDialog(null, "La fecha hasta no puede ser menor que la fecha desde.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;  // No continuar si las fechas no son válidas
-        }
+        Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
+                return; 
+                        }
 
         // Verificar que las fechas no sean iguales
         if (fechaDesdeVersion.equals(fechaHastaVersion)) {
-            JOptionPane.showMessageDialog(null, "La fecha desde no puede ser igual a la fecha hasta.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;  // No continuar si las fechas son iguales
+            Messages.create("Error").detail("FechaDesde no puede ser igual a FechaHasta.").error().add();
+                return;
         }
 
         // Crear el DTO
@@ -289,9 +291,9 @@ public class UIABMVersion implements Serializable {
         }
 
         if (listaNodo.size() <= 1) {
-            JOptionPane.showMessageDialog(null, "La version debe de tener mas de un estado para continuar "
-                    + " no tiene estados de destino conectados.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            Messages.create("Error").detail("La version debe tener más de un estado para continuar").error().add();
+                return;
+            
         }
 
         // Validar que los nodos tienen estados de destino conectados
@@ -318,10 +320,18 @@ public class UIABMVersion implements Serializable {
             Gson gson = new Gson();
             cargarJSON = gson.toJson(dto);
             System.out.println(cargarJSON);
-            Messages.create("Guardar").detail(cargarJSON).add();
+            Messages.create("Guardar").detail("Guardado exitoso").add();
+            PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
+            
+            
+            
+            
         } else {
-            JOptionPane.showMessageDialog(null, "Error al guardar los datos en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            Messages.create("Error").detail("Error al guardar los datos").error().add();
         }
     }
+ public void volverPantallaVersion() throws IOException {
+    FacesContext.getCurrentInstance().getExternalContext().redirect("admin/ABMVersion/abmVersionLista.jsf");
+}
 
 }

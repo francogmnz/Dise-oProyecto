@@ -20,6 +20,8 @@
         <h:form id="form" prependId="false">
             <p:panel styleClass="box-primary card">
                 <div class="ui-g ui-fluid">
+                                    <p:commandButton value="Volver" action="#{uiabmVersionLista.volverPantallaVersion()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
+
                     <!-- Número de Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
@@ -66,13 +68,14 @@
 
                     <!-- Botón de Guardar -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
-                        <p:commandButton id="guardarBean2" value="Agregar nueva versión 2" 
+                        <p:commandButton id="guardarBean2" value="Agregar nueva versión" 
                                          action="#{uiabmVersion.confirmar()}" 
                                          icon="fa fa-check"
                                          styleClass="btn-primary"  
                                          update="@form" 
                                          style="visibility: visible"/> 
                     </div>
+
                 </div>
             </p:panel>
         </h:form>

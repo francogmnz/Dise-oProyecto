@@ -197,31 +197,22 @@
 
                         <p:spacer width="5"/>
 
-                        <p:commandButton styleClass="btn-circle btn-eliminar" 
-                                         icon="fa fa-trash" 
-                                         action="#{uiabmVersionLista.anularVersion(version.codTipoTramite, version.nroVersion)}"
-                                         update="grid1" >
-                            <p:confirm header="Anulación de #{version.codTipoTramite}" 
-                                       message="¿Está seguro?" 
-                                       icon="ui-icon-alert"/>
-                        </p:commandButton>
 
 
                         <p:spacer width="5"/>
 
-                        <!-- Botón Historial en forma circular con ícono de historial/papel -->
                         <p:commandButton 
                             styleClass="btn-circle btn-historial" 
-                            icon="fa fa-history" 
+                            icon="fa fa-clock" 
                             action="#{uiabmVersionLista.irMostrarHistoricoVersiones(version.codTipoTramite)}"
                             process="@this" 
                             update="@form" 
                             oncomplete="if (!args.validationFailed) { 
-                            // Opcionalmente puedes mostrar un mensaje de éxito o realizar otra acción
+                            // Mensaje de éxito si la validación es correcta
                             Messages.addGlobalInfo('Redirigiendo al historial de versiones.');
                             }">
                         </p:commandButton>
-
+                   
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
                             <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check"/>
                             <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close"/>

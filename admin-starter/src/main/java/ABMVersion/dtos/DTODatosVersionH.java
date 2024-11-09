@@ -14,9 +14,25 @@ public class DTODatosVersionH {
     
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
+    private Timestamp fechaBajaVersion;
     private int nroVersion;
     private String descripcionVersion;
+    private int codTipoTramite;
 
+    public Timestamp getFechaBajaVersion() {
+        return fechaBajaVersion;
+    }
+
+    public void setFechaBajaVersion(Timestamp fechaBajaVersion) {
+        this.fechaBajaVersion = fechaBajaVersion;
+    }
+    public int getCodTipoTramite() {
+        return codTipoTramite;
+    }
+
+    public void setCodTipoTramite(int codTipoTramite) {
+        this.codTipoTramite = codTipoTramite;
+    }
     public Timestamp getFechaDesdeVersion() {
         return fechaDesdeVersion;
     }

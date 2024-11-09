@@ -5,9 +5,6 @@ import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
-import ABMVersion.dtos.DTOVersionesDeTipo;
-import ABMVersion.dtos.VersionDTO;
-import entidades.TipoTramite;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -18,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
-import utils.DTOCriterio;
-import utils.FachadaPersistencia;
 
 @Named("uiabmVersionLista")
 @ViewScoped
@@ -211,4 +206,10 @@ public class UIABMVersionLista implements Serializable {
         // Redirigir a la página de historial de versiones
 //        return versionHistoricoGrillaUI;
     }
+       public void volverPantallaVersion(){
+        BeansUtils.redirectToPreviousPage();
+    }
+       
+       
+       
 }
