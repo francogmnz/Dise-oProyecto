@@ -60,7 +60,7 @@
             }
             .dropzone {
                 overflow-y: auto;
-                flex-grow: 1; 
+                flex-grow: 1;
                 border: 2px dashed lightgray;
                 background-color: #f9f9f9;
                 transition: background-color 0.3s, border-color 0.3s;
@@ -96,7 +96,7 @@
                 justify-content: center;
             }
         </style>
-        
+
         <!-- Agregamos el JSON como un atributo data en el formulario -->
         <h:form id="agendaForm">
             <div style="padding: 10px; background-color: #e0e0e0; margin-bottom: 20px;">
@@ -133,30 +133,32 @@
                              ondragleave="dragLeave(event)">
                             <h3>Semana #{semana.nroSemana}</h3>
                             <ul>
- 
-                            <!-- Consultores asignados en esta semana -->
-                            <ui:repeat value="#{uiABMAgendaBean.consultoresPorSemana[semana.nroSemana]}" var="consultorEnSemana">
-                            <li id="consultor-#{consultorEnSemana.legajoConsultor}-asignado" draggable="true" ondragstart="dragStart(event)">
-                                    #{consultorEnSemana.nombreConsultor}
-                                <button type="button" class="remove-btn" 
-                                    onclick="removerConsultorDeSemana('#{semana.nroSemana}', '#{consultorEnSemana.legajoConsultor}')">
-                                    x
-                                </button>
 
-                                </li>
-                            </ui:repeat>
+                                <!-- Consultores asignados en esta semana -->
+                                <ui:repeat value="#{uiABMAgendaBean.consultoresPorSemana[semana.nroSemana]}" var="consultorEnSemana">
+                                    <li id="consultor-#{consultorEnSemana.legajoConsultor}-asignado" draggable="true" ondragstart="dragStart(event)">
+                                        #{consultorEnSemana.nombreConsultor}
+                                        <button type="button" class="remove-btn" 
+                                                onclick="removerConsultorDeSemana('#{semana.nroSemana}', '#{consultorEnSemana.legajoConsultor}')">
+                                            x
+                                        </button>
+
+                                    </li>
+                                </ui:repeat>
 
                             </ul>
                         </div>
                     </ui:repeat>
                 </div>
             </div>
-            
-                    <script src="#{request.contextPath}/resources/js/agenda.js"></script>
 
-        <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" onclick="return prepareAssignmentsData();">
-            <f:ajax execute="@form" render="@form"/>
-        </h:commandButton>
+            <script src="#{request.contextPath}/resources/js/agenda.js"></script>
+
+            <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" 
+                             onclick="prepareAssignmentsData(); return true;">
+                <f:ajax execute="@form" render="@form" onevent="handleFormSubmission" />
+            </h:commandButton>
+            
         </h:form>
     </ui:define>
 </ui:composition>
