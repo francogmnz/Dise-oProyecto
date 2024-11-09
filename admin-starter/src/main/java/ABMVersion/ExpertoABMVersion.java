@@ -181,7 +181,7 @@ public class ExpertoABMVersion {
         nueva.setNroVersion(nuevoNumeroVersion);
         // Configurar los demás atributos de la versión
         nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
-        
+
 // Obtener la fecha actual
         nueva.setFechaDesdeVersion(new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()));
         nueva.setFechaHastaVersion(new Timestamp(dtoDatosVersion.getFechaHastaVersion().getTime()));
@@ -316,7 +316,7 @@ public class ExpertoABMVersion {
 // Criterio para filtrar versiones activas (sin fecha de baja)
             DTOCriterio fechaVersion = new DTOCriterio();
             fechaVersion.setAtributo("fechaBajaVersion");
-            fechaVersion.setOperacion("is");
+            fechaVersion.setOperacion("=");
             fechaVersion.setValor(null);  // Solo versiones activas
             criterioList.add(fechaVersion);
 
@@ -414,7 +414,7 @@ public class ExpertoABMVersion {
 // Criterio para filtrar versiones activas (sin fecha de baja)
         DTOCriterio fechaVersion = new DTOCriterio();
         fechaVersion.setAtributo("fechaBajaVersion");
-        fechaVersion.setOperacion("is");
+        fechaVersion.setOperacion("=");
         fechaVersion.setValor(null);  // Solo versiones activas
         criterioList.add(fechaVersion);
 
@@ -429,8 +429,8 @@ public class ExpertoABMVersion {
 
             dtoVersionM.setNroVersion(versionEncontrada.getNroVersion());
             dtoVersionM.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
-            dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaDesdeVersion());
-            dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
+            dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaHastaVersion());
+//            dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
             dtoVersionM.setDibujo(versionEncontrada.getDibujo());
         }
 
@@ -454,7 +454,7 @@ public class ExpertoABMVersion {
         return dtoVersionM;
     }
 
-   public void anularVersion(int codTipoTramite, int nroVersion) throws VersionException {
+    public void anularVersion(int codTipoTramite, int nroVersion) throws VersionException {
         // Iniciar transacción
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
@@ -462,8 +462,6 @@ public class ExpertoABMVersion {
         List<DTOCriterio> lCriterio = new ArrayList<>();
 
         DTOCriterio criterioTipoTramite = new DTOCriterio();
-
-     
 
         DTOCriterio criterioFechaBaja = new DTOCriterio();
         criterioFechaBaja.setAtributo("fechaBajaVersion");
@@ -486,7 +484,6 @@ public class ExpertoABMVersion {
 
         // Buscar última versión válida
         lCriterio.clear();
-        
 
         DTOCriterio criterioFechaBajaUltima = new DTOCriterio();
         criterioFechaBajaUltima.setAtributo("fechaBajaVersion");
@@ -510,7 +507,17 @@ public class ExpertoABMVersion {
             throw new VersionException("Existen versiones futuras. Solo se puede anular la última futura.");
         }
 
-// Anular la versión estableciendo la fecha de baja a la fecha y hora actuales
+        //Verificacion para que no anule si es activa
+        Timestamp fechaActual = new Timestamp(System.currentTimeMillis());
+
+        if (ultVersion.getFechaDesdeVersion().before(fechaActual)
+                && (ultVersion.getFechaHastaVersion() == null || ultVersion.getFechaHastaVersion().after(fechaActual))) {
+            throw new VersionException("No se puede anular la versión porque es una versión vigente");
+
+        }
+       
+        
+        // Anular la versión estableciendo la fecha de baja a la fecha y hora actuales
         ultVersion.setFechaBajaVersion(new Timestamp(System.currentTimeMillis()));
         FachadaPersistencia.getInstance().guardar(ultVersion);
 
@@ -537,6 +544,7 @@ public class ExpertoABMVersion {
         // Finalizar transacción
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
+
     public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) throws VersionException {
 
         // Inicia la transacción
@@ -592,6 +600,5 @@ public class ExpertoABMVersion {
         // Devuelve el DTO con las versiones históricas
         return dtoVersionH;
     }
-
 
 }

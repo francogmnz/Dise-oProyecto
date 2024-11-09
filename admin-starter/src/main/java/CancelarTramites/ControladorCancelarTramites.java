@@ -1,14 +1,17 @@
 package CancelarTramites;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import CancelarTramites.dtos.TramiteDTO;
+import java.util.Date;
+import java.util.List;
 
-/**
- *
- * @author leolu
- */
+
 public class ControladorCancelarTramites {
+    
+   
+    private ExpertoCancelarTramites expertoCancelarTramites = new ExpertoCancelarTramites();
+    
+    public List<TramiteDTO> cancelarTramites() {
+        return expertoCancelarTramites.cancelarTramites();
+    }
     
 }

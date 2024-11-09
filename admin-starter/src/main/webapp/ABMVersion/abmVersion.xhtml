@@ -44,25 +44,27 @@
                         </div>
                     </div>
 
-                    <!-- Fecha Desde de la Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="fechaDesdeVersion" value="Fecha Desde de la Versión:" />
+                            <p:outputLabel for="fechaDesde" value="Fecha Desde:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:calendar id="fechaDesdeVersion" value="#{uiabmVersion.fechaDesdeVersion}" required="true" />
-                            <p:message id="fechaDesdeVersionMSG" for="fechaDesdeVersion"/>
+                            <p:datePicker id="fechaDesde" value="#{uiabmVersion.fechaDesdeVersion}" showTime="true" onkeydown="return false;" 
+                                          onpaste="return false;"
+                                          oncopy="return false;"
+                                          oncut="return false;"/>
                         </div>
                     </div>
 
-                    <!-- Fecha Hasta de la Versión -->
                     <div class="ui-sm-12 ui-g-6 ui-g-nopad">
                         <div class="ui-sm-12 ui-g-11">
-                            <p:outputLabel for="fechaHastaVersion" value="Fecha Hasta de la Versión:" />
+                            <p:outputLabel for="fechaHasta" value="Fecha Hasta:" />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:calendar id="fechaHastaVersion" value="#{uiabmVersion.fechaHastaVersion}" required="true" />
-                            <p:message id="fechaHastaVersionMSG" for="fechaHastaVersion"/>
+                            <p:datePicker id="fechaHasta" value="#{uiabmVersion.fechaHastaVersion}" showTime="true" onkeydown="return false;" 
+                                          onpaste="return false;"
+                                          oncopy="return false;"
+                                          oncut="return false;"/>
                         </div>
                     </div>
 

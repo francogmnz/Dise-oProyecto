@@ -17,10 +17,11 @@ public class TramiteDTO {
     
     private int nroTramite;
     private int precioTramite;
-    private Timestamp fechaFinTramite;
+    private Timestamp fechaAnulacionTramite;
     private Timestamp fechaInicioTramite;
     private Consultor consultor;
     private TipoTramite tipoTramite;
+    private int plazoEntregaDoc;
 
     public int getNroTramite() {
         return nroTramite;
@@ -30,8 +31,8 @@ public class TramiteDTO {
         return precioTramite;
     }
 
-    public Timestamp getFechaFinTramite() {
-        return fechaFinTramite;
+    public Timestamp getFechaAnulacionTramite() {
+        return fechaAnulacionTramite;
     }
 
     public Timestamp getFechaInicioTramite() {
@@ -54,12 +55,12 @@ public class TramiteDTO {
         this.precioTramite = precioTramite;
     }
 
-    public void setFechaFinTramite(Timestamp fechaFinTramite) {
-        this.fechaFinTramite = fechaFinTramite;
-    }
-
     public void setFechaInicioTramite(Timestamp fechaInicioTramite) {
         this.fechaInicioTramite = fechaInicioTramite;
+    }
+
+    public void setFechaAnulacionTramite(Timestamp fechaAnulacionTramite) {
+        this.fechaAnulacionTramite = fechaAnulacionTramite;
     }
 
     public void setConsultor(Consultor consultor) {
@@ -68,6 +69,14 @@ public class TramiteDTO {
 
     public void setTipoTramite(TipoTramite tipoTramite) {
         this.tipoTramite = tipoTramite;
+    }
+    
+    public int getPlazoEntregaDoc(){
+        return plazoEntregaDoc;
+    }
+    
+    public void setPlazoEntregaDoc(int dias){
+        this.plazoEntregaDoc = dias;
     }
     
     
