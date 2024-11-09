@@ -4,10 +4,7 @@
                 template="#{layoutMB.template}"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:define name="metadata">
-        <!-- Incluimos solo el archivo JavaScript aquí -->
-        <script src="#{request.contextPath}/resources/js/agenda.js"></script>
-    </ui:define>
+
 
     <ui:define name="title">
         Agenda de Consultores
@@ -102,6 +99,15 @@
         
         <!-- Agregamos el JSON como un atributo data en el formulario -->
         <h:form id="agendaForm">
+            <div style="padding: 10px; background-color: #e0e0e0; margin-bottom: 20px;">
+                <h2>Semana Actual: #{uiABMAgendaBean.semanaActual}</h2>
+                <h:inputHidden id="semanaActual" value="#{uiABMAgendaBean.semanaActual}" />
+
+                <h2>Agenda de Consultores - #{uiABMAgendaBean.anio} / #{uiABMAgendaBean.mes}</h2>
+                <!-- Campo oculto para el año -->
+                <h:inputHidden id="anioAgenda" value="#{uiABMAgendaBean.anio}" />
+                <h:inputHidden id="anioActual" value="#{uiABMAgendaBean.anioActual}" />
+            </div>
             <input type="hidden" id="consultoresPorSemanaJson" value="#{uiABMAgendaBean.consultoresPorSemanaJson}" />
 
             <div style="display: flex; flex-direction: row; height: 100%;">
@@ -146,9 +152,11 @@
                 </div>
             </div>
             
-            <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" onclick="prepareAssignmentsData();">
-               <f:ajax execute="@form" render="@form"/>
-           </h:commandButton>
+                    <script src="#{request.contextPath}/resources/js/agenda.js"></script>
+
+        <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" onclick="return prepareAssignmentsData();">
+            <f:ajax execute="@form" render="@form"/>
+        </h:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>

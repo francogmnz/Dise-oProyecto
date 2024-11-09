@@ -10,8 +10,6 @@ import ABMAgenda.dtos.DTODatosInicialesAgendaIn;
 import entidades.Consultor;
 import ABMAgenda.exceptions.AgendaException;
 import entidades.AgendaConsultor;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
 
@@ -137,6 +135,30 @@ public DTODatosInicialesAgenda obtenerAgendaConsultor(int mes, int anio) throws 
 }
 
 
+    public int calcularSemanaActual() {
+    // Obtener la fecha de hoy
+    LocalDate hoy = LocalDate.now();
+    
+    // Obtener el lunes de la semana actual (o el lunes más cercano)
+    LocalDate lunesActual = hoy.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+    // Obtener el número de semana en base a WeekFields
+    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+    int semanaActual = lunesActual.get(weekFields.weekOfYear());
+    
+    return semanaActual;
+}
+
+    public int calcularAnioActual() {
+    // Obtener la fecha de hoy
+    LocalDate hoy = LocalDate.now();
+    
+    // Extraer el año de la fecha actual
+    int anioActual = hoy.getYear();
+    
+    return anioActual;
+}
+
     public List<DTOConsultorListaIzq> buscarConsultoresActivos() throws AgendaException {
 
     // Crear el criterio para buscar consultores activos
@@ -260,7 +282,7 @@ public DTODatosInicialesAgenda obtenerAgendaConsultor(int mes, int anio) throws 
         int anioActual = fechaActual.getYear();
 
         // Validar si la agenda pertenece a una semana pasada o la semana actual
-        if (anio < anioActual || (anio == anioActual && semana <= semanaActual)) {
+        if (anio < anioActual || (anio == anioActual && semana < semanaActual)) {
             throw new AgendaException("No se pueden modificar agendas de semanas pasadas o la semana actual.");
         }
     }

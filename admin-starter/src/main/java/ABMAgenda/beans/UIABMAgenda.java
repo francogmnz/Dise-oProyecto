@@ -27,6 +27,8 @@ import java.util.Objects;
 public class UIABMAgenda implements Serializable {
     private int mes;
     private int anio;
+    private int semanaActual;
+    private int anioActual;
     private ControladorABMAgenda cont = new ControladorABMAgenda();
     private List<SemanaIU> semanasLi = new ArrayList<>();
     private List<DTOConsultorListaIzq> consultores = new ArrayList<>(); 
@@ -56,11 +58,29 @@ public class UIABMAgenda implements Serializable {
         this.semanasLi = semanasLi;
     }
     
+    public int getSemanaActual() {
+        return semanaActual;
+    }
+    public void setSemanaActual(int semana) {
+        this.semanaActual = semana;
+    }
+
+    public int getAnioActual() {
+        return anioActual;
+    }
+
+    public void setAnioActual(int anioActual) {
+        this.anioActual = anioActual;
+    }
+    
+    
 
     public UIABMAgenda() throws AgendaException, Exception {
         consultoresPorSemana.clear();
         // Obtener mes y año desde los parámetros de la URL
         cargarConsultoresActivos();
+        this.semanaActual = cont.calcularSemanaActual();
+        this.anioActual = cont.calcularAnioActual();
         
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 

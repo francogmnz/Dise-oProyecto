@@ -1,51 +1,90 @@
-// Obtener el JSON de consultoresPorSemana desde el campo input oculto y parsearlo
-const consultoresPorSemanaInput = document.getElementById("consultoresPorSemanaJson");
-const consultoresPorSemana = consultoresPorSemanaInput ? JSON.parse(consultoresPorSemanaInput.value) : {};
-const asignaciones = {};
+    // Obtener el JSON de consultoresPorSemana desde el campo input oculto y parsearlo
+    const consultoresPorSemanaInput = document.getElementById("consultoresPorSemanaJson");
+    const consultoresPorSemana = consultoresPorSemanaInput ? JSON.parse(consultoresPorSemanaInput.value) : {};
+    const asignaciones = {};
+    let semanaActual = 0;
+    let anioActual = 0;
+    let anioAgenda = 0;
 
-// Inicializar asignaciones usando los datos de consultoresPorSemana desde el backend
-Object.keys(consultoresPorSemana).forEach(semanaId => {
-    asignaciones[semanaId] = consultoresPorSemana[semanaId].map(consultor => consultor.legajoConsultor.toString());
+document.addEventListener("DOMContentLoaded", function() {
+    // Seleccionar el input oculto cuyo id termina en 'semanaActual' y obtener su valor
+    const semanaActualElement = document.querySelector("input[id$='semanaActual']");
+    semanaActual = semanaActualElement ? parseInt(semanaActualElement.value) : 0;
+    console.log("Semana actual:", semanaActual);
+
+    // Obtener el año actual desde el campo oculto cuyo id termina en 'anioActual' y su valor
+    const anioActualElement = document.querySelector("input[id$='anioActual']");
+    anioActual = anioActualElement ? parseInt(anioActualElement.value) : 0;
+    console.log("Año actual:", anioActual);
+
+    // Obtener el año de la agenda desde el campo oculto cuyo id termina en 'anioAgenda' y su valor
+    const anioAgendaElement = document.querySelector("input[id$='anioAgenda']");
+    anioAgenda = anioAgendaElement ? parseInt(anioAgendaElement.value) : 0;
+    console.log("Año de la agenda:", anioAgenda);
 });
-console.log("Asignaciones inicializadas con consultores desde BD:", asignaciones);
 
-// Función dragStart
-function dragStart(event) {
-    event.dataTransfer.setData('text/plain', event.target.id);
-    console.log('Dragging:', event.target.id);
-}
 
-// Función allowDrop
-function allowDrop(event) {
-    event.preventDefault();
-    const dropzone = event.target.closest('.dropzone');
-    if (dropzone) {
-        dropzone.classList.add('over');
-        console.log('Allow drop on:', dropzone.id);
+
+
+    // Inicializar asignaciones usando los datos de consultoresPorSemana desde el backend
+    Object.keys(consultoresPorSemana).forEach(semanaId => {
+        asignaciones[semanaId] = consultoresPorSemana[semanaId].map(consultor => consultor.legajoConsultor.toString());
+    });
+    console.log("Asignaciones inicializadas con consultores desde BD:", asignaciones);
+
+
+function esSemanaFutura(semana) {
+    if (anioAgenda < anioActual) {
+        return false; // No se puede modificar años anteriores
     }
+    if (anioAgenda === anioActual) {
+        return semana >= semanaActual; // Permitir semanas actuales o futuras
+    }
+    return true; // Permitir años futuros
 }
 
-// Función dragLeave
-function dragLeave(event) {
-    const dropzone = event.target.closest('.dropzone');
-    if (dropzone) {
-        dropzone.classList.remove('over');
-        console.log('Drag left dropzone:', dropzone.id);
+
+    // Función dragStart
+    function dragStart(event) {
+        event.dataTransfer.setData('text/plain', event.target.id);
+        console.log('Dragging:', event.target.id);
     }
-}
+
+
+
+    // Función allowDrop
+    function allowDrop(event) {
+        event.preventDefault();
+        const dropzone = event.target.closest('.dropzone');
+        if (dropzone) {
+            dropzone.classList.add('over');
+            console.log('Allow drop on:', dropzone.id);
+        }
+    }
+
+    // Función dragLeave
+    function dragLeave(event) {
+        const dropzone = event.target.closest('.dropzone');
+        if (dropzone) {
+            dropzone.classList.remove('over');
+            console.log('Drag left dropzone:', dropzone.id);
+        }
+    }
 
 function prepareAssignmentsData() {
-    // Eliminar semanas vacías antes de preparar el JSON
+    let preventSave = false;
+
+    // Eliminar semanas pasadas antes de preparar los datos para enviar
     Object.keys(asignaciones).forEach(semanaId => {
-        if (asignaciones[semanaId].length === 0) {
+        const semanaNumber = parseInt(semanaId, 10);
+        if (!esSemanaFutura(semanaNumber)) {
             delete asignaciones[semanaId];
-            console.log(`Semana ${semanaId} eliminada de asignaciones porque no tiene consultores.`);
+            console.log(`Semana ${semanaId} eliminada de asignaciones porque es pasada.`);
         }
     });
 
+    // Proceder con la preparación de datos si todas las semanas son futuras
     const jsonAssignments = JSON.stringify(asignaciones);
-    console.log("Assignments JSON:", jsonAssignments);
-
     let inputHidden = document.getElementById('assignmentsData');
     if (!inputHidden) {
         inputHidden = document.createElement('input');
@@ -54,122 +93,134 @@ function prepareAssignmentsData() {
         inputHidden.id = 'assignmentsData';
         document.getElementById('agendaForm').appendChild(inputHidden);
     }
-
     inputHidden.value = jsonAssignments;
+
+    return true; // Permite el envío si no hay restricciones
 }
 
-function sendAssignmentsToServer(data) {
-    if (data.status === 'begin') {
-        // Eliminar semanas vacías antes de enviar al servidor
+
+
+
+    function sendAssignmentsToServer(data) {
+        if (data.status === 'begin') {
+        // Eliminar semanas pasadas antes de preparar los datos para enviar
         Object.keys(asignaciones).forEach(semanaId => {
-            if (asignaciones[semanaId].length === 0) {
+            const semanaNumber = parseInt(semanaId, 10);
+            if (!esSemanaFutura(semanaNumber)) {
                 delete asignaciones[semanaId];
-                console.log(`Semana ${semanaId} eliminada de asignaciones porque no tiene consultores.`);
-            }
-        });
+                console.log(`Semana ${semanaId} eliminada de asignaciones porque es pasada.`);
+              }
+            });
 
-        const jsonAssignments = JSON.stringify(asignaciones);
-        const inputHidden = document.createElement('input');
-        inputHidden.type = 'hidden';
-        inputHidden.name = 'assignmentsData';
-        inputHidden.value = jsonAssignments;
-        document.getElementById('agendaForm').appendChild(inputHidden);
-    }
-}
-
-// Función drop para agregar consultores a semanas específicas
-function drop(event) {
-    event.preventDefault();
-    const consultorId = event.dataTransfer.getData('text/plain');
-    const consultorElement = document.getElementById(consultorId);
-    const dropzone = event.target.closest('.dropzone');
-
-    if (!dropzone) {
-        console.log('No dropzone found');
-        return;
+            const jsonAssignments = JSON.stringify(asignaciones);
+            const inputHidden = document.createElement('input');
+            inputHidden.type = 'hidden';
+            inputHidden.name = 'assignmentsData';
+            inputHidden.value = jsonAssignments;
+            document.getElementById('agendaForm').appendChild(inputHidden);
+        }
     }
 
-    dropzone.classList.remove('over');
-    console.log('Dropped on:', dropzone.id);
+    function drop(event) {
+        event.preventDefault();
+        const consultorId = event.dataTransfer.getData('text/plain');
+        const consultorElement = document.getElementById(consultorId);
+        const dropzone = event.target.closest('.dropzone');
 
-    if (consultorElement) {
-        const semanaId = dropzone.getAttribute('data-semana');
-        const consultoresEnSemana = dropzone.querySelectorAll('li');
-        const consultorYaAgregado = Array.from(consultoresEnSemana).some(consultor =>
-            consultor.id === consultorId
-        );
-
-        if (consultorYaAgregado) {
-            alert('Este consultor ya ha sido agregado a esta semana.');
-            console.log('Consultor ya agregado:', consultorId);
+        if (!dropzone) {
+            console.log('No dropzone found');
             return;
         }
 
-        const consultorStringId = consultorId.replace("consultor-", "");
-        const clone = consultorElement.cloneNode(true);
-        clone.id = `consultor-${consultorStringId}-asignado`;
-        clone.draggable = true;
-        clone.setAttribute('data-semana', semanaId);
-        clone.ondragstart = dragStart;
+        const semanaId = dropzone.getAttribute('data-semana');
+        const semanaNumber = parseInt(semanaId);
 
-        const removeBtn = document.createElement('button');
-        removeBtn.innerText = 'x';
-        removeBtn.classList.add('remove-btn');
-        removeBtn.addEventListener('click', () => {
-            removerConsultorDeSemana(semanaId, consultorStringId);
-        });
-
-        clone.appendChild(removeBtn);
-        dropzone.querySelector('ul').appendChild(clone);
-
-        if (!asignaciones[semanaId]) {
-            asignaciones[semanaId] = [];
+        // Validar si la semana es futura antes de proceder
+        if (!esSemanaFutura(semanaNumber)) {
+            alert('No se pueden agregar consultores a semanas pasadas.');
+            return;
         }
-        asignaciones[semanaId].push(consultorStringId);
-        console.log('Consultor added to week:', semanaId);
-        console.log('Current assignments:', asignaciones);
-        console.log(JSON.stringify(asignaciones, null, 2));
-    } else {
-        console.log('Consultor element not found:', consultorId);
-    }
-}
 
-// Función para eliminar consultor de la semana en DOM y en asignaciones
-function removerConsultorDeSemana(semanaId, consultorId) {
-    console.log('Intentando eliminar consultor:', consultorId, 'de la semana:', semanaId);
+        // Verificar si el consultor ya está asignado en esta semana en el objeto 'asignaciones'
+        const consultorStringId = consultorId.replace("consultor-", "");
+        if (asignaciones[semanaId] && asignaciones[semanaId].includes(consultorStringId)) {
+            alert('Este consultor ya ha sido agregado a esta semana.');
+            console.log('Consultor ya agregado desde BD o previamente asignado:', consultorStringId);
+            return;
+        }
 
-    const semanaElement = document.querySelector(`.dropzone[data-semana="${semanaId}"]`);
-
-    if (semanaElement) {
-        const consultorElement = semanaElement.querySelector(`#consultor-${consultorId}-asignado`);
+        // Proceder con el drop si la semana es futura y no hay duplicados
+        dropzone.classList.remove('over');
+        console.log('Dropped on:', dropzone.id);
 
         if (consultorElement) {
-            consultorElement.remove();
-            console.log(`Consultor con ID ${consultorId} eliminado del DOM en la semana ${semanaId}`);
-        }
+            const clone = consultorElement.cloneNode(true);
+            clone.id = `consultor-${consultorStringId}-asignado`;
+            clone.draggable = true;
+            clone.setAttribute('data-semana', semanaId);
+            clone.ondragstart = dragStart;
 
-        if (asignaciones[semanaId]) {
-            // Filtrar sin convertir a número
-            asignaciones[semanaId] = asignaciones[semanaId].filter(id => id !== consultorId);
-            console.log('Consultor removido de las asignaciones:', consultorId);
+            const removeBtn = document.createElement('button');
+            removeBtn.innerText = 'x';
+            removeBtn.classList.add('remove-btn');
+            removeBtn.addEventListener('click', () => {
+                removerConsultorDeSemana(semanaId, consultorStringId);
+            });
 
-           // Si no quedan consultores en la semana, elimina la semana de `asignaciones`
-           if (asignaciones[semanaId].length === 0) {
-               delete asignaciones[semanaId];
-                console.log(`Semana ${semanaId} eliminada de asignaciones porque no tiene consultores.`);
+            clone.appendChild(removeBtn);
+            dropzone.querySelector('ul').appendChild(clone);
+
+            // Inicializar la semana en asignaciones si aún no existe y agregar el consultor
+            if (!asignaciones[semanaId]) {
+                asignaciones[semanaId] = [];
             }
+            asignaciones[semanaId].push(consultorStringId);
+            console.log('Consultor added to week:', semanaId);
+            console.log('Current assignments:', asignaciones);
+            console.log(JSON.stringify(asignaciones, null, 2));
+        } else {
+            console.log('Consultor element not found:', consultorId);
         }
     }
 
-    // Mostrar el estado actual de `asignaciones` después de cada eliminación
-    console.log('Estado actual de asignaciones:', JSON.stringify(asignaciones, null, 2));
-}
 
-// Exponer funciones al ámbito global
-window.prepareAssignmentsData = prepareAssignmentsData;
-window.sendAssignmentsToServer = sendAssignmentsToServer;
-window.dragStart = dragStart;
-window.allowDrop = allowDrop;
-window.dragLeave = dragLeave;
-window.drop = drop;
-window.removerConsultorDeSemana = removerConsultorDeSemana;
+
+    // Función para eliminar consultor de la semana en DOM y en asignaciones
+    function removerConsultorDeSemana(semanaId, consultorId) {
+        console.log('Intentando eliminar consultor:', consultorId, 'de la semana:', semanaId);
+
+        const semanaElement = document.querySelector(`.dropzone[data-semana="${semanaId}"]`);
+
+        if (semanaElement) {
+            const consultorElement = semanaElement.querySelector(`#consultor-${consultorId}-asignado`);
+
+            if (consultorElement) {
+                consultorElement.remove();
+                console.log(`Consultor con ID ${consultorId} eliminado del DOM en la semana ${semanaId}`);
+            }
+
+            if (asignaciones[semanaId]) {
+                // Filtrar sin convertir a número
+                asignaciones[semanaId] = asignaciones[semanaId].filter(id => id !== consultorId);
+                console.log('Consultor removido de las asignaciones:', consultorId);
+
+//               // Si no quedan consultores en la semana, elimina la semana de `asignaciones`
+//               if (asignaciones[semanaId].length === 0) {
+//                   delete asignaciones[semanaId];
+//                    console.log(`Semana ${semanaId} eliminada de asignaciones porque no tiene consultores.`);
+//                }
+            }
+        }
+
+        // Mostrar el estado actual de `asignaciones` después de cada eliminación
+        console.log('Estado actual de asignaciones:', JSON.stringify(asignaciones, null, 2));
+    }
+
+    // Exponer funciones al ámbito global
+    window.prepareAssignmentsData = prepareAssignmentsData;
+    window.sendAssignmentsToServer = sendAssignmentsToServer;
+    window.dragStart = dragStart;
+    window.allowDrop = allowDrop;
+    window.dragLeave = dragLeave;
+    window.drop = drop;
+    window.removerConsultorDeSemana = removerConsultorDeSemana;

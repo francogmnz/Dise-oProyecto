@@ -43,4 +43,11 @@ public class ControladorABMAgenda {
             throw new AgendaException("Ocurrió un error al persistir los datos iniciales de la agenda.");
         }
     }
+
+    public int calcularSemanaActual() {
+        return expertoABMAgenda.calcularSemanaActual();
+    }
+    public int calcularAnioActual() {
+        return expertoABMAgenda.calcularAnioActual();
+    }
 }
