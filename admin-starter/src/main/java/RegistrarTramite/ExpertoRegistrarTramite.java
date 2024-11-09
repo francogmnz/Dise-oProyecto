@@ -321,28 +321,26 @@ public class ExpertoRegistrarTramite {
             if (clienteEncontrado == null && tipoTramiteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente && TipoTramite no encontrado/s");
             }
-            
+
             List<DTOCriterio> clienteTT = new ArrayList<>();
             DTOCriterio tramiteCliente = new DTOCriterio();
             tramiteCliente.setAtributo("cliente");
             tramiteCliente.setOperacion("=");
             tramiteCliente.setValor(clienteEncontrado);
-            
+            clienteTT.add(tramiteCliente);
+
+            // Obtenemos los trámites asociados al cliente encontrado
             List tramitesCliente = FachadaPersistencia.getInstance().buscar("Tramite", clienteTT);
-            for(Object tC:tramitesCliente){
-                int tc = 0;
+
+            for (Object tC : tramitesCliente) {
                 Tramite t = (Tramite) tC;
-                if(t.getTipoTramite().getNombreTipoTramite() == tipoTramiteEncontrado.getNombreTipoTramite() 
-                        && t.getFechaFinTramite() == null){
-                    tc++;
-                }if(t.getTipoTramite().getNombreTipoTramite() == tipoTramiteEncontrado.getNombreTipoTramite() 
-                        && t.getFechaAnulacionTramite() == null){
-                    tc++;
+                // Validamos si existe un trámite en curso del mismo tipo sin fecha de fin o anulación
+                boolean mismoTipoTramite = t.getTipoTramite().getNombreTipoTramite().equals(tipoTramiteEncontrado.getNombreTipoTramite());
+                boolean tramiteEnCurso = t.getFechaFinTramite() == null && t.getFechaAnulacionTramite() == null;
+
+                if (mismoTipoTramite && tramiteEnCurso) {
+                    throw new RegistrarTramiteException("El Cliente tiene un mismo Tipo Trámite en curso");
                 }
-                if(tc > 0){
-                    throw new RegistrarTramiteException("El Cliente ya tiene ese TipoTramite en Curso");
-                }
-                
             }
 
             if (tipoTramiteEncontrado == null) {
