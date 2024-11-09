@@ -114,7 +114,7 @@
     
                 
             <p:column headerText="Documentación Asociada">
-                <p:dataList value="#{tipoTramite.documentaciones}" var="doc" itemType="unordered">
+                <p:dataList value="#{tipoTramite.documentaciones}" var="doc" itemType="unordered" emptyMessage="Sin documentaciones asociadas">
                     <p:outputLabel value="#{doc.nombreDocumentacion}" />
                 </p:dataList>
             </p:column>

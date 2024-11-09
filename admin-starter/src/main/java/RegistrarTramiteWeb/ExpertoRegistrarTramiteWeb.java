@@ -276,26 +276,6 @@ public class ExpertoRegistrarTramiteWeb {
         }
         TipoTramite tipoTramiteRelacionado = (TipoTramite) tipoTramiteList.get(0);
 
-        List<DTOCriterio> clienteTT = new ArrayList<>();
-        DTOCriterio tramiteCliente = new DTOCriterio();
-        tramiteCliente.setAtributo("cliente");
-        tramiteCliente.setOperacion("=");
-        tramiteCliente.setValor(cliente);
-        clienteTT.add(tramiteCliente);
-
-        // Obtenemos los trámites asociados al cliente encontrado
-        List tramitesCliente = FachadaPersistencia.getInstance().buscar("Tramite", clienteTT);
-
-        for (Object tC : tramitesCliente) {
-            Tramite t = (Tramite) tC;
-            // Validamos si existe un trámite en curso del mismo tipo sin fecha de fin o anulación
-            boolean mismoTipoTramite = t.getTipoTramite().getNombreTipoTramite().equals(tipoTramiteRelacionado.getNombreTipoTramite());
-            boolean tramiteEnCurso = t.getFechaFinTramite() == null && t.getFechaAnulacionTramite() == null;
-
-            if (mismoTipoTramite && tramiteEnCurso) {
-                throw new RegistrarTramiteWebException("El Cliente tiene un mismo Tipo Trámite en curso");
-            }
-        }
         List<DTOCriterio> criterioEstadoTramiteList = new ArrayList<>();
         DTOCriterio criterioNombreEstadoTramite = new DTOCriterio();
 
@@ -453,6 +433,29 @@ public class ExpertoRegistrarTramiteWeb {
         if (!precioEncontrado) {
             throw new RegistrarTramiteWebException("El tipo de trámite seleccionado no tiene un precio asignado en la lista de precios activa.");
         }
+        
+        List<DTOCriterio> clienteTT = new ArrayList<>();
+        DTOCriterio tramiteCliente = new DTOCriterio();
+        tramiteCliente.setAtributo("cliente");
+        tramiteCliente.setOperacion("=");
+        tramiteCliente.setValor(cliente);
+        
+        clienteTT.add(tramiteCliente);
+
+        
+        List<Object> tramitesCliente = FachadaPersistencia.getInstance().buscar("Tramite", clienteTT);
+
+        for (Object tC : tramitesCliente) {
+            Tramite t = (Tramite) tC;
+        
+            boolean mismoTipoTramite = t.getTipoTramite().getNombreTipoTramite().equals(tipoTramiteRelacionado.getNombreTipoTramite());
+            boolean tramiteEnCurso = t.getFechaFinTramite() == null && t.getFechaAnulacionTramite() == null;
+
+            if (mismoTipoTramite && tramiteEnCurso) {
+                throw new RegistrarTramiteWebException("El Cliente tiene un mismo Tipo Trámite en curso");
+            }
+        }
+                
 
         DTOResumen dtoResumen = new DTOResumen();
 
