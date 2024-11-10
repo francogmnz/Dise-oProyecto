@@ -197,6 +197,7 @@ public class ExpertoRegistrarTramite {
             dtoTramite.setDni(tramite.getCliente().getDniCliente());
             dtoTramite.setCodTipoTramite(tramite.getTipoTramite().getCodTipoTramite());
             dtoTramite.setNombreEstado(tramite.getEstadoTramite().getNombreEstadoTramite());
+            dtoTramite.setNombreApellidoCliente(tramite.getCliente().getNombreCliente() + " " + tramite.getCliente().getApellidoCliente());
 
             //
             dtoTramite.setFechaInicioTramite(tramite.getFechaInicioTramite());

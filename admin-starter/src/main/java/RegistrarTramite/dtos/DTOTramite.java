@@ -14,6 +14,7 @@ public class DTOTramite {
     private Timestamp fechaAnulacion;
     private Timestamp fechaPresentacionTotalDocumentacion;
     private Timestamp fechaInicioTramite;
+    private String nombreApellidoCliente;
     private Timestamp fechaFinTramite;
     
     private EstadoTramite estadoTramite;
@@ -102,7 +103,14 @@ public class DTOTramite {
         this.fechaInicioTramite = fechaInicioTramite;
     }
 
-    
+    public String getNombreApellidoCliente() {
+        return nombreApellidoCliente;
+    }
+
+    public void setNombreApellidoCliente(String nombreApellidoCliente) {
+        this.nombreApellidoCliente =  nombreApellidoCliente;
+    }
+
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
     }

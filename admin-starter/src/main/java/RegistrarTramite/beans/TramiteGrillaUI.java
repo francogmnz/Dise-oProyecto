@@ -13,6 +13,7 @@ public class TramiteGrillaUI {
     private String nombreTipoTramite;
     private int codTipoTramite;
     private String nombreEstado;
+    private String nombreApellidoCliente;
     private int dni;
 
     public int getNroTramite() {
@@ -87,6 +88,14 @@ public class TramiteGrillaUI {
         this.nombreEstado = nombreEstado;
     }
 
+    public String getNombreApellidoCliente() {
+        return nombreApellidoCliente;
+    }
+
+    public void setNombreApellidoCliente(String nombreApellidoCliente) {
+        this.nombreApellidoCliente = nombreApellidoCliente;
+    }
+        
     public int getDni() {
         return dni;
     }

@@ -258,31 +258,31 @@
 
                 <!-- Subrayado para los tramites -->
                 <style type="text/css">
-                    .isAnulado {
-                        color: #000;
-                        background-color: #ff7884;
-                    }
+                 .isAnulado {
+                     color: black;
+                     background-color: #ff7884;
+                 }
 
-                    .isPendienteDoc {
-                        color: #000;
-                        background-color: #f2ff7b;
-                    }
+                 .isPendienteDoc {
+                     color: black;
+                     background-color: #f2ff7b;
+                 }
 
-                    .isIniciado {
-                        color: #000;
-                        background-color: #7bff9a;
-                    }
-                    .isFinalizado{
-                        color: #000;
-                        background-color: #a5a3a3;
-                    }
+                 .isIniciado {
+                     color: black;
+                     background-color: #7bff9a;
+                 }
 
-                    .isPendienteConsultor {
-                        color: #000;
-                        background-color: #bfac5c;
-                    }
+                 .isFinalizado {
+                     color: black;
+                     background-color: #a5a3a3;
+                 }
 
-                </style>
+                 .isPendienteConsultor {
+                     color: black;
+                     background-color: #bfac5c;
+                 }
+             </style>
 
                 <!-- Tabla para mostrar los trámites -->
                 <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
@@ -293,15 +293,17 @@
                                               uitramiteLista.isIniciado(tramite) ? 'isIniciado' : 'isPendienteConsultor'}">
                     <p:column>
                         <f:facet name="header">Número Trámite</f:facet>
-                        <p:commandLink action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}" 
-                                       value="#{tramite.nroTramite}" 
-                                       immediate="true"
-                                       style="text-decoration: none; color: blue;" />
+                            #{tramite.nroTramite}
                     </p:column>
 
                     <p:column>
                         <f:facet name="header">DNI</f:facet>
                             #{tramite.dni}
+                    </p:column>
+                    
+                     <p:column>
+                        <f:facet name="header">Nombre y Apellido</f:facet>
+                            #{tramite.nombreApellidoCliente}
                     </p:column>
 
                     <p:column>
@@ -320,6 +322,19 @@
                         <f:facet name="header">Estado Tramite</f:facet>
                             #{tramite.nombreEstado}
                     </p:column>
+                    <p:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <p:commandButton icon="pi pi-search" 
+                                         styleClass="rounded-button ui-button-success ui-button-outlined" 
+                                         action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}"
+                                         title="Ver resumen del trámite"
+                                         style="margin-right: 5px;" /> 
+                        <p:commandButton icon="pi pi-history" 
+                                         styleClass="rounded-button ui-button-secondary ui-button-outlined" 
+                                         action="#{uicambioEstadoLista.irMostrarHistorialEstados(tramite.nroTramite)}"
+                                         title="Ver historial de estados"
+                                         style="margin-right: 5px;"/> 
+                    </p:column>            
                 </p:dataTable>
 
             </div>
