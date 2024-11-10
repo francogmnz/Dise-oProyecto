@@ -43,6 +43,20 @@ function esSemanaFutura(semana) {
     return true; // Permitir años futuros
 }
 
+// Evitar el arrastre en las columnas de semanas
+document.querySelectorAll('.dropzone').forEach(dropzone => {
+    // Evitar el icono de arrastrar dentro de las columnas de semanas
+    dropzone.addEventListener('dragover', event => event.preventDefault());
+    
+    // Quitar eventos de arrastre en las semanas
+    dropzone.addEventListener('dragstart', event => {
+        event.preventDefault(); // Evita que se inicie el arrastre en las columnas de semanas
+    });
+    
+    // Cambiar el cursor para que no muestre el ícono de arrastre
+    dropzone.style.cursor = 'default';
+});
+
 
 // Función dragStart
 function dragStart(event) {
@@ -165,7 +179,7 @@ function drop(event) {
     if (consultorElement) {
         const clone = consultorElement.cloneNode(true);
         clone.id = `consultor-${consultorStringId}-asignado`;
-        clone.draggable = true;
+        clone.draggable = false;
         clone.setAttribute('data-semana', semanaId);
         clone.ondragstart = dragStart;
 

@@ -59,12 +59,16 @@
                 align-items: center;
             }
             .dropzone {
+                cursor: default !important;
                 overflow-y: auto;
                 flex-grow: 1;
                 border: 2px dashed lightgray;
                 background-color: #f9f9f9;
                 transition: background-color 0.3s, border-color 0.3s;
             }
+            .dropzone li {
+                cursor: default !important;
+            }       
             h3 {
                 background: blue;
                 width: 100%;
@@ -136,7 +140,7 @@
 
                                 <!-- Consultores asignados en esta semana -->
                                 <ui:repeat value="#{uiABMAgendaBean.consultoresPorSemana[semana.nroSemana]}" var="consultorEnSemana">
-                                    <li id="consultor-#{consultorEnSemana.legajoConsultor}-asignado" draggable="true" ondragstart="dragStart(event)">
+                                    <li id="consultor-#{consultorEnSemana.legajoConsultor}-asignado" draggable="false">
                                         #{consultorEnSemana.nombreConsultor}
                                         <button type="button" class="remove-btn" 
                                                 onclick="removerConsultorDeSemana('#{semana.nroSemana}', '#{consultorEnSemana.legajoConsultor}')">
