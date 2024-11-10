@@ -164,12 +164,12 @@ public class UIABCListaPrecios implements Serializable {
         try (InputStream inp = event.getFile().getInputStream()) {
             Workbook wb = WorkbookFactory.create(inp);
             Sheet sheet = wb.getSheetAt(0);
-            int iRow = 1;
+            int iRow = 2;
             Row row = sheet.getRow(iRow);
             while (row != null) {
                 DetalleListaPreciosDTO detalle = new DetalleListaPreciosDTO();
                 Cell cell = row.getCell(0);
-                Cell cell2 = row.getCell(1);
+                Cell cell2 = row.getCell(4);
 
                 if ((cell == null || cell.getCellType() == CellType.BLANK) && (cell2 == null || cell2.getCellType() == CellType.BLANK)) {
                     break;
@@ -178,13 +178,13 @@ public class UIABCListaPrecios implements Serializable {
                 if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                     int codTipoTramite = (int) cell.getNumericCellValue();
                     detalle.setCodTipoTramite(codTipoTramite);
-                    Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
+                   // Messages.create("Fila " + iRow + " CodListaPrecios:").detail(String.valueOf(codTipoTramite)).add();
                 }
 
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
                     double nuevoPrecioTipoTramite = cell2.getNumericCellValue();
                     detalle.setNuevoPrecioTipoTramite(nuevoPrecioTipoTramite);
-                    Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
+                   // Messages.create("Fila " + iRow + " NuevoPrecioTipoTramite:").detail(String.valueOf(nuevoPrecioTipoTramite)).add();
                 }
 
                 detalles.add(detalle);
@@ -204,7 +204,7 @@ public class UIABCListaPrecios implements Serializable {
         if (tags == null || tags.isEmpty()) {
             err.agregarError("Debe subir una Lista Precios.");
         }
-        if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() < 0) {
+        if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() <= 0) {
             err.agregarError("El Código debe ser un entero mayor o igual a 0.");
         }
 

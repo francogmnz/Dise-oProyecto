@@ -338,36 +338,44 @@ public class ExpertoABMVersion {
                     ultVersion = version;
                 }
             }
+            Version vultima = (Version) ultVersion;
 
-// Validar nuevas fechas
-            if (ultVersion != null) {
-                Timestamp FDNv = nueva.getFechaDesdeVersion();
-                Timestamp FHNv = nueva.getFechaHastaVersion();
+            //Voy comparardo y tiro error fatal
+            Timestamp FDNv = nueva.getFechaDesdeVersion();
 
-                Timestamp FDUv = ultVersion.getFechaDesdeVersion();
-                Timestamp FHUv = ultVersion.getFechaHastaVersion();
-
-//                // Comprobar que no haya huecos
-//                if (FDNv.before(FDUv) || FDNv.after(FHUv)) {
-//                    Messages.create("Error").detail("La nueva versión no puede crear huecos entre versiones.").error().add();
-//                       return false;
-//
-//                }
-                // Recorrer la lista de versiones existentes para verificar si hay coincidencia de fechas
-                for (Version version : listVersion) {
-                    // Comprobar si las fechas de la nueva versión coinciden con alguna versión existente
-                    if (FDNv.equals(version.getFechaDesdeVersion()) && FHNv.equals(version.getFechaHastaVersion())) {
-
-                        Messages.create("Error").detail("Ya existe una versión vigente con las mismas fechas 'desde' y 'hasta'.").error().add();
-                        return false;
-
-                    }
+            if (vultima != null) {
+                Timestamp FDUv = vultima.getFechaDesdeVersion();
+                if (FDNv.before(FDUv)) {
+                    Messages.create("Error").detail("La versión nueva está antes que la última versión. Existen versiones futuras.").error().add();
+                    return false;  // Asegúrate de detener la ejecución si hay un error
                 }
-                // Si todas las validaciones son correctas, actualizar la última versión (opcional)
-                // ultVersion.setFechaHastaVersion(FDNv); // Solo si es necesario
+                Timestamp FHUv = vultima.getFechaHastaVersion();
+                if (FDNv.after(FHUv)) {
+                    Messages.create("Error").detail("La versión nueva está después de la última versión. No puede haber huecos entre versiones.").error().add();
+                    return false;
+                }
+                //Significa que fechaHoraDesdeVersion(ÚltimaVersion)< fechaHoraDesdeVersion(NuevaVersion)<=fechaHoraHastaVersion(ÚltimaVersion)        
+                if (FDNv.equals(FDUv)) {
+                    Messages.create("Error").detail("La nueva versión tiene la misma fecha de inicio que la última versión. Debe anular la versión anterior antes de crear una nueva.").error().add();
+                    return false;
+                }
             }
 
-            // Guardar la versión
+            Timestamp FHNv = nueva.getFechaHastaVersion();
+            if (FHNv.equals(FDNv)) {
+                Messages.create("Error").detail("La versión nueva debe tener fechas 'desde' y 'hasta' diferentes.").error().add();
+                return false;
+            }
+
+            if (FHNv.before(FDNv)) {
+                Messages.create("Error").detail("La versión nueva no puede tener una fecha 'desde' mayor que la fecha 'hasta'.").error().add();
+                return false;
+            }
+//cambio la ultima version:
+            if (vultima != null) {
+                vultima.setFechaHastaVersion(FDNv);
+            }
+// Guardar la nueva versión
             f.guardar(nueva);
             f.finalizarTransaccion();
 

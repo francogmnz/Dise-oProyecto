@@ -332,8 +332,7 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
                 // Si no se encontró, creamos un nuevo detalle con precio 0
                 if (!encontrado) {
                     TipoTramiteListaPrecios detalleNuevo = new TipoTramiteListaPrecios();
-                    detalleNuevo.setTipoTramite(tipoTramite);
-                    detalleNuevo.setPrecioTipoTramite(0);
+                    detalleNuevo.setTipoTramite(tipoTramite);               
                     detallesNuevosTT.add(detalleNuevo);
                 }
             }
