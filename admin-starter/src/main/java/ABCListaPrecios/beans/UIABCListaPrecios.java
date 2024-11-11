@@ -207,12 +207,17 @@ public class UIABCListaPrecios implements Serializable {
         if (String.valueOf(getCodListaPrecios()).isEmpty() || getCodListaPrecios() <= 0) {
             err.agregarError("El Código debe ser un entero mayor o igual a 0.");
         }
-
         if (getFechaHoraDesdeListaPrecios().before(new Date(fechaHoraActual.obtenerFechaHoraActual().getTime() - 600000))) {
             err.agregarError("FechaDesde no puede ser menor a la Fecha Actual. Intente nuevamente.");
         }
         if (getFechaHoraHastaListaPrecios() == null) {
             err.agregarError("Debe Ingresar una FechaHasta.");
+        }
+        if (getFechaHoraHastaListaPrecios().before(getFechaHoraDesdeListaPrecios())) {
+            err.agregarError("La Fecha Hasta debe ser mayor a la Fecha Desde.");
+        }
+        if (getFechaHoraHastaListaPrecios() == getFechaHoraDesdeListaPrecios()) {
+            err.agregarError("Las Fechas Desde y Hasta son iguales.");
         }
         // Verificamos si hay errores antes de continuar
         if (!err.getErrores().isEmpty()) {

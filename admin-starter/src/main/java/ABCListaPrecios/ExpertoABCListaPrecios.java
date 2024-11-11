@@ -90,7 +90,7 @@ public class ExpertoABCListaPrecios {
         return ultimaListaPrecios;
     }
 
-public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
+    public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throws ListaPreciosException {
         err.getErrores().clear();
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
@@ -189,7 +189,7 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
                 for (DetalleListaPreciosDTO detalle : detalles) {
                     double precioTT = detalle.getNuevoPrecioTipoTramite();
                     int codigoTT = detalle.getCodTipoTramite();
-                    if (!(precioTT <= 0) && codigoTT == codTipoTramite) {
+                    if (!(precioTT < 0) && codigoTT == codTipoTramite) {
                         nuevoTipoTramiteListaPrecios.setPrecioTipoTramite(detalle.getNuevoPrecioTipoTramite());
                         isEncontrado = true;
                         break;
@@ -231,10 +231,6 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
         criterioList.add(dto);
 
         ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
-
-        listaPreciosEncontrada.getTipoTramiteListaPrecios().sort((tt1, tt2) -> {
-            return Integer.compare(tt2.getTipoTramite().getCodTipoTramite(), tt1.getTipoTramite().getCodTipoTramite());
-        }); //Para ordenar el excel por Codigo de manera Desc
 
         try {
             Workbook libro = new XSSFWorkbook();
@@ -332,12 +328,16 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
                 // Si no se encontró, creamos un nuevo detalle con precio 0
                 if (!encontrado) {
                     TipoTramiteListaPrecios detalleNuevo = new TipoTramiteListaPrecios();
-                    detalleNuevo.setTipoTramite(tipoTramite);               
+                    detalleNuevo.setTipoTramite(tipoTramite);
                     detallesNuevosTT.add(detalleNuevo);
                 }
             }
 
             listaPreciosEncontrada.setTipoTramiteListaPrecios(detallesNuevosTT);
+
+            listaPreciosEncontrada.getTipoTramiteListaPrecios().sort((tt1, tt2) -> {
+                return Integer.compare(tt1.getTipoTramite().getCodTipoTramite(), tt2.getTipoTramite().getCodTipoTramite());
+            }); //Para ordenar el excel por Codigo de manera Asc
 
             // Crear filas con datos
             for (int j = 0; j < detallesNuevosTT.size(); j++) {
@@ -409,8 +409,8 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
         }
 
         tiposTramites.sort((tt1, tt2) -> {
-            return Integer.compare(tt2.getCodTipoTramite(), tt1.getCodTipoTramite());
-        }); //Para ordenar el excel por Codigo de manera Desc
+            return Integer.compare(tt1.getCodTipoTramite(), tt2.getCodTipoTramite());
+        }); //Para ordenar el excel por Codigo de manera Asc
 
         try {
             Workbook libro = new XSSFWorkbook();
@@ -531,7 +531,7 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
 
     }
 
-    public void darDeBajaListaPrecios(int codigo) {
+    public void darDeBajaListaPrecios(int codigo) throws ListaPreciosException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -546,7 +546,19 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
 
         ListaPrecios listaPreciosEncontrada = (ListaPrecios) FachadaPersistencia.getInstance().buscar("ListaPrecios", criterioList).get(0);
         ListaPrecios ultiLP = buscarUltimaListaNoNula();
-//        VERIFICA SI ES LA LISTA ENCONTRADA ES LA ULTIMA LISTA DE PRECIOS
+//        VERIFICA SI LA LISTA SELECCIONADA ES LA VIGENTE
+        if (listaPreciosEncontrada.getFechaHoraDesdeListaPrecios().before(fechaHoraActual.obtenerFechaHoraActual()) && listaPreciosEncontrada.getFechaHoraHastaListaPrecios().after(fechaHoraActual.obtenerFechaHoraActual())) {
+            throw new ListaPreciosException("La Lista de Precios seleccionada está vigente y no se puede dar de Baja.");
+        }
+//        VERIFICA SI LA LISTA SELECCIONADA ES PASADA
+        if (listaPreciosEncontrada.getFechaHoraHastaListaPrecios().after(fechaHoraActual.obtenerFechaHoraActual())) {
+            throw new ListaPreciosException("La Lista de Precios seleccionada ya no se puede dar de Baja.");
+        }
+//        VERIFICA SI LA LISTA SELECCIONADA YA ESTA DADA DE BAJA
+        if (listaPreciosEncontrada.getFechaHoraBajaListaPrecios() != null) {
+            throw new ListaPreciosException("La Lista de Precios seleccionada ya se encuentra dada de Baja.");
+        }
+//        VERIFICA SI NO HAY OTRA LISTA Y LA DA DE BAJA
         if (ultiLP == null) {
             listaPreciosEncontrada.setFechaHoraBajaListaPrecios(fechaHoraActual.obtenerFechaHoraActual());
             FachadaPersistencia.getInstance().guardar(listaPreciosEncontrada);
@@ -555,6 +567,8 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
             if (codigo == ultiLP.getCodListaPrecios()) {
 //            LE SETEA LA FECHAHORABAJA
                 listaPreciosEncontrada.setFechaHoraBajaListaPrecios(fechaHoraActual.obtenerFechaHoraActual());
+            } else {
+                throw new ListaPreciosException("La lista seleccionada no es la última lista.");
             }
 
             Timestamp fh = listaPreciosEncontrada.getFechaHoraHastaListaPrecios();
@@ -574,5 +588,3 @@ public void agregarListaPrecios(NuevaListaPreciosDTO nuevaListaPreciosDTO) throw
         }
     }
 }
-
-

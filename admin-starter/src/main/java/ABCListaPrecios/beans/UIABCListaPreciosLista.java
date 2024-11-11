@@ -53,9 +53,10 @@ public class UIABCListaPreciosLista implements Serializable {
     public StreamedContent exportarListaPrecios(int codigo) throws ListaPreciosException {
         return controladorABCListaPrecios.exportarListaPrecios(codigo);
     }
-     public StreamedContent plantillaListaPrecio()  {
+
+    public StreamedContent plantillaListaPrecio() {
         return controladorABCListaPrecios.plantillaListaPrecio();
-     }
+    }
 
     public void filtrar() {
     }
@@ -98,79 +99,37 @@ public class UIABCListaPreciosLista implements Serializable {
 
             case "codAsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return Integer.compare(lp1.getCodListaPrecios(), lp2.getCodListaPrecios());
                 });
                 break;
             case "codDsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return Integer.compare(lp2.getCodListaPrecios(), lp1.getCodListaPrecios());
                 });
                 break;
             case "fDAsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return lp1.getFechaHoraDesdeListaPrecios().compareTo(lp2.getFechaHoraDesdeListaPrecios());
                 });
                 break;
             case "fDDsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return lp2.getFechaHoraDesdeListaPrecios().compareTo(lp1.getFechaHoraDesdeListaPrecios());
                 });
                 break;
             case "fHAsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return lp1.getFechaHoraHastaListaPrecios().compareTo(lp2.getFechaHoraHastaListaPrecios());
                 });
                 break;
             case "fHDsc":
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
                     return lp2.getFechaHoraHastaListaPrecios().compareTo(lp1.getFechaHoraHastaListaPrecios());
                 });
                 break;
             default:
                 lpGrilla.sort((lp1, lp2) -> {
-                    if (lp1.getFechaHoraBajaListaPrecios() != null && lp2.getFechaHoraBajaListaPrecios() == null) {
-                        return 1;
-                    }
-                    if (lp1.getFechaHoraBajaListaPrecios() == null && lp2.getFechaHoraBajaListaPrecios() != null) {
-                        return -1;
-                    }
-                    return lp2.getFechaHoraDesdeListaPrecios().compareTo(lp1.getFechaHoraDesdeListaPrecios());
+                    return Integer.compare(lp2.getCodListaPrecios(), lp1.getCodListaPrecios());
                 });
         }
         return lpGrilla;
@@ -185,7 +144,6 @@ public class UIABCListaPreciosLista implements Serializable {
         }
         return false;
     }
-    
 
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES LA VIGENTE 
     public boolean isLaActiva(ListaPreciosGrillaUI listaEnviada) {
@@ -202,14 +160,12 @@ public class UIABCListaPreciosLista implements Serializable {
         }
         return false;
     }
-    
-    
+
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
     public boolean isAnulada(ListaPreciosGrillaUI listaEnviada) {
         return listaEnviada.getFechaHoraBajaListaPrecios() != null;
     }
-    
-    
+
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES PASADA
     public boolean isPasada(ListaPreciosGrillaUI listaEnviada) {
         Timestamp hoy = fechaHoraActual.obtenerFechaHoraActual();
