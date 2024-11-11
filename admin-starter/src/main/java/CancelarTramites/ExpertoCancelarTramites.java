@@ -62,9 +62,9 @@ public class ExpertoCancelarTramites {
                 int diasDePlazo = tipoTramite.getPlazoEntregaDocumentacionTT();
         
                 // Calcular la fecha límite
-                Date fechaInicio = tramite.getFechaInicioTramite();
+
                 Calendar fechaLimite = Calendar.getInstance();
-                fechaLimite.setTime(fechaInicio);
+                fechaLimite.setTime(tramite.getFechaRecepcionTramite());
                 fechaLimite.add(Calendar.DAY_OF_MONTH, diasDePlazo);
         
                 // Comparar la fecha límite con la fecha actual

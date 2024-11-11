@@ -413,6 +413,13 @@ public class ExpertoABMTipoTramite {
         criterioTramiteActivo.setValor(null);
         
         criterioTramiteList.add(criterioTramiteActivo);
+        
+        DTOCriterio criterioTramiteAnulado = new DTOCriterio();
+        criterioTramiteAnulado.setAtributo("fechaAnulacionTramite");
+        criterioTramiteAnulado.setOperacion("=");
+        criterioTramiteAnulado.setValor(null);
+        
+        criterioTramiteList.add(criterioTramiteAnulado);        
 
         List tramitesRelacionadosActivos = FachadaPersistencia.getInstance().buscar("Tramite", criterioTramiteList);
 
