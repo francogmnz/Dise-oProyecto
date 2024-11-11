@@ -434,6 +434,10 @@ public class ExpertoRegistrarTramiteWeb {
             throw new RegistrarTramiteWebException("El tipo de trámite seleccionado no tiene un precio asignado en la lista de precios activa.");
         }
         
+        if (cliente == null) {
+            throw new RegistrarTramiteWebException("No hay un cliente en proceso para registrar.");
+        } 
+        
         List<DTOCriterio> clienteTT = new ArrayList<>();
         DTOCriterio tramiteCliente = new DTOCriterio();
         tramiteCliente.setAtributo("cliente");
@@ -456,7 +460,7 @@ public class ExpertoRegistrarTramiteWeb {
             }
         }
                 
-
+       
         DTOResumen dtoResumen = new DTOResumen();
 
         dtoResumen.setNombreCliente(nuevoTramite.getCliente().getNombreCliente());
@@ -476,7 +480,10 @@ public class ExpertoRegistrarTramiteWeb {
 
     }
 
-    public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException {
+    public DTONumeroTramite registrarTramite() throws RegistrarTramiteWebException { 
+        if (cliente == null) {
+            throw new RegistrarTramiteWebException("No hay un cliente en proceso para registrar.");
+        }        
         if (tramiteEnProceso == null) {
             throw new RegistrarTramiteWebException("No hay un tramite en proceso para registrar.");
         }
@@ -552,6 +559,7 @@ public class ExpertoRegistrarTramiteWeb {
         FachadaPersistencia.getInstance().finalizarTransaccion();
 
         tramiteEnProceso = null;
+        cliente = null;
 
         return dtoNumeroTramite;
     }
