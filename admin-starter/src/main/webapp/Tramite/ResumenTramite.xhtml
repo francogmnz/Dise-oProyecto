@@ -159,24 +159,26 @@
                         </h:panelGrid>
                     </p:panel>
 
-                    <!-- Botón de Anular -->
-                    <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="margin-top: 8px; width:160px; height:36px;" 
-                                     actionListener="#{uiresumen.anularTramite(nroTramite)}" 
-                                     disabled="#{uiresumen.fechaAnulacionTramite != null || uiresumen.fechaFinTramite != null}" 
-                                     update="@form" 
-                                     oncomplete="if (!args.validationFailed) window.location.reload();">
-                        <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" 
-                                   message="¿Desea anular el trámite?" 
-                                   icon="ui-icon-alert"/>
-                    </p:commandButton>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                        <!-- Botón de Anular -->
+                        <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="width:160px; height:36px;" 
+                                         actionListener="#{uiresumen.anularTramite(nroTramite)}" 
+                                         disabled="#{uiresumen.fechaAnulacionTramite != null || uiresumen.fechaFinTramite != null}" 
+                                         update="@form" 
+                                         oncomplete="if (!args.validationFailed) window.location.reload();">
+                            <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" 
+                                       message="¿Desea anular el trámite?" 
+                                       icon="ui-icon-alert"/>
+                        </p:commandButton>
 
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
-                        <p:commandButton value="Si" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" 
-                                         icon="fa fa-check"/>
-                        <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" 
-                                         icon="fa fa-close"/>
-                    </p:confirmDialog>
-
+                        <!-- Botón de Asignar consultor -->
+                        <p:commandButton value="Asignar consultor" styleClass="btn-block btn-primary" style="width:160px; height:36px;" 
+                                         actionListener="#{uiresumen.asignarConsultorFuturo()}" 
+                                         disabled="#{uiresumen.fechaInicioTramite != null}" 
+                                         update="@form" 
+                                         oncomplete="if (!args.validationFailed) window.location.reload();">
+                        </p:commandButton>
+                    </div>
                 </p:tab>
 
                 <!-- Pestaña Documentación -->

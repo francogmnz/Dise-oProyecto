@@ -686,7 +686,6 @@ public class ExpertoRegistrarTramite {
 
         FachadaPersistencia.getInstance().refrescar(tramiteElegido);
 
-        // Solo asignar consultor si no se ha asignado ya y todas las documentaciones están presentadas
         try {
             if (todasPresentadas) {
                 tramiteElegido.setFechaPresentacionTotalDocumentacion(fechaHoraActual.obtenerFechaHoraActual());
@@ -699,25 +698,29 @@ public class ExpertoRegistrarTramite {
                 criterioListAgenda.add(agendaCriterio1);
 
                 List<Object> agendas = FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda);
-                if (agendas.isEmpty()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay agendas disponibles para asignar un consultor."));
+                AgendaConsultor agendaSeleccionada = null;
+
+                // Buscar una agenda que tenga al menos un consultor disponible
+                for (Object obj : agendas) {
+                    AgendaConsultor agenda = (AgendaConsultor) obj;
+                    List<Consultor> consultores = agenda.getConsultores();
+
+                    if (consultores != null && !consultores.isEmpty()) {
+                        agendaSeleccionada = agenda;
+                        break;
+                    }
+                }
+
+                if (agendaSeleccionada == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay agendas disponibles con consultores para asignar."));
                     return;
                 }
 
-                AgendaConsultor agenda = (AgendaConsultor) agendas.get(0);
-                List<Consultor> consultorList = agenda.getConsultores();
-
-                // Verificar que haya consultores disponibles en la agenda
-                if (consultorList == null || consultorList.isEmpty()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay consultores disponibles en la agenda."));
-                    return;
-                }
-
+                List<Consultor> consultorList = agendaSeleccionada.getConsultores();
                 Consultor consultorSeleccionado = null;
                 int menorCantidadTramites = Integer.MAX_VALUE;
 
                 for (Consultor consultor : consultorList) {
-
                     if (consultor.getFechaHoraBajaConsultor() == null) {
                         criterioListAgenda.clear();
                         DTOCriterio consuCriterio = new DTOCriterio();
@@ -726,13 +729,13 @@ public class ExpertoRegistrarTramite {
                         consuCriterio.setValor(consultor);
                         criterioListAgenda.add(consuCriterio);
 
-                        // Buscar trámites asociados a este consultor
                         List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
-                        int tramitesAsignados = objectList.size(); // Contar directamente el tamaño de la lista
+                        int tramitesAsignados = objectList.size();
 
                         if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
                             menorCantidadTramites = tramitesAsignados;
                             consultorSeleccionado = consultor;
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exitoso", "Consultor asignado con éxito."));
                         }
                     }
                 }
@@ -745,12 +748,100 @@ public class ExpertoRegistrarTramite {
                 tramiteElegido.setConsultor(consultorSeleccionado);
                 tramiteElegido.setFechaInicioTramite(fechaHoraActual.obtenerFechaHoraActual());
                 FachadaPersistencia.getInstance().merge(tramiteElegido);
-
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         } finally {
             FachadaPersistencia.getInstance().finalizarTransaccion();
+        }
+    }
+
+    public void asignarConsultorFuturo() throws RegistrarTramiteException {
+
+        List<DTOCriterio> criterioListTramite = new ArrayList<>();
+        DTOCriterio criterioTramite = new DTOCriterio();
+        criterioTramite.setAtributo("nroTramite");
+        criterioTramite.setOperacion("=");
+        criterioTramite.setValor(tramiteElegido.getNroTramite());
+        criterioListTramite.add(criterioTramite);
+
+        Tramite tramite = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioListTramite).get(0);
+
+        if (tramite.getFechaPresentacionTotalDocumentacion() != null && tramite.getFechaInicioTramite() == null) {
+
+            FachadaPersistencia.getInstance().iniciarTransaccion();
+
+            try {
+
+                tramiteElegido.setFechaPresentacionTotalDocumentacion(fechaHoraActual.obtenerFechaHoraActual());
+
+                List<DTOCriterio> criterioListAgenda = new ArrayList<>();
+                DTOCriterio agendaCriterio1 = new DTOCriterio();
+                agendaCriterio1.setAtributo("fechaHastaSemana");
+                agendaCriterio1.setOperacion(">");
+                agendaCriterio1.setValor(fechaHoraActual.obtenerFechaHoraActual());
+                criterioListAgenda.add(agendaCriterio1);
+
+                List<Object> agendas = FachadaPersistencia.getInstance().buscar("AgendaConsultor", criterioListAgenda);
+                AgendaConsultor agendaSeleccionada = null;
+
+                // Buscar una agenda que tenga al menos un consultor disponible
+                for (Object obj : agendas) {
+                    AgendaConsultor agenda = (AgendaConsultor) obj;
+                    List<Consultor> consultores = agenda.getConsultores();
+
+                    if (consultores != null && !consultores.isEmpty()) {
+                        agendaSeleccionada = agenda;
+                        break;
+                    }
+                }
+
+                if (agendaSeleccionada == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay agendas disponibles con consultores para asignar."));
+                    return;
+                }
+
+                List<Consultor> consultorList = agendaSeleccionada.getConsultores();
+                Consultor consultorSeleccionado = null;
+                int menorCantidadTramites = Integer.MAX_VALUE;
+
+                for (Consultor consultor : consultorList) {
+                    if (consultor.getFechaHoraBajaConsultor() == null) {
+                        criterioListAgenda.clear();
+                        DTOCriterio consuCriterio = new DTOCriterio();
+                        consuCriterio.setAtributo("consultor");
+                        consuCriterio.setOperacion("=");
+                        consuCriterio.setValor(consultor);
+                        criterioListAgenda.add(consuCriterio);
+
+                        List<Object> objectList = FachadaPersistencia.getInstance().buscar("Tramite", criterioListAgenda);
+                        int tramitesAsignados = objectList.size();
+
+                        if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
+                            menorCantidadTramites = tramitesAsignados;
+                            consultorSeleccionado = consultor;
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exitoso", "Consultor asignado con éxito."));
+                        }
+                    }
+                }
+
+                if (consultorSeleccionado == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Todos los consultores están ocupados."));
+                    return;
+                }
+
+                
+                tramiteElegido.setConsultor(consultorSeleccionado);
+                if (tramiteElegido.getFechaInicioTramite() == null){
+                tramiteElegido.setFechaInicioTramite(fechaHoraActual.obtenerFechaHoraActual());
+                }
+                FachadaPersistencia.getInstance().merge(tramiteElegido);
+
+            } catch (Exception e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            } finally {
+                FachadaPersistencia.getInstance().finalizarTransaccion();
+            }
         }
     }
 
@@ -795,7 +886,6 @@ public class ExpertoRegistrarTramite {
             if (tramiteElegido.getFechaPresentacionTotalDocumentacion() != null) {
                 tramiteElegido.setConsultor(null);
                 tramiteElegido.setFechaPresentacionTotalDocumentacion(null);
-                tramiteElegido.setFechaInicioTramite(null);
             }
             FachadaPersistencia.getInstance().merge(tramiteElegido);
             // Finalizar la transacción correctamente

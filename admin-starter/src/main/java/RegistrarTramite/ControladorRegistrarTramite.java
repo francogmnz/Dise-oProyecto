@@ -75,4 +75,8 @@ public class ControladorRegistrarTramite {
         expertoRegistrarTramite.registrarDocumentacion(codTD, archivoTD, nroTramite);
     }
 
+    public void asignarConsultorFuturo() throws RegistrarTramiteException {
+        expertoRegistrarTramite.asignarConsultorFuturo();
+    }
+
 }

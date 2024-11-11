@@ -265,7 +265,7 @@ public class UIResumen implements Serializable {
     public void setFechaPresentacionTotalDocumentacion(Timestamp fechaPresentacionTotalDocumentacion) {
         this.fechaPresentacionTotalDocumentacion = fechaPresentacionTotalDocumentacion;
     }
-    
+
     public void setMailCliente(String mailCliente) {
         this.mailCliente = mailCliente;
     }
@@ -387,7 +387,7 @@ public class UIResumen implements Serializable {
         } catch (RegistrarTramiteException e) {
             throw new RegistrarTramiteException("");
         }
-       
+
     }
 
     public void eliminarArchivo(int codTD) {
@@ -454,5 +454,13 @@ public class UIResumen implements Serializable {
     // Boton agregar volver a tramites
     public String irPantallaTramites() {
         return "TramiteLista?faces-redirect=true";
+    }
+
+    public void asignarConsultorFuturo() throws RegistrarTramiteException {
+        try {
+            controladorRegistrarTramite.asignarConsultorFuturo();
+        } catch (RegistrarTramiteException e) {
+            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+        }
     }
 }
