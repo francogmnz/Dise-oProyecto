@@ -189,6 +189,10 @@ public class ExpertoABMTipoTramite {
         
             CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaList).get(0);
         
+            if (categoriaTipoTramite.getFechaHoraBajaCategoriaTipoTramite() != null) {
+                throw new TipoTramiteException("La categoría seleccionada está inactiva.");
+            }    
+            
             tipoTramite.setCategoriaTipoTramite(categoriaTipoTramite);
             
 
@@ -207,6 +211,10 @@ public class ExpertoABMTipoTramite {
             criterioDocumentacionList.add(criterioCodigoDocumentacion);
             
             Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
+            
+            if (documentacion.getFechaHoraBajaDocumentacion() != null) {
+                throw new TipoTramiteException("La documentación seleccionada está inactiva.");
+            }        
             
             TipoTramiteDocumentacion tipoTramiteDocumentacion = new TipoTramiteDocumentacion();
             tipoTramiteDocumentacion.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());
@@ -313,6 +321,9 @@ public class ExpertoABMTipoTramite {
         
         CategoriaTipoTramite categoriaTipoTramite = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCategoriaList).get(0);
         
+        if (categoriaTipoTramite.getFechaHoraBajaCategoriaTipoTramite() != null) {
+            throw new TipoTramiteException("La categoría seleccionada está inactiva.");
+        }     
         tipoTramiteEncontrada.setCategoriaTipoTramite(categoriaTipoTramite);
 
         
@@ -359,6 +370,10 @@ public class ExpertoABMTipoTramite {
         criterioDocumentacionList.add(criterioPorCodigoDocumentacion);
 
         Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
+        
+        if (documentacion.getFechaHoraBajaDocumentacion() != null) {
+            throw new TipoTramiteException("La documentación seleccionada está inactiva.");
+        }        
 
         TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
         tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());

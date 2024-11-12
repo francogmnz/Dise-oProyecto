@@ -403,12 +403,8 @@ public class ExpertoABMEstadoTramite {
         dtoCodET.setOperacion("<>");
         dtoCodET.setValor(estadoTramiteDTO.getCodEstadoTramite());
         criterioNombreET.add(dtoCodET);
-
+        
         List lETNombre = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioNombreET);
-        if (!lETNombre.isEmpty()) {
-            throw new EstadoTramiteException("El nombre del Estado Tramite ya existe.");
-        }
-
 
         List<DTOCriterio> criterioDescripcionET = new ArrayList<>();
         DTOCriterio dtoDescripcionET = new DTOCriterio();
@@ -422,11 +418,21 @@ public class ExpertoABMEstadoTramite {
         dtoDescET.setOperacion("<>");
         dtoDescET.setValor(estadoTramiteDTO.getCodEstadoTramite());
         criterioDescripcionET.add(dtoDescET);
-
+        
         List lETDescripcion = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioDescripcionET);
+        
+        if(!lETDescripcion.isEmpty() && !lETNombre.isEmpty()){
+            throw new EstadoTramiteException("El nombre y la descripcion del EstadoTramite ya existe.");
+        }
+        
         if (!lETDescripcion.isEmpty()) {
             throw new EstadoTramiteException("La descripcion del EstadoTramite ya existe.");
         }
+        
+        if (!lETNombre.isEmpty()) {
+            throw new EstadoTramiteException("El nombre del Estado Tramite ya existe.");
+        }
+        
 
         }
 }
