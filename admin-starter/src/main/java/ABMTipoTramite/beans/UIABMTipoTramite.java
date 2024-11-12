@@ -47,6 +47,8 @@ public class UIABMTipoTramite implements Serializable {
     //private List<Integer> documentacionesSeleccionadas;
     private List<Integer> documentacionesSeleccionadas;
     private List<DocumentacionDTO> documentacionesActivas;
+    
+    private int codTipoTramiteOriginal;
 
     
    
@@ -130,6 +132,14 @@ public class UIABMTipoTramite implements Serializable {
         this.documentacionesActivas = documentacionesActivas;
     }
 
+    public int getCodTipoTramiteOriginal() {
+        return codTipoTramiteOriginal;
+    }
+
+    public void setCodTipoTramiteOriginal(int codTipoTramiteOriginal) {
+        this.codTipoTramiteOriginal = codTipoTramiteOriginal;
+    }
+    
     public UIABMTipoTramite() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -158,6 +168,7 @@ public class UIABMTipoTramite implements Serializable {
             ModificarTipoTramiteDTO modificarTipoTramiteDTO = controladorABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
 
             setCodTipoTramite(modificarTipoTramiteDTO.getCodTipoTramite()); 
+            setCodTipoTramiteOriginal(modificarTipoTramiteDTO.getCodTipoTramite());
             setNombreTipoTramite(modificarTipoTramiteDTO.getNombreTipoTramite());
             setDescripcionTipoTramite(modificarTipoTramiteDTO.getDescripcionTipoTramite());
             setDescripcionWebTipoTramite(modificarTipoTramiteDTO.getDescripcionWebTipoTramite());
@@ -181,6 +192,7 @@ public class UIABMTipoTramite implements Serializable {
             {
                 ModificarTipoTramiteDTOIn modificarTipoTramiteDTOIn = new ModificarTipoTramiteDTOIn();
                 modificarTipoTramiteDTOIn.setCodTipoTramite(getCodTipoTramite());
+                modificarTipoTramiteDTOIn.setCodTipoTramiteOriginal(getCodTipoTramiteOriginal());
                 modificarTipoTramiteDTOIn.setNombreTipoTramite(getNombreTipoTramite());
                 modificarTipoTramiteDTOIn.setDescripcionTipoTramite(getDescripcionTipoTramite());
                 modificarTipoTramiteDTOIn.setDescripcionWebTipoTramite(getDescripcionWebTipoTramite());

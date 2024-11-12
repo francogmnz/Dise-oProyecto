@@ -11,6 +11,7 @@ package ABMCategoriaTipoTramite.dtos;
 public class ModificarCategoriaTipoTramiteDTOIn {
     
     private int codCategoriaTipoTramite;
+    private int codCategoriaTipoTramiteOriginal;
     private String nombreCategoriaTipoTramite;
     private String descripcionCategoriaTipoTramite;
     private String descripcionWebCategoriaTipoTramite;
@@ -23,6 +24,14 @@ public class ModificarCategoriaTipoTramiteDTOIn {
         this.codCategoriaTipoTramite = codCategoriaTipoTramite;
     }
 
+    public int getCodCategoriaTipoTramiteOriginal() {
+        return codCategoriaTipoTramiteOriginal;
+    }
+
+    public void setCodCategoriaTipoTramiteOriginal(int codCategoriaTipoTramiteOriginal) {
+        this.codCategoriaTipoTramiteOriginal = codCategoriaTipoTramiteOriginal;
+    }
+  
     public String getNombreCategoriaTipoTramite() {
         return nombreCategoriaTipoTramite;
     }

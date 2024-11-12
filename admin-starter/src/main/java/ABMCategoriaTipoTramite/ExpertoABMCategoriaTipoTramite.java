@@ -120,7 +120,7 @@ public class ExpertoABMCategoriaTipoTramite {
         
         dtoCod.setAtributo("codCategoriaTipoTramite");
         dtoCod.setOperacion("=");
-        dtoCod.setValor(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
+        dtoCod.setValor(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramiteOriginal());
 
         criterioList.add(dtoCod);
         
@@ -133,6 +133,11 @@ public class ExpertoABMCategoriaTipoTramite {
         criterioList.add(dtoFecha);        
 
         CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
+        
+        
+        if (modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite() != modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramiteOriginal()){
+            throw new CategoriaTipoTramiteException("El código de la categoria no puede ser modificado.");
+        }        
         
         categoriaTipoTramiteEncontrada.setCodCategoriaTipoTramite(modificarCategoriaTipoTramiteDTOIn.getCodCategoriaTipoTramite());
         categoriaTipoTramiteEncontrada.setNombreCategoriaTipoTramite(modificarCategoriaTipoTramiteDTOIn.getNombreCategoriaTipoTramite());

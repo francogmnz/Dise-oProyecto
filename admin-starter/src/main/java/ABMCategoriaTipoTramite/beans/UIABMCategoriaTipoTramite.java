@@ -35,7 +35,8 @@ public class UIABMCategoriaTipoTramite implements Serializable {
     private String descripcionCategoriaTipoTramite;
     private String descripcionWebCategoriaTipoTramite;
     
-
+    private int codCategoriaTipoTramiteOriginal;
+    
 
     public boolean isInsert() {
         return insert;
@@ -77,7 +78,13 @@ public class UIABMCategoriaTipoTramite implements Serializable {
         this.descripcionWebCategoriaTipoTramite = descripcionWebCategoriaTipoTramite;
     }
 
+    public int getCodCategoriaTipoTramiteOriginal() {
+        return codCategoriaTipoTramiteOriginal;
+    }
 
+    public void setCodCategoriaTipoTramiteOriginal(int codCategoriaTipoTramiteOriginal) {
+        this.codCategoriaTipoTramiteOriginal = codCategoriaTipoTramiteOriginal;
+    }
 
     
 
@@ -94,6 +101,7 @@ public class UIABMCategoriaTipoTramite implements Serializable {
             ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = controladorABMCategoriaTipoTramite.buscarCategoriaTipoTramiteAModificar(codCategoriaTipoTramite);
 
             setCodCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite()); 
+            setCodCategoriaTipoTramiteOriginal(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite());
             setNombreCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getNombreCategoriaTipoTramite());
             setDescripcionCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionCategoriaTipoTramite());
             setDescripcionWebCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionWebCategoriaTipoTramite());
@@ -109,6 +117,7 @@ public class UIABMCategoriaTipoTramite implements Serializable {
             {
                 ModificarCategoriaTipoTramiteDTOIn modificarCategoriaTipoTramiteDTOIn = new ModificarCategoriaTipoTramiteDTOIn();
                 modificarCategoriaTipoTramiteDTOIn.setCodCategoriaTipoTramite(getCodCategoriaTipoTramite());
+                modificarCategoriaTipoTramiteDTOIn.setCodCategoriaTipoTramiteOriginal(getCodCategoriaTipoTramiteOriginal());
                 modificarCategoriaTipoTramiteDTOIn.setNombreCategoriaTipoTramite(getNombreCategoriaTipoTramite());
                 modificarCategoriaTipoTramiteDTOIn.setDescripcionCategoriaTipoTramite(getDescripcionCategoriaTipoTramite());
                 modificarCategoriaTipoTramiteDTOIn.setDescripcionWebCategoriaTipoTramite(getDescripcionWebCategoriaTipoTramite());

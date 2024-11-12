@@ -216,11 +216,14 @@ public class ExpertoABMTipoTramite {
                 throw new TipoTramiteException("La documentación seleccionada está inactiva.");
             }        
             
+            Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+            
             TipoTramiteDocumentacion tipoTramiteDocumentacion = new TipoTramiteDocumentacion();
-            tipoTramiteDocumentacion.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());
+            tipoTramiteDocumentacion.setFechaDesdeTTD(fechaActual);
             tipoTramiteDocumentacion.setFechaHoraBajaTTD(null); 
             //Ver si dejamos esto como fechaHastaTTD antes estaba en null-
             Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaActual);
             calendar.add(Calendar.MONTH, 6);
             Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());     
             //
@@ -298,11 +301,23 @@ public class ExpertoABMTipoTramite {
         
         criterioPorCodigoTT.setAtributo("codTipoTramite");
         criterioPorCodigoTT.setOperacion("=");
-        criterioPorCodigoTT.setValor(modificarTipoTramiteDTOIn.getCodTipoTramite());
+        criterioPorCodigoTT.setValor(modificarTipoTramiteDTOIn.getCodTipoTramiteOriginal());
 
         criterioModificarTTList.add(criterioPorCodigoTT);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        
+        dtoFecha.setAtributo("fechaHoraBajaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        
+        criterioModificarTTList.add(dtoFecha);           
 
         TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioModificarTTList).get(0);
+        
+        if (modificarTipoTramiteDTOIn.getCodTipoTramite() != modificarTipoTramiteDTOIn.getCodTipoTramiteOriginal()){
+            throw new TipoTramiteException("El código del tipo de trámite no puede ser modificado.");
+        }
         
         tipoTramiteEncontrada.setCodTipoTramite(modificarTipoTramiteDTOIn.getCodTipoTramite());
         tipoTramiteEncontrada.setNombreTipoTramite(modificarTipoTramiteDTOIn.getNombreTipoTramite());
@@ -375,11 +390,14 @@ public class ExpertoABMTipoTramite {
             throw new TipoTramiteException("La documentación seleccionada está inactiva.");
         }        
 
+        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+        
         TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
-        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaHoraActual.obtenerFechaHoraActual());
+        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaActual);
         tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);
         // Lo mismo que en el agregar - ver que hacemos - estana en null
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaActual);
         calendar.add(Calendar.MONTH, 6);
         Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());
         //
@@ -410,6 +428,14 @@ public class ExpertoABMTipoTramite {
         criterioPorCodigoTT.setValor(codTipoTramite);
         
         criterioBajaTTList.add(criterioPorCodigoTT);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        
+        dtoFecha.setAtributo("fechaHoraBajaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        
+        criterioBajaTTList.add(dtoFecha);           
         
         TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBajaTTList).get(0);
         

@@ -13,6 +13,7 @@ import ABMTipoTramite.dtos.*;
 public class ModificarTipoTramiteDTOIn {
     
     private int codTipoTramite;
+    private int codTipoTramiteOriginal;
     private String nombreTipoTramite;
     private String descripcionTipoTramite;
     private String descripcionWebTipoTramite;
@@ -28,6 +29,14 @@ public class ModificarTipoTramiteDTOIn {
         this.codTipoTramite = codTipoTramite;
     }
 
+    public int getCodTipoTramiteOriginal() {
+        return codTipoTramiteOriginal;
+    }
+
+    public void setCodTipoTramiteOriginal(int codTipoTramiteOriginal) {
+        this.codTipoTramiteOriginal = codTipoTramiteOriginal;
+    }
+    
     public String getNombreTipoTramite() {
         return nombreTipoTramite;
     }
