@@ -171,8 +171,8 @@ public class ExpertoABMEstadoTramite {
 
         // Buscar versiones activas (fecha desde menor a ahora y sin fecha de baja)
         DTOCriterio dto2 = new DTOCriterio();
-        dto2.setAtributo("fechaDesdeVersion");
-        dto2.setOperacion("<");
+        dto2.setAtributo("fechaHastaVersion");
+        dto2.setOperacion(">=");
         dto2.setValor(fechaHoraActual.obtenerFechaHoraActual());
         criterioList.add(dto2);
 
@@ -197,38 +197,6 @@ public class ExpertoABMEstadoTramite {
         if(estadoTramiteEncontrado.getNombreEstadoTramite() == "Iniciado"){
             throw new EstadoTramiteException("No se puede modificar el Estado Iniciado");
         }
-
-        //Verifica si el nombre del estado ya existe
-//        List<DTOCriterio> criterioNombre = new ArrayList<>();
-//        DTOCriterio dto5 = new DTOCriterio();
-
-//        dto5.setAtributo("nombreEstadoTramite");
-//        dto5.setOperacion("=");
-//        dto5.setValor(modificarEstadoTramiteDTOIn.getNombreEstadoTramite());
-//
-//        criterioNombre.add(dto5);
-//
-//        List lEstadoTramite2 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioNombre);
-//
-//        if (lEstadoTramite2.size() > 0) {
-//            throw new EstadoTramiteException("El nombre del EstadoTramite ya existe");
-//        }
-//
-//        //Verifica si la descripcion del estado ya existe
-//        List<DTOCriterio> criterioDesc = new ArrayList<>();
-//        DTOCriterio dto6 = new DTOCriterio();
-//
-//        dto6.setAtributo("descripcionEstadoTramite");
-//        dto6.setOperacion("=");
-//        dto6.setValor(modificarEstadoTramiteDTOIn.getDescripcionEstadoTramite());
-//
-//        criterioDesc.add(dto6);
-
-//        List lEstadoTramite3 = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioDesc);
-//
-//        if (lEstadoTramite3.size() > 0) {
-//            throw new EstadoTramiteException("La descripcion de EstadoTramite ya existe");
-//        }
 
         // Modificar el EstadoTramite si no hay problema
         estadoTramiteEncontrado.setCodEstadoTramite(modificarEstadoTramiteDTOIn.getCodEstadoTramite());
