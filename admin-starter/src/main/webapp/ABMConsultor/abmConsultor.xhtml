@@ -25,7 +25,7 @@
                             <p:outputLabel for="legajo" value="Legajo: " />
                </div>
                  <div class="ui-sm-12 ui-g-11">
-                     <p:inputText id="legajo" value="#{uiabmConsultor.legajoConsultor}" style="width: 150px;" disabled="#{!uiabmConsultor.insert}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                     <p:inputText id="legajo" value="#{uiabmConsultor.legajoConsultor}" style="width: 150px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 
                      </p:inputText><p:message id="legajoMSG" for="legajo"/>
                  </div>

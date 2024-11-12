@@ -89,7 +89,7 @@ public class UIABCListaPreciosLista implements Serializable {
             controladorABCListaPrecios.darDeBajaListaPrecios(codigo);
             Messages.create("Anulado").detail("Anulado").add();
         } catch (ListaPreciosException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
     }
 

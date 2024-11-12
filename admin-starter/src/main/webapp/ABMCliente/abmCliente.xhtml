@@ -25,7 +25,7 @@
                             <p:outputLabel for="dni" value="DNI: " />
                </div>
                  <div class="ui-sm-12 ui-g-11">
-                     <p:inputText id="dni" value="#{uiabmCliente.dniCliente}" style="width: 150px;" disabled="#{!uiabmCliente.insert}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                     <p:inputText id="dni" value="#{uiabmCliente.dniCliente}" style="width: 150px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 
                      </p:inputText><p:message id="dniMSG" for="dni"/>
                  </div>

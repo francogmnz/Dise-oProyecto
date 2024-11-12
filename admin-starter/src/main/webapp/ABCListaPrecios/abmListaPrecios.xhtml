@@ -25,7 +25,7 @@
                             <p:outputLabel for="codigo" value="Código: " />
                         </div>
                         <div class="ui-sm-12 ui-g-11">
-                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" />
+                            <p:inputText id="codigo" value="#{uiabmListaPrecios.codListaPrecios}" style="width: 150px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
                             <p:message id="codigoMSG" for="codigo" />
                         </div>
                     </div>

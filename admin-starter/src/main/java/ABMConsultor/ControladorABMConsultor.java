@@ -21,7 +21,7 @@ public class ControladorABMConsultor {
         expertoABMConsultor.agregarConsultor(dtoIngresoDatos);
     }
 
-    public void modificarConsultor(DTOModificacionDatosIn dtoModificacionDatosIn){
+    public void modificarConsultor(DTOModificacionDatosIn dtoModificacionDatosIn) throws ConsultorException{
         expertoABMConsultor.modificarConsultor(dtoModificacionDatosIn);
     }
 

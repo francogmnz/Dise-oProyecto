@@ -4,6 +4,7 @@ package ABMCliente.dtos;
 public class DTOModificacionDatosIn {
     
    private int dniCliente;
+   private int dniOriginalCliente;
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
@@ -38,6 +39,14 @@ public class DTOModificacionDatosIn {
 
     public void setMailCliente(String mailCliente) {
         this.mailCliente = mailCliente;
+    }
+
+    public int getDniOriginalCliente() {
+        return dniOriginalCliente;
+    }
+
+    public void setDniOriginalCliente(int dniOriginalCliente) {
+        this.dniOriginalCliente = dniOriginalCliente;
     }
    
     

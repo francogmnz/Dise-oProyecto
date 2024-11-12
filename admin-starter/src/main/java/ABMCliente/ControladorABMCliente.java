@@ -22,7 +22,7 @@ public class ControladorABMCliente {
         expertoABMCliente.agregarCliente(dtoIngresoDatos);
     }
 
-    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException{
+    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException, IOException{
         expertoABMCliente.modificarCliente(dtoModificacionDatosIn);
     }
 

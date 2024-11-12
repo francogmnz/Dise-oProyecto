@@ -1,5 +1,7 @@
 package ABMCliente;
 
+import ABMCliente.beans.UIABMCliente;
+import ABMCliente.beans.UIABMClienteLista;
 import ABMCliente.dtos.DTOCliente;
 import ABMCliente.dtos.DTOIngresoDatos;
 import ABMCliente.dtos.DTOModificacionDatos;
@@ -9,6 +11,7 @@ import entidades.Cliente;
 import entidades.Tramite;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -105,7 +108,7 @@ public class ExpertoABMCliente {
         dto.setValor(dniCliente);
 
         criterioList.add(dto);
-        
+
         dto2.setAtributo("fechaHoraBajaCliente");
         dto2.setOperacion("=");
         dto2.setValor(null);
@@ -122,6 +125,7 @@ public class ExpertoABMCliente {
             dtoModificacionDatos.setDniCliente(clienteEncontrado.getDniCliente());
             dtoModificacionDatos.setApellidoCliente(clienteEncontrado.getApellidoCliente());
             dtoModificacionDatos.setMailCliente(clienteEncontrado.getMailCliente());
+            dtoModificacionDatos.setDniOriginalCliente(clienteEncontrado.getDniCliente());
             return dtoModificacionDatos;
         } catch (Exception e) {
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
@@ -129,18 +133,24 @@ public class ExpertoABMCliente {
         return dtoModificacionDatos;
     }
 
-    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException {
+    public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException, IOException {
+
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
 
+        if (dtoModificacionDatosIn.getDniCliente() != dtoModificacionDatosIn.getDniOriginalCliente()) {
+            throw new ClienteException("El DNI ingresado no coincide con el DNI del cliente a Modificar");
+        }
         dto.setAtributo("dniCliente");
         dto.setOperacion("=");
         dto.setValor(dtoModificacionDatosIn.getDniCliente());
 
         criterioList.add(dto);
-        Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+
+           Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+           
         clienteEncontrado.setDniCliente(dtoModificacionDatosIn.getDniCliente());
         clienteEncontrado.setNombreCliente(dtoModificacionDatosIn.getNombreCliente());
         clienteEncontrado.setApellidoCliente(dtoModificacionDatosIn.getApellidoCliente());
@@ -169,6 +179,10 @@ public class ExpertoABMCliente {
 
         criterioList.add(dto2);
         Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+        if (clienteEncontrado == null) {
+            throw new ClienteException("El cliente seleccionado ya se encuentra dado de baja");
+        }
+
         int dniEncontrado = clienteEncontrado.getDniCliente();
 
         criterioList.clear();
@@ -180,7 +194,7 @@ public class ExpertoABMCliente {
         dto.setValor(null);
 
         criterioList.add(dto);
-        
+
         dto2.setAtributo("fechaAnulacionTramite");
         dto2.setOperacion("=");
         dto2.setValor(null);
@@ -192,13 +206,13 @@ public class ExpertoABMCliente {
         for (Object x : objetoList) {
 
             Tramite tramite = (Tramite) x;
-            if (tramite.getCliente()!= null){
-            Cliente cliente = tramite.getCliente();
-            int dni = cliente.getDniCliente();
+            if (tramite.getCliente() != null) {
+                Cliente cliente = tramite.getCliente();
+                int dni = cliente.getDniCliente();
 
-            if (dniEncontrado == dni) {
-                throw new ClienteException("Cliente no puede darse de baja por estar asignado en al menos a un tramite");
-            }
+                if (dniEncontrado == dni) {
+                    throw new ClienteException("Cliente no puede darse de baja por estar asignado en al menos a un tramite");
+                }
             }
         }
 

@@ -26,6 +26,8 @@ public class UIABMClienteLista implements Serializable {
     private String apellidoFiltro = "";
     private String mailFiltro = "";
     private String criterio = "";
+    private int dniSeleccionado = 0;
+    
 
     public ControladorABMCliente getControladorABMCliente() {
         return controladorABMCliente;
@@ -75,6 +77,15 @@ public class UIABMClienteLista implements Serializable {
         this.criterio = criterio;
     }
 
+    public int getDniSeleccionado() {
+        return dniSeleccionado;
+    }
+
+    public void setDniSeleccionado(int dniSeleccionado) {
+        this.dniSeleccionado = dniSeleccionado;
+    }
+    
+
     public void filtrar() {
 
     }
@@ -101,6 +112,7 @@ public class UIABMClienteLista implements Serializable {
     }
 
     public String irModificarCliente(int dni) {
+        setDniSeleccionado(dni);
         BeansUtils.guardarUrlAnterior();
         return "abmCliente?faces-redirect=true&dni=" + dni; // Usa '?faces-redirect=true' para hacer una redirección
     }

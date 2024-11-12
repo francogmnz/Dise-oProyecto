@@ -23,6 +23,7 @@ public class UIABMCliente implements Serializable {
     private ControladorABMCliente controladorABMCliente = new ControladorABMCliente();
     private boolean insert;
     private int dniCliente;
+    private int dniOriginalCliente;
     private String nombreCliente;
     private String apellidoCliente;
     private String mailCliente;
@@ -68,12 +69,22 @@ public class UIABMCliente implements Serializable {
         this.mailCliente = mailCliente;
     }
 
+    public int getDniOriginalCliente() {
+        return dniOriginalCliente;
+    }
+
+    public void setDniOriginalCliente(int dniOriginalCliente) {
+        this.dniOriginalCliente = dniOriginalCliente;
+    }
+    
+
     public UIABMCliente() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
         int dni = 0;
+        int dniOriginal = 0;
 
         // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
         if (request.getParameter("dni") == null || !(request.getParameter("dni").matches("-?\\d+")) || Integer.parseInt(request.getParameter("dni")) < 0) {
@@ -83,6 +94,7 @@ public class UIABMCliente implements Serializable {
         }
         try {
             dni = Integer.parseInt(request.getParameter("dni"));
+            dniOriginal = Integer.parseInt(request.getParameter("dni"));
         } catch (NumberFormatException e) {
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
             return;
@@ -96,6 +108,7 @@ public class UIABMCliente implements Serializable {
             setApellidoCliente(dtoModificacionDatos.getApellidoCliente());
             setDniCliente(dtoModificacionDatos.getDniCliente());
             setMailCliente(dtoModificacionDatos.getMailCliente());
+            setDniOriginalCliente(dtoModificacionDatos.getDniOriginalCliente());
         }
         if (dni == 0) {
             setNombreCliente("");
@@ -113,7 +126,7 @@ public class UIABMCliente implements Serializable {
 
     }
 
-    public String agregarCliente() {
+    public String agregarCliente() throws IOException {
 //        VALIDACIONES
         if (String.valueOf(getDniCliente()).isEmpty() || getDniCliente() <= 0) {
             err.agregarError("El DNI debe ser mayor a 0.");
@@ -138,6 +151,7 @@ public class UIABMCliente implements Serializable {
                     dtoModificacionDatosIn.setDniCliente(getDniCliente());
                     dtoModificacionDatosIn.setApellidoCliente(getApellidoCliente());
                     dtoModificacionDatosIn.setMailCliente(getMailCliente());
+                    dtoModificacionDatosIn.setDniOriginalCliente(getDniOriginalCliente());
                     controladorABMCliente.modificarCliente(dtoModificacionDatosIn);
                     return BeansUtils.redirectToPreviousPage();
                 } else {

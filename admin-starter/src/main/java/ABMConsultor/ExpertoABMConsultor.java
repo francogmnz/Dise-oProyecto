@@ -112,6 +112,7 @@ public class ExpertoABMConsultor {
             dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
             dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
             dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
+            dtoModificacionDatos.setLegajoOriginal(consultorEncontrado.getLegajoConsultor());
             return dtoModificacionDatos;
         } catch (Exception e) {
             // Maneja la excepción
@@ -120,15 +121,19 @@ public class ExpertoABMConsultor {
         return dtoModificacionDatos;
     }
 
-    public void modificarConsultor(DTOModificacionDatosIn dtoModificacionDatosIn) {
+    public void modificarConsultor(DTOModificacionDatosIn dtoModificacionDatosIn) throws ConsultorException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
+        if (dtoModificacionDatosIn.getLegajoConsultor()!= dtoModificacionDatosIn.getLegajoOriginal()) {
+            throw new ConsultorException("El Legajo ingresado no coincide con el Legajo del consultor a Modificar");
+        }
 
         dto.setAtributo("legajoConsultor");
         dto.setOperacion("=");
         dto.setValor(dtoModificacionDatosIn.getLegajoConsultor());
+
 
         criterioList.add(dto);
 
@@ -137,6 +142,7 @@ public class ExpertoABMConsultor {
         consultorEncontrado.setLegajoConsultor(dtoModificacionDatosIn.getLegajoConsultor());
         consultorEncontrado.setNombreConsultor(dtoModificacionDatosIn.getNombreConsultor());
         consultorEncontrado.setNumMaximoTramites(dtoModificacionDatosIn.getNumMaximoTramites());
+ 
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();

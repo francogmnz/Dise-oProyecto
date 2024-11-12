@@ -3,6 +3,7 @@ package ABMConsultor.dtos;
 
 public class DTOModificacionDatos {
    private int legajoConsultor;
+   private int legajoOriginal;
     private String nombreConsultor;
     private int numMaximoTramites;
 
@@ -29,6 +30,15 @@ public class DTOModificacionDatos {
     public void setNumMaximoTramites(int numMaximoTramites) {
         this.numMaximoTramites = numMaximoTramites;
     }
+
+    public int getLegajoOriginal() {
+        return legajoOriginal;
+    }
+
+    public void setLegajoOriginal(int legajoOriginal) {
+        this.legajoOriginal = legajoOriginal;
+    }
+    
     
 }
     

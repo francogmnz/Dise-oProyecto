@@ -552,7 +552,7 @@ public class ExpertoABCListaPrecios {
         }
 //        VERIFICA SI LA LISTA SELECCIONADA ES PASADA
         if (listaPreciosEncontrada.getFechaHoraHastaListaPrecios().after(fechaHoraActual.obtenerFechaHoraActual())) {
-            throw new ListaPreciosException("La Lista de Precios seleccionada ya no se puede dar de Baja.");
+            throw new ListaPreciosException("La Lista de Precios seleccionada no se puede dar de Baja, ya que no es la última.");
         }
 //        VERIFICA SI LA LISTA SELECCIONADA YA ESTA DADA DE BAJA
         if (listaPreciosEncontrada.getFechaHoraBajaListaPrecios() != null) {

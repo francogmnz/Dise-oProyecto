@@ -22,6 +22,7 @@ public class UIABMConsultorLista implements Serializable {
 
     private ControladorABMConsultor controladorABMConsultor = new ControladorABMConsultor();
     private int legajoFiltro = 0;
+    private int legajoSeleccionado=0;
     private String nombreFiltro = "";
     private int numMaximoTramitesFiltro = 0;
     private String criterio = "";
@@ -65,6 +66,15 @@ public class UIABMConsultorLista implements Serializable {
     public void setCriterio(String criterio) {
         this.criterio = criterio;
     }
+
+    public int getLegajoSeleccionado() {
+        return legajoSeleccionado;
+    }
+
+    public void setLegajoSeleccionado(int legajoSeleccionado) {
+        this.legajoSeleccionado = legajoSeleccionado;
+    }
+    
 
     public void filtrar() {
 
