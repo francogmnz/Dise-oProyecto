@@ -199,6 +199,8 @@ public class ExpertoCambioEstado {
         tramiteEstadoTramite.setFechaHastaTET(fechaHasta);
         tramiteEstadoTramite.setEstadoTramite(estadoDestino);
       //  tramiteEstadoTramite.setObservaciones();
+      
+        tramite.setEstadoTramite(estadoDestino);
         tramite.addTramiteEstadoTramite(tramiteEstadoTramite);
 
         // Verificar si es el último estado y actualizar fecha de fin
