@@ -323,6 +323,13 @@ public class ExpertoRegistrarTramite {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente && TipoTramite no encontrado/s");
             }
 
+            if (tipoTramiteEncontrado == null) {
+                throw new RegistrarTramiteException("No se pudo registrar el trámite. TipoTramite no encontrado");
+            }
+            if (clienteEncontrado == null) {
+                throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente no encontrado");
+            }
+            
             List<DTOCriterio> clienteTT = new ArrayList<>();
             DTOCriterio tramiteCliente = new DTOCriterio();
             tramiteCliente.setAtributo("cliente");
@@ -342,13 +349,6 @@ public class ExpertoRegistrarTramite {
                 if (mismoTipoTramite && tramiteEnCurso) {
                     throw new RegistrarTramiteException("El Cliente tiene un mismo Tipo Trámite en curso");
                 }
-            }
-
-            if (tipoTramiteEncontrado == null) {
-                throw new RegistrarTramiteException("No se pudo registrar el trámite. TipoTramite no encontrado");
-            }
-            if (clienteEncontrado == null) {
-                throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente no encontrado");
             }
 
             tramiteCreado.setCliente(clienteEncontrado);
@@ -830,10 +830,9 @@ public class ExpertoRegistrarTramite {
                     return;
                 }
 
-                
                 tramiteElegido.setConsultor(consultorSeleccionado);
-                if (tramiteElegido.getFechaInicioTramite() == null){
-                tramiteElegido.setFechaInicioTramite(fechaHoraActual.obtenerFechaHoraActual());
+                if (tramiteElegido.getFechaInicioTramite() == null) {
+                    tramiteElegido.setFechaInicioTramite(fechaHoraActual.obtenerFechaHoraActual());
                 }
                 FachadaPersistencia.getInstance().merge(tramiteElegido);
 
