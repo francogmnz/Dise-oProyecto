@@ -12,6 +12,7 @@ import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
+import entidades.Tramite;
 import entidades.Version;
 import java.sql.Timestamp;
 import java.time.ZoneId;
@@ -21,6 +22,7 @@ import java.util.List;
 import org.omnifaces.util.Messages;
 import utils.DTOCriterio;
 import utils.FachadaPersistencia;
+import utils.fechaHoraActual;
 
 public class ExpertoABMVersion {
 
@@ -507,6 +509,7 @@ public class ExpertoABMVersion {
         return dtoVersionM;
     }
      */
+    
     public void anularVersion(int codTipoTramite, int nroVersion) throws VersionException {
         // Iniciar transacción
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -514,88 +517,54 @@ public class ExpertoABMVersion {
         // Verificar existencia del TipoTramite el primer buscar
         List<DTOCriterio> lCriterio = new ArrayList<>();
 
-        DTOCriterio criterioTipoTramite = new DTOCriterio();
-
         DTOCriterio criterioFechaBaja = new DTOCriterio();
         criterioFechaBaja.setAtributo("fechaBajaVersion");
         criterioFechaBaja.setOperacion("=");
         criterioFechaBaja.setValor(null);
+        
         lCriterio.add(criterioFechaBaja);
 
         DTOCriterio criterioNroVersion = new DTOCriterio();
         criterioNroVersion.setAtributo("nroVersion");
         criterioNroVersion.setOperacion("=");
         criterioNroVersion.setValor(nroVersion);
+        
         lCriterio.add(criterioNroVersion);
 
         List<Object> objetoList2 = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
 
-        if (objetoList2.isEmpty()) {
-            throw new VersionException("La versión no se puede anular");
-        }
         Version versionAnula = (Version) objetoList2.get(0);//transformo el primer elemento a version
 
-        // Buscar última versión válida
-        lCriterio.clear();
-
-        DTOCriterio criterioFechaBajaUltima = new DTOCriterio();
-        criterioFechaBajaUltima.setAtributo("fechaBajaVersion");
-        criterioFechaBajaUltima.setOperacion("=");
-        criterioFechaBajaUltima.setValor(null);
-        lCriterio.add(criterioFechaBajaUltima);
-
-        List<Object> objetoList3 = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
-        //aca recorro todas las ultimas versiones sin fecha de baja
-        Version ultVersion = null;
-        for (Object obj : objetoList3) {
-            Version version = (Version) obj;  // aca convierto  el Object en Version pq sino da error
-            // verifico si es la primera versión o si la versión actual tiene una fecha de inicio más reciente
-            if (ultVersion == null || version.getFechaDesdeVersion().compareTo(ultVersion.getFechaDesdeVersion()) > 0) {
-                ultVersion = version; //aca establesco la version ult como null para q sea
+        List<DTOCriterio> lCriterio2 = new ArrayList<>();
+        
+        DTOCriterio criterioTramite = new DTOCriterio();
+        criterioTramite.setAtributo("version");
+        criterioTramite.setOperacion("=");
+        criterioTramite.setValor(versionAnula);
+        
+        lCriterio2.add(criterioTramite);
+        
+        List tramiteList = FachadaPersistencia.getInstance().buscar("Tramite", lCriterio2);
+        for(Object o:tramiteList){
+            Tramite tramiteAsociado = (Tramite) o;
+            if(tramiteAsociado.getFechaAnulacionTramite() == null || tramiteAsociado.getFechaFinTramite() == null){
+                throw new VersionException("No se puede dar de baja la Version, porque estan asociado a "
+                        + "por lo menos un Tramite activo");
             }
+        }        
+        
+        if(versionAnula.getNroVersion() != obtenerUltimoNumeroVersion(codTipoTramite)){
+            throw new VersionException("Solo se puede dar de baja la ultima version");
         }
-
-        //Verifica si no se encontró ninguna versión activa o si la última versión activa no es la que se intenta anular
-        if (ultVersion == null || ultVersion.getNroVersion() != versionAnula.getNroVersion()) {
-            throw new VersionException("Existen versiones futuras. Solo se puede anular la última futura.");
-        }
-
-        //Verificacion para que no anule si es activa
-        Timestamp fechaActual = new Timestamp(System.currentTimeMillis());
-
-        if (ultVersion.getFechaDesdeVersion().before(fechaActual)
-                && (ultVersion.getFechaHastaVersion() == null || ultVersion.getFechaHastaVersion().after(fechaActual))) {
-            throw new VersionException("No se puede anular la versión porque es una versión vigente");
-
-        }
-
-        // Anular la versión estableciendo la fecha de baja a la fecha y hora actuales
-        ultVersion.setFechaBajaVersion(new Timestamp(System.currentTimeMillis()));
-        FachadaPersistencia.getInstance().guardar(ultVersion);
-
-        // Actualizar la penúltima versión
-        // Inicializar la variable para almacenar la penúltima versión
-        Version penultVersion = null;
-        for (Object obj : objetoList3) {
-            Version version = (Version) obj;  // Convertir el objeto actual a tipo Version
-
-            // Comparar con la última versión para encontrar la penúltima
-            if (penultVersion == null || version.getFechaDesdeVersion().compareTo(penultVersion.getFechaDesdeVersion()) > 0) {
-                // Asegurarse de que la versión no sea la última
-                if (version.getNroVersion() != ultVersion.getNroVersion()) {
-                    penultVersion = version;
-                }
-            }
-        }
-        // Si se encontró una penúltima versión, actualizar su fecha de finalización
-        if (penultVersion != null) {
-            penultVersion.setFechaHastaVersion(ultVersion.getFechaHastaVersion());  // Establecer la fecha de finalización
-            FachadaPersistencia.getInstance().guardar(penultVersion);
-        }
-
-        // Finalizar transacción
+        
+        versionAnula.setFechaBajaVersion(fechaHoraActual.obtenerFechaHoraActual());
+        
+        FachadaPersistencia.getInstance().iniciarTransaccion();
+        
+        FachadaPersistencia.getInstance().guardar(versionAnula);
+        
         FachadaPersistencia.getInstance().finalizarTransaccion();
-    }
+        }
 
     public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) throws VersionException {
 
@@ -641,6 +610,7 @@ public class ExpertoABMVersion {
             datosVersionH.setFechaDesdeVersion(version.getFechaDesdeVersion());
             datosVersionH.setFechaHastaVersion(version.getFechaHastaVersion());
             datosVersionH.setDescripcionVersion(version.getDescripcionVersion());
+            datosVersionH.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
             datosVersionH.setFechaBajaVersion(version.getFechaBajaVersion());
             // Agrega el DTO a la lista
             listaDatosVersionH.add(datosVersionH);

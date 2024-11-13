@@ -87,9 +87,11 @@ public class UIABMVersionLista implements Serializable {
     }
 
     public void anularVersion(int codTipoTramite, int nroVersion) {
-
+        try{
         controladorABMVersion.anularVersion(codTipoTramite, nroVersion);
-        Messages.create("Versión anulada").detail("La versión ha sido anulada correctamente.").add();
+        } catch (Exception e){
+            Messages.create("Error al dar de baja una version.").error().detail(e.getMessage()).add();
+        }
     }
 
     public void cargarHistorial() {
