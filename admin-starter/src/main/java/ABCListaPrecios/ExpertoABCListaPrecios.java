@@ -551,8 +551,8 @@ public class ExpertoABCListaPrecios {
             throw new ListaPreciosException("La Lista de Precios seleccionada está vigente y no se puede dar de Baja.");
         }
 //        VERIFICA SI LA LISTA SELECCIONADA ES PASADA
-        if (listaPreciosEncontrada.getFechaHoraHastaListaPrecios().after(fechaHoraActual.obtenerFechaHoraActual())) {
-            throw new ListaPreciosException("La Lista de Precios seleccionada no se puede dar de Baja, ya que no es la última.");
+        if (listaPreciosEncontrada.getFechaHoraHastaListaPrecios().before(fechaHoraActual.obtenerFechaHoraActual())) {
+            throw new ListaPreciosException("La Lista de Precios seleccionada no se puede dar de Baja, ya que es un Lista pasada.");
         }
 //        VERIFICA SI LA LISTA SELECCIONADA YA ESTA DADA DE BAJA
         if (listaPreciosEncontrada.getFechaHoraBajaListaPrecios() != null) {
