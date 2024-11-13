@@ -1,5 +1,9 @@
 package utils;
 
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,7 +13,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.primefaces.shaded.json.JSONObject;
 
-public class fechaHoraActual {
+@Named
+@ViewScoped
+public class fechaHoraActual implements Serializable {
 
     private static Timestamp cachedTimestamp = null;
     private static long lastFetchTime = 0;
@@ -17,7 +23,7 @@ public class fechaHoraActual {
 
     public static Timestamp obtenerFechaHoraActual() {
         long currentTime = System.currentTimeMillis();
-        
+
         // Verificar si el cache es válido
         if (cachedTimestamp != null && (currentTime - lastFetchTime < CACHE_DURATION)) {
             return cachedTimestamp; // Devolver el timestamp cacheado
@@ -31,6 +37,11 @@ public class fechaHoraActual {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Comprobamos el estado de la respuesta HTTP
+            if (response.statusCode() != 200) {
+                throw new Exception("Error al obtener la fecha y hora: código de estado " + response.statusCode());
+            }
 
             // Parseamos la respuesta JSON para extraer la fecha y hora
             JSONObject jsonResponse = new JSONObject(response.body());
@@ -47,7 +58,20 @@ public class fechaHoraActual {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            // Redirigir a la página de error y retornar un valor predeterminado
+            redirigirPaginaDeError();
+            return Timestamp.valueOf("1000-1-1 00:00:00"); // Valor predeterminado que evita el NullPointerException
         }
     }
+
+    // Método de redirección usando un string de navegación
+    private static void redirigirPaginaDeError() {
+        try {
+            String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pagina_error.xhtml");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
