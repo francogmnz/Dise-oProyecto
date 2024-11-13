@@ -266,13 +266,13 @@ public class ExpertoABMEstadoTramite {
     private void verificarEstadoTramiteEnOrigenODestino(EstadoTramite estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
         // Verificar si el estado está en la lista de origen     
         if (estadoTramiteOrigen.getCodEstadoTramite() == codEstadoTramite) {
-            throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en el origen de una versión actual/posterior");
+            throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en una versión actual/posterior");
         }
 
         // Verificar si el estado está en la lista de destino
         for (EstadoTramite estado : estadoTramiteDestino) {
             if (estado.getCodEstadoTramite() == codEstadoTramite) {
-                throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en el destino de una versión actual/posterior");
+                throw new EstadoTramiteException("No se pudo eliminar el Estado porque está presente en una versión actual/posterior");
             }
         }
     }
@@ -280,13 +280,13 @@ public class ExpertoABMEstadoTramite {
     private void verificarEstadoTramiteEnOrigenODestinoM(EstadoTramite estadoTramiteOrigen, List<EstadoTramite> estadoTramiteDestino, int codEstadoTramite) throws EstadoTramiteException {
         // Verificar si el estado está en la lista de origen
         if (estadoTramiteOrigen.getCodEstadoTramite() == codEstadoTramite) {
-            throw new EstadoTramiteException("No se pudo modficar el Estado porque está presente en el origen de una versión actual/posterior");
+            throw new EstadoTramiteException("No se pudo modficar el Estado porque está presente en una versión actual/posterior");
         }
 
         // Verificar si el estado está en la lista de destino
         for (EstadoTramite estado : estadoTramiteDestino) {
             if (estado.getCodEstadoTramite() == codEstadoTramite) {
-                throw new EstadoTramiteException("No se pudo modificar el Estado porque está presente en el destino de una versión actual/posterior");
+                throw new EstadoTramiteException("No se pudo modificar el Estado porque está presente en una versión actual/posterior");
             }
         }
     }

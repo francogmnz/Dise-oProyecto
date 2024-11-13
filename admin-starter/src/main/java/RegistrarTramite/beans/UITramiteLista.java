@@ -248,10 +248,4 @@ public class UITramiteLista implements Serializable {
         return tramiteFila.getFechaInicioTramite() != null && tramiteFila.getFechaFinTramite() == null;
     }
 
-    public boolean isPendienteConsultor(TramiteGrillaUI tramiteFila) {
-        // El trámite está pendiente de consultor si se presentó toda la documentación, no ha iniciado,
-        // y no está finalizado ni anulado
-        return tramiteFila.getFechaInicioTramite() == null && tramiteFila.getFechaPresentacionTotalDocumentacion() != null;
-    }
-
 }

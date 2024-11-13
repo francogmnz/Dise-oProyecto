@@ -244,9 +244,6 @@
                                     <tr>
                                         <td class="isFinalizado">FINALIZADO</td>
                                     </tr>
-                                    <tr>
-                                        <td class="isPendienteConsultor">PENDIENTE CONSULTOR</td>
-                                    </tr>
                                 </table>
                             </div>
                         </div>    
@@ -278,10 +275,6 @@
                      background-color: #a5a3a3;
                  }
 
-                 .isPendienteConsultor {
-                     color: black;
-                     background-color: #bfac5c;
-                 }
              </style>
 
                 <!-- Tabla para mostrar los trámites -->
@@ -290,7 +283,7 @@
                              rowStyleClass="#{uitramiteLista.isFinalizado(tramite) ? 'isFinalizado' :
                                               uitramiteLista.isAnulado(tramite) ? 'isAnulado' :
                                               uitramiteLista.isPendienteDoc(tramite) ? 'isPendienteDoc' : 
-                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado' : 'isPendienteConsultor'}">
+                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado' : ''}">
                     <p:column>
                         <f:facet name="header">Número Trámite</f:facet>
                             #{tramite.nroTramite}
