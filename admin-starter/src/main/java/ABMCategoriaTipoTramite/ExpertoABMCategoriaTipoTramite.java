@@ -251,7 +251,7 @@ public class ExpertoABMCategoriaTipoTramite {
         dtoCodigo.setOperacion("=");
         dtoCodigo.setValor(categoriaDTO.getCodCategoriaTipoTramite());
         criterioCodigo.add(dtoCodigo);
-
+        
         List lCategoriaCodigo = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioCodigo);
         if (!lCategoriaCodigo.isEmpty()) {
             throw new CategoriaTipoTramiteException("El codigo de la categoria introducido ya existe.");
@@ -264,6 +264,12 @@ public class ExpertoABMCategoriaTipoTramite {
         dtoNombreCategoriaTipoTramite.setOperacion("=");
         dtoNombreCategoriaTipoTramite.setValor(nombreCategoriaTipoTramite);
         criterioNombreCategoriaTipoTramite.add(dtoNombreCategoriaTipoTramite);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        dtoFecha.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        criterioNombreCategoriaTipoTramite.add(dtoFecha);
 
         List lCategoriaNombre = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioNombreCategoriaTipoTramite);
         if (!lCategoriaNombre.isEmpty()) {
@@ -277,6 +283,7 @@ public class ExpertoABMCategoriaTipoTramite {
         dtoDescripcion.setOperacion("=");
         dtoDescripcion.setValor(descripcionCategoriaTipoTramite);
         criterioDescripcion.add(dtoDescripcion);
+        criterioDescripcion.add(dtoFecha);
 
 
         List lCategoriaDescripcion = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioDescripcion);
@@ -291,6 +298,7 @@ public class ExpertoABMCategoriaTipoTramite {
         dtoDescripcionWeb.setOperacion("=");
         dtoDescripcionWeb.setValor(descripcionWebCategoriaTipoTramite);
         criterioDescripcionWeb.add(dtoDescripcionWeb);
+        criterioDescripcionWeb.add(dtoFecha);
 
 
         List lCategoriaDescripcionWeb = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioDescripcionWeb);
@@ -336,6 +344,12 @@ public class ExpertoABMCategoriaTipoTramite {
         dtoDistintoCodCTT.setOperacion("<>");
         dtoDistintoCodCTT.setValor(categoriaDTO.getCodCategoriaTipoTramite());
         criterioNombreCategoriaTipoTramite.add(dtoDistintoCodCTT);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        dtoFecha.setAtributo("fechaHoraBajaCategoriaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        criterioNombreCategoriaTipoTramite.add(dtoFecha);
 
         List lCategoriaNombre = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioNombreCategoriaTipoTramite);
         if (!lCategoriaNombre.isEmpty()) {
@@ -351,7 +365,8 @@ public class ExpertoABMCategoriaTipoTramite {
         criterioDescripcion.add(dtoDescripcion);
 
         criterioDescripcion.add(dtoDistintoCodCTT);
-
+        criterioDescripcion.add(dtoFecha);
+        
         List lCategoriaDescripcion = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioDescripcion);
         if (!lCategoriaDescripcion.isEmpty()) {
             throw new CategoriaTipoTramiteException("La descripcion de la Categoria introducida ya existe.");
@@ -366,7 +381,8 @@ public class ExpertoABMCategoriaTipoTramite {
         criterioDescripcionWeb.add(dtoDescripcionWeb);
 
         criterioDescripcionWeb.add(dtoDistintoCodCTT);
-
+        criterioDescripcionWeb.add(dtoFecha);
+        
         List lCategoriaDescripcionWeb = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioDescripcionWeb);
         if (!lCategoriaDescripcionWeb.isEmpty()) {
             throw new CategoriaTipoTramiteException("La descripcion web de la Categoria introducida ya existe.");

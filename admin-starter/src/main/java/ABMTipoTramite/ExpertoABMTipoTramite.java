@@ -559,7 +559,13 @@ public class ExpertoABMTipoTramite {
         dtoNombreTT.setOperacion("=");
         dtoNombreTT.setValor(nombreTipoTramite);
         criterioNombreTT.add(dtoNombreTT);
-
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        dtoFecha.setAtributo("fechaHoraBajaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        criterioNombreTT.add(dtoFecha);
+        
         List lTipoTramiteNombre = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioNombreTT);
         if (!lTipoTramiteNombre.isEmpty()) {
             throw new TipoTramiteException("El nombre del tipo de tramite ya existe.");
@@ -572,6 +578,7 @@ public class ExpertoABMTipoTramite {
         dtoDescripcionTT.setOperacion("=");
         dtoDescripcionTT.setValor(descripcionTT);
         criterioDescripcionTT.add(dtoDescripcionTT);
+        criterioDescripcionTT.add(dtoFecha);
 
         List lTipoTramiteDescripcion = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionTT);
         if (!lTipoTramiteDescripcion.isEmpty()) {
@@ -584,6 +591,7 @@ public class ExpertoABMTipoTramite {
         dtoDescripcionWebTT.setOperacion("=");
         dtoDescripcionWebTT.setValor(descripcionWebTT);
         criterioDescripcionWebTT.add(dtoDescripcionWebTT);
+        criterioDescripcionWebTT.add(dtoFecha);
 
         List lTipoTramiteDescripcionWeb = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionWebTT);
         if (!lTipoTramiteDescripcionWeb.isEmpty()) {
@@ -645,6 +653,12 @@ public class ExpertoABMTipoTramite {
         dtoDistintoCodTT.setOperacion("<>");
         dtoDistintoCodTT.setValor(tipoTramiteDTO.getCodTipoTramite());
         criterioNombreTT.add(dtoDistintoCodTT);
+        
+        DTOCriterio dtoFecha = new DTOCriterio();
+        dtoFecha.setAtributo("fechaHoraBajaTipoTramite");
+        dtoFecha.setOperacion("=");
+        dtoFecha.setValor(null);
+        criterioNombreTT.add(dtoFecha);
 
         List lTipoTramiteNombre = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioNombreTT);
         if (!lTipoTramiteNombre.isEmpty()) {
@@ -658,6 +672,7 @@ public class ExpertoABMTipoTramite {
         dtoDescripcionTT.setValor(descripcionTT);
         criterioDescripcionTT.add(dtoDescripcionTT);
         criterioDescripcionTT.add(dtoDistintoCodTT);
+        criterioDescripcionTT.add(dtoFecha);
 
         List lTipoTramiteDescripcion = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionTT);
         if (!lTipoTramiteDescripcion.isEmpty()) {
@@ -671,6 +686,7 @@ public class ExpertoABMTipoTramite {
         dtoDescripcionWebTT.setValor(descripcionWebTT);
         criterioDescripcionWebTT.add(dtoDescripcionWebTT);
         criterioDescripcionWebTT.add(dtoDistintoCodTT);
+        criterioDescripcionWebTT.add(dtoFecha);
 
         List lTipoTramiteDescripcionWeb = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioDescripcionWebTT);
         if (!lTipoTramiteDescripcionWeb.isEmpty()) {

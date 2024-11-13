@@ -309,6 +309,7 @@ public class ExpertoRegistrarTramiteWeb {
         nuevoTramite.setTipoTramite(tipoTramiteRelacionado);
         nuevoTramite.setEstadoTramite(estadoTramite);
         nuevoTramite.setFechaRecepcionTramite(fechaHoraActual.obtenerFechaHoraActual());
+        nuevoTramite.setFechaPresentacionTotalDocumentacion(null);
         nuevoTramite.setFechaInicioTramite(null);
         nuevoTramite.setFechaFinTramite(null);
         nuevoTramite.setFechaAnulacionTramite(null);
