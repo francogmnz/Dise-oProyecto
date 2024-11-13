@@ -14,13 +14,17 @@ public class CambioEstadoGrillaUI {
     private String nombreConsultor;
     private Timestamp fechaInicioTramite;
     private Timestamp  fechaRecepcionTramite;
+    private EstadoTramite estadoTramite;
+    private String nombreEstadoTramite;
+    
 
-    public Consultor getConsultor() {
-        return consultor;
+    
+    public EstadoTramite getEstadoTramite() {
+        return estadoTramite;
     }
 
-    public void setConsultor(Consultor consultor) {
-        this.consultor = consultor;
+    public void setEstadoTramite(EstadoTramite estadoTramite) {
+        this.estadoTramite = estadoTramite;
     }
 
     public String getNombreConsultor() {
@@ -30,6 +34,16 @@ public class CambioEstadoGrillaUI {
     public void setNombreConsultor(String nombreConsultor) {
         this.nombreConsultor = nombreConsultor;
     }
+
+    
+    public Consultor getConsultor() {
+        return consultor;
+    }
+
+    public void setConsultor(Consultor consultor) {
+        this.consultor = consultor;
+    }
+
 
     public int getCodConsultor() {
         return codConsultor;
@@ -79,8 +93,5 @@ public class CambioEstadoGrillaUI {
         this.nombreEstadoTramite = nombreEstadoTramite;
     }
     private int codEstadoTramite;
-    private String nombreEstadoTramite;
-    
-    
-  
+
 }

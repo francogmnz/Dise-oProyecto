@@ -2,11 +2,9 @@ package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
 import CambioEstado.dtos.DTOHistorialEstado;
-import CambioEstado.dtos.DTOMostrarHistorial;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
-import entidades.TramiteEstadoTramite;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -14,6 +12,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.primefaces.PrimeFaces;
 import utils.BeansUtils;
 
 @Named("uicambioEstadoLista")
@@ -25,8 +24,17 @@ public class UICambioEstadoLista implements Serializable {
     private String nombreFiltro = "";
     private String nombreTramite;
     private int nroTramite;
+    private int contador;
     
     private List<CambioEstadoHistoricoGrillaUI> historialEstadosList = new ArrayList<>();
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
 
     
     public List<CambioEstadoHistoricoGrillaUI> getHistorialEstadosList() {
@@ -36,7 +44,8 @@ public class UICambioEstadoLista implements Serializable {
     public void setHistorialEstadosList(List<CambioEstadoHistoricoGrillaUI> historialEstadosList) {
         this.historialEstadosList = historialEstadosList;
     }
-    
+   
+
     public String getNombreTramite() {
         return nombreTramite;
     }
@@ -83,8 +92,7 @@ public class UICambioEstadoLista implements Serializable {
     }
     
     public String irMostrarHistorialEstados(int nroTramite) {
-    this.nroTramite = nroTramite; // Set it in case it's required on the next page
-        System.out.println("Hola");
+    this.nroTramite = nroTramite;
             
     BeansUtils.guardarUrlAnterior();
     return "/CambioEstado/HistorialTramite.xhtml?faces-redirect=true&nroTramite=" + nroTramite;
@@ -115,8 +123,7 @@ public class UICambioEstadoLista implements Serializable {
                 cambioEstadoGrillaUI.setFechaInicioTramite(tramiteDTO.getFechaInicioTramite()); // Fecha de inicio del trámite
                 cambioEstadoGrillaUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite()); // Fecha de recepción
                 cambioEstadoGrillaUI.setNroTramite(tramiteDTO.getNroTramite()); // Número del trámite
-                cambioEstadoGrillaUI.setNombreConsultor(tramiteDTO.getConsultor().getNombreConsultor());
-                
+                cambioEstadoGrillaUI.setNombreConsultor(tramiteDTO.getNombreConsultor());
                 // Agregar el objeto a la lista que se mostrará en la grilla
                 cambioEstadoGrilla.add(cambioEstadoGrillaUI);
             }
@@ -138,7 +145,7 @@ public class UICambioEstadoLista implements Serializable {
                 grillaUI.setNombreEstadoTramite(dto.getNombreEstadoTramite());
                 grillaUI.setFechaDesdeTET(dto.getFechaDesdeTET());
                 grillaUI.setFechaHastaTET(dto.getFechaHastaTET());
-                grillaUI.setContador(dto.getContador());
+                grillaUI.setContador(dto.getContadorTET());
                 grillaUI.setNroTramite(nroTramite);
                 historialEstadosList.add(grillaUI);
             }
@@ -147,33 +154,24 @@ public class UICambioEstadoLista implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al obtener historial de estados", e.getMessage()));
         }
     }
+    
+    public void deshacerUltimoCambio() {
+    try {
+        controladorCambioEstado.deshacerUltimoCambio(nroTramite); // Llama al método en el controlador
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Último cambio deshecho con éxito", null));
+
+    } catch (CambioEstadoException e) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al deshacer el cambio", e.getMessage()));
+    }
+  // Ejecutar el script de JavaScript para ir a la página anterior después de 1.5 segundos
+    PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
+
+}
+    
     public void volverPantallaTramiteConsultor(){
         BeansUtils.redirectToPreviousPage();
     }
     
 }
-        // Redirigir a la página de historial de versiones
-//        return versionHistoricoGrillaUI;
-  
-
-
-
-   /* public String irAgregarArticulo() {
-        BeansUtils.guardarUrlAnterior();
-        return "abmArticulo?faces-redirect=true&codigo=0";
-    }
-
-    public String irModificarArticulo(int codigo) {
-        BeansUtils.guardarUrlAnterior();
-        return "abmArticulo?faces-redirect=true&codigo=" + codigo;
-    }
-
-    /*public void darDeBajaArticulo(int codigo) {
-        try {
-            controladorABMArticulo.darDeBajaArticulo(codigo);
-            Messages.create("Anulado").detail("Anulado").add();
-        } catch (ArticuloException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
-
-        }
-    }*/

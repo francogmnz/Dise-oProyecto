@@ -5,18 +5,17 @@ import ABMVersion.dtos.DTODatosVersionIn;
 import ABMVersion.dtos.DTOEstadoDestinoIN;
 import ABMVersion.dtos.DTOEstadoOrigenIN;
 import ABMVersion.dtos.DTOVersionM;
-import ABMVersion.dtos.VersionDTO;
 import ABMVersion.dtos.DTOEstado;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
-import ABMVersion.dtos.DTOVersionesDeTipo;
 import ABMVersion.exceptions.VersionException;
 import entidades.ConfTipoTramiteEstadoTramite;
 import entidades.EstadoTramite;
 import entidades.TipoTramite;
 import entidades.Version;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.omnifaces.util.Messages;
@@ -181,15 +180,29 @@ public class ExpertoABMVersion {
         nueva.setNroVersion(nuevoNumeroVersion);
         // Configurar los demás atributos de la versión
         nueva.setDescripcionVersion(dtoDatosVersion.getDescripcionVersion());
+// Configura la zona horaria deseada (por ejemplo, "America/Argentina/Buenos_Aires")
+        ZoneId zonaHorariaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
 
-// Obtener la fecha actual
-        nueva.setFechaDesdeVersion(new Timestamp(dtoDatosVersion.getFechaDesdeVersion().getTime()));
-        nueva.setFechaHastaVersion(new Timestamp(dtoDatosVersion.getFechaHastaVersion().getTime()));
+// Convertir FechaDesdeVersion a la zona horaria de Argentina y guardar como Timestamp
+        ZonedDateTime fechaDesdeArgentina = dtoDatosVersion.getFechaDesdeVersion().toInstant().atZone(zonaHorariaArgentina);
+        nueva.setFechaDesdeVersion(Timestamp.valueOf(fechaDesdeArgentina.toLocalDateTime()));
 
+// Convertir FechaHastaVersion a la zona horaria de Argentina y guardar como Timestamp
+        ZonedDateTime fechaHastaArgentina = dtoDatosVersion.getFechaHastaVersion().toInstant().atZone(zonaHorariaArgentina);
+        nueva.setFechaHastaVersion(Timestamp.valueOf(fechaHastaArgentina.toLocalDateTime()));
         // Debug: Imprimir las fechas
         System.out.println("Fecha Desde: " + nueva.getFechaDesdeVersion());
         System.out.println("Fecha Hasta: " + nueva.getFechaHastaVersion());
 
+        if (dtoDatosVersion.getFechaDesdeVersion() == null) {
+            Messages.create("Error").detail("La fecha desde no puede estar vacia").error().add();
+            return false;
+        }
+
+        if (dtoDatosVersion.getFechaHastaVersion() == null) {
+            Messages.create("Error").detail("La fecha hasta no puede estar vacia").error().add();
+            return false;
+        }
         // Verificar que la fecha hasta no sea menor que la fecha desde
         if (nueva.getFechaHastaVersion().before(nueva.getFechaDesdeVersion())) {
             Messages.create("Error").detail("La fecha hasta no puede ser menor que la fecha desde.").error().add();
@@ -320,18 +333,17 @@ public class ExpertoABMVersion {
             fechaVersion.setValor(null);  // Solo versiones activas
             criterioList.add(fechaVersion);
 
-            // Buscar la versión con el criterio dado
             List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
             List<Version> listVersion = new ArrayList<>();
             for (Object obj : lVersion) {
-                if (obj instanceof Version) {  // Verificar que el objeto sea de tipo Version
+                if (obj instanceof Version) {
                     listVersion.add((Version) obj);
                 } else {
                     System.out.println("Elemento encontrado en lVersion no es de tipo Version: " + obj);
                 }
             }
 
-// Ahora puedes proceder a verificar la última versión
+// Obtener la última versión
             Version ultVersion = null;
             for (Version version : listVersion) {
                 if (ultVersion == null || ultVersion.getFechaDesdeVersion().compareTo(version.getFechaDesdeVersion()) < 0) {
@@ -462,6 +474,39 @@ public class ExpertoABMVersion {
         return dtoVersionM;
     }
 
+    /*   public DTOVersionM VerVersion(int codTipoTramite, int nroVersion) {
+
+        DTOVersionM dtoVersionM = new DTOVersionM();
+
+        // Obtener el número de la última versión del tipo de trámite
+        int v = obtenerUltimoNumeroVersion(codTipoTramite);
+
+        List<DTOCriterio> criterioList = new ArrayList<>();        
+
+        DTOCriterio versionCriterio = new DTOCriterio();
+        versionCriterio.setAtributo("nroVersion");
+        versionCriterio.setOperacion("=");
+        versionCriterio.setValor(v);
+        criterioList.add(versionCriterio);
+
+        // Buscar la versión con el criterio dado
+        List<Object> lVersion = FachadaPersistencia.getInstance().buscar("Version", criterioList);
+
+        if (lVersion.isEmpty()) {
+            // No se encontró la versión
+        } else {
+            // Obtener la versión encontrada y mapear a DTO
+            Version versionEncontrada = (Version) lVersion.get(0);
+
+            dtoVersionM.setNroVersion(versionEncontrada.getNroVersion());
+            dtoVersionM.setDescripcionVersion(versionEncontrada.getDescripcionVersion());
+            dtoVersionM.setFechaDesdeVersion(versionEncontrada.getFechaHastaVersion());
+//            dtoVersionM.setFechaHastaVersion(versionEncontrada.getFechaHastaVersion());
+            dtoVersionM.setDibujo(versionEncontrada.getDibujo());
+        }
+        return dtoVersionM;
+    }
+     */
     public void anularVersion(int codTipoTramite, int nroVersion) throws VersionException {
         // Iniciar transacción
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -523,8 +568,7 @@ public class ExpertoABMVersion {
             throw new VersionException("No se puede anular la versión porque es una versión vigente");
 
         }
-       
-        
+
         // Anular la versión estableciendo la fecha de baja a la fecha y hora actuales
         ultVersion.setFechaBajaVersion(new Timestamp(System.currentTimeMillis()));
         FachadaPersistencia.getInstance().guardar(ultVersion);

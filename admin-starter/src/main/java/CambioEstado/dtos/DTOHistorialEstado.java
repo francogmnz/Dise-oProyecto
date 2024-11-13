@@ -7,15 +7,14 @@ public class DTOHistorialEstado {
     private String nombreEstadoTramite;
     private Timestamp fechaDesdeTET;
     private Timestamp fechaHastaTET;
-    private int contador;
+    private int contadorTET;
 
-    public int getContador() {
-        return contador;
+    public int getContadorTET() {
+        return contadorTET;
     }
 
-    // Getters y Setters
-    public void setContador(int contador) {
-        this.contador = contador;
+    public void setContadorTET(int contadorTET) {
+        this.contadorTET = contadorTET;
     }
 
     public String getNombreEstadoTramite() {
@@ -41,6 +40,8 @@ public class DTOHistorialEstado {
     public void setFechaHastaTET(Timestamp fechaHastaTET) {
         this.fechaHastaTET = fechaHastaTET;
     }
+
+   
 
 
 }

@@ -1,13 +1,12 @@
 package CambioEstado.beans;
 
 import CambioEstado.ControladorCambioEstado;
-import CambioEstado.ExpertoCambioEstado;
 import CambioEstado.dtos.DTOEstadoDestinoCE;
 import CambioEstado.dtos.DTOEstadoOrigenCE;
 import CambioEstado.dtos.DTOTramitesVigentes;
 import CambioEstado.dtos.TramiteDTO;
 import CambioEstado.exceptions.CambioEstadoException;
-import entidades.EstadoTramite;
+import entidades.Consultor;
 import entidades.TramiteEstadoTramite;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -20,19 +19,21 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import utils.BeansUtils;
+import org.primefaces.PrimeFaces;
 
 @Named("uiCambioEstado")
 @ViewScoped
 public class UICambioEstado implements Serializable {
 
     private ControladorCambioEstado controladorCambioEstado = new ControladorCambioEstado();
+    private Consultor consultor;
     private int legajoConsultor;  // Código del consultor para filtrar los trámites
     private String nombreConsultor;  // Nombre del consultor (si es necesario usarlo)
     private List<CambioEstadoGrillaUI> tramitesConsultor;  // Lista de trámites para mostrar
     private String nombreEstadoOrigen;
     private int codEstadoOrigen;
     private int nroTramite;
+    private String observaciones;
     private List<GrillaEstadosUI> estadosDestinoList;
     private GrillaEstadosUI estadoDestinoSeleccionado;
 
@@ -48,7 +49,7 @@ public class UICambioEstado implements Serializable {
             cargarTramitesConsultor(); // Cargar trámites asociados al consultor
         }
     }
-    
+
     @PostConstruct
     public void init() {
     }
@@ -60,7 +61,6 @@ public class UICambioEstado implements Serializable {
         }
     }
 
-    
     public void mostrarEstadosPosibles(int nroTramite) {
         try {
             DTOEstadoOrigenCE estadoOrigen = controladorCambioEstado.mostrarEstadosPosibles(nroTramite);
@@ -81,8 +81,9 @@ public class UICambioEstado implements Serializable {
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al mostrar estados", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al mostrar estados", e.getMessage()));
         }
+        // Ejecutar el script de JavaScript para ir a la página anterior después de 1.5 segundos
     }
 
     public String irMostrarEstado(int nroTramite) {
@@ -92,21 +93,24 @@ public class UICambioEstado implements Serializable {
     public void cambiarEstado() {
         try {
             if (estadoDestinoSeleccionado != null) {
+               
+                         // Crear un nuevo objeto de cambio de estado
                 controladorCambioEstado.cambiarEstado(nroTramite, estadoDestinoSeleccionado.getCodEstadoTramite());
-
-
+      
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Estado cambiado con exito", null));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Estado cambiado con exito", null));
+                PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
+
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe seleccionar un estado destino", null));
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe seleccionar un estado destino", null));
             }
         } catch (CambioEstadoException e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar estado", e.getMessage()));
         }
     }
-     
+
     // Método para cargar trámites al iniciar
     public void cargarTramitesConsultor() {
         tramitesConsultor = new ArrayList<>();
@@ -123,6 +127,9 @@ public class UICambioEstado implements Serializable {
                 tramiteUI.setFechaRecepcionTramite(tramiteDTO.getFechaRecepcionTramite());
                 tramiteUI.setNroTramite(tramiteDTO.getNroTramite());
 
+                if (tramiteDTO.getNombreConsultor() != null) {
+                    tramiteUI.setNombreConsultor(tramiteDTO.getNombreConsultor());
+                }
                 // Agregar a la lista de trámites a mostrar
                 tramitesConsultor.add(tramiteUI);
             }
@@ -137,21 +144,22 @@ public class UICambioEstado implements Serializable {
             System.out.println("Por favor ingrese un código de consultor válido.");
         }
     }
-    
+
     private List<TramiteEstadoTramite> historialEstados;
 
 // Getter for the history list
-public List<TramiteEstadoTramite> getHistorialEstados() {
-    return historialEstados;
-}
+    public List<TramiteEstadoTramite> getHistorialEstados() {
+        return historialEstados;
+    }
+// Getters y Setters
 
-// Method to fetch the history
+    public String getObservaciones() {
+        return observaciones;
+    }
 
-
-
-    
-
-    // Getters y Setters
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
     public List<GrillaEstadosUI> getEstadosDestinoList() {
         return estadosDestinoList;
@@ -160,15 +168,15 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
     public void setEstadosDestinoList(List<GrillaEstadosUI> estadosDestinoList) {
         this.estadosDestinoList = estadosDestinoList;
     }
-    
-    
+
     public GrillaEstadosUI getEstadoDestinoSeleccionado() {
         return estadoDestinoSeleccionado;
     }
 
     public void setEstadoDestinoSeleccionado(GrillaEstadosUI estadoDestinoSeleccionado) {
         this.estadoDestinoSeleccionado = estadoDestinoSeleccionado;
-    }    
+    }
+
     public List<CambioEstadoGrillaUI> getTramitesConsultor() {
         return tramitesConsultor;
     }
@@ -212,10 +220,13 @@ public List<TramiteEstadoTramite> getHistorialEstados() {
     public void setNroTramite(int nroTramite) {
         this.nroTramite = nroTramite;
     }
-    
-    public void volverPantallaTramiteConsultor() throws IOException{
-        FacesContext.getCurrentInstance().getExternalContext().redirect("/admin/CambioEstado/CambioEstadoTramiteLista.jsf");
+
+    public void volverPantallaTramiteConsultor() throws IOException {
+        // Guardar legajoConsultor en el Flash scope
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("legajoConsultor", legajoConsultor);
+
+        // Redirigir a la página de la lista de trámites
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/admin/CambioEstado/CambioEstadoTramiteLista.jsf?faces-redirect=true");
     }
-    
-    
+
 }

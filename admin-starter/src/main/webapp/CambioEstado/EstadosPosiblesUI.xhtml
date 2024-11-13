@@ -16,14 +16,14 @@
     <ui:define name="metadata">
     </ui:define>
 
- <ui:define name="description">
+    <ui:define name="description">
         Visualización de Estados Posibles
     </ui:define>
 
     <ui:define name="body">
         <h:form>
             <div class="box box-primary">
-                
+
                 <div class="box-header">
                     <h:outputText value="Estados Posibles para el Trámite"/>
                 </div>
@@ -56,15 +56,17 @@
                     </p:column>
 
                 </p:dataTable>
+                <h:outputLabel value="Observaciones:" styleClass="estado-label"/>
+                <p:inputTextarea value="#{uiCambioEstado.observaciones}" rows="3" cols="40"/>
                 
                 <p:commandButton value="Cambiar Estado" actionListener="#{uiCambioEstado.cambiarEstado}"
                                  update="@form" process="@this gridEstadosPosibles"
                                  oncomplete="if (!args.validationFailed) { PF('estadosPosiblesTable').clearSelection(); }" />
-                
+
                 <br>
-                    
+
                 </br>
-                
+
                 <p:commandButton value="Volver" action="#{uiCambioEstado.volverPantallaTramiteConsultor()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
 
             </div>

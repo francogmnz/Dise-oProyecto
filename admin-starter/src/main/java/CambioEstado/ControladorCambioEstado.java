@@ -31,5 +31,9 @@ public class ControladorCambioEstado {
    public void cambiarEstado(int nroTramite, int codEstadoDestino) throws CambioEstadoException {
         expertoCambioEstado.cambiarEstado(nroTramite,codEstadoDestino);
    }
+   
+   public void deshacerUltimoCambio(int nroTramite) throws CambioEstadoException {
+    expertoCambioEstado.deshacerUltimoCambio(nroTramite); // Llama al método en el experto para deshacer el cambio
+}
 
 }

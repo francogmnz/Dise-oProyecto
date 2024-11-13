@@ -5,8 +5,12 @@ import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
+import ABMVersion.dtos.DTOVersionM;
+import ABMVersion.exceptions.VersionException;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -210,6 +214,10 @@ public class UIABMVersionLista implements Serializable {
         BeansUtils.redirectToPreviousPage();
     }
        
-       
+    public String irVerVersion(int codTipoTramite, int nroVersion) {
+        return "/admin/Version/drawIU.jsf?codTipoTramite=" + codTipoTramite + "&nroVersion=" + nroVersion + "&faces-redirect=true";
+    }
+
+
        
 }

@@ -72,6 +72,13 @@
                         <p:commandButton value="Sí" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check"/>
                         <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close"/>
                     </p:confirmDialog>
+                    <p:column headerText="Ver Detalles">
+                        <p:commandButton value="Ver" icon="pi pi-eye"
+                                         action="#{uiabmVersionLista.irVerVersion(version.codTipoTramite, version.nroVersion)}"
+                                         ajax="false" />
+                    </p:column>
+
+
                 </p:column>
             </p:dataTable>
 

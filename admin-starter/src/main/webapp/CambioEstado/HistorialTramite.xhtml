@@ -33,16 +33,20 @@
                 </p:column>
                 <p:column headerText="Fecha Desde">
                     <h:outputText value="#{estado.fechaDesdeTET}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                     </h:outputText>
                 </p:column>
                 <p:column headerText="Fecha Hasta">
                     <h:outputText value="#{estado.fechaHastaTET}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Contador">
-                    <h:outputText value="#{estado.contador}" />
+           //     <p:column headerText="Contador">
+             //       <h:outputText value="#{estado.contador}" />
+               // </p:column>
+                <p:column headerText="Anular Cambio">
+                    <p:commandButton icon="pi pi-undo" value="Deshacer Último Cambio" action="#{uicambioEstadoLista.deshacerUltimoCambio()}">
+                    </p:commandButton>
                 </p:column>
             </p:dataTable>
 

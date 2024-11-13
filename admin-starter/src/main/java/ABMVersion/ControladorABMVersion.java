@@ -30,6 +30,12 @@ public class ControladorABMVersion {
         return expertoABMVersion.modificarVersion(codTipoTramite);
    
 }
+  /*public DTOVersionM verVersion(int codTipoTramite, int nroVersion) {
+    
+        return expertoABMVersion.VerVersion(codTipoTramite, nroVersion);
+   
+} */
+
 
     // Confirmar datos de versión
     public boolean confirmacion(DTODatosVersionIn dtoDatosVersion) throws VersionException {

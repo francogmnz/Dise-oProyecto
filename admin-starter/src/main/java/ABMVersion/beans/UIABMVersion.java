@@ -25,9 +25,13 @@ import java.io.IOException;
 import org.omnifaces.util.Messages;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -198,7 +202,7 @@ public class UIABMVersion implements Serializable {
         this.nodosPosibles = nodosPosibles;
     }
 
- public UIABMVersion() {
+    public UIABMVersion() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -215,6 +219,7 @@ public class UIABMVersion implements Serializable {
         }
 
         DTOVersionM dtoVersionM = controladorABMVersion.modificarVersion(codTipoTramite);
+
         titulo = "Versión";
         editable = true;
         Gson gson = new Gson();
@@ -222,6 +227,8 @@ public class UIABMVersion implements Serializable {
         //aca preparo los nodos
         List<NodoMenuIU> lestadosP = new ArrayList<NodoMenuIU>();
         for (DTOEstado de : dtoVersionM.getDtoEstado()) {
+            // Verificar si el nombre del estado es "Terminado"
+
             NodoMenuIU unEP = new NodoMenuIU();
             unEP.setCodigo(de.getCodEstadoTramite());
             unEP.setNombre(de.getNombreEstadoTramite());
@@ -240,6 +247,10 @@ public class UIABMVersion implements Serializable {
         } else {
             List<NodoIU> lestados = new ArrayList<NodoIU>();
             for (DTOEstado de : dtoVersionM.getDtoEstado()) {
+                if ("Terminado".equals(de.getNombreEstadoTramite().trim())) {
+                    NodoIU unE = new NodoIU();
+                    continue; // Si es "Terminado", no creamos un nodo para el dibujo
+                }
                 if (de.getCodEstadoTramite() == 1) {
                     NodoIU unE = new NodoIU();
                     unE.setCodigo(de.getCodEstadoTramite());
@@ -252,29 +263,38 @@ public class UIABMVersion implements Serializable {
             }
             cargarJSON = gson.toJson(lestados);
         }
+
     }
 
     //metodo para confirmar los datos
     public void confirmar() throws VersionException {
         // La fecha hasta no puede ser menor que la fecha desde
         if (fechaHastaVersion.before(fechaDesdeVersion)) {
-        Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
-                return; 
-                        }
+            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
+            return;
+        }
 
         // Verificar que las fechas no sean iguales
         if (fechaDesdeVersion.equals(fechaHastaVersion)) {
             Messages.create("Error").detail("FechaDesde no puede ser igual a FechaHasta.").error().add();
-                return;
+            return;
         }
+        ZoneId zonaHoraria = ZoneId.of("America/Argentina/Buenos_Aires");
 
         // Crear el DTO
         DTODatosVersionIn dto = new DTODatosVersionIn();
         dto.setCodTipoTramite(codTipoTramite);
         dto.setDescripcionVersion(descripcionVersion);
-        dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
-        dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
+        // Asegurarse de que las fechas estén en la zona horaria de Buenos Aires
+        ZoneId zonaBuenosAires = ZoneId.of("America/Argentina/Buenos_Aires");
 
+// Convertir fechaDesdeVersion y fechaHastaVersion usando la zona horaria específica
+        ZonedDateTime fechaDesdeBA = fechaDesdeVersion.toInstant().atZone(zonaBuenosAires);
+        ZonedDateTime fechaHastaBA = fechaHastaVersion.toInstant().atZone(zonaBuenosAires);
+
+// Guardar las fechas convertidas en el DTO
+        dto.setFechaDesdeVersion(Timestamp.from(fechaDesdeBA.toInstant()));
+        dto.setFechaHastaVersion(Timestamp.from(fechaHastaBA.toInstant()));
         ObjectMapper objectMapper = new ObjectMapper();
         TypeFactory typeFactory = objectMapper.getTypeFactory();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -292,14 +312,30 @@ public class UIABMVersion implements Serializable {
 
         if (listaNodo.size() <= 1) {
             Messages.create("Error").detail("La version debe tener más de un estado para continuar").error().add();
-                return;
-            
+            return;
+
         }
+        // Validar nodos para asegurar origen y estado final
+        boolean tieneNodoFinal = false;
+        Set<Integer> nodosConOrigen = new HashSet<>(); // Para rastrear nodos que tienen un origen
+        boolean estadoFinalValido = false;
+        Set<Integer> estadosConOrigen = new HashSet<>();
 
         // Validar que los nodos tienen estados de destino conectados
         for (NodoIU unNodo : listaNodo) {
             DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
             ori.setCodEstadoTramite(unNodo.getCodigo());
+            if ("Terminado".equals(unNodo.getNombre()) && !unNodo.getDestinos().isEmpty()) {
+                Messages.create("Error").detail("El estado 'Terminado' no puede tener destinos.").error().add();
+                return;  // Salir si la condición no se cumple
+            }
+            // Si el nodo tiene nombre "Terminado" y no tiene destinos, marcamos como estado final
+            if ("Terminado".equals(unNodo.getNombre()) && unNodo.getDestinos().isEmpty()) {
+                estadoFinalValido = true;
+            } else if (unNodo.getDestinos().isEmpty()) {
+                Messages.create("Error").detail("Solo el estado 'Terminado' puede ser considerado final sin destinos.").error().add();
+                return;
+            }
 
             // Comprobación de que el estado de origen no quede suelto
             // Añadir los destinos al DTO de origen
@@ -322,16 +358,14 @@ public class UIABMVersion implements Serializable {
             System.out.println(cargarJSON);
             Messages.create("Guardar").detail("Guardado exitoso").add();
             PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
-            
-            
-            
-            
+
         } else {
             Messages.create("Error").detail("Error al guardar los datos").error().add();
         }
     }
- public void volverPantallaVersion() throws IOException {
-    FacesContext.getCurrentInstance().getExternalContext().redirect("admin/ABMVersion/abmVersionLista.jsf");
-}
+
+    public void volverPantallaVersion() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("admin/ABMVersion/abmVersionLista.jsf");
+    }
 
 }

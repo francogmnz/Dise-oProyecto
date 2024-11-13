@@ -2,7 +2,6 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:adm="http://github.com/adminfaces"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       template="#{layoutMB.template}">
     <ui:define name="title">
@@ -24,10 +23,10 @@
             <!-- aca tengo que agregar el nombre del consultor a la tabla -->
 
             <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable">
+                
                 <p:column headerText="Nombre del Consultor">
                     <h:outputText value="#{tramite.nombreConsultor}" />
                 </p:column>
-                
                 <p:column headerText="Número de Trámite">
                     <h:outputText value="#{tramite.nroTramite}" />
                 </p:column>
@@ -49,15 +48,14 @@
                 </p:column>
                 
                 <p:column headerText="Acciones">
-                    <p:commandButton value="Cambiar Estado" action="#{uiCambioEstado.irMostrarEstado(tramite.nroTramite)}"/>
-                </p:column>
-                <p:column>
-                <p:column headerText="Acciones">
+                    <p:commandButton icon="pi pi-pencil" action="#{uiCambioEstado.irMostrarEstado(tramite.nroTramite)}"
+                                      />
+                
             <p:commandButton value="Historial" 
                  action="#{uicambioEstadoLista.irMostrarHistorialEstados(tramite.nroTramite)}" 
                   />
         </p:column>
-                </p:column>
+                
             </p:dataTable>
             
             
