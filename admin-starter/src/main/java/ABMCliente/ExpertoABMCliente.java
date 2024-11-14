@@ -137,7 +137,7 @@ public class ExpertoABMCliente {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         if (dtoModificacionDatosIn.getDniCliente() != dtoModificacionDatosIn.getDniOriginalCliente()) {
-            throw new ClienteException("El DNI ingresado no coincide con el DNI del cliente a Modificar");
+            throw new ClienteException("No se puede modificar el DNI");
         }
         
         List<DTOCriterio> criterioList = new ArrayList<>();
