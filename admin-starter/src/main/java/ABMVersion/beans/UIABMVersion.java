@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.primefaces.PrimeFaces;
+import utils.fechaHoraActual;
 
 @Named("uiabmVersion")
 @ViewScoped
@@ -268,17 +269,38 @@ public class UIABMVersion implements Serializable {
 
     //metodo para confirmar los datos
     public void confirmar() throws VersionException {
+        if (fechaHastaVersion == null) {
+            Messages.create("Error").detail("La fecha hasta no puede estar vacía.").error().add();
+            return;
+        }
+        if (fechaDesdeVersion == null) {
+            Messages.create("Error").detail("La fecha desde no puede estar vacía.").error().add();
+            return;
+        }
+        if (descripcionVersion.isEmpty()) {
+            Messages.create("Error").detail("La descripcion no puede estar vacía.").error().add();
+            return;
+        }
+
         // La fecha hasta no puede ser menor que la fecha desde
         if (fechaHastaVersion.before(fechaDesdeVersion)) {
             Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
             return;
         }
 
-        // Verificar que las fechas no sean iguales
-        if (fechaDesdeVersion.equals(fechaHastaVersion)) {
-            Messages.create("Error").detail("FechaDesde no puede ser igual a FechaHasta.").error().add();
+        if (fechaDesdeVersion.before(fechaDesdeVersion)) {
+            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
             return;
         }
+
+        // Verificar que no se guarde una fecha anterior a hoy
+        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+
+        if (fechaDesdeVersion.before(fechaActual)) {
+            Messages.create("Error").detail("No se puede guardar una version con una fecha anterior a hoy.").error().add();
+            return;
+        }
+
         ZoneId zonaHoraria = ZoneId.of("America/Argentina/Buenos_Aires");
 
         // Crear el DTO

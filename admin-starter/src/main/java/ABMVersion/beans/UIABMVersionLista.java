@@ -5,12 +5,8 @@ import ABMVersion.beans.VersionGrillaUI;
 import ABMVersion.dtos.DTODatosVersionH;
 import ABMVersion.dtos.DTOTipoTramiteVersion;
 import ABMVersion.dtos.DTOVersionH;
-import ABMVersion.dtos.DTOVersionM;
-import ABMVersion.exceptions.VersionException;
-import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -152,6 +148,7 @@ public class UIABMVersionLista implements Serializable {
             versionGrillaUI.setFechaHastaVersion(versionReciente.getFechaHastaVersion());
             versionGrillaUI.setFechaBajaVersion(versionReciente.getFechaBajaVersion());
             versionGrillaUI.setCodTipoTramite(versionReciente.getCodTipoTramite());
+            versionGrillaUI.setDescripcionVersion(versionReciente.getDescripcionVersion());
             // Agregar el objeto a la lista que se mostrará en la grilla
             versionGrilla.add(versionGrillaUI);
         }

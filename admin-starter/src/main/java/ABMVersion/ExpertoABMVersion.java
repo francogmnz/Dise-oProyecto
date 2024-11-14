@@ -84,6 +84,7 @@ public class ExpertoABMVersion {
                 dtoSinVersion.setNroVersion(0);  // Código de versión 0 indica que no hay versiones
                 dtoSinVersion.setFechaDesdeVersion(null);
                 dtoSinVersion.setFechaHastaVersion(null);
+                dtoSinVersion.setDescripcionVersion("");
                 dtoVersiones.add(dtoSinVersion);
             } else {
                 // Si hay versiones, agregar el DTO con la versión más reciente
@@ -96,7 +97,7 @@ public class ExpertoABMVersion {
                     dto.setFechaHastaVersion(version.getFechaHastaVersion());
                     dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
                     dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
-
+                    dto.setDescripcionVersion(version.getDescripcionVersion());
                     dtoVersiones.add(dto);
                 }
             }

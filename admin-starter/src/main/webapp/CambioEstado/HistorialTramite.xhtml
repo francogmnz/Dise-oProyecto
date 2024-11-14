@@ -41,13 +41,15 @@
                         <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                     </h:outputText>
                 </p:column>
-           //     <p:column headerText="Contador">
-             //       <h:outputText value="#{estado.contador}" />
-               // </p:column>
-                <p:column headerText="Anular Cambio">
-                    <p:commandButton icon="pi pi-undo" value="Deshacer Último Cambio" action="#{uicambioEstadoLista.deshacerUltimoCambio()}">
-                    </p:commandButton>
-                </p:column>
+
+               <p:column headerText="Anular Cambio">
+    <p:commandButton icon="pi pi-undo" 
+                     value="Deshacer Último Cambio" 
+                     action="#{uicambioEstadoLista.deshacerUltimoCambio()}"
+                     rendered="#{estado.fechaHastaTET eq uicambioEstadoLista.obtenerUltimaFechaHasta()}" />
+</p:column>
+
+
             </p:dataTable>
 
             <p:commandButton value="Volver" action="#{uicambioEstadoLista.volverPantallaTramiteConsultor()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />

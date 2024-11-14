@@ -4,6 +4,8 @@ package CambioEstado.beans;
 import CambioEstado.dtos.DTOHistorialEstado;
 import CambioEstado.dtos.DTOMostrarHistorial;
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -65,5 +67,7 @@ public class CambioEstadoHistoricoGrillaUI {
         this.mostrarHistorial = mostrarHistorial;
     }
     
+   
+
 }
     

@@ -1,9 +1,20 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      template="#{layoutMB.template}">
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.template}">
+    
+    <h:head>
+        <style>
+            /* CSS para resaltar los trámites terminados */
+            .tramite-terminado {
+                background-color: red;  /* Color de fondo rojo */
+                color: white;           /* Color del texto blanco para mejor contraste */
+            }
+        </style>
+    </h:head>
+
     <ui:define name="title">
         Lista de Trámites del Consultor
     </ui:define>
@@ -20,9 +31,8 @@
                 <p:commandButton value="Buscar Trámites" action="#{uiCambioEstado.buscarTramites}" update=":tramitesListForm:tramitesTable" />
             </p:panelGrid>
 
-            <!-- aca tengo que agregar el nombre del consultor a la tabla -->
-
-            <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable">
+            <p:dataTable id="tramitesTable" value="#{uiCambioEstado.tramitesConsultor}" var="tramite" styleClass="tramitesTable" 
+                         rowStyleClass="#{tramite.nombreEstadoTramite eq 'Terminado' ? 'tramite-terminado' : ''}">
                 
                 <p:column headerText="Nombre del Consultor">
                     <h:outputText value="#{tramite.nombreConsultor}" />
@@ -46,21 +56,22 @@
                 <p:column headerText="Fecha de Recepción">
                     <h:outputText value="#{tramite.fechaRecepcionTramite}" />
                 </p:column>
-                
+
                 <p:column headerText="Acciones">
-                    <p:commandButton icon="pi pi-pencil" action="#{uiCambioEstado.irMostrarEstado(tramite.nroTramite)}"
-                                      />
-                
-            <p:commandButton value="Historial" 
-                 action="#{uicambioEstadoLista.irMostrarHistorialEstados(tramite.nroTramite)}" 
-                  />
-        </p:column>
+                    <p:commandButton 
+                        icon="pi pi-pencil" 
+                        action="#{uiCambioEstado.irMostrarEstado(tramite.nroTramite)}"
+                        disabled="#{tramite.nombreEstadoTramite eq 'Terminado'}" 
+                        title="#{tramite.nombreEstadoTramite eq 'Terminado' ? 'Trámite terminado, no se puede modificar' : ''}" 
+                    />
+
+                    <p:commandButton 
+                        value="Historial" 
+                        action="#{uicambioEstadoLista.irMostrarHistorialEstados(tramite.nroTramite)}" 
+                    />
+                </p:column>
                 
             </p:dataTable>
-            
-            
-
         </h:form>
-        
     </ui:define>
 </ui:composition>

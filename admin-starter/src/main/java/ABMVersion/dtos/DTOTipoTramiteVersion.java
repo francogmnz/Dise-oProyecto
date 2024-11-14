@@ -9,6 +9,7 @@ public class DTOTipoTramiteVersion {
     private Timestamp fechaDesdeVersion;
     private Timestamp fechaHastaVersion;
     private Timestamp fechaBajaVersion;
+    private String descripcionVersion;
 
     private String nombreTipoTramite;
     private int codTipoTramite;
@@ -28,6 +29,14 @@ public class DTOTipoTramiteVersion {
 
     public void setFechaHoraBajaTipoTramite(Timestamp fechaHoraBajaTipoTramite) {
         this.fechaHoraBajaTipoTramite = fechaHoraBajaTipoTramite;
+    }
+
+    public String getDescripcionVersion() {
+        return descripcionVersion;
+    }
+
+    public void setDescripcionVersion(String descripcionVersion) {
+        this.descripcionVersion = descripcionVersion;
     }
 
     public int getNroVersion() {
