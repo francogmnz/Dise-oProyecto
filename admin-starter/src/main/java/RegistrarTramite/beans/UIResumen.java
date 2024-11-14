@@ -320,7 +320,6 @@ public class UIResumen implements Serializable {
     public void anularTramite(int nroTramite) throws RegistrarTramiteException {
         try {
             controladorRegistrarTramite.anularTramite(nroTramite);
-            Messages.create("Trámite Anulado").add();
         } catch (RegistrarTramiteException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
         }

@@ -350,7 +350,6 @@ public class ExpertoRegistrarTramite {
                 }
             }
 
-
             tramiteCreado.setCliente(clienteEncontrado);
             tramiteCreado.setTipoTramite(tipoTramiteEncontrado);
 
@@ -558,18 +557,23 @@ public class ExpertoRegistrarTramite {
     // anularTramite()
     public void anularTramite(int nroTramite) throws RegistrarTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
-        if(tramiteElegido.getFechaAnulacionTramite() != null){
-            throw new RegistrarTramiteException("El Tramite ya esta Anulado");
-        }
-        
-        if(tramiteElegido.getFechaFinTramite() != null){
-            throw new RegistrarTramiteException("El Tramite ya esta Finalizado");
-        }
-        
-        tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
 
-        FachadaPersistencia.getInstance().merge(tramiteElegido);
+        try {
+            if (tramiteElegido.getFechaAnulacionTramite() != null) {
+                throw new RegistrarTramiteException("El Tramite ya esta Anulado");
+            }
+            if (tramiteElegido.getFechaFinTramite() != null) {
+                throw new RegistrarTramiteException("El Tramite ya esta Finalizado");
+            }
+
+            if (tramiteElegido.getFechaAnulacionTramite() == null && tramiteElegido.getFechaFinTramite() != null) {
+                tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Trámite anulado."));
+            }
+            FachadaPersistencia.getInstance().merge(tramiteElegido);
+        } catch (RegistrarTramiteException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+        }
         FachadaPersistencia.getInstance().finalizarTransaccion();
     }
 

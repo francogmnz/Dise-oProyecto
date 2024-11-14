@@ -24,66 +24,78 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <ui:define name="body">
         <h:form id="formTramites">
-    <div class="ui-g ui-fluid">
-        <div class="ui-g-12 ui-md-2">
-            <p:outputLabel for="fechaDesde" value="Fecha Desde" />
-            <p:calendar id="fechaDesde" value="#{uiInformeTramitesTerminados.fechaDesde}" showOn="button" />
-        </div>
+            <div class="ui-g ui-fluid">
+                <!-- Filtros de búsqueda -->
+                <div class="ui-g-12 ui-md-2">
+                    <p:outputLabel for="fechaDesde" value="Fecha Desde" />
+                    <p:calendar id="fechaDesde" value="#{uiInformeTramitesTerminados.fechaDesde}" showOn="button" />
+                </div>
 
-        <div class="ui-g-12 ui-md-2">
-            <p:outputLabel for="fechaHasta" value="Fecha Hasta" />
-            <p:calendar id="fechaHasta" value="#{uiInformeTramitesTerminados.fechaHasta}" showOn="button" />
-        </div>
+                <div class="ui-g-12 ui-md-2">
+                    <p:outputLabel for="fechaHasta" value="Fecha Hasta" />
+                    <p:calendar id="fechaHasta" value="#{uiInformeTramitesTerminados.fechaHasta}" showOn="button" />
+                </div>
 
-        <div class="ui-g-12 ui-md-2">
-            <p:outputPanel>
-                <p:spacer height="5" />
-                <p:commandButton id="brFind"
-                                 value="Buscar"
-                                 action="#{uiInformeTramitesTerminados.buscarTramites}"
-                                 process="@form"
-                                 update="tablaTramites"
-                                 styleClass="btn-flat bg-black btn-states"
-                                 partialSubmit="true" /> 
-            </p:outputPanel>
-        </div>
-    </div>
+                <div class="ui-g-12 ui-md-2">
+                    <p:outputPanel>
+                        <p:spacer height="5" />
+                        <p:commandButton id="brFind"
+                                         value="Buscar"
+                                         action="#{uiInformeTramitesTerminados.buscarTramites}"
+                                         process="@form"
+                                         update="tablaTramites contadorTramites"
+                                         styleClass="btn-flat bg-black btn-states"
+                                         partialSubmit="true" /> 
+                    </p:outputPanel>
+                </div>
+            </div>
 
-    <!-- Tabla para mostrar los resultados -->
-    <p:dataTable id="tablaTramites" var="tramite"
-                 value="#{uiInformeTramitesTerminados.listaTramites}" 
-                 emptyMessage="No se encontraron trámites"
-                 style="margin-top:20px">
+            <!-- Contador de trámites terminados -->
+            <h:outputText id="contadorTramites" 
+                          value="Total de trámites terminados: #{uiInformeTramitesTerminados.totalTramitesTerminados}" 
+                          style="font-weight:bold; margin-top:20px; font-size: 18px;" />
 
-        <p:column headerText="Nro Trámite">
-            <h:outputText value="#{tramite.nroTramite}" />
-        </p:column>
+            <!-- Tabla para mostrar los resultados -->
+            <p:dataTable id="tablaTramites" var="tramite"
+                         value="#{uiInformeTramitesTerminados.listaTramites}" 
+                         emptyMessage="No se encontraron trámites"
+                         style="margin-top:20px">
+                <!-- Columnas de la tabla -->
+                <p:column headerText="Nro Trámite">
+                    <h:outputText value="#{tramite.nroTramite}" />
+                </p:column>
 
-        <p:column headerText="Fecha Inicio">
-            <h:outputText value="#{tramite.fechaInicioTramite}">
-                <f:convertDateTime pattern="dd/MM/yyyy" />
-            </h:outputText>
-        </p:column>
+                <p:column headerText="DNI">
+                    <h:outputText value="#{tramite.dniCliente}" />
+                </p:column>
 
-        <p:column headerText="Fecha Fin">
-            <h:outputText value="#{tramite.fechaFinTramite}">
-                <f:convertDateTime pattern="dd/MM/yyyy" />
-            </h:outputText>
-        </p:column>
+                <p:column headerText="Nombre y Apellido">
+                    <h:outputText value="#{tramite.nombreCliente} #{tramite.apellidoCliente}" />
+                </p:column>
 
-        <p:column headerText="Tipo Trámite">
-            <h:outputText value="#{tramite.tipoTramite.nombreTipoTramite}" />
-        </p:column>
+                <p:column headerText="Fecha Inicio">
+                    <h:outputText value="#{tramite.fechaInicioTramite}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
 
-        <p:column headerText="Precio">
-            <h:outputText value="#{tramite.precioTramite}">
-                <f:convertNumber currencySymbol="$" type="currency" />
-            </h:outputText>
-        </p:column>
+                <p:column headerText="Fecha Fin">
+                    <h:outputText value="#{tramite.fechaFinTramite}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
 
-    </p:dataTable>
-</h:form>
+                <p:column headerText="Tipo Trámite">
+                    <h:outputText value="#{tramite.tipoTramite.nombreTipoTramite}" />
+                </p:column>
 
-
+                <p:column headerText="Precio">
+                    <h:outputText value="#{tramite.precioTramite}">
+                        <f:convertNumber currencySymbol="$" type="currency" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
+
 </ui:composition>

@@ -26,13 +26,13 @@ import utils.FachadaPersistencia;
 @SessionScoped
 
 public class UIInformeTramitesTerminados implements Serializable {
-    
+
     private ControladorInformeTramitesTerminados controladorTramitesTerminados = new ControladorInformeTramitesTerminados();
-        
+
     private Date fechaDesde;
     private Date fechaHasta;
     private List<TramiteDTO> listaTramites;
-    
+
     public ControladorInformeTramitesTerminados getControladorInformeTramitesTerminados() {
         return controladorTramitesTerminados;
     }
@@ -65,20 +65,22 @@ public class UIInformeTramitesTerminados implements Serializable {
     public void setListaTramites(List<TramiteDTO> listaTramites) {
         this.listaTramites = listaTramites;
     }
-    
-    
 
-    public List<TramiteDTO> buscarTramites() throws Exception{
+    public List<TramiteDTO> buscarTramites() throws Exception {
         try {
-       
-        listaTramites = controladorTramitesTerminados.buscarTramites(fechaDesde,fechaHasta);
-        
-        return listaTramites;
+
+            listaTramites = controladorTramitesTerminados.buscarTramites(fechaDesde, fechaHasta);
+
+            return listaTramites;
 
         } catch (Exception e) {
-           Messages.create("Error!").error().detail(e.getMessage()).add();
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
         return null;
     }
-}
 
+    // Método que devuelve la cantidad de trámites terminados
+    public int getTotalTramitesTerminados() {
+        return listaTramites != null ? listaTramites.size() : 0;
+    }
+}
