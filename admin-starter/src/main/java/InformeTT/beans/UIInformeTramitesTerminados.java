@@ -68,12 +68,17 @@ public class UIInformeTramitesTerminados implements Serializable {
     
     
 
-    public List<TramiteDTO> buscarTramites() {
-               
+    public List<TramiteDTO> buscarTramites() throws Exception{
+        try {
+       
         listaTramites = controladorTramitesTerminados.buscarTramites(fechaDesde,fechaHasta);
         
         return listaTramites;
 
+        } catch (Exception e) {
+           Messages.create("Error!").error().detail(e.getMessage()).add();
+        }
+        return null;
     }
 }
 

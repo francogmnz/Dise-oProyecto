@@ -108,13 +108,10 @@ public class UIResumen implements Serializable {
                     this.resumenDoc = tramiteElegido.getResumenDoc();
 
                     for (DTODocumentacion doc : resumenDoc) {
-                        System.out.println("Asignando codTD desde resumenDoc: " + doc.getCodTD());
-
-//                        this.codTD = doc.getCodTD();
                         this.nombreTD = doc.getNombreTD();
                         this.nombreDocumentacion = doc.getNombreDocumentacion();
                         this.fechaEntregaDoc = doc.getFechaEntregaDoc();
-
+                        
                     }
 
                     System.out.println("codTD actual: " + codTD);
@@ -368,10 +365,6 @@ public class UIResumen implements Serializable {
             // Convertir el valor obtenido en un entero
             int codTD = Integer.parseInt(codTDInput.getValue().toString());
 
-            System.out.println("codTD recibido: " + codTD);
-            FacesMessage message = new FacesMessage("Exitoso // ", event.getFile().getFileName() + " subido.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-
             // Continuar con la lógica de subida de archivo
             byte[] sourceBytes = IOUtils.toByteArray(event.getFile().getInputStream());
             String encodedString = Base64.getEncoder().encodeToString(sourceBytes);
@@ -382,27 +375,24 @@ public class UIResumen implements Serializable {
 
             // Pasar codTD al método correspondiente
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
+            
+            FacesMessage message = new FacesMessage("Éxito // ", event.getFile().getFileName() + " subido.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            
             this.file = fileU;
 
         } catch (RegistrarTramiteException e) {
-            throw new RegistrarTramiteException("");
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
 
     }
 
-    public void eliminarArchivo(int codTD) {
+    public void eliminarArchivo(int codTD) throws Exception {
         try {
             // Llamar al experto para eliminar la documentación
             controladorRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
-
-            // Mensaje de éxito
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Archivo eliminado // ", "El archivo ha sido eliminado correctamente."));
-        } catch (Exception e) {
-            // Manejo de errores
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar el archivo."));
-            e.printStackTrace();
+        } catch (RegistrarTramiteException e) {
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
     }
 

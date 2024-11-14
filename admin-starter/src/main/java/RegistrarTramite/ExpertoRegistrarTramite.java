@@ -322,14 +322,13 @@ public class ExpertoRegistrarTramite {
             if (clienteEncontrado == null && tipoTramiteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente && TipoTramite no encontrado/s");
             }
-
             if (tipoTramiteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. TipoTramite no encontrado");
             }
             if (clienteEncontrado == null) {
                 throw new RegistrarTramiteException("No se pudo registrar el trámite. Cliente no encontrado");
             }
-            
+
             List<DTOCriterio> clienteTT = new ArrayList<>();
             DTOCriterio tramiteCliente = new DTOCriterio();
             tramiteCliente.setAtributo("cliente");
@@ -350,6 +349,7 @@ public class ExpertoRegistrarTramite {
                     throw new RegistrarTramiteException("El Cliente tiene un mismo Tipo Trámite en curso");
                 }
             }
+
 
             tramiteCreado.setCliente(clienteEncontrado);
             tramiteCreado.setTipoTramite(tipoTramiteEncontrado);
@@ -558,7 +558,15 @@ public class ExpertoRegistrarTramite {
     // anularTramite()
     public void anularTramite(int nroTramite) throws RegistrarTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
-
+        
+        if(tramiteElegido.getFechaAnulacionTramite() != null){
+            throw new RegistrarTramiteException("El Tramite ya esta Anulado");
+        }
+        
+        if(tramiteElegido.getFechaFinTramite() != null){
+            throw new RegistrarTramiteException("El Tramite ya esta Finalizado");
+        }
+        
         tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().merge(tramiteElegido);
@@ -665,10 +673,15 @@ public class ExpertoRegistrarTramite {
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
         FachadaPersistencia.getInstance().merge(td);
 
+        if (td.getFechaEntregaTD() != null) {
+            throw new RegistrarTramiteException("Elimine la documentación si desea agregar una");
+        }
+
         List<TramiteDocumentacion> tdList = tramiteElegido.getTramiteDocumentacion();
 
         for (TramiteDocumentacion tds : tdList) {
             if (tds.getCodTD() == codTD) {
+
                 tds.setArchivoTD(archivoTD.getContenidoB64());
                 tds.setNombreTD(archivoTD.getNombre());
                 tds.setFechaEntregaTD(fechaHoraActual.obtenerFechaHoraActual());
@@ -735,7 +748,7 @@ public class ExpertoRegistrarTramite {
                         if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
                             menorCantidadTramites = tramitesAsignados;
                             consultorSeleccionado = consultor;
-                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exitoso", "Consultor asignado con éxito."));
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Consultor asignado."));
                         }
                     }
                 }
@@ -820,7 +833,7 @@ public class ExpertoRegistrarTramite {
                         if (tramitesAsignados < consultor.getNumMaximoTramites() && tramitesAsignados < menorCantidadTramites) {
                             menorCantidadTramites = tramitesAsignados;
                             consultorSeleccionado = consultor;
-                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exitoso", "Consultor asignado con éxito."));
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Consultor asignado."));
                         }
                     }
                 }
@@ -837,14 +850,14 @@ public class ExpertoRegistrarTramite {
                 FachadaPersistencia.getInstance().merge(tramiteElegido);
 
             } catch (Exception e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
             } finally {
                 FachadaPersistencia.getInstance().finalizarTransaccion();
             }
         }
     }
 
-    public void eliminarDocumentacion(int codTD, int nroTramite) throws Exception {
+    public void eliminarDocumentacion(int codTD, int nroTramite) throws RegistrarTramiteException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         try {
@@ -860,6 +873,14 @@ public class ExpertoRegistrarTramite {
                 tramiteElegido = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
             }
 
+            if (tramiteElegido.getFechaAnulacionTramite() != null) {
+                throw new RegistrarTramiteException("No se puede eliminar una documentación de un Trámite anulado.");
+            }
+
+            if (tramiteElegido.getFechaFinTramite() != null) {
+                throw new RegistrarTramiteException("No se puede eliminar una documentación de un Trámite finalizado.");
+            }
+
             // Buscar la documentación existente
             List<DTOCriterio> criterioListTD = new ArrayList<>();
             DTOCriterio criterioTD = new DTOCriterio();
@@ -871,15 +892,15 @@ public class ExpertoRegistrarTramite {
             TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
 
             // Eliminar los datos de la documentación
-            if (td != null) {
+            if (td.getFechaEntregaTD() != null) {
                 td.setArchivoTD(null);
                 td.setNombreTD(null);
                 td.setFechaEntregaTD(null);
 
                 // Guardar los cambios en la base de datos
                 FachadaPersistencia.getInstance().guardar(td);
-            } else {
-                throw new Exception("No se encontró el documento con el código proporcionado");
+
+                throw new RegistrarTramiteException("Archivo eliminado correctamente");
             }
 
             if (tramiteElegido.getFechaPresentacionTotalDocumentacion() != null) {
@@ -887,10 +908,11 @@ public class ExpertoRegistrarTramite {
                 tramiteElegido.setFechaPresentacionTotalDocumentacion(null);
             }
             FachadaPersistencia.getInstance().merge(tramiteElegido);
-            // Finalizar la transacción correctamente
             FachadaPersistencia.getInstance().finalizarTransaccion();
 
-        } catch (Exception e) {
+        } catch (RegistrarTramiteException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", e.getMessage()));
+        } finally {
             FachadaPersistencia.getInstance().finalizarTransaccion();
         }
     }
