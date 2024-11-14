@@ -15,6 +15,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 /**
@@ -98,15 +99,19 @@ public class UIABMCategoriaTipoTramite implements Serializable {
 
         if (codCategoriaTipoTramite > 0) {
             insert = false;
-            ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = controladorABMCategoriaTipoTramite.buscarCategoriaTipoTramiteAModificar(codCategoriaTipoTramite);
+            try {
+                ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = controladorABMCategoriaTipoTramite.buscarCategoriaTipoTramiteAModificar(codCategoriaTipoTramite);
 
-            setCodCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite()); 
-            setCodCategoriaTipoTramiteOriginal(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite());
-            setNombreCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getNombreCategoriaTipoTramite());
-            setDescripcionCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionCategoriaTipoTramite());
-            setDescripcionWebCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionWebCategoriaTipoTramite());
-
-
+                setCodCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite()); 
+                setCodCategoriaTipoTramiteOriginal(modificarCategoriaTipoTramiteDTO.getCodCategoriaTipoTramite());
+                setNombreCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getNombreCategoriaTipoTramite());
+                setDescripcionCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionCategoriaTipoTramite());
+                setDescripcionWebCategoriaTipoTramite(modificarCategoriaTipoTramiteDTO.getDescripcionWebCategoriaTipoTramite());
+            } catch (Exception e) {
+                Messages.create("Error!").error().detail(e.getMessage()).add();
+                Faces.getExternalContext().getFlash().setKeepMessages(true);
+                Faces.redirect(externalContext.getRequestContextPath() + "/ABMCategoriaTipoTramite/abmCategoriaTipoTramiteLista.jsf");
+            }
         }
     }
 

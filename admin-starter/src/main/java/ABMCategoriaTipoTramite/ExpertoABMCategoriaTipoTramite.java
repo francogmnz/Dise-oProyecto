@@ -81,7 +81,7 @@ public class ExpertoABMCategoriaTipoTramite {
         
     }
     
-        public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite) {
+        public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite)throws CategoriaTipoTramiteException {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dtoCod = new DTOCriterio();
 
@@ -99,7 +99,13 @@ public class ExpertoABMCategoriaTipoTramite {
         
         criterioList.add(dtoFecha);
         
-        CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
+        List objectList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList);
+
+        if (objectList.isEmpty()) {
+            throw new CategoriaTipoTramiteException("No se puede modificar una CategoriaTipoTramite dada de baja.");
+        }
+
+        CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) objectList.get(0);
 
         ModificarCategoriaTipoTramiteDTO modificarCategoriaTipoTramiteDTO = new ModificarCategoriaTipoTramiteDTO();
         modificarCategoriaTipoTramiteDTO.setCodCategoriaTipoTramite(categoriaTipoTramiteEncontrada.getCodCategoriaTipoTramite());
@@ -171,7 +177,14 @@ public class ExpertoABMCategoriaTipoTramite {
         
         criterioList.add(dtoFecha);
         
-        CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList).get(0);
+        List objectList = FachadaPersistencia.getInstance().buscar("CategoriaTipoTramite", criterioList);
+
+        if (objectList.isEmpty()) {
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw new CategoriaTipoTramiteException("La CategoriaTipoTramite seleccionada ya se encuentra dada de baja.");
+        }
+
+        CategoriaTipoTramite categoriaTipoTramiteEncontrada = (CategoriaTipoTramite) objectList.get(0);
         
         List<DTOCriterio> tipoTramiteCriterioList = new ArrayList<>();
         

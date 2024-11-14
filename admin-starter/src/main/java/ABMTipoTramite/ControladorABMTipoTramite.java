@@ -39,7 +39,7 @@ public class ControladorABMTipoTramite {
         expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);
     }
 
-    public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
+    public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) throws TipoTramiteException {
         return expertoABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
     }
 

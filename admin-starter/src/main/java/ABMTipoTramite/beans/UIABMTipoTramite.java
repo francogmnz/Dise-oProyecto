@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 /**
@@ -165,6 +166,7 @@ public class UIABMTipoTramite implements Serializable {
 
         if (codTipoTramite > 0) {
             insert = false;
+            try{
             ModificarTipoTramiteDTO modificarTipoTramiteDTO = controladorABMTipoTramite.buscarTipoTramiteAModificar(codTipoTramite);
 
             setCodTipoTramite(modificarTipoTramiteDTO.getCodTipoTramite()); 
@@ -180,7 +182,11 @@ public class UIABMTipoTramite implements Serializable {
             for (DocumentacionDTO doc : modificarTipoTramiteDTO.getDocumentacionesDTO()) {
                 documentacionesSeleccionadas.add(doc.getCodDocumentacion());
             }
-        
+            } catch(Exception e){
+                Messages.create("Error!").error().detail(e.getMessage()).add();
+                Faces.getExternalContext().getFlash().setKeepMessages(true);
+                Faces.redirect(externalContext.getRequestContextPath() + "/ABMTipoTramite/abmTipoTramiteLista.jsf");
+            }
             
         }
     }

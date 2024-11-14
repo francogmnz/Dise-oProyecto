@@ -27,7 +27,7 @@ public class ControladorABMCategoriaTipoTramite {
         expertoABMCategoriaTipoTramite.agregarCategoriaTipoTramite(nuevaCategoriaTipoTramiteDTO);
     }
 
-    public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite) {
+    public ModificarCategoriaTipoTramiteDTO buscarCategoriaTipoTramiteAModificar(int codCategoriaTipoTramite)throws CategoriaTipoTramiteException {
         return expertoABMCategoriaTipoTramite.buscarCategoriaTipoTramiteAModificar(codCategoriaTipoTramite);
     }
 

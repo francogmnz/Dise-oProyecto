@@ -243,7 +243,7 @@ public class ExpertoABMTipoTramite {
         
     }
     
-        public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite) {
+        public ModificarTipoTramiteDTO buscarTipoTramiteAModificar(int codTipoTramite)throws TipoTramiteException{
         List<DTOCriterio> criterioBuscarTTModificarList = new ArrayList<>();
         DTOCriterio criterioPorCodigoTT = new DTOCriterio();
 
@@ -253,7 +253,20 @@ public class ExpertoABMTipoTramite {
 
         criterioBuscarTTModificarList.add(criterioPorCodigoTT);
 
-        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTTModificarList).get(0);
+        DTOCriterio criterioFechaBajaTT = new DTOCriterio();
+        criterioFechaBajaTT.setAtributo("fechaHoraBajaTipoTramite");
+        criterioFechaBajaTT.setOperacion("=");
+        criterioFechaBajaTT.setValor(null);
+
+        criterioBuscarTTModificarList.add(criterioFechaBajaTT);      
+        
+        List objectList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBuscarTTModificarList);
+
+        if (objectList.isEmpty()) {
+            throw new TipoTramiteException("No se puede modificar un TipoTramite dado de baja.");
+        }
+
+        TipoTramite tipoTramiteEncontrada = (TipoTramite) objectList.get(0);
 
         ModificarTipoTramiteDTO modificarTipoTramiteDTO = new ModificarTipoTramiteDTO();
         modificarTipoTramiteDTO.setCodTipoTramite(tipoTramiteEncontrada.getCodTipoTramite());
@@ -437,9 +450,14 @@ public class ExpertoABMTipoTramite {
         
         criterioBajaTTList.add(dtoFecha);           
         
-        TipoTramite tipoTramiteEncontrada = (TipoTramite) FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBajaTTList).get(0);
+        List objectList = FachadaPersistencia.getInstance().buscar("TipoTramite", criterioBajaTTList);
+
+        if (objectList.isEmpty()) {
+            throw new TipoTramiteException("El TipoTramite seleccionado ya se encuentra dado de baja.");
+        }
+
+        TipoTramite tipoTramiteEncontrada = (TipoTramite) objectList.get(0);
         
-    
         List<DTOCriterio> criterioTramiteList = new ArrayList<>();
         DTOCriterio criterioTipoTramiteRelacionado = new DTOCriterio();
         criterioTipoTramiteRelacionado.setAtributo("tipoTramite");
