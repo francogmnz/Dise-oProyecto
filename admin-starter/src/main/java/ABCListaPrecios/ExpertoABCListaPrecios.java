@@ -171,7 +171,7 @@ public class ExpertoABCListaPrecios {
                 throw new ListaPreciosException("La Fecha Desde debe ser mayor a la Fecha Desde de la última lista");
             }
 
-            if (nuevaFechaHoraDesde.after(nuevaFechaHoraHasta) || nuevaFechaHoraDesde.before(nuevaFechaHoraHasta)) {
+            if (nuevaFechaHoraDesde.after(ultimaListaPrecios.getFechaHoraHastaListaPrecios()) || nuevaFechaHoraDesde.before(ultimaListaPrecios.getFechaHoraHastaListaPrecios())) {
                 ultimaListaPrecios.setFechaHoraHastaListaPrecios(nuevaFechaHoraDesde);
             }
             FachadaPersistencia.getInstance().guardar(ultimaListaPrecios);

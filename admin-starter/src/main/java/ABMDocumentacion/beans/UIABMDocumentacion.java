@@ -14,6 +14,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 
@@ -74,10 +75,16 @@ public class UIABMDocumentacion implements Serializable{
         if(codDocumentacion > 0)
         {
             insert=false;
-            ModificarDocumentacionDTO modificarDocumentacionDTO = controladorABMDocumentacion.buscarDocumentacionAModificar(codDocumentacion);
-            setNombreDocumentacion(modificarDocumentacionDTO.getNombreDocumentacion());
-            setCodDocumentacion(modificarDocumentacionDTO.getCodDocumentacion());
-            setDescripcionDocumentacion(modificarDocumentacionDTO.getDescripcionDocumentacion());
+            try {
+                ModificarDocumentacionDTO modificarDocumentacionDTO = controladorABMDocumentacion.buscarDocumentacionAModificar(codDocumentacion);
+                setNombreDocumentacion(modificarDocumentacionDTO.getNombreDocumentacion());
+                setCodDocumentacion(modificarDocumentacionDTO.getCodDocumentacion());
+                setDescripcionDocumentacion(modificarDocumentacionDTO.getDescripcionDocumentacion());
+            } catch (Exception e) {
+                Messages.create("Error!").error().detail(e.getMessage()).add();
+                Faces.getExternalContext().getFlash().setKeepMessages(true);
+                Faces.redirect(externalContext.getRequestContextPath() + "/ABMDocumentacion/abmDocumentacionLista.jsf");
+            }
         }
         
     }

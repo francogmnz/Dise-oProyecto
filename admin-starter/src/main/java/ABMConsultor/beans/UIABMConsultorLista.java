@@ -111,7 +111,7 @@ public class UIABMConsultorLista implements Serializable {
             Messages.create("Anulado").detail("Anulado").add();;
 
         } catch (ConsultorException e) {
-            Messages.create("Error!").error().detail("No se puede dar de baja, el consultor tiene asignado al menos un tramite.").add();
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
     }
 

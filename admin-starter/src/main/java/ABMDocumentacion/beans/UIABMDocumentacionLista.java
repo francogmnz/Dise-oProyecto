@@ -78,6 +78,15 @@ public class UIABMDocumentacionLista implements Serializable {
         BeansUtils.guardarUrlAnterior();
         return "abmDocumentacion?faces-redirect=true&codDocumentacion=0"; // Usa '?faces-redirect=true' para hacer una redirección
     }
+    
+    //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ESTA ANULADA
+    public boolean isAnulada(DocumentacionGrillaUI documentacionEnviada) {
+        if (documentacionEnviada.getFechaHoraBajaDocumentacion()!= null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     
     public String irModificarDocumentacion(int codDocumentacion) {
@@ -88,10 +97,10 @@ public class UIABMDocumentacionLista implements Serializable {
     public void darDeBajaDocumentacion(int codDocumentacion){
         try {
             controladorABMDocumentacion.darDeBajaDocumentacion(codDocumentacion);
-            Messages.create("Anulado").detail("Anulado").add();;
+            Messages.create("Anulado").detail("Anulado").add();
                     
         } catch (DocumentacionException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            Messages.create("Error!").error().detail(e.getMessage()).add();
         }
     }
     

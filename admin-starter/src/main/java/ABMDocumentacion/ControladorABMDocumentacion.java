@@ -23,7 +23,7 @@ public class ControladorABMDocumentacion {
         expertoABMDocumentacion.modificarDocumentacion(modificarDocumentacionDTOIn);
     }
 
-    public ModificarDocumentacionDTO buscarDocumentacionAModificar(int codDocumentacion){
+    public ModificarDocumentacionDTO buscarDocumentacionAModificar(int codDocumentacion) throws DocumentacionException{
         return expertoABMDocumentacion.buscarDocumentacionAModificar(codDocumentacion);
     }
 

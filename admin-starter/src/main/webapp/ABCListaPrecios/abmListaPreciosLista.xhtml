@@ -179,7 +179,7 @@
                             <p:fileDownload value="#{uiabmListaPreciosLista.exportarListaPrecios(listaPrecios.codListaPrecios)}"/> 
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}" rendered="#{uiabmListaPreciosLista.habilitarBtnBaja(listaPrecios)}">
+                        <p:commandButton value="Dar de baja" styleClass="btn-danger" update="@form" actionListener="#{uiabmListaPreciosLista.darDeBajaListaPrecios(listaPrecios.codListaPrecios)}">
                             <p:confirm header="Anulación de Lista de Precios código #{listaPrecios.codListaPrecios}" message="¿Está seguro?" icon="ui-icon-alert"/>
                         </p:commandButton>
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">

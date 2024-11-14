@@ -25,7 +25,7 @@ public class ControladorABMConsultor {
         expertoABMConsultor.modificarConsultor(dtoModificacionDatosIn);
     }
 
-    public DTOModificacionDatos buscarConsultorAModificar(int legajo) throws IOException{
+    public DTOModificacionDatos buscarConsultorAModificar(int legajo) throws IOException, ConsultorException{
         return expertoABMConsultor.buscarConsultorAModificar(legajo);
     }
 

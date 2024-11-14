@@ -112,14 +112,12 @@
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmConsultorLista.irModificarConsultor(consultor.legajoConsultor)}" disabled="#{consultor.fechaHoraBajaConsultor != null}">
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmConsultorLista.irModificarConsultor(consultor.legajoConsultor)}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmConsultorLista.darDeBajaConsultor(consultor.legajoConsultor)}" disabled="#{consultor.fechaHoraBajaConsultor != null}">
-
+                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmConsultorLista.darDeBajaConsultor(consultor.legajoConsultor)}">
                             <p:confirm header="Anulación de #{consultor.legajoConsultor} #{consultor.nombreConsultor}" message="¿Está seguro?" icon="ui-icon-alert"/>
-
                         </p:commandButton>
 
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">

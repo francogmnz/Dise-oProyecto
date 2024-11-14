@@ -25,6 +25,9 @@
             }
         </style>
         <h:form>
+<!--            <p:growl sticky="false" life="3000">
+                <p:autoUpdate/>
+            </p:growl>-->
             <p:focus context="@form"/>
             <div class="box box-primary">
 
@@ -142,11 +145,12 @@
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmClienteLista.irModificarCliente(cliente.dniCliente)}" disabled="#{cliente.fechaHoraBajaCliente != null}">
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmClienteLista.irModificarCliente(cliente.dniCliente)}"> 
                             <f:ajax render="@form"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmClienteLista.darDeBajaCliente(cliente.dniCliente)}" disabled="#{cliente.fechaHoraBajaCliente != null}">
+                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmClienteLista.darDeBajaCliente(cliente.dniCliente)}">
+<!--                                         disabled="#{consultor.fechaHoraBajaConsultor != null}">-->
 
                             <p:confirm header="Anulación de #{cliente.dniCliente} #{cliente.nombreCliente}#{cliente.apellidoCliente}" message="¿Está seguro?" icon="ui-icon-alert"/>
 

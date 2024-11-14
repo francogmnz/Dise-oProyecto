@@ -18,6 +18,12 @@
     </ui:define>
 
     <ui:define name="body">
+        <style type="text/css">
+            .deBaja {
+                color: whitesmoke;
+                background-color: #ff7884;
+            }
+        </style>
         <h:form>
             <p:focus context="@form"/>
             <div class="box box-primary">
@@ -80,7 +86,8 @@
                     
                 </div>
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="documentacionTable" value="#{uiabmDocumentacionLista.buscarDocumentaciones()}" var="documentacion" >
+                <p:dataTable id="grid1" widgetVar="documentacionTable" value="#{uiabmDocumentacionLista.buscarDocumentaciones()}" var="documentacion"
+                             rowStyleClass="#{uiabmDocumentacionLista.isAnulada(documentacion) ? 'deBaja' : ''}">
 
                     <p:column>
                         <f:facet name="header">Código</f:facet>
@@ -104,11 +111,11 @@
 
                     <p:column>
                         <f:facet name="header">Acciones</f:facet>
-                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmDocumentacionLista.irModificarDocumentacion(documentacion.codDocumentacion)}" disabled="#{documentacion.fechaHoraBajaDocumentacion != null}">
+                        <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmDocumentacionLista.irModificarDocumentacion(documentacion.codDocumentacion)}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Eliminar" styleClass="btn-dSSanger" update="@form" actionListener="#{uiabmDocumentacionLista.darDeBajaDocumentacion(documentacion.codDocumentacion)}" disabled="#{documentacion.fechaHoraBajaDocumentacion != null}">
+                        <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmDocumentacionLista.darDeBajaDocumentacion(documentacion.codDocumentacion)}">
                             <p:confirm header="Anulación de #{documentacion.codDocumentacion} #{documentacion.nombreDocumentacion}" message="¿Está seguro?" icon="ui-icon-alert"/>
                         </p:commandButton>
 

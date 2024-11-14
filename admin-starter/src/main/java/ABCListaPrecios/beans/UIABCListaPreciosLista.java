@@ -135,16 +135,6 @@ public class UIABCListaPreciosLista implements Serializable {
         return lpGrilla;
     }
 
-//    RENDERIZA EL BOTON DARDEBAJA SI ES LA ULTIMA LISTA DE PRECIOS, NO ESTA VIGENTE Y NO ES UNA LISTA PRECIOS PASADA
-    public boolean habilitarBtnBaja(ListaPreciosGrillaUI listaEnviada) {
-        Timestamp hoy = fechaHoraActual.obtenerFechaHoraActual();
-        if (listaEnviada.getFechaHoraBajaListaPrecios() == null && listaEnviada.getFechaHoraHastaListaPrecios().after(hoy) && !isLaActiva(listaEnviada)) {
-            ListaPrecios ultimaLP = controladorABCListaPrecios.buscarUltimaListaNoNula();
-            return ultimaLP.getCodListaPrecios() == listaEnviada.getCodListaPrecios();
-        }
-        return false;
-    }
-
 //    DEVUELVE TRUE SI LA LISTA DE PRECIOS ES LA VIGENTE 
     public boolean isLaActiva(ListaPreciosGrillaUI listaEnviada) {
         if (listaEnviada != null) {

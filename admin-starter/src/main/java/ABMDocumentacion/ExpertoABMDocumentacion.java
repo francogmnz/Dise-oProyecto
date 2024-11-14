@@ -87,23 +87,36 @@ public class ExpertoABMDocumentacion {
         }
     }
 
-    public ModificarDocumentacionDTO buscarDocumentacionAModificar(int codDocumentacion){
+    public ModificarDocumentacionDTO buscarDocumentacionAModificar(int codDocumentacion) throws DocumentacionException {
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
-
+        DTOCriterio dto2 = new DTOCriterio();
+        
         dto.setAtributo("codDocumentacion");
         dto.setOperacion("=");
         dto.setValor(codDocumentacion);
 
         criterioList.add(dto);
-        List objetoList = FachadaPersistencia.getInstance().buscar("Documentacion", criterioList);
-        Documentacion documentacionEncontrado = (Documentacion) objetoList.get(0);
-
-        ModificarDocumentacionDTO modificarDocumentacionDTO = new ModificarDocumentacionDTO();
-        modificarDocumentacionDTO.setCodDocumentacion(documentacionEncontrado.getCodDocumentacion());
-        modificarDocumentacionDTO.setNombreDocumentacion(documentacionEncontrado.getNombreDocumentacion());
-        modificarDocumentacionDTO.setDescripcionDocumentacion(documentacionEncontrado.getDescripcionDocumentacion());
-        return modificarDocumentacionDTO;
+        
+        dto2.setAtributo("fechaHoraBajaDocumentacion");
+        dto2.setOperacion("=");
+        dto2.setValor(null);
+           
+        criterioList.add(dto2);
+        try {
+            List objetoList = FachadaPersistencia.getInstance().buscar("Documentacion", criterioList);
+            if (objetoList.isEmpty()) {
+                throw new DocumentacionException("No se puede modificar una documentacion dado de baja.");
+            }
+            Documentacion documentacionEncontrado = (Documentacion) objetoList.get(0);
+            ModificarDocumentacionDTO modificarDocumentacionDTO = new ModificarDocumentacionDTO();
+            modificarDocumentacionDTO.setCodDocumentacion(documentacionEncontrado.getCodDocumentacion());
+            modificarDocumentacionDTO.setNombreDocumentacion(documentacionEncontrado.getNombreDocumentacion());
+            modificarDocumentacionDTO.setDescripcionDocumentacion(documentacionEncontrado.getDescripcionDocumentacion());
+            return modificarDocumentacionDTO;
+        } catch (Exception e) {
+            throw new DocumentacionException(e.getMessage());
+        }
     }
 
     public void modificarDocumentacion(ModificarDocumentacionDTOIn modificarDocumentacionDTOIn) throws DocumentacionException{
@@ -117,8 +130,6 @@ public class ExpertoABMDocumentacion {
         dto.setAtributo("codDocumentacion");
         dto.setOperacion("=");
         dto.setValor(modificarDocumentacionDTOIn.getCodDocumentacion());
-
-        criterioList.add(dto);
 
         Documentacion documentacionEncontrado = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioList).get(0);
 
@@ -135,15 +146,25 @@ public class ExpertoABMDocumentacion {
 
         List<DTOCriterio> criterioList = new ArrayList<>();
         DTOCriterio dto = new DTOCriterio();
+        DTOCriterio dto2 = new DTOCriterio();
 
         dto.setAtributo("codDocumentacion");
         dto.setOperacion("=");
         dto.setValor(codDocumentacion);
 
         criterioList.add(dto);
+        
+        dto2.setAtributo("fechaHoraBajaDocumentacion");
+        dto2.setOperacion("=");
+        dto2.setValor(null);
+           
+        criterioList.add(dto2);
 
-        Documentacion documentacionEncontrado = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioList).get(0);
-
+        List object =FachadaPersistencia.getInstance().buscar("Documentacion", criterioList);
+        if (object.isEmpty()) {
+            throw new DocumentacionException("La documentacion seleccionada ya se encuentra dado de baja");
+        }
+        Documentacion documentacionEncontrado = (Documentacion) object.get(0);
         documentacionEncontrado.setFechaHoraBajaDocumentacion(new Timestamp(System.currentTimeMillis()));
 
         FachadaPersistencia.getInstance().guardar(documentacionEncontrado);
