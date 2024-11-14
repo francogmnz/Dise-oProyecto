@@ -1,18 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author licciardi
- */
+
 public class ListaPrecios extends Entidad {
     
     
@@ -21,7 +13,7 @@ public class ListaPrecios extends Entidad {
     private Timestamp fechaHoraBajaListaPrecios;
     private Timestamp fechaHoraDesdeListaPrecios;
     private Timestamp fechaHoraHastaListaPrecios;
-    private List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = new ArrayList<>();  // Relación OneToMany con TipoTramiteListaPrecios
+    private List<TipoTramiteListaPrecios> tipoTramiteListaPrecios = new ArrayList<>();  
 
     public ListaPrecios() {
     }

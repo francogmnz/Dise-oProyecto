@@ -24,6 +24,14 @@ public class FachadaPersistencia {
         FachadaInterna.getInstance().guardar(objeto);
     }
 
+    public void merge(Object objeto) {
+        FachadaInterna.getInstance().merge(objeto);
+    }
+
+    public void refrescar(Object objeto) {
+        FachadaInterna.getInstance().refrescar(objeto);
+    }
+
     public void iniciarTransaccion() {
         FachadaInterna.getInstance().iniciarTransaccion();
     }

@@ -11,16 +11,12 @@
             <column name="OIDAgendaConsultor"/>
             <generator class="uuid2"/>
         </id>
+        <property name="fechaDesdeSemana" column="fecha_desde_semana" type="date" not-null="true"/>
+        <property name="fechaHastaSemana" column="fecha_hasta_semana" type="date" not-null="true"/>
+        <property name="mesAgendaConsultor" column="mes_agenda_consultor" type="int" not-null="true"/>
+        <property name="añoAgendaConsultor" column="anio_agenda_consultor" type="int" not-null="true"/>
+        <property name="semAgendaConsultor" column="sem_agenda_consultor" type="int" not-null="true"/>
 
-        <property name="codAgendaConsultor" type="int">
-            <column name="codigo_agenda_consultor"/>
-        </property>
-
-        <property name="fechaAgenda" column="fecha_agenda" type="timestamp" not-null="true"/>
-
-        <property name="fechaAltaAgendaConsultor" column="fecha_alta_agenda_consultor" type="timestamp" not-null="true"/>
-
-        <property name="fechaBajaAgendaConsultor" column="fecha_baja_agenda_consultor" type="timestamp"/>
         
         <!-- Relación ManyToMany con Consultor -->
         <bag name="consultores" table="consultor_agenda_consultor">

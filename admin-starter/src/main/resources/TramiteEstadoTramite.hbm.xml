@@ -10,14 +10,15 @@
             <generator class="uuid2"/>
         </id>
 
-        <property name="fechaHoraAltaTET" column="fecha_hora_alta_tet" type="timestamp"/>
+        <property name="fechaDesdeTET" column="fecha_desde_tet" type="timestamp"/>
 
-        <property name="fechaHoraBajaTET" column="fecha_hora_baja_tet" type="timestamp"/>
+        <property name="fechaHastaTET" column="fecha_hasta_tet" type="timestamp"/>
 
+        
 
 
         <!-- Relación ManyToOne con EstadoTramite -->
-        <many-to-one name="estadoTramite" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="true"/>
+        <many-to-one name="estadoTramite" class="entidades.EstadoTramite" column="OIDEstadoTramite" not-null="false"/>
 
     </class>
 

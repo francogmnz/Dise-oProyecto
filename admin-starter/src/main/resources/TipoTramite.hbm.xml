@@ -33,10 +33,10 @@
         </property>
 
         <!-- Relación ManyToOne con CategoriaTipoTramite -->
-        <many-to-one name="categoriaTipoTramite" class="entidades.CategoriaTipoTramite" column="OIDCategoriaTipoTramite" not-null="true"/>
+        <many-to-one name="categoriaTipoTramite" class="entidades.CategoriaTipoTramite" column="OIDCategoriaTipoTramite" not-null="false"/>
         
         <!-- Relación OneToMany con TipoTramiteDocumentacion -->
-        <bag name="tipoTramiteDocumentacion" table="tipo_tramite_documentacion" cascade="none">
+        <bag name="tipoTramiteDocumentacion" table="tipo_tramite_documentacion" cascade="none" inverse="false" lazy="false"> <!-- era none -->
             <key column="OIDTipoTramite" not-null="false"/> <!-- Cambiar el false a true dsp -->
             <one-to-many class="entidades.TipoTramiteDocumentacion"/>
         </bag>

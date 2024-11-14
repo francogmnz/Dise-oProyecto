@@ -1,40 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author licciardi
- */
 public class TramiteEstadoTramite extends Entidad {
-    
-    private Timestamp fechaHoraAltaTET;
-    private Timestamp fechaHoraBajaTET;
-    private EstadoTramite estadoTramite;  // Relación ManyToOne con EstadoTramite
+
+    private Timestamp fechaDesdeTET;
+    private Timestamp fechaHastaTET;
+    private EstadoTramite estadoTramite;
+    private int contadorTET;
 
     public TramiteEstadoTramite() {
     }
 
-    public Timestamp getFechaHoraAltaTET() {
-        return fechaHoraAltaTET;
+    public int getContadorTET() {
+        return contadorTET;
     }
 
-    public void setFechaHoraAltaTET(Timestamp fechaHoraAltaTET) {
-        this.fechaHoraAltaTET = fechaHoraAltaTET;
+    public void setContadorTET(int contadorTET) {
+        this.contadorTET = contadorTET;
     }
 
-    public Timestamp getFechaHoraBajaTET() {
-        return fechaHoraBajaTET;
+    public Timestamp getFechaDesdeTET() {
+        return fechaDesdeTET;
     }
 
-    public void setFechaHoraBajaTET(Timestamp fechaHoraBajaTET) {
-        this.fechaHoraBajaTET = fechaHoraBajaTET;
+    public void setFechaDesdeTET(Timestamp fechaDesdeTET) {
+        this.fechaDesdeTET = fechaDesdeTET;
     }
 
+    public Timestamp getFechaHastaTET() {
+        return fechaHastaTET;
+    }
+
+    public void setFechaHastaTET(Timestamp fechaHastaTET) {
+        this.fechaHastaTET = fechaHastaTET;
+    }
 
     public EstadoTramite getEstadoTramite() {
         return estadoTramite;
@@ -43,9 +43,5 @@ public class TramiteEstadoTramite extends Entidad {
     public void setEstadoTramite(EstadoTramite estadoTramite) {
         this.estadoTramite = estadoTramite;
     }
-    
-    
-    
-    
-    
+
 }

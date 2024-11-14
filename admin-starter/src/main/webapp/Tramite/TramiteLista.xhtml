@@ -1,0 +1,341 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="#{layoutMB.template}">
+    <ui:define name="metadata">
+        <ui:param name="title" value="Gestión de Trámites"/> 
+
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Gestión de Trámites
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form1">
+            <p:focus context="@form"/>
+            <div class="box box-primary">
+
+                <div class="box-header with-border">
+                    <div id="main-buttons">
+                        <p:commandButton value="Agregar trámite"  icon="fa fa-plus" action="#{uitramiteLista.irRegistrarTramite()}"
+                                         styleClass="btn-warning btn-sm" style="padding: 5px 10px; font-size: 12px;"/>
+                    </div>
+                </div>
+
+                <!-- Tabla para mostrar la lista de Tramites -->
+                <p:separator/>
+
+                <div class="ui-g ui-fluid">
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Número trámite:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="nroTramiteFiltro" style="width:150px"
+                                         placeholder="Número trámite" value="#{uitramiteLista.nroTramiteFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
+                                <p:ajax event="change" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="DNI:"/>
+                            <br/>
+                            <p:spacer height="10"/>
+                            <p:inputText id="dniFiltro" style="width:150px"
+                                         placeholder="DNI" value="#{uitramiteLista.dniFiltro}"
+                                         onfocus="Javascript:this.focus();this.select();">
+                                <p:keyFilter mask="pint"/>
+                                <p:ajax event="change" 
+                                        listener="#{uitramiteLista.filtrar()}" 
+                                        update="@form:grid1" />
+                            </p:inputText>
+                        </p:outputPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Código Tipo Trámite:" />
+                            <br />
+                            <p:spacer height="10" />
+
+                            <!-- Alineación ajustada -->
+                            <p:outputPanel style="display: inline-block; vertical-align: middle;">
+                                <p:inputText id="codTipoTramiteInput" style="width:150px; display: inline-block;"
+                                             placeholder="Código tipo trámite" 
+                                             value="#{uitramiteLista.codTipoTramiteFiltro}"
+                                             onfocus="Javascript:this.focus();this.select();">
+                                    <p:keyFilter mask="pint" />
+                                    <p:ajax event="change" 
+                                            listener="#{uitramiteLista.filtrar()}"
+                                            update="@form:grid1" />
+                                </p:inputText>
+                            </p:outputPanel>
+
+                            <!-- Alineación del botón -->
+                            <p:commandButton icon="fa fa-question-circle" 
+                                             title="Ver filtros de Tipo trámite" 
+                                             oncomplete="PF('dlgFiltrosTipoTramite').show();" 
+                                             update="@none"
+                                             style="border:none; background: none; color: black; display: inline-block;
+                                             vertical-align: middle; padding: 0; margin-left: 5px; width: auto; height: auto;" 
+                                             iconPos="left" />
+                        </p:outputPanel>
+                    </div>
+
+                    <!-- Dialogo para filtros de Tipo Trámite -->
+                    <p:dialog header="Filtros de Tipo Trámite" widgetVar="dlgFiltrosTipoTramite" 
+                              modal="true" width="900px" height="auto" resizable="false" 
+                              style="overflow-y: auto; max-height: 1000px;">
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Código TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputNumber id="codTipoTramiteFiltro" style="width:150px"
+                                                   placeholder="Código" value="#{uitramiteLista.codTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputNumber>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Categoría TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="nombreCategoriaTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Categoría" value="#{uitramiteLista.nombreCategoriaTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Nombre TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="nombreTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Nombre" value="#{uitramiteLista.nombreTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <p:outputPanel>
+                                    <h:outputText value="Descripción TipoTrámite:"/>
+                                    <br/>
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="descripcionTipoTramiteFiltro" style="width:150px"
+                                                 placeholder="Descripción" value="#{uitramiteLista.descripcionTipoTramiteFiltro}">
+                                        <p:ajax event="keyup" 
+                                                listener="#{uitramiteLista.filtrar}" 
+                                                update="grid1Dialog" />
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <p:spacer height="5"/>
+                        <!-- Tabla con barra de desplazamiento -->
+                        <p:dataTable id="grid1Dialog" var="tipoTramite" value="#{uitramiteLista.buscarTipoTramite()}" 
+                                     sortMode="multiple" scrollable="true" scrollHeight="200">
+                            <p:column sortBy="#{tipoTramite.codTipoTramite}">
+                                <f:facet name="header">Código</f:facet>
+                                    #{tipoTramite.codTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.nombreCategoriaTipoTramite}">
+                                <f:facet name="header">Categoría</f:facet>
+                                    #{tipoTramite.nombreCategoriaTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.nombreTipoTramite}">
+                                <f:facet name="header">Nombre</f:facet>
+                                    #{tipoTramite.nombreTipoTramite}
+                            </p:column>
+                            <p:column sortBy="#{tipoTramite.descripcionTipoTramite}">
+                                <f:facet name="header">Descripción</f:facet>
+                                    #{tipoTramite.descripcionTipoTramite}
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputPanel>
+                            <h:outputText value="Fecha recepción:"/>
+                            <p:spacer height="10"/>
+                            <p:calendar id="fechaRecepcionTramiteFiltro" style="width:150px"
+                                        value="#{uitramiteLista.fechaRecepcionTramiteFiltro}"
+                                        pattern="dd/MM/yyyy" showButtonPanel="true" 
+                                        placeholder="Seleccionar fecha">
+                                <p:ajax event="dateSelect" 
+                                        listener="#{uitramiteLista.filtrar()}"
+                                        update="@form:grid1" />
+                            </p:calendar>
+                        </p:outputPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-6">
+                        <h:outputText value="Estado:"/>
+                        <p:selectOneMenu id="estadoMenu" value="#{uitramiteLista.nombreEstadoFiltro}">
+                            <f:selectItem itemLabel="Seleccione un Estado" />
+                            <f:selectItems value="#{uitramite.estadoTramiteDisponibles}"
+                                           var="estadoTramite"
+                                           itemValue="#{estadoTramite.nombreEstado}"
+                                           itemLabel="#{estadoTramite.nombreEstado}"/> 
+                            <p:ajax event="change" listener="#{uitramiteLista.filtrar()}" update="@form:grid1" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <h:outputText value="Ordenar por:" />
+                        <p:selectOneMenu value="#{uitramiteLista.criterio}">
+                            <f:selectItem itemLabel="Seleccione un criterio" itemValue="" noSelectionOption="true" />
+                            <f:selectItem itemLabel="Número Trámite Ascendente" itemValue="codAsc" />
+                            <f:selectItem itemLabel="Número Trámite Descendente" itemValue="codDesc" />
+                            <p:ajax event="change" listener="#{uitramiteLista.mostrarTramites}" update="form1:grid1" />
+                        </p:selectOneMenu>
+
+                        <!-- Botón de Glosario -->
+                        <p:commandButton icon="fa fa-question-circle" 
+                                         title="Ver glosario lista" 
+                                         oncomplete="PF('dlgGlosario').show();"
+                                         update="@none"
+                                         style="border:none; background: none; color: black; display: inline-block;
+                                         padding: 0; width: 25px; height: auto; margin-top: 10px; margin-bottom: 0px" 
+                                         iconPos="right" />
+                    </div>
+
+                    <!-- Diálogo del glosario -->
+                    <p:dialog header="Glosario lista trámites" widgetVar="dlgGlosario" modal="true" width="auto" height="auto" resizable="false"
+                              style="overflow-y: auto; max-height: 1000px;">
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12">
+                                <table border="1" class="tabla-estatica">
+                                    <tr>
+                                        <td class="isAnulado">ANULADO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isPendienteDoc">PENDIENTE DOCUMENTACIÓN</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isIniciado">INICIADO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="isFinalizado">FINALIZADO</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>    
+                    </p:dialog>
+
+                </div>
+
+                <p:spacer height="5"/>
+
+                <!-- Subrayado para los tramites -->
+                <style type="text/css">
+                 .isAnulado {
+                     color: black;
+                     background-color: #ff7884;
+                 }
+
+                 .isPendienteDoc {
+                     color: black;
+                     background-color: #f2ff7b;
+                 }
+
+                 .isIniciado {
+                     color: black;
+                     background-color: #7bff9a;
+                 }
+
+                 .isFinalizado {
+                     color: black;
+                     background-color: #a5a3a3;
+                 }
+
+             </style>
+
+                <!-- Tabla para mostrar los trámites -->
+                <p:dataTable id="grid1" value="#{uitramiteLista.mostrarTramites()}" var="tramite" 
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             rowStyleClass="#{uitramiteLista.isFinalizado(tramite) ? 'isFinalizado' :
+                                              uitramiteLista.isAnulado(tramite) ? 'isAnulado' :
+                                              uitramiteLista.isPendienteDoc(tramite) ? 'isPendienteDoc' : 
+                                              uitramiteLista.isIniciado(tramite) ? 'isIniciado' : ''}">
+                    <p:column>
+                        <f:facet name="header">Número Trámite</f:facet>
+                            #{tramite.nroTramite}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">DNI</f:facet>
+                            #{tramite.dni}
+                    </p:column>
+                    
+                     <p:column>
+                        <f:facet name="header">Nombre y Apellido</f:facet>
+                            #{tramite.nombreApellidoCliente}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Codigo Tipo Trámite</f:facet>
+                            #{tramite.codTipoTramite}
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Fecha Recepción</f:facet>
+                        <h:outputText value="#{tramite.fechaRecepcionTramite}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Estado Tramite</f:facet>
+                            #{tramite.nombreEstado}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <p:commandButton icon="pi pi-search" 
+                                         styleClass="rounded-button ui-button-success ui-button-outlined" 
+                                         action="#{uitramiteLista.mostrarResumenTramite(tramite.nroTramite)}"
+                                         title="Ver resumen del trámite"
+                                         style="margin-right: 5px;" /> 
+                        <p:commandButton icon="pi pi-history" 
+                                         styleClass="rounded-button ui-button-secondary ui-button-outlined" 
+                                         action="#{uicambioEstadoLista.irMostrarHistorialEstados(tramite.nroTramite)}"
+                                         title="Ver historial de estados"
+                                         style="margin-right: 5px;"/> 
+                    </p:column>            
+                </p:dataTable>
+
+            </div>
+
+            <div class="col-sm-12 col-md-3">
+                <p:commandButton value="Volver Atrás" onclick="window.history.back();"
+                                 styleClass="btn-block btn-default" icon="pi pi-arrow-left" style="width: 180px;" />
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

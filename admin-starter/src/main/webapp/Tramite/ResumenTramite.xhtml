@@ -1,0 +1,274 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Resumen Tramite"/>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h:form id="tramiteForm">
+
+
+
+            <!-- Datos importantes -->
+            <p:panel style="width: 100%; margin-bottom: 8px; color: #c0c0c0;">
+                <h:panelGrid columns="3" style="width: 100%; text-align: center; padding-left: 12px; padding-right: 12px;" columnClasses="custom-column">
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Trámite n°:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value=" #{uiresumen.nroTramite}" style="font-size: 18px;" />
+                    </h:panelGroup>
+
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Cliente:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value=" #{uiresumen.nombreCliente}" style="font-size: 18px; margin-left: 10px;" />
+                        <h:outputText value=" #{uiresumen.apellidoCliente}" style="font-size: 18px;" />
+                    </h:panelGroup>
+
+                    <h:panelGroup layout="block" style="margin: 0 12px;">
+                        <h:outputLabel value="Fecha límite documentación:" style="font-size: 18px; font-weight: 700;" />
+                        <h:outputText value="#{uiresumen.fechaLimite}" style="font-size: 18px;">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+            </p:panel>
+
+
+
+            <p:tabView dynamic="true" cache="true" effect="fold">
+                <p:tab title="Datos Trámite">
+                    <!-- Pestaña Datos Tramite -->
+                    <p:panel toggleable="true" collapsed="false">
+                        <f:facet name="header">
+                            <h4><b>Datos Trámite</b></h4>
+                        </f:facet>
+                        <h:panelGrid columns="1">
+                            <h:panelGroup>
+                                <h:outputLabel value="Número Tramite:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.nroTramite}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Ingreso:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaRecepcionTramite}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Anulación:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaAnulacionTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaAnulacionTramite != null ? 'red' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Presentación Total Documentación:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaPresentacionTotalDocumentacion}" 
+                                              style="font-weight:700;"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Inicio:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaInicioTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaInicioTramite != null ? 'green' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Fecha Fin:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.fechaFinTramite}" 
+                                              style="font-weight:700; color: #{uiresumen.fechaFinTramite != null ? 'grey' : 'black'};"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Plazo entrega documentación:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.plazoDocumentacion} días" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Código Tipo Tramite:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.codTipoTramite}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Tipo Trámite:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.nombreTipoTramite}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Estado Trámite:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.nombreEstado}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Precio:" style="font-weight:700;"/>
+                                <h:outputText value=" $#{uiresumen.precioTramite}" />
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </p:panel>
+
+
+                    <!-- Pestaña Datos Cliente -->
+                    <p:panel toggleable="true" collapsed="false" style="margin-top: 8px">
+                        <f:facet name="header">
+                            <h4><b>Datos Cliente</b></h4>
+                        </f:facet>
+
+                        <h:panelGrid columns="1">
+                            <h:panelGroup>
+                                <h:outputLabel value="Nombre:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.nombreCliente}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Apellido:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.apellidoCliente}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="DNI:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.dniCliente}" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Mail:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.mailCliente}" />
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <!-- Pestaña Datos Consultor -->
+                    <p:panel toggleable="true" collapsed="false" style="margin-top: 8px">
+                        <f:facet name="header">
+                            <h4><b>Datos Consultor</b></h4>
+                        </f:facet>
+
+                        <h:panelGrid columns="1">
+                            <h:panelGroup>
+                                <h:outputLabel value="Nombre:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.nombreConsultor}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:outputLabel value="Legajo:" style="font-weight:700;"/>
+                                <h:outputText value=" #{uiresumen.legajoConsultor != 0 ? uiresumen.legajoConsultor : 'Sin asignar'}" />
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                        <!-- Botón de Anular -->
+                        <p:commandButton value="Anular trámite" styleClass="btn-block btn-fatal" style="width:160px; height:36px;" 
+                                         actionListener="#{uiresumen.anularTramite(nroTramite)}" 
+                                         update="@form" 
+                                         oncomplete="if (!args.validationFailed) window.location.reload();">
+                            <!--disabled="{uiresumen.fechaAnulacionTramite != null || uiresumen.fechaFinTramite != null}"--> 
+                            <p:confirm header="Anulación del trámite N° #{uiresumen.nroTramite} de cliente con DNI #{uiresumen.dniCliente}" 
+                                       message="¿Desea anular el trámite?" 
+                                       icon="ui-icon-alert"/>
+                        </p:commandButton>
+
+                        <!-- Botón de Asignar consultor -->
+                        <p:commandButton value="Asignar consultor" styleClass="btn-block btn-primary" style="width:160px; height:36px;" 
+                                         actionListener="#{uiresumen.asignarConsultorFuturo()}" 
+                                         update="@form" 
+                                         oncomplete="if (!args.validationFailed) window.location.reload();">
+                            <!--disabled="{uiresumen.fechaInicioTramite != null}"-->
+                        </p:commandButton>
+                    </div>
+                </p:tab>
+
+                <!-- Pestaña Documentación -->
+                <p:tab title="Documentación">
+                    <p:panel toggleable="true" collapsed="false">
+                        <f:facet name="header">
+                            <h4><b>Documentación</b></h4>
+                        </f:facet>
+                        <p:dataTable id="tablaDoc" var="doc" value="#{uiresumen.resumenDoc}">
+                            <!-- Columna: Nombre documento -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">codTD</f:facet>
+                                    #{doc.codTD}
+                            </p:column>
+
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Nombre documento</f:facet>
+                                    #{doc.nombreDocumentacion}
+                            </p:column>
+
+                            <!-- Columna: Estado Entrega -->
+                            <p:column id="estadoEntrega" style="text-align: center">
+                                <f:facet name="header">Estado Entrega</f:facet>
+                                <h:outputText value="#{doc.fechaEntregaDoc != null ? 'ENTREGADO' : 'PENDIENTE'}" 
+                                              style="color: #{doc.fechaEntregaDoc != null ? 'green' : 'red'}; font-weight: 700;" />
+                            </p:column>
+
+                            <!-- Columna: Agregar/Editar Entrega -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Agregar</f:facet>
+                                <h:form id="form#{doc.codTD}">
+                                    <h:inputHidden id="codTD" value="#{doc.codTD}" />
+                                    <p:fileUpload 
+                                        listener="#{uiresumen.handleFileUpload}" 
+                                        mode="advanced" 
+                                        dragDropSupport="true" 
+                                        auto="true"
+                                        multiple="false" 
+                                        sizeLimit="10000000"
+                                        allowTypes="/(\.|\/)(pdf|txt|jpg)$/"
+                                        update="messages"
+                                        oncomplete="setTimeout(function() { window.location.reload(true); }, 3500);">
+                                        <!--disabled="{doc.fechaEntregaDoc != null || uiresumen.fechaAnulacionTramite != null}"-->
+                                    </p:fileUpload>
+                                </h:form>
+                            </p:column>
+
+                            <!-- Sección de mensajes para mostrar notificaciones -->
+                            <p:messages id="messages" showDetail="true" closable="true"/>
+
+                            <!-- Columna: Botón de Descargar -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Descarga</f:facet>
+                                <p:commandButton value="Descargar archivo" ajax="false"
+                                                 onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                 icon="pi pi-arrow-down"  styleClass="btn-success">
+                                    <!--disabled="{doc.fechaEntregaDoc == null}">-->
+                                    <p:fileDownload value="#{uiresumen.getFileD(doc.codTD)}"/> 
+                                </p:commandButton>    
+                            </p:column>
+
+                            <!-- Columna: Botón de Eliminar -->
+                            <p:column style="text-align: center">
+                                <f:facet name="header">Eliminar</f:facet>
+                                <p:commandButton value="Eliminar"
+                                                 actionListener="#{uiresumen.eliminarArchivo(doc.codTD)}"
+                                                 icon="pi pi-trash"
+                                                 update="tablaDoc"
+                                                 oncomplete="setTimeout(function() { window.location.reload(true); }, 1500);">
+                                    <!--disabled="{doc.fechaEntregaDoc == null || uiresumen.fechaAnulacionTramite != null || uiresumen.fechaFinTramite != null}">-->
+                                    <p:confirm header="Confirmación" message="¿Desea eliminar #{doc.nombreDocumentacion}?" icon="ui-icon-alert"/>
+                                </p:commandButton> 
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350"
+                                                 style="border: 1px solid red; background-color: #f0f0f0;">
+                                    <h:panelGroup style="display: flex; justify-content: space-between; margin-top: 0; padding-top: 0;">
+                                        <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes btn-danger ui-button-flat" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
+                                    </h:panelGroup>
+                                </p:confirmDialog>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:tab>
+            </p:tabView>
+
+            <!-- Botón de Volver a Tramites, alineado a la derecha -->
+            <div style="text-align: right; margin-top: 8px;">
+                <p:commandButton value="Volver a trámites" action="#{uiresumen.irPantallaTramites()}"
+                                 icon="pi pi-arrow-left" style="width: 180px;" />
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
