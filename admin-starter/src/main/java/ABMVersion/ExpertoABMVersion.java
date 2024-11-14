@@ -38,7 +38,14 @@ public class ExpertoABMVersion {
             criterioTipo.setOperacion("=");
             criterioTipo.setValor(codTipoTramite);
             criterioTipoTramite.add(criterioTipo);
+           
         }
+        
+        DTOCriterio criterioFechaHoraBaja = new DTOCriterio();
+        criterioFechaHoraBaja.setAtributo("fechaHoraBajaTipoTramite");
+        criterioFechaHoraBaja.setOperacion("=");
+        criterioFechaHoraBaja.setValor(null);  // Solo tipos de trámite sin fecha de baja
+        criterioTipoTramite.add(criterioFechaHoraBaja);
 
         // Agregar criterio para nombreTipoTramite
         if (nombreTipoTramite != null && !nombreTipoTramite.trim().isEmpty()) {
@@ -90,15 +97,16 @@ public class ExpertoABMVersion {
                 // Si hay versiones, agregar el DTO con la versión más reciente
                 for (Object objVersion : lVersiones) {
                     Version version = (Version) objVersion;
-
-                    DTOTipoTramiteVersion dto = new DTOTipoTramiteVersion();
-                    dto.setNroVersion(version.getNroVersion());
-                    dto.setFechaDesdeVersion(version.getFechaDesdeVersion());
-                    dto.setFechaHastaVersion(version.getFechaHastaVersion());
-                    dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
-                    dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
-                    dto.setDescripcionVersion(version.getDescripcionVersion());
-                    dtoVersiones.add(dto);
+                    if (version.getTipoTramite().getFechaHoraBajaTipoTramite() == null) {
+                        DTOTipoTramiteVersion dto = new DTOTipoTramiteVersion();
+                        dto.setNroVersion(version.getNroVersion());
+                        dto.setFechaDesdeVersion(version.getFechaDesdeVersion());
+                        dto.setFechaHastaVersion(version.getFechaHastaVersion());
+                        dto.setNombreTipoTramite(version.getTipoTramite().getNombreTipoTramite());
+                        dto.setCodTipoTramite(version.getTipoTramite().getCodTipoTramite());
+                        dto.setDescripcionVersion(version.getDescripcionVersion());
+                        dtoVersiones.add(dto);
+                    }
                 }
             }
         }
@@ -510,7 +518,6 @@ public class ExpertoABMVersion {
         return dtoVersionM;
     }
      */
-    
     public void anularVersion(int codTipoTramite, int nroVersion) throws VersionException {
         // Iniciar transacción
         FachadaPersistencia.getInstance().iniciarTransaccion();
@@ -522,14 +529,14 @@ public class ExpertoABMVersion {
         criterioFechaBaja.setAtributo("fechaBajaVersion");
         criterioFechaBaja.setOperacion("=");
         criterioFechaBaja.setValor(null);
-        
+
         lCriterio.add(criterioFechaBaja);
 
         DTOCriterio criterioNroVersion = new DTOCriterio();
         criterioNroVersion.setAtributo("nroVersion");
         criterioNroVersion.setOperacion("=");
         criterioNroVersion.setValor(nroVersion);
-        
+
         lCriterio.add(criterioNroVersion);
 
         List<Object> objetoList2 = FachadaPersistencia.getInstance().buscar("Version", lCriterio);
@@ -537,35 +544,35 @@ public class ExpertoABMVersion {
         Version versionAnula = (Version) objetoList2.get(0);//transformo el primer elemento a version
 
         List<DTOCriterio> lCriterio2 = new ArrayList<>();
-        
+
         DTOCriterio criterioTramite = new DTOCriterio();
         criterioTramite.setAtributo("version");
         criterioTramite.setOperacion("=");
         criterioTramite.setValor(versionAnula);
-        
+
         lCriterio2.add(criterioTramite);
-        
+
         List tramiteList = FachadaPersistencia.getInstance().buscar("Tramite", lCriterio2);
-        for(Object o:tramiteList){
+        for (Object o : tramiteList) {
             Tramite tramiteAsociado = (Tramite) o;
-            if(tramiteAsociado.getFechaAnulacionTramite() == null || tramiteAsociado.getFechaFinTramite() == null){
+            if (tramiteAsociado.getFechaAnulacionTramite() == null || tramiteAsociado.getFechaFinTramite() == null) {
                 throw new VersionException("No se puede dar de baja la Version, porque estan asociado a "
                         + "por lo menos un Tramite activo");
             }
-        }        
-        
-        if(versionAnula.getNroVersion() != obtenerUltimoNumeroVersion(codTipoTramite)){
+        }
+
+        if (versionAnula.getNroVersion() != obtenerUltimoNumeroVersion(codTipoTramite)) {
             throw new VersionException("Solo se puede dar de baja la ultima version");
         }
-        
+
         versionAnula.setFechaBajaVersion(fechaHoraActual.obtenerFechaHoraActual());
-        
+
         FachadaPersistencia.getInstance().iniciarTransaccion();
-        
+
         FachadaPersistencia.getInstance().guardar(versionAnula);
-        
+
         FachadaPersistencia.getInstance().finalizarTransaccion();
-        }
+    }
 
     public DTOVersionH mostrarHistoricoVersion(int codTipoTramite) throws VersionException {
 

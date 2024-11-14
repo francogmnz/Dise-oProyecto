@@ -566,7 +566,7 @@ public class ExpertoRegistrarTramite {
                 throw new RegistrarTramiteException("El Tramite ya esta Finalizado");
             }
 
-            if (tramiteElegido.getFechaAnulacionTramite() == null && tramiteElegido.getFechaFinTramite() != null) {
+            if (tramiteElegido.getFechaAnulacionTramite() == null && tramiteElegido.getFechaFinTramite() == null) {
                 tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Trámite anulado."));
             }
@@ -663,6 +663,12 @@ public class ExpertoRegistrarTramite {
             criterioList.add(criterio);
 
             tramiteElegido = (Tramite) FachadaPersistencia.getInstance().buscar("Tramite", criterioList).get(0);
+        }
+        if (tramiteElegido.getFechaAnulacionTramite() != null) {
+            throw new RegistrarTramiteException("No se puede agregar la documentacion");
+        }
+        if (tramiteElegido.getFechaFinTramite() != null) {
+            throw new RegistrarTramiteException("No se puede agregar la documentacion");
         }
 
         List<DTOCriterio> criterioListTD = new ArrayList<>();
