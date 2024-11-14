@@ -159,7 +159,8 @@ public class ExpertoABMAgenda {
 
         return anioActual;
     }
-        public int calcularMesActual() {
+
+    public int calcularMesActual() {
         // Obtener la fecha de hoy
         LocalDate hoy = LocalDate.now();
 
@@ -168,7 +169,6 @@ public class ExpertoABMAgenda {
 
         return mesActual;
     }
-
 
     public List<DTOConsultorListaIzq> buscarConsultoresActivos() throws AgendaException {
 
@@ -383,6 +383,12 @@ public class ExpertoABMAgenda {
         criterioFechaFinNula.setOperacion("null");
         criterios.add(criterioFechaFinNula);
 
+        // Criterio: fechaAnulacionTramite es null
+        DTOCriterio criterioFechaAnulacionNula = new DTOCriterio();
+        criterioFechaAnulacionNula.setAtributo("fechaAnulacionTramite");
+        criterioFechaAnulacionNula.setOperacion("null");
+        criterios.add(criterioFechaAnulacionNula);
+
         DTOCriterio criterioFechaInicioDesde = new DTOCriterio();
         criterioFechaInicioDesde.setAtributo("fechaInicioTramite");
         criterioFechaInicioDesde.setOperacion(">=");
@@ -504,15 +510,6 @@ public class ExpertoABMAgenda {
         } else {
             return null;
         }
-    }
-
-    private boolean consultorYaAsignado(AgendaConsultor agenda, int legajoConsultor) {
-        for (Consultor consultor : agenda.getConsultores()) {
-            if (consultor.getLegajoConsultor() == legajoConsultor) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
