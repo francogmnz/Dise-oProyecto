@@ -567,7 +567,7 @@ public class ExpertoRegistrarTramite {
                 throw new RegistrarTramiteException("El Tramite ya esta Finalizado");
             }
 
-            if (tramiteElegido.getFechaAnulacionTramite() == null && tramiteElegido.getFechaFinTramite() != null) {
+            if (tramiteElegido.getFechaAnulacionTramite() == null && tramiteElegido.getFechaFinTramite() == null) {
                 tramiteElegido.setFechaAnulacionTramite(fechaHoraActual.obtenerFechaHoraActual());
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Trámite anulado."));
             }
