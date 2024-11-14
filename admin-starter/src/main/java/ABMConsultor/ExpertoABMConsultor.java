@@ -108,7 +108,7 @@ public class ExpertoABMConsultor {
             if (objectConsultor.isEmpty()) {
                 throw new ConsultorException("No se puede modificar un consultor dado de baja.");
             }
-            Consultor consultorEncontrado = (Consultor) objectConsultor;
+            Consultor consultorEncontrado = (Consultor) objectConsultor.get(0);
             dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
             dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
             dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
