@@ -679,6 +679,13 @@ public class ExpertoRegistrarTramite {
         TramiteDocumentacion td = (TramiteDocumentacion) FachadaPersistencia.getInstance().buscar("TramiteDocumentacion", criterioListTD).get(0);
         FachadaPersistencia.getInstance().merge(td);
 
+        if (tramiteElegido.getFechaAnulacionTramite() != null) {
+            throw new RegistrarTramiteException("No se puede agregar la documentacion");
+        }
+        if (tramiteElegido.getFechaFinTramite() != null) {
+            throw new RegistrarTramiteException("No se puede agregar la documentacion");
+        }
+        
         if (td.getFechaEntregaTD() != null) {
             throw new RegistrarTramiteException("Elimine la documentación si desea agregar una");
         }
