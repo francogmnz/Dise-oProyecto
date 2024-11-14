@@ -15,7 +15,7 @@ public class ControladorRegistrarTramite {
 
     private ExpertoRegistrarTramite expertoRegistrarTramite = new ExpertoRegistrarTramite();
 
-    public void eliminarDocumentacion(int codTD, int nroTramite) throws RegistrarTramiteException {
+    public void eliminarDocumentacion(int codTD, int nroTramite) throws Exception {
         expertoRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);
     }
 

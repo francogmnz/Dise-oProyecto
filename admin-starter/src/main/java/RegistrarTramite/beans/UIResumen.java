@@ -111,7 +111,7 @@ public class UIResumen implements Serializable {
                         this.nombreTD = doc.getNombreTD();
                         this.nombreDocumentacion = doc.getNombreDocumentacion();
                         this.fechaEntregaDoc = doc.getFechaEntregaDoc();
-                        
+
                     }
 
                     System.out.println("codTD actual: " + codTD);
@@ -320,7 +320,6 @@ public class UIResumen implements Serializable {
     public void anularTramite(int nroTramite) throws RegistrarTramiteException {
         try {
             controladorRegistrarTramite.anularTramite(nroTramite);
-            Messages.create("Trámite Anulado").add();
         } catch (RegistrarTramiteException e) {
             Messages.create("Error!").error().detail("AdminFaces Error message.").add();
         }
@@ -375,10 +374,10 @@ public class UIResumen implements Serializable {
 
             // Pasar codTD al método correspondiente
             controladorRegistrarTramite.registrarDocumentacion(codTD, fileU, nroTramite);
-            
+
             FacesMessage message = new FacesMessage("Éxito // ", event.getFile().getFileName() + " subido.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            
+
             this.file = fileU;
 
         } catch (RegistrarTramiteException e) {
@@ -387,7 +386,7 @@ public class UIResumen implements Serializable {
 
     }
 
-    public void eliminarArchivo(int codTD) {
+    public void eliminarArchivo(int codTD) throws Exception {
         try {
             // Llamar al experto para eliminar la documentación
             controladorRegistrarTramite.eliminarDocumentacion(codTD, nroTramite);

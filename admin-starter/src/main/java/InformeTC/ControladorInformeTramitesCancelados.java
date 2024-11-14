@@ -16,7 +16,7 @@ public class ControladorInformeTramitesCancelados {
     
     private ExpertoInformeTramitesCancelados expertoTramitesCancelados = new ExpertoInformeTramitesCancelados();
     
-    public List<TramiteDTO> buscarTramites(Date fechaDesde, Date fechaHasta){
+    public List<TramiteDTO> buscarTramites(Date fechaDesde, Date fechaHasta) throws Exception{
         return expertoTramitesCancelados.buscarTramites(fechaDesde, fechaHasta);
     }
     

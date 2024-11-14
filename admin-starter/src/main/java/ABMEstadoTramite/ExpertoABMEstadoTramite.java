@@ -152,7 +152,7 @@ public class ExpertoABMEstadoTramite {
 
     public void modificarEstadoTramite(ModificarEstadoTramiteDTOIn modificarEstadoTramiteDTOIn) throws EstadoTramiteException {
 
-        validarDocumentacionM(modificarEstadoTramiteDTOIn);
+        validarEstadoTramiteM(modificarEstadoTramiteDTOIn);
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
         int codEstadoTramite = modificarEstadoTramiteDTOIn.getCodEstadoTramite();
@@ -356,7 +356,7 @@ public class ExpertoABMEstadoTramite {
 
     }
 
-    private void validarDocumentacionM(ModificarEstadoTramiteDTOIn estadoTramiteDTO) throws EstadoTramiteException {
+    private void validarEstadoTramiteM(ModificarEstadoTramiteDTOIn estadoTramiteDTO) throws EstadoTramiteException {
 
         String nombreET = estadoTramiteDTO.getNombreEstadoTramite();
         if (nombreET == null || nombreET.trim().isEmpty() || nombreET.length() > 255) {

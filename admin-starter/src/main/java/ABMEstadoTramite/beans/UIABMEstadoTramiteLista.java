@@ -29,6 +29,7 @@ public class UIABMEstadoTramiteLista implements Serializable {
     private int codigoFiltro = 0;
     private String nombreFiltro = "";
     private String descripcionFiltro = "";
+    private String criterio = "";
 
     public ControladorABMEstadoTramite getControladorABMEstadoTramite() {
         return controladorABMEstadoTramite;
@@ -61,16 +62,20 @@ public class UIABMEstadoTramiteLista implements Serializable {
     public void setDescripcionFiltro(String descripcionFiltro) {
         this.descripcionFiltro = descripcionFiltro;
     }
-    
+
+    public String getCriterio() {
+        return criterio;
+    }
+
+    public void setCriterio(String criterio) {
+        this.criterio = criterio;
+    }
+
     public void filtrar() {
 
     }
 
     public List<EstadoTramiteGrillaUI> buscarEstadosTramite() {
-        System.out.println(codigoFiltro);
-        System.out.println(nombreFiltro);
-        System.out.println(descripcionFiltro);
-
         List<EstadoTramiteGrillaUI> estadosTramiteGrilla = new ArrayList<>();
         List<EstadoTramiteDTO> estadosTramiteDTO = controladorABMEstadoTramite.buscarEstadosTramite(codigoFiltro, nombreFiltro, descripcionFiltro);
         for (EstadoTramiteDTO estadoTramiteDTO : estadosTramiteDTO) {
@@ -82,7 +87,7 @@ public class UIABMEstadoTramiteLista implements Serializable {
             estadoTramiteGrillaUI.setFechaHoraBajaEstadoTramite(estadoTramiteDTO.getFechaHoraBajaEstadoTramite());
             estadosTramiteGrilla.add(estadoTramiteGrillaUI);
         }
-        return estadosTramiteGrilla;
+        return filtrarET(estadosTramiteGrilla);
     }
 
     public String irAgregarEstadoTramite() {
@@ -106,4 +111,27 @@ public class UIABMEstadoTramiteLista implements Serializable {
         }
     }
 
+    public List<EstadoTramiteGrillaUI> filtrarET(List<EstadoTramiteGrillaUI> etGrilla) {
+        List<EstadoTramiteGrillaUI> etActivos = new ArrayList<>();
+        List<EstadoTramiteGrillaUI> etInactivos = new ArrayList<>();
+        for (EstadoTramiteGrillaUI estadoTramite : etGrilla) {
+            if (estadoTramite.getFechaHoraBajaEstadoTramite() == null) {
+                etActivos.add(estadoTramite);
+            } else {
+                etInactivos.add(estadoTramite);
+            }
+        }
+        switch (criterio) {
+            case "etActivo":
+                return etActivos;
+            case "etInactivo":
+                return etInactivos;
+            default:
+                return etGrilla;
+        }
+    }
+
+    public boolean isAnulada(EstadoTramiteGrillaUI filaET) {
+        return filaET.getFechaHoraBajaEstadoTramite() != null;
+    }
 }

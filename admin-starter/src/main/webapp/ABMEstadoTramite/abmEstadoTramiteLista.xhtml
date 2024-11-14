@@ -18,23 +18,42 @@
     </ui:define>
 
     <ui:define name="body">
+        <style type="text/css">
+            .etDebaja {
+                color: whitesmoke;
+                background-color: #ff7884;
+            }
+        </style>
         <h:form>
             <p:focus context="@form"/>
             <div class="box box-primary">
 
                 <div class="box-header with-border">
-                    <div id="main-buttons">
-
+                    <div class="ui-g-4 ui-md-2">
                         <p:commandButton value="Agregar"  icon="fa fa-plus" action="#{uiabmEstadoTramiteLista.irAgregarEstadoTramite()}"   styleClass="btn-primary"/>
                     </div>
+                    <div class="ui-g-4 ui-md-6"></div>
+                    <div class="ui-g-4 ui-md-4">
+                        <div class="ui-material">
+                            <p:selectOneMenu id="select" value="#{uiabmEstadoTramiteLista.criterio}" >
+                                <f:selectItem itemLabel="Mostrar todos los estados"/>
+                                <f:selectItem itemLabel="Estados activos" itemValue="etActivo"/>
+                                <f:selectItem itemLabel="Estados inactivos" itemValue="etInactivo"/>
+                                <p:ajax event="change" listener="#{uiabmEstadoTramiteLista.buscarEstadosTramite()}" update="grid1" />
+                            </p:selectOneMenu>
+                            <p:outputLabel for="select" value="Filtrar por:"/>
+                            <p:message for="select"/>
+                        </div>
+                    </div>
                 </div>
-                <!-- Tabla para mostrar la lista de estados tramite -->
-                <p:separator/>
 
+
+                <p:spacer height="5"/>
+                <!-- Tabla para mostrar la lista de estados tramite -->
                 <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g-12 ui-md-3">
                         <p:outputPanel>
-                            <h:outputText value="Código:"/>
+                            <h:outputText value="Código: "/>
                             <p:spacer height="10"/>
                             <p:inputText id="codFilter"  style="width:150px"
                                          placeholder="" value="#{uiabmEstadoTramiteLista.codigoFiltro}" onfocus="Javascript:this.focus();this.select();">
@@ -48,9 +67,9 @@
                         </p:outputPanel> 
                     </div>
 
-                    <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g-12 ui-md-3">
                         <p:outputPanel>
-                            <h:outputText value="Nombre:"/>
+                            <h:outputText value="Nombre: "/>
                             <p:spacer height="10"/>
                             <p:inputText id="nomFilter"  style="width:150px"
                                          placeholder="" value="#{uiabmEstadoTramiteLista.nombreFiltro}" onfocus="Javascript:this.focus();this.select();">
@@ -64,9 +83,9 @@
                         </p:outputPanel> 
                     </div>
 
-                    <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g-12 ui-md-3">
                         <p:outputPanel>
-                            <h:outputText value="Descripcion:"/>
+                            <h:outputText value="Descripción: "/>
                             <p:spacer height="10"/>
                             <p:inputText id="descFilter"  style="width:150px"
                                          placeholder="" value="#{uiabmEstadoTramiteLista.descripcionFiltro}" onfocus="Javascript:this.focus();this.select();">
@@ -81,7 +100,8 @@
 
                 </div>
                 <p:spacer height="5"/>
-                <p:dataTable id="grid1" widgetVar="estadoTramiteTable" value="#{uiabmEstadoTramiteLista.buscarEstadosTramite()}" var="estadoTramite" >
+                <p:dataTable id="grid1" widgetVar="estadoTramiteTable" value="#{uiabmEstadoTramiteLista.buscarEstadosTramite()}" var="estadoTramite"
+                             rowStyleClass="#{uiabmEstadoTramiteLista.isAnulada(estadoTramite) ? 'etDebaja' : ''}">
 
                     <p:column>
                         <f:facet name="header">Código</f:facet>
@@ -94,7 +114,7 @@
                     </p:column>
 
                     <p:column>
-                        <f:facet name="header">Descripcion</f:facet>
+                        <f:facet name="header">Descripción</f:facet>
                             #{estadoTramite.descripcionEstadoTramite}
                     </p:column>
 
@@ -108,12 +128,12 @@
                             #{estadoTramite.fechaHoraBajaEstadoTramite}
                     </p:column>
 
-                   <p:column>
+                    <p:column>
                         <f:facet name="header">Acciones</f:facet>
 
                         <p:commandButton value="Modificar" styleClass="btn-info"
-                                         action="#{uiabmEstadoTramiteLista.irModificarEstadoTramite(estadoTramite.codEstadoTramite)}">
-                                         <!--disabled="{estadoTramite.fechaHoraBajaEstadoTramite != null or (estadoTramite.nombreEstadoTramite eq 'Iniciado' and estadoTramite.codEstadoTramite == 1)}">-->
+                                         action="#{uiabmEstadoTramiteLista.irModificarEstadoTramite(estadoTramite.codEstadoTramite)}"
+                                         disabled="#{estadoTramite.fechaHoraBajaEstadoTramite != null or (estadoTramite.nombreEstadoTramite eq 'Iniciado' and estadoTramite.codEstadoTramite == 1)}">
                             <f:ajax render="@form"/>
                         </p:commandButton>
 
@@ -121,8 +141,8 @@
 
                         <p:commandButton value="Eliminar" styleClass="btn-danger"
                                          update="@form"
-                                         actionListener="#{uiabmEstadoTramiteLista.darDeBajaEstadoTramite(estadoTramite.codEstadoTramite)}">
-<!--                                         disabled="{estadoTramite.fechaHoraBajaEstadoTramite != null or (estadoTramite.nombreEstadoTramite eq 'Iniciado' and estadoTramite.codEstadoTramite == 1)}">-->
+                                         actionListener="#{uiabmEstadoTramiteLista.darDeBajaEstadoTramite(estadoTramite.codEstadoTramite)}"
+                                         disabled="#{estadoTramite.fechaHoraBajaEstadoTramite != null or (estadoTramite.nombreEstadoTramite eq 'Iniciado' and estadoTramite.codEstadoTramite == 1)}">
                             <p:confirm header="Anulación de #{estadoTramite.codEstadoTramite} #{estadoTramite.nombreEstadoTramite}" 
                                        message="¿Está seguro?" 
                                        icon="ui-icon-alert"/>

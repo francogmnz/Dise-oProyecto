@@ -13,7 +13,13 @@ import java.sql.Timestamp;
 
 public class ExpertoInformeTramitesCancelados {
     
-    public List<TramiteDTO> buscarTramites(Date fechaDesde, Date fechaHasta) {
+    public List<TramiteDTO> buscarTramites(Date fechaDesde, Date fechaHasta) throws Exception {
+        if (fechaDesde == null) {
+            throw new Exception("Ingrese una fechaDesde");
+        }
+        if (fechaHasta == null) {
+            throw new Exception("Ingrese una fechaHasta");
+        }
         
         // Convertir Date a Timestamp
         Timestamp tsDesde = new Timestamp(fechaDesde.getTime());
