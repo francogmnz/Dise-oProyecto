@@ -28,12 +28,21 @@ public class ControladorABMTipoTramite {
         return expertoABMTipoTramite.buscarTipoTramites(codTipoTramite, nombreTipoTramite);
     }
     
-    public List<DocumentacionDTO> obtenerDocumentacionesActivas() throws TipoTramiteException {
-        return expertoABMTipoTramite.obtenerDocumentacionesActivas();
+//    public List<DocumentacionDTO> obtenerDocumentacionesActivas() throws TipoTramiteException {
+//        return expertoABMTipoTramite.obtenerDocumentacionesActivas();
+//    }
+//    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() throws TipoTramiteException {
+//        return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+//    }
+    
+    public List<DocumentacionDTO> obtenerDocumentaciones() throws TipoTramiteException {
+        return expertoABMTipoTramite.obtenerDocumentaciones();
     }
-    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramiteActivas() throws TipoTramiteException {
-        return expertoABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+
+    public List<CategoriaTipoTramiteDTO> obtenerCategoriasTipoTramite() throws TipoTramiteException {
+        return expertoABMTipoTramite.obtenerCategoriasTipoTramite();
     }
+        
 
     public void agregarTipoTramite(NuevoTipoTramiteDTO nuevoTipoTramiteDTO,List<DocumentacionDTO> documentacionesSeleccionadasDTO) throws TipoTramiteException {
         expertoABMTipoTramite.agregarTipoTramite(nuevoTipoTramiteDTO,documentacionesSeleccionadasDTO);

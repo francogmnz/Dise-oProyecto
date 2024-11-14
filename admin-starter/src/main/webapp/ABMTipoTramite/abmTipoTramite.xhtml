@@ -74,7 +74,7 @@
                <div class="ui-sm-12 ui-g-11">
                    <h:selectOneMenu id="categoriaTipoTramite" value="#{uiabmTipoTramite.codCategoriaTipoTramite}" style="width: 100%;" required="true" requiredMessage="Debe seleccionar una categoria">
                        <f:selectItem itemLabel="Seleccione una categoría" itemValue="" />
-                       <f:selectItems value="#{uiabmTipoTramite.categoriasTipoTramiteActivas}" var="categoria"
+                       <f:selectItems value="#{uiabmTipoTramite.categoriasTipoTramite}" var="categoria"
                                       itemLabel="#{categoria.nombreCategoriaTipoTramite}" 
                                       itemValue="#{categoria.codCategoriaTipoTramite}" />
                    </h:selectOneMenu>
@@ -88,7 +88,7 @@
                </div>
                <div class="ui-sm-12 ui-g-11">
                    <p:selectCheckboxMenu id="documentacionesSeleccionadas" value="#{uiabmTipoTramite.documentacionesSeleccionadas}" label="Seleccione Documentaciones" style="width:100%" required="true" requiredMessage="Debe seleccionar al menos una documentacion">
-                       <f:selectItems value="#{uiabmTipoTramite.documentacionesActivas}" var="documentacion"
+                       <f:selectItems value="#{uiabmTipoTramite.documentaciones}" var="documentacion"
                                       itemLabel="#{documentacion.nombreDocumentacion}" itemValue="#{documentacion.codDocumentacion}" />
                    </p:selectCheckboxMenu>
                    <p:message id="documentacionesMSG" for="documentacionesSeleccionadas" />

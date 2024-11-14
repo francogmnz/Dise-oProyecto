@@ -51,6 +51,8 @@ public class UIABMTipoTramite implements Serializable {
     
     private int codTipoTramiteOriginal;
 
+    private List<DocumentacionDTO> documentaciones;
+    private List<CategoriaTipoTramiteDTO> categoriasTipoTramite;  
     
    
     public boolean isInsert() {
@@ -109,13 +111,13 @@ public class UIABMTipoTramite implements Serializable {
         this.codCategoriaTipoTramite = codCategoriaTipoTramite;
     }
 
-    public List<CategoriaTipoTramiteDTO> getCategoriasTipoTramiteActivas() {
-        return categoriasTipoTramiteActivas;
-    }
-
-    public void setCategoriasTipoTramiteActivas(List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas) {
-        this.categoriasTipoTramiteActivas = categoriasTipoTramiteActivas;
-    }
+//    public List<CategoriaTipoTramiteDTO> getCategoriasTipoTramiteActivas() {
+//        return categoriasTipoTramiteActivas;
+//    }
+//
+//    public void setCategoriasTipoTramiteActivas(List<CategoriaTipoTramiteDTO> categoriasTipoTramiteActivas) {
+//        this.categoriasTipoTramiteActivas = categoriasTipoTramiteActivas;
+//    }
 
     public List<Integer> getDocumentacionesSeleccionadas() {
         return documentacionesSeleccionadas;
@@ -125,13 +127,13 @@ public class UIABMTipoTramite implements Serializable {
         this.documentacionesSeleccionadas = documentacionesSeleccionadas;
     }
 
-    public List<DocumentacionDTO> getDocumentacionesActivas() {
-        return documentacionesActivas;
-    }
-
-    public void setDocumentacionesActivas(List<DocumentacionDTO> documentacionesActivas) {
-        this.documentacionesActivas = documentacionesActivas;
-    }
+//    public List<DocumentacionDTO> getDocumentacionesActivas() {
+//        return documentacionesActivas;
+//    }
+//
+//    public void setDocumentacionesActivas(List<DocumentacionDTO> documentacionesActivas) {
+//        this.documentacionesActivas = documentacionesActivas;
+//    }
 
     public int getCodTipoTramiteOriginal() {
         return codTipoTramiteOriginal;
@@ -140,6 +142,24 @@ public class UIABMTipoTramite implements Serializable {
     public void setCodTipoTramiteOriginal(int codTipoTramiteOriginal) {
         this.codTipoTramiteOriginal = codTipoTramiteOriginal;
     }
+
+    public List<DocumentacionDTO> getDocumentaciones() {
+        return documentaciones;
+    }
+
+    public void setDocumentaciones(List<DocumentacionDTO> documentaciones) {
+        this.documentaciones = documentaciones;
+    }
+
+    public List<CategoriaTipoTramiteDTO> getCategoriasTipoTramite() {
+        return categoriasTipoTramite;
+    }
+
+    public void setCategoriasTipoTramite(List<CategoriaTipoTramiteDTO> categoriasTipoTramite) {
+        this.categoriasTipoTramite = categoriasTipoTramite;
+    }
+    
+    
     
     public UIABMTipoTramite() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -149,17 +169,19 @@ public class UIABMTipoTramite implements Serializable {
         int codTipoTramite = Integer.parseInt(request.getParameter("codTipoTramite")); 
         //categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
         try {
-        categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        //categoriasTipoTramiteActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        categoriasTipoTramite = controladorABMTipoTramite.obtenerCategoriasTipoTramite();
         } catch (TipoTramiteException e) {
             Messages.create("Error").error().detail(e.getMessage()).add();
-            categoriasTipoTramiteActivas = new ArrayList<>();
+            categoriasTipoTramite = new ArrayList<>();
         }    
         //documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
         try {
-        documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+        //documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+        documentaciones = controladorABMTipoTramite.obtenerDocumentaciones();
         } catch (TipoTramiteException e) {
             Messages.create("Error").error().detail(e.getMessage()).add();
-            documentacionesActivas = new ArrayList<>();
+            documentaciones = new ArrayList<>();
         }    
         
         insert = true;
@@ -208,7 +230,7 @@ public class UIABMTipoTramite implements Serializable {
                 
                 List<DocumentacionDTO> documentacionesSeleccionadasDTO = new ArrayList<>();
                 for(Integer codDocumentacion: documentacionesSeleccionadas){
-                    for(DocumentacionDTO documentacionDTO: documentacionesActivas){
+                    for(DocumentacionDTO documentacionDTO: documentaciones){
                         if(documentacionDTO.getCodDocumentacion() == codDocumentacion){
                             documentacionesSeleccionadasDTO.add(documentacionDTO);
                             break;
@@ -233,7 +255,7 @@ public class UIABMTipoTramite implements Serializable {
                 
                 List<DocumentacionDTO> documentacionesSeleccionadasDTO = new ArrayList<>();
                 for(Integer codDocumentacion: documentacionesSeleccionadas){
-                    for(DocumentacionDTO documentacionDTO: documentacionesActivas){
+                    for(DocumentacionDTO documentacionDTO: documentaciones){
                         if(documentacionDTO.getCodDocumentacion() == codDocumentacion){
                             documentacionesSeleccionadasDTO.add(documentacionDTO);
                             break;

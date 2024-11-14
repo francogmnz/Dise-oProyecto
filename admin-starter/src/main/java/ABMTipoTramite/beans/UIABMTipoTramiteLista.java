@@ -102,11 +102,13 @@ public class UIABMTipoTramiteLista implements Serializable {
     public String irAgregarTipoTramite() {
     try {
 
-        List<CategoriaTipoTramiteDTO> categoriasActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
-
-        List<DocumentacionDTO> documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
-
-        if (categoriasActivas.isEmpty() || documentacionesActivas.isEmpty()) {
+        //List<CategoriaTipoTramiteDTO> categoriasActivas = controladorABMTipoTramite.obtenerCategoriasTipoTramiteActivas();
+        List<CategoriaTipoTramiteDTO> categorias = controladorABMTipoTramite.obtenerCategoriasTipoTramite();
+        
+        //List<DocumentacionDTO> documentacionesActivas = controladorABMTipoTramite.obtenerDocumentacionesActivas();
+        List<DocumentacionDTO> documentaciones = controladorABMTipoTramite.obtenerDocumentaciones();
+        
+        if (categorias.isEmpty() || documentaciones.isEmpty()) {
             Messages.create("Error").error().detail("No es posible agregar un nuevo Tipo de Trámite porque no hay categorías o documentaciones disponibles.").add();
             return null; 
         } else {

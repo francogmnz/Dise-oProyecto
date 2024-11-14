@@ -134,11 +134,11 @@
 
             <p:column>
                 <f:facet name="header">Acciones</f:facet>
-                <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmTipoTramiteLista.irModificarTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
+                <p:commandButton value="Modificar" styleClass="btn-info" action="#{uiabmTipoTramiteLista.irModificarTipoTramite(tipoTramite.codTipoTramite)}" >
                     <f:ajax render="@form"/>
                 </p:commandButton>
                 <p:spacer width="5"/>
-                <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmTipoTramiteLista.darDeBajaTipoTramite(tipoTramite.codTipoTramite)}" disabled="#{tipoTramite.fechaHoraBajaTipoTramite != null}">
+                <p:commandButton value="Eliminar" styleClass="btn-danger" update="@form" actionListener="#{uiabmTipoTramiteLista.darDeBajaTipoTramite(tipoTramite.codTipoTramite)}" >
                    
                     <p:confirm header="Anulación de #{tipoTramite.codTipoTramite} #{tipoTramite.nombreTipoTramite}" message="¿Está seguro?" icon="ui-icon-alert"/>
                     
