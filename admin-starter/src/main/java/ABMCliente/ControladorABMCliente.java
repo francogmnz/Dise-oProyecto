@@ -26,7 +26,7 @@ public class ControladorABMCliente {
         expertoABMCliente.modificarCliente(dtoModificacionDatosIn);
     }
 
-    public DTOModificacionDatos buscarClienteAModificar(int dni) throws IOException{
+    public DTOModificacionDatos buscarClienteAModificar(int dni) throws IOException, ClienteException{
         return expertoABMCliente.buscarClienteAModificar(dni);
     }
 

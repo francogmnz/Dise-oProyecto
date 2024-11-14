@@ -11,6 +11,7 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import utils.BeansUtils;
 import utils.Errores;
@@ -76,9 +77,8 @@ public class UIABMCliente implements Serializable {
     public void setDniOriginalCliente(int dniOriginalCliente) {
         this.dniOriginalCliente = dniOriginalCliente;
     }
-    
 
-    public UIABMCliente() throws IOException {
+    public UIABMCliente() throws IOException, ClienteException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
@@ -103,12 +103,18 @@ public class UIABMCliente implements Serializable {
         insert = true;
         if (dni > 0) {
             insert = false;
-            ABMCliente.dtos.DTOModificacionDatos dtoModificacionDatos = controladorABMCliente.buscarClienteAModificar(dni);
-            setNombreCliente(dtoModificacionDatos.getNombreCliente());
-            setApellidoCliente(dtoModificacionDatos.getApellidoCliente());
-            setDniCliente(dtoModificacionDatos.getDniCliente());
-            setMailCliente(dtoModificacionDatos.getMailCliente());
-            setDniOriginalCliente(dtoModificacionDatos.getDniOriginalCliente());
+            try {
+                ABMCliente.dtos.DTOModificacionDatos dtoModificacionDatos = controladorABMCliente.buscarClienteAModificar(dni);
+                setNombreCliente(dtoModificacionDatos.getNombreCliente());
+                setApellidoCliente(dtoModificacionDatos.getApellidoCliente());
+                setDniCliente(dtoModificacionDatos.getDniCliente());
+                setMailCliente(dtoModificacionDatos.getMailCliente());
+                setDniOriginalCliente(dtoModificacionDatos.getDniOriginalCliente());
+            } catch (Exception e) {
+                Messages.create("Error!").error().detail(e.getMessage()).add();
+                Faces.getExternalContext().getFlash().setKeepMessages(true);
+                Faces.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            }
         }
         if (dni == 0) {
             setNombreCliente("");

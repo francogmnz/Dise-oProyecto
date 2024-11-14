@@ -12,6 +12,8 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
+import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 import utils.BeansUtils;
 import utils.Errores;
 
@@ -24,6 +26,7 @@ public class UIABMConsultor implements Serializable {
     private boolean insert;
     private String nombreConsultor;
     private int legajoConsultor;
+    private int legajoOriginal;
     private int numMaximoTramites;
     private Errores err = new Errores();
 
@@ -59,6 +62,14 @@ public class UIABMConsultor implements Serializable {
         this.legajoConsultor = legajoConsultor;
     }
 
+    public int getLegajoOriginal() {
+        return legajoOriginal;
+    }
+
+    public void setLegajoOriginal(int legajoOriginal) {
+        this.legajoOriginal = legajoOriginal;
+    }
+
     public int getNumMaximoTramites() {
         return numMaximoTramites;
     }
@@ -72,6 +83,7 @@ public class UIABMConsultor implements Serializable {
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         int legajo = 0;
+        int legajoOriginal = 0;
         // Verificar si el código es válido, y si no lo es, redirigir a la URL anterior
         if (request.getParameter("legajo") == null || !(request.getParameter("legajo").matches("\\d+")) || Integer.parseInt(request.getParameter("legajo")) < 0) {
             // Redirigir a la URL anterior si el código no es válido
@@ -81,6 +93,7 @@ public class UIABMConsultor implements Serializable {
         }
         try {
             legajo = Integer.parseInt(request.getParameter("legajo"));
+            legajoOriginal = Integer.parseInt(request.getParameter("legajo"));
         } catch (NumberFormatException e) {
             externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
             return;
@@ -90,10 +103,17 @@ public class UIABMConsultor implements Serializable {
         insert = true;
         if (legajo > 0) {
             insert = false;
-            DTOModificacionDatos dtoModificacionDatos = controladorABMConsultor.buscarConsultorAModificar(legajo);
-            setNombreConsultor(dtoModificacionDatos.getNombreConsultor());
-            setLegajoConsultor(dtoModificacionDatos.getLegajoConsultor());
-            setNumMaximoTramites(dtoModificacionDatos.getNumMaximoTramites());
+            try {
+                DTOModificacionDatos dtoModificacionDatos = controladorABMConsultor.buscarConsultorAModificar(legajo);
+                setNombreConsultor(dtoModificacionDatos.getNombreConsultor());
+                setLegajoConsultor(dtoModificacionDatos.getLegajoConsultor());
+                setNumMaximoTramites(dtoModificacionDatos.getNumMaximoTramites());
+                setLegajoOriginal(dtoModificacionDatos.getLegajoOriginal());
+            } catch (Exception e) {
+                Messages.create("Error!").error().detail(e.getMessage()).add();
+                Faces.getExternalContext().getFlash().setKeepMessages(true);
+                Faces.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            }
         }
         if (legajo == 0) {
             setNombreConsultor("");
@@ -119,6 +139,7 @@ public class UIABMConsultor implements Serializable {
                     dtoModificacionDatosIn.setNombreConsultor(getNombreConsultor());
                     dtoModificacionDatosIn.setLegajoConsultor(getLegajoConsultor());
                     dtoModificacionDatosIn.setNumMaximoTramites(getNumMaximoTramites());
+                    dtoModificacionDatosIn.setLegajoOriginal(getLegajoOriginal());
                     controladorABMConsultor.modificarConsultor(dtoModificacionDatosIn);
                 } else {
 

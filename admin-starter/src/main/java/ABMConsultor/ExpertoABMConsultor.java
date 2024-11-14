@@ -71,7 +71,7 @@ public class ExpertoABMConsultor {
         List lConsultor = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
 
         if (lConsultor.size() > 0) {
-            throw new ConsultorException("El código ingresado corresponde a un consultor existente");
+            throw new ConsultorException("El legajo ingresado corresponde a un consultor existente");
         } else {
             Consultor consultor = new Consultor();
             consultor.setLegajoConsultor(nuevoConsultorDTO.getLegajoConsultor());
@@ -83,7 +83,7 @@ public class ExpertoABMConsultor {
         }
     }
 
-    public DTOModificacionDatos buscarConsultorAModificar(int legajoConsultor) throws IOException {
+    public DTOModificacionDatos buscarConsultorAModificar(int legajoConsultor) throws IOException, ConsultorException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         List<DTOCriterio> criterioList = new ArrayList<>();
@@ -95,7 +95,7 @@ public class ExpertoABMConsultor {
         dto.setValor(legajoConsultor);
 
         criterioList.add(dto);
-        
+
         dto2.setAtributo("fechaHoraBajaConsultor");
         dto2.setOperacion("=");
         dto2.setValor(null);
@@ -104,36 +104,34 @@ public class ExpertoABMConsultor {
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
 
         try {
-            Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
-
-            if (consultorEncontrado == null) {
-                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            List objectConsultor = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
+            if (objectConsultor.isEmpty()) {
+                throw new ConsultorException("No se puede modificar un consultor dado de baja.");
             }
+            Consultor consultorEncontrado = (Consultor) objectConsultor;
             dtoModificacionDatos.setNombreConsultor(consultorEncontrado.getNombreConsultor());
             dtoModificacionDatos.setLegajoConsultor(consultorEncontrado.getLegajoConsultor());
             dtoModificacionDatos.setNumMaximoTramites(consultorEncontrado.getNumMaximoTramites());
             dtoModificacionDatos.setLegajoOriginal(consultorEncontrado.getLegajoConsultor());
             return dtoModificacionDatos;
         } catch (Exception e) {
-            // Maneja la excepción
-            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMConsultor/abmConsultorLista.jsf");
+            throw new ConsultorException(e.getMessage());
         }
-        return dtoModificacionDatos;
     }
 
     public void modificarConsultor(DTOModificacionDatosIn dtoModificacionDatosIn) throws ConsultorException {
         FachadaPersistencia.getInstance().iniciarTransaccion();
 
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
-        if (dtoModificacionDatosIn.getLegajoConsultor()!= dtoModificacionDatosIn.getLegajoOriginal()) {
+        if (dtoModificacionDatosIn.getLegajoConsultor() != dtoModificacionDatosIn.getLegajoOriginal()) {
             throw new ConsultorException("El Legajo ingresado no coincide con el Legajo del consultor a Modificar");
         }
+
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
 
         dto.setAtributo("legajoConsultor");
         dto.setOperacion("=");
         dto.setValor(dtoModificacionDatosIn.getLegajoConsultor());
-
 
         criterioList.add(dto);
 
@@ -142,7 +140,6 @@ public class ExpertoABMConsultor {
         consultorEncontrado.setLegajoConsultor(dtoModificacionDatosIn.getLegajoConsultor());
         consultorEncontrado.setNombreConsultor(dtoModificacionDatosIn.getNombreConsultor());
         consultorEncontrado.setNumMaximoTramites(dtoModificacionDatosIn.getNumMaximoTramites());
- 
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);
         FachadaPersistencia.getInstance().finalizarTransaccion();
@@ -164,9 +161,13 @@ public class ExpertoABMConsultor {
         dto2.setAtributo("fechaHoraBajaConsultor");
         dto2.setOperacion("=");
         dto2.setValor(null);
-        
+
         criterioList.add(dto2);
-        Consultor consultorEncontrado = (Consultor) FachadaPersistencia.getInstance().buscar("Consultor", criterioList).get(0);
+        List object = FachadaPersistencia.getInstance().buscar("Consultor", criterioList);
+        if (object.isEmpty()) {
+            throw new ConsultorException("El consultor seleccionado ya se encuentra dado de baja");
+        }
+        Consultor consultorEncontrado = (Consultor) object.get(0);
         int legajoEncontrado = consultorEncontrado.getLegajoConsultor();
 
         criterioList.clear();
@@ -176,30 +177,30 @@ public class ExpertoABMConsultor {
         dto.setAtributo("fechaFinTramite");
         dto.setOperacion("=");
         dto.setValor(null);
-        
+
         criterioList.add(dto);
-        
+
         dto2.setAtributo("fechaAnulacionTramite");
         dto2.setOperacion("=");
         dto2.setValor(null);
 
         criterioList.add(dto2);
-        
+
         List objetoList = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
 
         for (Object x : objetoList) {
 
             Tramite tramite = (Tramite) x;
-            if (tramite.getConsultor()!= null){
-            Consultor consultor = tramite.getConsultor();
-            int legajo = consultor.getLegajoConsultor();
+            if (tramite.getConsultor() != null) {
+                Consultor consultor = tramite.getConsultor();
+                int legajo = consultor.getLegajoConsultor();
 
-            if (legajoEncontrado == legajo) {
-                throw new ConsultorException("Consultor no puede darse de baja por estar asignado en al menos a un tramite");
-            }
+                if (legajoEncontrado == legajo) {
+                    throw new ConsultorException("Consultor no puede darse de baja por estar asignado en al menos a un tramite");
+                }
             }
         }
-            
+
         consultorEncontrado.setFechaHoraBajaConsultor(fechaHoraActual.obtenerFechaHoraActual());
 
         FachadaPersistencia.getInstance().guardar(consultorEncontrado);

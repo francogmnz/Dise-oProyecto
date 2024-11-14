@@ -6,7 +6,7 @@
 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost/disenio?serverTimezone=UTC</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/disenio?serverTimezone=America/Argentina/Buenos_Aires</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">disenio</property>
         <property name="hibernate.current_session_context_class">thread</property>

@@ -95,7 +95,7 @@ public class ExpertoABMCliente {
         }
     }
 
-    public DTOModificacionDatos buscarClienteAModificar(int dniCliente) throws IOException {
+    public DTOModificacionDatos buscarClienteAModificar(int dniCliente) throws IOException, ClienteException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
 
@@ -116,11 +116,11 @@ public class ExpertoABMCliente {
         criterioList.add(dto2);
         DTOModificacionDatos dtoModificacionDatos = new DTOModificacionDatos();
         try {
-
-            Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
-            if (clienteEncontrado == null) {
-                externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            List objectCliente = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+            if (objectCliente.isEmpty()) {
+                throw new ClienteException("No se puede modificar un cliente dado de baja.");
             }
+            Cliente clienteEncontrado = (Cliente) objectCliente.get(0);
             dtoModificacionDatos.setNombreCliente(clienteEncontrado.getNombreCliente());
             dtoModificacionDatos.setDniCliente(clienteEncontrado.getDniCliente());
             dtoModificacionDatos.setApellidoCliente(clienteEncontrado.getApellidoCliente());
@@ -128,28 +128,28 @@ public class ExpertoABMCliente {
             dtoModificacionDatos.setDniOriginalCliente(clienteEncontrado.getDniCliente());
             return dtoModificacionDatos;
         } catch (Exception e) {
-            externalContext.redirect(externalContext.getRequestContextPath() + "/ABMCliente/abmClienteLista.jsf");
+            throw new ClienteException(e.getMessage());
         }
-        return dtoModificacionDatos;
     }
 
     public void modificarCliente(DTOModificacionDatosIn dtoModificacionDatosIn) throws ClienteException, IOException {
-
+        
         FachadaPersistencia.getInstance().iniciarTransaccion();
-
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
 
         if (dtoModificacionDatosIn.getDniCliente() != dtoModificacionDatosIn.getDniOriginalCliente()) {
             throw new ClienteException("El DNI ingresado no coincide con el DNI del cliente a Modificar");
         }
+        
+        List<DTOCriterio> criterioList = new ArrayList<>();
+        DTOCriterio dto = new DTOCriterio();
+
         dto.setAtributo("dniCliente");
         dto.setOperacion("=");
         dto.setValor(dtoModificacionDatosIn.getDniCliente());
 
         criterioList.add(dto);
 
-           Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
+        Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
            
         clienteEncontrado.setDniCliente(dtoModificacionDatosIn.getDniCliente());
         clienteEncontrado.setNombreCliente(dtoModificacionDatosIn.getNombreCliente());
@@ -178,11 +178,11 @@ public class ExpertoABMCliente {
         dto2.setValor(null);
 
         criterioList.add(dto2);
-        Cliente clienteEncontrado = (Cliente) FachadaPersistencia.getInstance().buscar("Cliente", criterioList).get(0);
-        if (clienteEncontrado == null) {
+        List object = FachadaPersistencia.getInstance().buscar("Cliente", criterioList);
+        if (object.isEmpty()) {
             throw new ClienteException("El cliente seleccionado ya se encuentra dado de baja");
         }
-
+        Cliente clienteEncontrado = (Cliente) object.get(0);
         int dniEncontrado = clienteEncontrado.getDniCliente();
 
         criterioList.clear();
