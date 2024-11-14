@@ -158,11 +158,12 @@
 
             <script src="#{request.contextPath}/resources/js/agenda.js"></script>
 
-            <h:commandButton value="Guardar Asignaciones" action="#{uiABMAgendaBean.guardarAsignaciones}" 
-                             onclick="prepareAssignmentsData(); return true;">
+            <h:commandButton value="Guardar Asignaciones" 
+                             action="#{uiABMAgendaBean.guardarAsignaciones}" 
+                             onclick="prepareAssignmentsData(); return true;" 
+                             rendered="#{not uiABMAgendaBean.esFechaPasada()}">
                 <f:ajax execute="@form" render="@form" onevent="handleFormSubmission" />
             </h:commandButton>
-            
         </h:form>
     </ui:define>
 </ui:composition>

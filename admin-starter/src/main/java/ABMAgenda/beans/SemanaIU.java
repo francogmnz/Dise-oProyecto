@@ -2,12 +2,15 @@
 package ABMAgenda.beans;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class SemanaIU {
     private int nroSemana;
     private Timestamp fecha;
     private int mes;
     private int anio;
+    private Date fechaDesdeSemana;
+    private Date fechaHastaSemana;
 
     public int getNroSemana() {
         return nroSemana;
@@ -40,4 +43,24 @@ public class SemanaIU {
     public void setAnio(int anio) {
         this.anio = anio;
     }
+
+    public Date getFechaDesdeSemana() {
+        return fechaDesdeSemana;
+    }
+
+    public void setFechaDesdeSemana(Date fechaDesdeSemana) {
+        this.fechaDesdeSemana = fechaDesdeSemana;
+    }
+
+    public Date getFechaHastaSemana() {
+        return fechaHastaSemana;
+    }
+
+    public void setFechaHastaSemana(Date fechaHastaSemana) {
+        this.fechaHastaSemana = fechaHastaSemana;
+    }
+
+    
+    
+    
 }

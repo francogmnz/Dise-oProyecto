@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @Named("uiabmAgendaLista")
 @ViewScoped
 public class UIABMAgendaLista implements Serializable {
@@ -20,19 +19,24 @@ public class UIABMAgendaLista implements Serializable {
     private ControladorABMAgenda controladorABMAgenda = new ControladorABMAgenda();
     private int anio;
     private int mes;
+    private int mesActual;
+    private int anioActual;
+    private ControladorABMAgenda cont = new ControladorABMAgenda();
     private List<Integer> listaAnios;
     private boolean agendaEncontrada;
     private String primerDiaMes;
     private String ultimoDiaMes;
 
-   
     public UIABMAgendaLista() {
         // Establece el mes y año actuales como valores por defecto si no están ingresados
         Calendar calendar = Calendar.getInstance();
         this.mes = calendar.get(Calendar.MONTH) + 1; // +1 porque MONTH es cero
         this.anio = calendar.get(Calendar.YEAR);
         buscarAgenda();
+        this.anioActual = cont.calcularAnioActual();
+        this.mesActual = cont.calcularMesActual();
     }
+
     public List<Integer> getListaAnios() {
         if (listaAnios == null) {
             listaAnios = new ArrayList<>();
@@ -82,8 +86,31 @@ public class UIABMAgendaLista implements Serializable {
     public void setUltimoDiaMes(String ultimoDiaMes) {
         this.ultimoDiaMes = ultimoDiaMes;
     }
-    
-    
+
+    public int getMesActual() {
+        return mesActual;
+    }
+
+    public void setMesActual(int mesActual) {
+        this.mesActual = mesActual;
+    }
+
+    public int getAnioActual() {
+        return anioActual;
+    }
+
+    public void setAnioActual(int anioActual) {
+        this.anioActual = anioActual;
+    }
+
+    public ControladorABMAgenda getCont() {
+        return cont;
+    }
+
+    public void setCont(ControladorABMAgenda cont) {
+        this.cont = cont;
+    }
+
     public String getMesNombre() {
         Map<Integer, String> meses = new HashMap<>();
         meses.put(1, "Enero");
@@ -101,7 +128,7 @@ public class UIABMAgendaLista implements Serializable {
 
         return meses.get(mes); // Devuelve el nombre del mes correspondiente
     }
-    
+
     public void buscarAgenda() {
         agendaEncontrada = controladorABMAgenda.existeAgendaParaMesYAnio(mes, anio);
 
@@ -121,7 +148,16 @@ public class UIABMAgendaLista implements Serializable {
             ultimoDiaMes = null;
         }
     }
-    
+
+    public boolean esFechaPasada() {
+        if (anio < anioActual) {
+            return true;
+        } else if (anio == anioActual && mes < mesActual) {
+            return true;
+        }
+        return false;
+    }
+
     public String irCrearAgenda() {
         return "abmAgenda?faces-redirect=true&mes=" + mes + "&anio=" + anio;
     }
@@ -140,6 +176,5 @@ public class UIABMAgendaLista implements Serializable {
     public void setControladorABMAgenda(ControladorABMAgenda controladorABMAgenda) {
         this.controladorABMAgenda = controladorABMAgenda;
     }
-
 
 }

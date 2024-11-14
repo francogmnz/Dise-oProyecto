@@ -50,4 +50,7 @@ public class ControladorABMAgenda {
     public int calcularAnioActual() {
         return expertoABMAgenda.calcularAnioActual();
     }
+    public int calcularMesActual() {
+        return expertoABMAgenda.calcularMesActual();
+    }
 }

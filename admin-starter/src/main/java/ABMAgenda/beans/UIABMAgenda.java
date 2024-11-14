@@ -1,4 +1,5 @@
 package ABMAgenda.beans;
+
 import ABMAgenda.ControladorABMAgenda;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -21,18 +22,18 @@ import java.util.Map;
 import com.google.gson.Gson;
 import java.util.Objects;
 
-
 @Named("uiABMAgendaBean")
 @ViewScoped
 public class UIABMAgenda implements Serializable {
+
     private int mes;
     private int anio;
     private int semanaActual;
     private int anioActual;
+    private int mesActual;
     private ControladorABMAgenda cont = new ControladorABMAgenda();
     private List<SemanaIU> semanasLi = new ArrayList<>();
-    private List<DTOConsultorListaIzq> consultores = new ArrayList<>(); 
-    
+    private List<DTOConsultorListaIzq> consultores = new ArrayList<>();
 
     public int getMes() {
         return mes;
@@ -57,10 +58,11 @@ public class UIABMAgenda implements Serializable {
     public void setSemanasLi(List<SemanaIU> semanasLi) {
         this.semanasLi = semanasLi;
     }
-    
+
     public int getSemanaActual() {
         return semanaActual;
     }
+
     public void setSemanaActual(int semana) {
         this.semanaActual = semana;
     }
@@ -72,16 +74,24 @@ public class UIABMAgenda implements Serializable {
     public void setAnioActual(int anioActual) {
         this.anioActual = anioActual;
     }
-    
-    
 
+    public int getMesActual() {
+        return mesActual;
+    }
+
+    public void setMesActual(int mesActual) {
+        this.mesActual = mesActual;
+    }
+    
+    
     public UIABMAgenda() throws AgendaException, Exception {
         consultoresPorSemana.clear();
         // Obtener mes y año desde los parámetros de la URL
         cargarConsultoresActivos();
         this.semanaActual = cont.calcularSemanaActual();
         this.anioActual = cont.calcularAnioActual();
-        
+        this.mesActual = cont.calcularMesActual();
+
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
         String mesParam = params.get("mes");
@@ -95,13 +105,12 @@ public class UIABMAgenda implements Serializable {
             Calendar calendario = new GregorianCalendar();
             this.mes = calendario.get(Calendar.MONTH) + 1;
             this.anio = calendario.get(Calendar.YEAR);
-            
-            
+
         }
-                cargarSemanas();
-                getConsultoresPorSemanaJson();
+        cargarSemanas();
+        getConsultoresPorSemanaJson();
     }
-    
+
     public void cargarSemanas() throws AgendaException {
         semanasLi.clear();
         consultoresPorSemana.clear(); // Limpiamos para evitar datos duplicados
@@ -115,6 +124,10 @@ public class UIABMAgenda implements Serializable {
             semana.setMes(mes);
             semana.setAnio(anio);
 
+            // Asignar fechaDesdeSemana y fechaHastaSemana directamente desde agendaDTO
+            semana.setFechaDesdeSemana(agendaDTO.getFechaDesdeSemana());
+            semana.setFechaHastaSemana(agendaDTO.getFechaHastaSemana());
+
             // Añadir cada semana a la lista de semanas
             semanasLi.add(semana);
 
@@ -124,14 +137,22 @@ public class UIABMAgenda implements Serializable {
         }
     }
 
-public String getConsultoresPorSemanaJson() {
-    // Convierte el objeto `consultoresPorSemana` a JSON
-    String jsonString = new Gson().toJson(consultoresPorSemana);
+    public String getConsultoresPorSemanaJson() {
+        // Convierte el objeto `consultoresPorSemana` a JSON
+        String jsonString = new Gson().toJson(consultoresPorSemana);
 
-    // Imprimir el JSON generado para verificar que se generó correctamente
-
-    return jsonString;
-}
+        // Imprimir el JSON generado para verificar que se generó correctamente
+        return jsonString;
+    }
+    
+        public boolean esFechaPasada() {
+        if (anio < anioActual) {
+            return true;
+        } else if (anio == anioActual && mes < mesActual) {
+            return true;
+        }
+        return false;
+    }
 
     public void cargarConsultoresActivos() throws Exception {
         try {
@@ -150,13 +171,15 @@ public String getConsultoresPorSemanaJson() {
             this.consultores = consultoresActivos;
 
         } catch (Exception e) {
-            throw new Exception (e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
+
     public void actualizar() throws Exception {
-    cargarConsultoresActivos();
-    // Otras acciones de actualización si es necesario
-}
+        cargarConsultoresActivos();
+        // Otras acciones de actualización si es necesario
+    }
+
     public List<DTOConsultorListaIzq> getConsultores() {
         return consultores;
     }
@@ -164,13 +187,13 @@ public String getConsultoresPorSemanaJson() {
     public void setConsultores(List<DTOConsultorListaIzq> consultores) {
         this.consultores = consultores;
     }
-    
+
     private Map<Integer, List<DTOConsultor>> consultoresPorSemana = new HashMap<>();
 
     public Map<Integer, List<DTOConsultor>> getConsultoresPorSemana() {
         return consultoresPorSemana;
     }
-    
+
     public DTOConsultor obtenerConsultorDeLista(int consultorId) {
         for (DTOConsultorListaIzq dtoConsultorListaIzq : consultores) {
             // Comparar int con Integer usando el método intValue()
@@ -186,7 +209,6 @@ public String getConsultoresPorSemanaJson() {
         return null;
     }
 
-
     public void guardarAsignaciones() throws Exception {
         consultoresPorSemana.clear();
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -195,33 +217,30 @@ public String getConsultoresPorSemanaJson() {
         if (assignmentsData != null && !assignmentsData.isEmpty()) {
             Gson gson = new Gson();
             Map<String, List<String>> asignaciones = gson.fromJson(assignmentsData, Map.class);
-            
+
             // Procesar y actualizar directamente `consultoresPorSemana`
             if (asignaciones != null && !asignaciones.isEmpty()) {
                 asignaciones.forEach((semanaIdStr, consultoresIds) -> {
                     int semanaId = Integer.parseInt(semanaIdStr);
-                    
+
                     // Obtener o inicializar la lista de consultores de la semana
                     List<DTOConsultor> consultoresEnSemana = consultoresPorSemana.computeIfAbsent(semanaId, k -> new ArrayList<>());
 
                     // Procesar consultores en una sola operación usando Stream
                     consultoresIds.stream()
-                        .map(Integer::parseInt)
-                        .map(this::obtenerConsultorDeLista)
-                        .filter(Objects::nonNull) // Solo agregar consultores válidos
-                        .forEach(consultoresEnSemana::add);
+                            .map(Integer::parseInt)
+                            .map(this::obtenerConsultorDeLista)
+                            .filter(Objects::nonNull) // Solo agregar consultores válidos
+                            .forEach(consultoresEnSemana::add);
                 });
-
 
                 // Persistir las asignaciones procesadas
                 persistirAsignaciones();
             }
-        } 
+        }
     }
 
-
-    // Método de persistencia
-        private void persistirAsignaciones() throws Exception {
+    private void persistirAsignaciones() throws Exception {
         try {
             DTODatosInicialesAgendaIn datosInicialesAgendain = new DTODatosInicialesAgendaIn();
 
@@ -229,11 +248,22 @@ public String getConsultoresPorSemanaJson() {
                 int nroSemana = entry.getKey();
                 List<DTOConsultor> consultores = entry.getValue();
 
-                // Crear un `AgendaDTO` para cada semana
                 AgendaDTOIn agendaDTOIn = new AgendaDTOIn();
                 agendaDTOIn.setSemAgendaConsultor(nroSemana);
                 agendaDTOIn.setMesAgendaConsultor(mes);
                 agendaDTOIn.setAñoAgendaConsultor(anio);
+
+                // Obtener la instancia de `SemanaIU` correspondiente desde `semanasLi`
+                SemanaIU semana = semanasLi.stream()
+                        .filter(s -> s.getNroSemana() == nroSemana)
+                        .findFirst()
+                        .orElse(null);
+
+                if (semana != null) {
+                    // Asignar fechaDesdeSemana y fechaHastaSemana
+                    agendaDTOIn.setFechaDesdeSemana(semana.getFechaDesdeSemana());
+                    agendaDTOIn.setFechaHastaSemana(semana.getFechaHastaSemana());
+                }
 
                 // Establecer la lista de consultores asociados a la semana
                 List<DTOConsultorIn> consultoresDTO = new ArrayList<>();
@@ -245,21 +275,18 @@ public String getConsultoresPorSemanaJson() {
                 }
                 agendaDTOIn.setConsultores(consultoresDTO);
 
-                // Agregar el `AgendaDTO` a `DTODatosInicialesAgenda`
+                // Agregar `AgendaDTOIn` a `DTODatosInicialesAgendaIn`
                 datosInicialesAgendain.addAgendaDTO(agendaDTOIn);
             }
 
-            // Llamar al controlador para persistir `DTODatosInicialesAgenda`
+            // Llamar al controlador para persistir `DTODatosInicialesAgendaIn`
             cont.persistirDatosInicialesAgenda(datosInicialesAgendain);
 
         } catch (Exception e) {
-            throw new Exception (e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
-
-
-    
     public void asignarConsultorASemana(int semana, DTOConsultor consultor) {
         if (!consultoresPorSemana.containsKey(semana)) {
             consultoresPorSemana.put(semana, new ArrayList<>());
@@ -275,7 +302,5 @@ public String getConsultoresPorSemanaJson() {
         // Si no está asignado, lo agrega a la semana
         consultoresEnSemana.add(consultor);
     }
-    
-}
 
-    
+}

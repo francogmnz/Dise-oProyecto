@@ -5,7 +5,7 @@ public class DTOConsultorListaIzq {
     
     private int legajoConsultor;
     private String nombreConsultor;
-    private int nroMaximoTramites;
+    private int numMaximoTramites;
     private int tramAct;
     
      public int getLegajoConsultor() {
@@ -23,20 +23,20 @@ public class DTOConsultorListaIzq {
         this.nombreConsultor = nombreConsultor;
     }
     
-    public int NroMaximoTramites() {
-        return nroMaximoTramites;
+    public int NumMaximoTramites() {
+        return numMaximoTramites;
     }
 
-    public void NroMaximoTramites(int nroMaximoTramites) {
-        this.nroMaximoTramites = nroMaximoTramites;
+    public void NumMaximoTramites(int nroMaximoTramites) {
+        this.numMaximoTramites = nroMaximoTramites;
     }
 
-    public int getNroMaximoTramites() {
-        return nroMaximoTramites;
+    public int getNumMaximoTramites() {
+        return numMaximoTramites;
     }
 
-    public void setNroMaximoTramites(int nroMaximoTramites) {
-        this.nroMaximoTramites = nroMaximoTramites;
+    public void setNumMaximoTramites(int nroMaximoTramites) {
+        this.numMaximoTramites = nroMaximoTramites;
     }
 
     public int getTramAct() {
