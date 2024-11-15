@@ -17,7 +17,7 @@
         <property name="fechaHoraBajaTTD" column="fecha_hora_baja_ttd" type="timestamp"/>
 
         <!-- Relación ManyToOne con Documentacion -->
-        <many-to-one name="documentacion" class="entidades.Documentacion" column="OIDDocumentacion" not-null="false"/>
+        <many-to-one name="documentacion" class="entidades.Documentacion" column="OIDDocumentacion" not-null="false" lazy="false"/>
 
     </class>
 

@@ -355,71 +355,68 @@ public class ExpertoABMTipoTramite {
         tipoTramiteEncontrada.setCategoriaTipoTramite(categoriaTipoTramite);
 
         
-        List<TipoTramiteDocumentacion> tipoTramiteDocumentacionRelacionada = tipoTramiteEncontrada.getTipoTramiteDocumentacion();
-        
-        /*
-        List<Integer> codDocumentacionesExistentes = new ArrayList<>();
-        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
-            if(ttd.getFechaHoraBajaTTD() == null){
-                codDocumentacionesExistentes.add(ttd.getDocumentacion().getCodDocumentacion());
+    List<TipoTramiteDocumentacion> tipoTramiteDocumentacionActivas = new ArrayList<>();
+    for (TipoTramiteDocumentacion ttd : tipoTramiteEncontrada.getTipoTramiteDocumentacion()) {
+        if (ttd.getFechaHoraBajaTTD() == null) {
+            tipoTramiteDocumentacionActivas.add(ttd);
+        }
+    }
+
+    for (TipoTramiteDocumentacion ttd : tipoTramiteDocumentacionActivas) {
+        boolean sigueSeleccionada = false;
+        for (DocumentacionDTO docDTO : documentacionesSeleccionadasDTO) {
+            if (ttd.getDocumentacion().getCodDocumentacion() == docDTO.getCodDocumentacion()) {
+                sigueSeleccionada = true;
+                break;
             }
         }
-        
-        List<Integer> codDocumentacionesSeleccionadas = new ArrayList<>();
-        for(DocumentacionDTO docDTO: documentacionesSeleccionadasDTO){
-            codDocumentacionesSeleccionadas.add(docDTO.getCodDocumentacion());
+        if (!sigueSeleccionada) {
+            ttd.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
+            FachadaPersistencia.getInstance().guardar(ttd);
         }
-        
-        for(TipoTramiteDocumentacion ttd: tipoTramiteDocumentacionRelacionada){
-            if(ttd.getFechaHoraBajaTTD() == null){
-                Integer codDocExistente = ttd.getDocumentacion().getCodDocumentacion();
-                if(!codDocumentacionesSeleccionadas.contains(codDocExistente)){
-                    ttd.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
-                    FachadaPersistencia.getInstance().guardar(ttd);
-                }
+    }         
+      
+    for (DocumentacionDTO documentacionModificadaDTO : documentacionesSeleccionadasDTO) {
+        boolean yaExiste = false;
+        for (TipoTramiteDocumentacion ttd : tipoTramiteDocumentacionActivas) {
+            if (ttd.getDocumentacion().getCodDocumentacion() == documentacionModificadaDTO.getCodDocumentacion()) {
+                yaExiste = true;
+                break;
             }
-        
         }
-        */
-        
-        for(TipoTramiteDocumentacion ttdr: tipoTramiteDocumentacionRelacionada){
-            ttdr.setFechaHoraBajaTTD(fechaHoraActual.obtenerFechaHoraActual());
-            FachadaPersistencia.getInstance().guardar(ttdr);
-        }
-        
-        for(DocumentacionDTO documentacionModificadaDTO: documentacionesSeleccionadasDTO){
+        if(!yaExiste){
+            List<DTOCriterio> criterioDocumentacionList = new ArrayList<>();
+            DTOCriterio criterioPorCodigoDocumentacion = new DTOCriterio();
+            criterioPorCodigoDocumentacion.setAtributo("codDocumentacion");
+            criterioPorCodigoDocumentacion.setOperacion("=");
+            criterioPorCodigoDocumentacion.setValor(documentacionModificadaDTO.getCodDocumentacion());
 
-        List<DTOCriterio> criterioDocumentacionList = new ArrayList<>();
-        DTOCriterio criterioPorCodigoDocumentacion = new DTOCriterio();
-        criterioPorCodigoDocumentacion.setAtributo("codDocumentacion");
-        criterioPorCodigoDocumentacion.setOperacion("=");
-        criterioPorCodigoDocumentacion.setValor(documentacionModificadaDTO.getCodDocumentacion());
+            criterioDocumentacionList.add(criterioPorCodigoDocumentacion);
 
-        criterioDocumentacionList.add(criterioPorCodigoDocumentacion);
+            Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
 
-        Documentacion documentacion = (Documentacion) FachadaPersistencia.getInstance().buscar("Documentacion", criterioDocumentacionList).get(0);
-        
-        if (documentacion.getFechaHoraBajaDocumentacion() != null) {
-            throw new TipoTramiteException("La documentación seleccionada está inactiva.");
-        }        
+            if (documentacion.getFechaHoraBajaDocumentacion() != null) {
+                throw new TipoTramiteException("La documentación seleccionada está inactiva.");
+            }        
 
-        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
-        
-        TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
-        tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaActual);
-        tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);
-        // Lo mismo que en el agregar - ver que hacemos - estana en null
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fechaActual);
-        calendar.add(Calendar.MONTH, 6);
-        Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());
-        //
-        tipoTramiteDocumentacionModificada.setFechaHastaTTD(fechaHastaTTD);
-        tipoTramiteDocumentacionModificada.setDocumentacion(documentacion);
+            Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
 
-        FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacionModificada);
+            TipoTramiteDocumentacion tipoTramiteDocumentacionModificada = new TipoTramiteDocumentacion();
+            tipoTramiteDocumentacionModificada.setFechaDesdeTTD(fechaActual);
+            tipoTramiteDocumentacionModificada.setFechaHoraBajaTTD(null);
+            // Lo mismo que en el agregar - ver que hacemos - estana en null
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaActual);
+            calendar.add(Calendar.MONTH, 6);
+            Timestamp fechaHastaTTD = new Timestamp(calendar.getTimeInMillis());
+            //
+            tipoTramiteDocumentacionModificada.setFechaHastaTTD(fechaHastaTTD);
+            tipoTramiteDocumentacionModificada.setDocumentacion(documentacion);
 
-        tipoTramiteEncontrada.addTipoTramiteDocumentacion(tipoTramiteDocumentacionModificada);
+            FachadaPersistencia.getInstance().guardar(tipoTramiteDocumentacionModificada);
+
+            tipoTramiteEncontrada.addTipoTramiteDocumentacion(tipoTramiteDocumentacionModificada);
+            }
         }
 
 
