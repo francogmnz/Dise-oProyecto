@@ -310,7 +310,7 @@ public class UIABMVersion implements Serializable {
         Messages.create("Error").detail("La versión debe tener más de un estado para continuar.").error().add();
         return;
     }
-
+//voy verificando q al menos un estado tiene q ser final o sea no tener nodo destino
     boolean tieneEstadoFinal = listaNodo.stream()
         .anyMatch(nodo -> nodo.getDestinos() == null || nodo.getDestinos().isEmpty());
     if (!tieneEstadoFinal) {
