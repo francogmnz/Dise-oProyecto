@@ -228,8 +228,6 @@ public class UIABMVersion implements Serializable {
         //aca preparo los nodos
         List<NodoMenuIU> lestadosP = new ArrayList<NodoMenuIU>();
         for (DTOEstado de : dtoVersionM.getDtoEstado()) {
-            // Verificar si el nombre del estado es "Terminado"
-
             NodoMenuIU unEP = new NodoMenuIU();
             unEP.setCodigo(de.getCodEstadoTramite());
             unEP.setNombre(de.getNombreEstadoTramite());
@@ -248,10 +246,6 @@ public class UIABMVersion implements Serializable {
         } else {
             List<NodoIU> lestados = new ArrayList<NodoIU>();
             for (DTOEstado de : dtoVersionM.getDtoEstado()) {
-                if ("Terminado".equals(de.getNombreEstadoTramite().trim())) {
-                    NodoIU unE = new NodoIU();
-                    continue; // Si es "Terminado", no creamos un nodo para el dibujo
-                }
                 if (de.getCodEstadoTramite() == 1) {
                     NodoIU unE = new NodoIU();
                     unE.setCodigo(de.getCodEstadoTramite());
@@ -268,123 +262,100 @@ public class UIABMVersion implements Serializable {
     }
 
     //metodo para confirmar los datos
-    public void confirmar() throws VersionException {
-        if (fechaHastaVersion == null) {
-            Messages.create("Error").detail("La fecha hasta no puede estar vacía.").error().add();
-            return;
-        }
-        if (fechaDesdeVersion == null) {
-            Messages.create("Error").detail("La fecha desde no puede estar vacía.").error().add();
-            return;
-        }
-        if (descripcionVersion.isEmpty()) {
-            Messages.create("Error").detail("La descripcion no puede estar vacía.").error().add();
-            return;
-        }
-
-        // La fecha hasta no puede ser menor que la fecha desde
-        if (fechaHastaVersion.before(fechaDesdeVersion)) {
-            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
-            return;
-        }
-
-        if (fechaDesdeVersion.before(fechaDesdeVersion)) {
-            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
-            return;
-        }
-
-        // Verificar que no se guarde una fecha anterior a hoy
-        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
-
-        if (fechaDesdeVersion.before(fechaActual)) {
-            Messages.create("Error").detail("No se puede guardar una version con una fecha anterior a hoy.").error().add();
-            return;
-        }
-
-        ZoneId zonaHoraria = ZoneId.of("America/Argentina/Buenos_Aires");
-
-        // Crear el DTO
-        DTODatosVersionIn dto = new DTODatosVersionIn();
-        dto.setCodTipoTramite(codTipoTramite);
-        dto.setDescripcionVersion(descripcionVersion);
-        // Asegurarse de que las fechas estén en la zona horaria de Buenos Aires
-        ZoneId zonaBuenosAires = ZoneId.of("America/Argentina/Buenos_Aires");
-
-// Convertir fechaDesdeVersion y fechaHastaVersion usando la zona horaria específica
-        ZonedDateTime fechaDesdeBA = fechaDesdeVersion.toInstant().atZone(zonaBuenosAires);
-        ZonedDateTime fechaHastaBA = fechaHastaVersion.toInstant().atZone(zonaBuenosAires);
-
-// Guardar las fechas convertidas en el DTO
-        dto.setFechaDesdeVersion(Timestamp.from(fechaDesdeBA.toInstant()));
-        dto.setFechaHastaVersion(Timestamp.from(fechaHastaBA.toInstant()));
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeFactory typeFactory = objectMapper.getTypeFactory();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        List<NodoIU> listaNodo = new ArrayList<>();
-        dto.setDibujo(this.guardarJSON);
-
-        try {
-            listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class, NodoIU.class));
-            System.out.println(listaNodo.toString());
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
-            Messages.create(ex.getMessage()).error().add();
-            return;  // Si hay un error en el procesamiento del JSON, no continuar
-        }
-
-        if (listaNodo.size() <= 1) {
-            Messages.create("Error").detail("La version debe tener más de un estado para continuar").error().add();
-            return;
-
-        }
-        // Validar nodos para asegurar origen y estado final
-        boolean tieneNodoFinal = false;
-        Set<Integer> nodosConOrigen = new HashSet<>(); // Para rastrear nodos que tienen un origen
-        boolean estadoFinalValido = false;
-        Set<Integer> estadosConOrigen = new HashSet<>();
-
-        // Validar que los nodos tienen estados de destino conectados
-        for (NodoIU unNodo : listaNodo) {
-            DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
-            ori.setCodEstadoTramite(unNodo.getCodigo());
-            if ("Terminado".equals(unNodo.getNombre()) && !unNodo.getDestinos().isEmpty()) {
-                Messages.create("Error").detail("El estado 'Terminado' no puede tener destinos.").error().add();
-                return;  // Salir si la condición no se cumple
-            }
-            // Si el nodo tiene nombre "Terminado" y no tiene destinos, marcamos como estado final
-            if ("Terminado".equals(unNodo.getNombre()) && unNodo.getDestinos().isEmpty()) {
-                estadoFinalValido = true;
-            } else if (unNodo.getDestinos().isEmpty()) {
-                Messages.create("Error").detail("Solo el estado 'Terminado' puede ser considerado final sin destinos.").error().add();
-                return;
-            }
-
-            // Comprobación de que el estado de origen no quede suelto
-            // Añadir los destinos al DTO de origen
-            for (Integer i : unNodo.getDestinos()) {
-                DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();
-                des.setCodEstadoTramite(i.intValue());
-                ori.addDtoEstadoDestinoList(des);
-            }
-
-            dto.addDtoEstadoOrigenList(ori);
-        }
-
-        // Intentar guardar los datos a través del controlador
-        boolean guardadoExitoso = controladorABMVersion.confirmacion(dto);
-
-        // Mostrar mensaje solo si se guardó exitosamente
-        if (guardadoExitoso) {
-            Gson gson = new Gson();
-            cargarJSON = gson.toJson(dto);
-            System.out.println(cargarJSON);
-            Messages.create("Guardar").detail("Guardado exitoso").add();
-            PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
-
-        } else {
-            Messages.create("Error").detail("Error al guardar los datos").error().add();
-        }
+ public void confirmar() throws VersionException {
+    if (fechaHastaVersion == null) {
+        Messages.create("Error").detail("La fecha hasta no puede estar vacía.").error().add();
+        return;
     }
+    if (fechaDesdeVersion == null) {
+        Messages.create("Error").detail("La fecha desde no puede estar vacía.").error().add();
+        return;
+    }
+    if (descripcionVersion.isEmpty()) {
+        Messages.create("Error").detail("La descripción no puede estar vacía.").error().add();
+        return;
+    }
+
+    if (fechaHastaVersion.before(fechaDesdeVersion)) {
+        Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
+        return;
+    }
+
+    Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+    if (fechaDesdeVersion.before(fechaActual)) {
+        Messages.create("Error").detail("No se puede guardar una versión con una fecha anterior a hoy.").error().add();
+        return;
+    }
+
+    DTODatosVersionIn dto = new DTODatosVersionIn();
+    dto.setCodTipoTramite(codTipoTramite);
+    dto.setDescripcionVersion(descripcionVersion);
+    dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
+    dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
+    dto.setDibujo(this.guardarJSON);
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    List<NodoIU> listaNodo;
+    try {
+        listaNodo = objectMapper.readValue(this.guardarJSON, 
+            objectMapper.getTypeFactory().constructCollectionType(List.class, NodoIU.class));
+    } catch (JsonProcessingException ex) {
+        Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
+        Messages.create(ex.getMessage()).error().add();
+        return;
+    }
+
+    if (listaNodo.size() <= 1) {
+        Messages.create("Error").detail("La versión debe tener más de un estado para continuar.").error().add();
+        return;
+    }
+
+    boolean tieneEstadoFinal = listaNodo.stream()
+        .anyMatch(nodo -> nodo.getDestinos() == null || nodo.getDestinos().isEmpty());
+    if (!tieneEstadoFinal) {
+        Messages.create("Error").detail("Debe haber al menos un estado sin destinos para definir el estado final.").error().add();
+        return;
+    }
+
+    // Validación de orígenes
+    boolean todosTienenOrigen = listaNodo.stream().allMatch(nodo -> {
+        if (nodo.getCodigo() == 1) {
+            return true;
+        }
+        return listaNodo.stream().anyMatch(otroNodo ->
+            otroNodo.getDestinos() != null && otroNodo.getDestinos().contains(nodo.getCodigo())
+        );
+    });
+
+    if (!todosTienenOrigen) {
+        Messages.create("Error").detail("Todos los estados, excepto el estado iniciado (código 1), deben tener al menos un origen.").error().add();
+        return;
+    }
+
+    for (NodoIU unNodo : listaNodo) {
+        DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
+        ori.setCodEstadoTramite(unNodo.getCodigo());
+
+        for (Integer destino : unNodo.getDestinos()) {
+            DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();
+            des.setCodEstadoTramite(destino);
+            ori.addDtoEstadoDestinoList(des);
+        }
+
+        dto.addDtoEstadoOrigenList(ori);
+    }
+
+    boolean guardadoExitoso = controladorABMVersion.confirmacion(dto);
+    if (guardadoExitoso) {
+        Gson gson = new Gson();
+        cargarJSON = gson.toJson(dto);
+        Messages.create("Guardar").detail("Guardado exitoso").add();
+        PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
+    } else {
+        Messages.create("Error").detail("Error al guardar los datos.").error().add();
+    }
+}
 
     public void volverPantallaVersion() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().redirect("admin/ABMVersion/abmVersionLista.jsf");
