@@ -27,30 +27,36 @@
 
             <p:growl id="messages" showDetail="true" />
 
-            <p:dataTable value="#{uicambioEstadoLista.historialEstadosList}" var="estado">
-                <p:column headerText="Estado">
-                    <h:outputText value="#{estado.nombreEstadoTramite}" />
-                </p:column>
-                <p:column headerText="Fecha Desde">
-                    <h:outputText value="#{estado.fechaDesdeTET}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                    </h:outputText>
-                </p:column>
-                <p:column headerText="Fecha Hasta">
-                    <h:outputText value="#{estado.fechaHastaTET}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                    </h:outputText>
-                </p:column>
+          <p:dataTable value="#{uicambioEstadoLista.historialEstadosList}" var="estado" sortBy="#{estado.contadorTET}">
+    <p:column headerText="Contador">
+        <h:outputText value="#{estado.contadorTET}" />
+    </p:column> 
 
-               <p:column headerText="Anular Cambio">
-    <p:commandButton icon="pi pi-undo" 
-                     value="Deshacer Último Cambio" 
-                     action="#{uicambioEstadoLista.deshacerUltimoCambio()}"
-                     rendered="#{estado.fechaHastaTET eq uicambioEstadoLista.obtenerUltimaFechaHasta()}" />
-</p:column>
+    <p:column headerText="Estado">
+        <h:outputText value="#{estado.nombreEstadoTramite}" />
+    </p:column>
+    
+    <p:column headerText="Fecha Desde">
+        <h:outputText value="#{estado.fechaDesdeTET}">
+            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+        </h:outputText>
+    </p:column>
+    
+    <p:column headerText="Fecha Hasta">
+        <h:outputText value="#{estado.fechaHastaTET}">
+            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+        </h:outputText>
+    </p:column>
 
+    <p:column headerText="Anular Cambio">
+        <!-- Mostrar solo si el contador corresponde al más alto -->
+        <p:commandButton icon="pi pi-undo" 
+                         value="Deshacer Último Cambio" 
+                         action="#{uicambioEstadoLista.deshacerUltimoCambio()}"
+                         rendered="#{estado.contadorTET eq uicambioEstadoLista.obtenerContadorMasAlto()}" />
+    </p:column>
+</p:dataTable>
 
-            </p:dataTable>
 
             <p:commandButton value="Volver" action="#{uicambioEstadoLista.volverPantallaTramiteConsultor()}" icon="pi pi-arrow-left" style="margin-top: 20px;" />
         </h:form>

@@ -1,9 +1,12 @@
 package ABMDocumentacion.beans;
+
 import ABMDocumentacion.ControladorABMDocumentacion;
 import ABMDocumentacion.exceptions.DocumentacionException;
 import utils.BeansUtils;
 
 import ABMTipoTramite.dtos.DocumentacionDTO;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -18,9 +21,9 @@ import org.omnifaces.util.Messages;
 public class UIABMDocumentacionLista implements Serializable {
 
     private ControladorABMDocumentacion controladorABMDocumentacion = new ControladorABMDocumentacion();
-    private int codigoFiltro=0;
-    private String nombreFiltro="";
-    private String descripcionFiltro="";
+    private int codigoFiltro = 0;
+    private String nombreFiltro = "";
+    private String descripcionFiltro = "";
 
     public ControladorABMDocumentacion getControladorABMDocumentacion() {
         return controladorABMDocumentacion;
@@ -53,16 +56,14 @@ public class UIABMDocumentacionLista implements Serializable {
     public void setDescripcionFiltro(String descripcionFiltro) {
         this.descripcionFiltro = descripcionFiltro;
     }
-    
-    
-    public void filtrar()
-    {
+
+    public void filtrar() {
 
     }
 
-    public List<DocumentacionGrillaUI> buscarDocumentaciones(){
+    public List<DocumentacionGrillaUI> buscarDocumentaciones() {
         List<DocumentacionGrillaUI> documentacionesGrilla = new ArrayList<>();
-        List<DocumentacionDTO> documentacionesDTO = controladorABMDocumentacion.buscarDocumentaciones(codigoFiltro,nombreFiltro,descripcionFiltro);
+        List<DocumentacionDTO> documentacionesDTO = controladorABMDocumentacion.buscarDocumentaciones(codigoFiltro, nombreFiltro, descripcionFiltro);
         for (DocumentacionDTO documentacionDTO : documentacionesDTO) {
             DocumentacionGrillaUI documentacionesGrillaUI = new DocumentacionGrillaUI();
             documentacionesGrillaUI.setCodDocumentacion(documentacionDTO.getCodDocumentacion());
@@ -79,20 +80,18 @@ public class UIABMDocumentacionLista implements Serializable {
         return "abmDocumentacion?faces-redirect=true&codDocumentacion=0"; // Usa '?faces-redirect=true' para hacer una redirección
     }
 
-    
     public String irModificarDocumentacion(int codDocumentacion) {
         BeansUtils.guardarUrlAnterior();
         return "abmDocumentacion?faces-redirect=true&codDocumentacion=" + codDocumentacion; // Usa '?faces-redirect=true' para hacer una redirección
     }
 
-    public void darDeBajaDocumentacion(int codDocumentacion){
+    public void darDeBajaDocumentacion(int codDocumentacion) {
         try {
             controladorABMDocumentacion.darDeBajaDocumentacion(codDocumentacion);
-            Messages.create("Anulado").detail("Anulado").add();;
-                    
         } catch (DocumentacionException e) {
-            Messages.create("Error!").error().detail("AdminFaces Error message.").add();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
+
     }
-    
 }

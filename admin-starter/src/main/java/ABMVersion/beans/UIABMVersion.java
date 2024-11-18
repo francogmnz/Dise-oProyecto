@@ -329,7 +329,7 @@ public class UIABMVersion implements Serializable {
     });
 
     if (!todosTienenOrigen) {
-        Messages.create("Error").detail("Todos los estados, excepto el estado iniciado (código 1), deben tener al menos un origen.").error().add();
+        Messages.create("Error").detail("Todos los estados, excepto el estado iniciado, deben tener al menos un origen.").error().add();
         return;
     }
 

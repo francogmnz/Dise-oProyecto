@@ -2,10 +2,7 @@ package CambioEstado.beans;
 
 
 import CambioEstado.dtos.DTOHistorialEstado;
-import CambioEstado.dtos.DTOMostrarHistorial;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -14,7 +11,7 @@ public class CambioEstadoHistoricoGrillaUI {
     private int nroTramite;
     private Timestamp fechaDesdeTET;
     private Timestamp fechaHastaTET;
-    private int contador;
+    private int contadorTET;
     List<DTOHistorialEstado> mostrarHistorial;
     
 
@@ -51,13 +48,15 @@ public class CambioEstadoHistoricoGrillaUI {
         this.fechaHastaTET = fechaHastaTET;
     }
 
-    public int getContador() {
-        return contador;
+    public int getContadorTET() {
+        return contadorTET;
     }
 
-    public void setContador(int contador) {
-        this.contador = contador;
+    public void setContadorTET(int contadorTET) {
+        this.contadorTET = contadorTET;
     }
+
+    
 
     public List<DTOHistorialEstado> getMostrarHistorial() {
         return mostrarHistorial;

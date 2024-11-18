@@ -29,7 +29,7 @@ public class UICambioEstadoLista implements Serializable {
     private String nombreFiltro = "";
     private String nombreTramite;
     private int nroTramite;
-    private int contador;
+    private int contadorTET;
     private CambioEstadoHistoricoGrillaUI ultimoEstado;
     private List<CambioEstadoHistoricoGrillaUI> historialEstadosList = new ArrayList<>();
 
@@ -77,13 +77,7 @@ public class UICambioEstadoLista implements Serializable {
         this.nroTramite = nroTramite;
     }
 
-    public int getContador() {
-        return contador;
-    }
-
-    public void setContador(int contador) {
-        this.contador = contador;
-    }
+   
 
     public List<CambioEstadoHistoricoGrillaUI> getHistorialEstadosList() {
         return historialEstadosList;
@@ -151,7 +145,7 @@ public class UICambioEstadoLista implements Serializable {
                 grillaUI.setNombreEstadoTramite(dto.getNombreEstadoTramite());
                 grillaUI.setFechaDesdeTET(dto.getFechaDesdeTET());
                 grillaUI.setFechaHastaTET(dto.getFechaHastaTET());
-                grillaUI.setContador(dto.getContadorTET());
+                grillaUI.setContadorTET(dto.getContadorTET());
                 grillaUI.setNroTramite(nroTramite);
                 historialEstadosList.add(grillaUI);
             }
@@ -183,32 +177,32 @@ public class UICambioEstadoLista implements Serializable {
         BeansUtils.redirectToPreviousPage();
     }
 
-    public Timestamp obtenerUltimaFechaHasta() {
-        if (historialEstadosList == null || historialEstadosList.isEmpty()) {
-            return null; // Si la lista está vacía o nula, retornamos null
-        }
-
-        // Inicializar la variable para almacenar la última fecha "hasta"
-        Timestamp ultimaFechaHasta = null;
-
-        // Iterar sobre la lista para encontrar la fecha "hasta" más alta
-        for (CambioEstadoHistoricoGrillaUI estado : historialEstadosList) {
-            if (estado == null) {
-                continue; // Evitar posibles nulos en la lista, si es que pudiera ocurrir
-            }
-
-            Timestamp fechaHasta = estado.getFechaHastaTET();
-
-            if (fechaHasta != null) {
-                // Comparar las fechas y actualizar si encontramos una fecha más reciente
-                if (ultimaFechaHasta == null || fechaHasta.after(ultimaFechaHasta)) {
-                    ultimaFechaHasta = fechaHasta;
-                }
-            }
-        }
-
-        // Retornar la última fecha "hasta" encontrada
-        return ultimaFechaHasta;
+  public Integer obtenerContadorMasAlto() {
+    if (historialEstadosList == null || historialEstadosList.isEmpty()) {
+        return null; // Retorna null si la lista está vacía o nula
     }
+
+    // Variable para almacenar el contador más alto
+    Integer contadorMasAlto = null;
+
+    // Iterar sobre la lista para encontrar el contador más alto
+    for (CambioEstadoHistoricoGrillaUI estado : historialEstadosList) {
+        if (estado == null) {
+            continue; // Ignorar elementos nulos en la lista
+        }
+
+        Integer contador = estado.getContadorTET(); // Obtener el contador actual
+
+        if (contador != null) {
+            // Actualizar si encontramos un contador más alto
+            if (contadorMasAlto == null || contador > contadorMasAlto) {
+                contadorMasAlto = contador;
+            }
+        }
+    }
+
+    // Retornar el contador más alto encontrado
+    return contadorMasAlto;
+}
 
 }
