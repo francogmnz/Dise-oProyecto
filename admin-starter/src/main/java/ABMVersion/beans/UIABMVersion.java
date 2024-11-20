@@ -262,100 +262,136 @@ public class UIABMVersion implements Serializable {
     }
 
     //metodo para confirmar los datos
- public void confirmar() throws VersionException {
-    if (fechaHastaVersion == null) {
-        Messages.create("Error").detail("La fecha hasta no puede estar vacía.").error().add();
-        return;
-    }
-    if (fechaDesdeVersion == null) {
-        Messages.create("Error").detail("La fecha desde no puede estar vacía.").error().add();
-        return;
-    }
-    if (descripcionVersion.isEmpty()) {
-        Messages.create("Error").detail("La descripción no puede estar vacía.").error().add();
-        return;
-    }
+    public void confirmar() throws VersionException {
 
-    if (fechaHastaVersion.before(fechaDesdeVersion)) {
-        Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
-        return;
-    }
-
-    Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
-    if (fechaDesdeVersion.before(fechaActual)) {
-        Messages.create("Error").detail("No se puede guardar una versión con una fecha anterior a hoy.").error().add();
-        return;
-    }
-
-    DTODatosVersionIn dto = new DTODatosVersionIn();
-    dto.setCodTipoTramite(codTipoTramite);
-    dto.setDescripcionVersion(descripcionVersion);
-    dto.setFechaDesdeVersion(new Timestamp(fechaDesdeVersion.getTime()));
-    dto.setFechaHastaVersion(new Timestamp(fechaHastaVersion.getTime()));
-    dto.setDibujo(this.guardarJSON);
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    List<NodoIU> listaNodo;
-    try {
-        listaNodo = objectMapper.readValue(this.guardarJSON, 
-            objectMapper.getTypeFactory().constructCollectionType(List.class, NodoIU.class));
-    } catch (JsonProcessingException ex) {
-        Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
-        Messages.create(ex.getMessage()).error().add();
-        return;
-    }
-
-    if (listaNodo.size() <= 1) {
-        Messages.create("Error").detail("La versión debe tener más de un estado para continuar.").error().add();
-        return;
-    }
-//voy verificando q al menos un estado tiene q ser final o sea no tener nodo destino
-    boolean tieneEstadoFinal = listaNodo.stream()
-        .anyMatch(nodo -> nodo.getDestinos() == null || nodo.getDestinos().isEmpty());
-    if (!tieneEstadoFinal) {
-        Messages.create("Error").detail("Debe haber al menos un estado sin destinos para definir el estado final.").error().add();
-        return;
-    }
-
-    // Validación de orígenes
-    boolean todosTienenOrigen = listaNodo.stream().allMatch(nodo -> {
-        if (nodo.getCodigo() == 1) {
-            return true;
+        if (fechaHastaVersion == null) {
+            Messages.create("Error").detail("La fecha hasta no puede estar vacía.").error().add();
+            return;
         }
-        return listaNodo.stream().anyMatch(otroNodo ->
-            otroNodo.getDestinos() != null && otroNodo.getDestinos().contains(nodo.getCodigo())
-        );
-    });
-
-    if (!todosTienenOrigen) {
-        Messages.create("Error").detail("Todos los estados, excepto el estado iniciado, deben tener al menos un origen.").error().add();
-        return;
-    }
-
-    for (NodoIU unNodo : listaNodo) {
-        DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
-        ori.setCodEstadoTramite(unNodo.getCodigo());
-
-        for (Integer destino : unNodo.getDestinos()) {
-            DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();
-            des.setCodEstadoTramite(destino);
-            ori.addDtoEstadoDestinoList(des);
+        if (fechaDesdeVersion == null) {
+            Messages.create("Error").detail("La fecha desde no puede estar vacía.").error().add();
+            return;
+        }
+        if (descripcionVersion.isEmpty()) {
+            Messages.create("Error").detail("La descripcion no puede estar vacía.").error().add();
+            return;
         }
 
-        dto.addDtoEstadoOrigenList(ori);
-    }
+        // La fecha hasta no puede ser menor que la fecha desde
+        if (fechaHastaVersion.before(fechaDesdeVersion)) {
+            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
+            return;
+        }
 
-    boolean guardadoExitoso = controladorABMVersion.confirmacion(dto);
-    if (guardadoExitoso) {
-        Gson gson = new Gson();
-        cargarJSON = gson.toJson(dto);
-        Messages.create("Guardar").detail("Guardado exitoso").add();
-        PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
-    } else {
-        Messages.create("Error").detail("Error al guardar los datos.").error().add();
+        if (fechaDesdeVersion.before(fechaDesdeVersion)) {
+            Messages.create("Error").detail("FechaDesde no puede ser mayor a FechaHasta.").error().add();
+            return;
+        }
+
+        // Verificar que no se guarde una fecha anterior a hoy
+        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+
+        if (fechaDesdeVersion.before(fechaActual)) {
+            Messages.create("Error").detail("No se puede guardar una version con una fecha anterior a hoy.").error().add();
+            return;
+        }
+
+        ZoneId zonaHoraria = ZoneId.of("America/Argentina/Buenos_Aires");
+
+        // Crear el DTO
+        DTODatosVersionIn dto = new DTODatosVersionIn();
+        dto.setCodTipoTramite(codTipoTramite);
+        dto.setDescripcionVersion(descripcionVersion);
+        // Asegurarse de que las fechas estén en la zona horaria de Buenos Aires
+        ZoneId zonaBuenosAires = ZoneId.of("America/Argentina/Buenos_Aires");
+
+// Convertir fechaDesdeVersion y fechaHastaVersion usando la zona horaria específica
+        ZonedDateTime fechaDesdeBA = fechaDesdeVersion.toInstant().atZone(zonaBuenosAires);
+        ZonedDateTime fechaHastaBA = fechaHastaVersion.toInstant().atZone(zonaBuenosAires);
+
+// Guardar las fechas convertidas en el DTO
+        dto.setFechaDesdeVersion(Timestamp.from(fechaDesdeBA.toInstant()));
+        dto.setFechaHastaVersion(Timestamp.from(fechaHastaBA.toInstant()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<NodoIU> listaNodo = new ArrayList<>();
+        dto.setDibujo(this.guardarJSON);
+
+        try {
+            listaNodo = objectMapper.readValue(this.guardarJSON, typeFactory.constructCollectionType(List.class, NodoIU.class));
+            System.out.println(listaNodo.toString());
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(UIABMVersion.class.getName()).log(Level.SEVERE, null, ex);
+            Messages.create(ex.getMessage()).error().add();
+            return;  // Si hay un error en el procesamiento del JSON, no continuar
+        }
+
+        if (listaNodo.size() <= 1) {
+            Messages.create("Error").detail("La version debe tener más de un estado para continuar").error().add();
+            return;
+
+        }
+        // Validar que los nodos tienen estados de destino conectados
+
+// Paso 1: Crear una lista de todos los nodos que son destinos (es decir, que están referenciados por otros nodos)
+        Set<Integer> destinos = new HashSet<>();
+        for (NodoIU unNodo : listaNodo) {
+            // Recorremos los destinos de cada nodo
+            for (Integer destino : unNodo.getDestinos()) {
+                destinos.add(destino); // Añadir cada destino a la lista
+            }
+        }
+// Paso 2: Verificar si cada nodo tiene al menos un origen (es decir, si está en la lista de destinos)
+        boolean esFinal = false;
+        for (NodoIU unNodo : listaNodo) {
+            if (unNodo.getCodigo() != 1) { // Excluir el nodo con código 1 (Iniciado)
+                // Verificar si el nodo actual está presente como destino
+                if (!destinos.contains(unNodo.getCodigo())) {
+                    // Si el código del nodo no está en la lista de destinos, el nodo no tiene origen
+                    Messages.create("Error").detail("El estado " + unNodo.getNombre() + " no tiene un origen, está aislado.").error().add();
+                    return;  // Detener el proceso, ya que hay un nodo sin origen
+                }
+                if (unNodo.getDestinos().isEmpty()) {
+                   esFinal = true;
+                   
+                }
+            }
+        }
+
+// Si todos los nodos tienen un origen, continuar con el resto del proceso
+        for (NodoIU unNodo : listaNodo) {
+            DTOEstadoOrigenIN ori = new DTOEstadoOrigenIN();
+            ori.setCodEstadoTramite(unNodo.getCodigo());
+
+            // Añadir los destinos al DTO de origen
+            for (Integer i : unNodo.getDestinos()) {
+                DTOEstadoDestinoIN des = new DTOEstadoDestinoIN();
+                des.setCodEstadoTramite(i.intValue());
+                ori.addDtoEstadoDestinoList(des);
+            }
+            if(esFinal == false){
+            Messages.create("Error").detail("Debe haber un estado sin destino como minimo").error().add();
+                    return;  
+            }
+            dto.addDtoEstadoOrigenList(ori);
+        }
+
+        // Intentar guardar los datos a través del controlador
+        boolean guardadoExitoso = controladorABMVersion.confirmacion(dto);
+
+        // Mostrar mensaje solo si se guardó exitosamente
+        if (guardadoExitoso) {
+            Gson gson = new Gson();
+            cargarJSON = gson.toJson(dto);
+            System.out.println(cargarJSON);
+            Messages.create("Guardar").detail("Guardado exitoso").add();
+            PrimeFaces.current().executeScript("setTimeout(function(){ window.history.back(); }, 1500);");
+
+        } else {
+            Messages.create("Error").detail("Error al guardar los datos").error().add();
+        }
     }
-}
 
     public void volverPantallaVersion() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().redirect("admin/ABMVersion/abmVersionLista.jsf");

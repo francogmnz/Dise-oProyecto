@@ -294,61 +294,28 @@
         }
 
     }
-    function guardar() {
-    exp = editor.export();
-    var lista = exp.drawflow.Home.data;
-    var lnodos = [];
-    var tieneEstadoFinal = false;
-    var todosTienenOrigen = true; // Nuevo: para verificar si todos los nodos tienen un origen
-
-    for (var u in lista) {
-        var unodo = {};
-        unodo.codigo = lista[u].data.codigo;
-        unodo.nombre = lista[u].data.nombre;
-        unodo.xpos = lista[u].pos_x;
-        unodo.ypos = lista[u].pos_y;
-
-        // Obtener destinos
-        unodo.destinos = [];
-        for (var i = 0; i < lista[u].outputs.output_1.connections.length; i++) {
-            unodo.destinos.push(buscaNombre(lista[u].outputs.output_1.connections[i].node));
+    function guardar()
+    {
+        exp=editor.export();
+        var lista=exp.drawflow.Home.data;
+        var u;
+        var lnodos=[];
+        
+        for(u in lista){
+            unodo={}
+            unodo.codigo=lista[u].data.codigo;
+            unodo.nombre=lista[u].data.nombre;
+            unodo.xpos=lista[u].pos_x;
+            unodo.ypos=lista[u].pos_y;
+            unodo.destinos=new Array(lista[u].outputs.output_1.connections.length)
+             for(i=0;i<lista[u].outputs.output_1.connections.length;i++)
+             {
+                 unodo.destinos[i]=(buscaNombre(lista[u].outputs.output_1.connections[i].node))
+             }
+             lnodos.push(unodo)
         }
-
-        // Validar si tiene entradas (origenes)
-        var tieneOrigen = false;
-        for (var v in lista) {
-            for (var i = 0; i < lista[v].outputs.output_1.connections.length; i++) {
-                if (lista[v].outputs.output_1.connections[i].node == u) {
-                    tieneOrigen = true;
-                    break;
-                }
-            }
-            if (tieneOrigen) break; // Salir del bucle si se encuentra un origen
-        }
-
-        // Si no tiene un origen, marcar que no cumple la validación
-        if (!tieneOrigen) {
-            todosTienenOrigen = false;
-        }
-
-        lnodos.push(unodo);
-
-        // Detectar estado final (nodo sin destinos)
-        if (unodo.destinos.length === 0) {
-            tieneEstadoFinal = true;
-        }
-    }
-
-    // Validar antes de guardar
-    if (tieneEstadoFinal && todosTienenOrigen) {
-        console.log(JSON.stringify(lnodos));
+        console.log(JSON.stringify(lnodos))
         window.parent.document.getElementById("jsonGuardar").value = JSON.stringify(lnodos);
-    } else {
-        if (!tieneEstadoFinal) {
-            alert("Error: Debe haber al menos un estado sin destinos para definir el estado final.");
-        }
-        if (!todosTienenOrigen) {
-            alert("Error: Todos los estados deben tener al menos un origen.");
-        }
+        
     }
-}
+    
