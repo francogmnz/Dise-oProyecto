@@ -162,93 +162,132 @@ public class ExpertoCambioEstado {
         estadoOrigenDTO.addEstadosDestinos(estadosDestinoList);
         return estadoOrigenDTO;
     }
-public void cambiarEstado(int nroTramite, int codEstadoDestino) throws CambioEstadoException {
-    FachadaPersistencia.getInstance().iniciarTransaccion();
 
-    try {
-        // Validar si el trámite existe
-        List<DTOCriterio> criterioList = new ArrayList<>();
-        DTOCriterio dto = new DTOCriterio();
-        dto.setAtributo("nroTramite");
-        dto.setOperacion("=");
-        dto.setValor(nroTramite);
-        criterioList.add(dto);
 
-        List tramites = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+    public void cambiarEstado(int nroTramite, int codEstadoDestino) throws CambioEstadoException {
+        FachadaPersistencia.getInstance().iniciarTransaccion();
 
-        if (tramites == null || tramites.isEmpty()) {
-            throw new CambioEstadoException("El trámite no existe");
+        try {
+            // Validar si el trámite existe
+            List<DTOCriterio> criterioList = new ArrayList<>();
+            DTOCriterio dto = new DTOCriterio();
+            dto.setAtributo("nroTramite");
+            dto.setOperacion("=");
+            dto.setValor(nroTramite);
+            criterioList.add(dto);
+
+            List tramites = FachadaPersistencia.getInstance().buscar("Tramite", criterioList);
+
+            if (tramites == null || tramites.isEmpty()) {
+                throw new CambioEstadoException("El trámite no existe");
+            }
+
+            Tramite tramite = (Tramite) tramites.get(0);
+            Version versionTramite = tramite.getVersion();
+
+            List<ConfTipoTramiteEstadoTramite> confVersion = versionTramite.getConfTipoTramiteEstadoTramite();
+            List<ConfTipoTramiteEstadoTramite> confiVersion = versionTramite.getConfTipoTramiteEstadoTramite();
+
+            boolean esFinal = false;
+            
+
+            EstadoTramite estadoActual = tramite.getEstadoTramite();
+
+            List<EstadoTramite> estadosFinales = new ArrayList<>();
+
+            
+            for (ConfTipoTramiteEstadoTramite confi : confiVersion) {
+
+                if (confi.getEstadoTramiteDestino().isEmpty()) {
+
+                    estadosFinales.add(confi.getEstadoTramiteOrigen());
+
+                }
+            }
+            if (!estadosFinales.isEmpty()) {
+                System.out.println("Estados finales encontrados:");
+                for (EstadoTramite estadoFinal : estadosFinales) {
+                    System.out.println(estadoFinal);
+                }
+            } else {
+                System.out.println("No se encontraron estados finales.");
+            }
+
+            
+           
+
+            // Obtener el historial de estados del trámite
+            List<TramiteEstadoTramite> tetList = tramite.getTramiteEstadoTramite();
+
+            // Calcular el nuevo valor del contador
+            int nuevoContador = tetList.isEmpty()
+                    ? 1 // Si no hay historial, inicializamos en 1
+                    : tetList.stream()
+                            .mapToInt(TramiteEstadoTramite::getContadorTET)
+                            .max()
+                            .orElse(0) + 1; // Si hay historial, incrementamos el contador
+
+            // Validar el estado destino
+            criterioList.clear();
+            dto = new DTOCriterio();
+            dto.setAtributo("codEstadoTramite");
+            dto.setOperacion("=");
+            dto.setValor(codEstadoDestino);
+            criterioList.add(dto);
+
+            List estados = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
+            if (estados == null || estados.isEmpty()) {
+                throw new CambioEstadoException("El estado destino no existe");
+            }
+
+            EstadoTramite estadoDestino = (EstadoTramite) estados.get(0);
+
+            // Configurar el nuevo cambio de estado
+            TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
+            Timestamp fechaDesde = fechaHoraActual.obtenerFechaHoraActual();
+
+            
+
+            // Asignar el contador y las fechas
+            tramiteEstadoTramite.setContadorTET(nuevoContador);
+            tramiteEstadoTramite.setFechaDesdeTET(fechaDesde);
+            tramiteEstadoTramite.setEstadoTramite(estadoDestino);
+
+            // Actualizar el estado actual del trámite
+            tramite.setEstadoTramite(estadoDestino);
+            
+            for(EstadoTramite estadofinal : estadosFinales){
+            
+                if(estadoDestino.getCodEstadoTramite() == estadofinal.getCodEstadoTramite()){
+                
+                    esFinal = true;
+                }
+            }
+
+            
+            if (esFinal == true) {
+                tramite.setFechaFinTramite(fechaHoraActual.obtenerFechaHoraActual());
+            }
+            
+            tramite.addTramiteEstadoTramite(tramiteEstadoTramite);
+
+            // Guardar los cambios
+            FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
+            FachadaPersistencia.getInstance().guardar(tramite);
+
+            // Finalizar la transacción
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+
+            System.out.println("Cambio de estado realizado con éxito. Nuevo contador: " + nuevoContador);
+        } catch (Exception e) {
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            e.printStackTrace();
+            throw new CambioEstadoException("Error al cambiar el estado del trámite");
         }
-
-        Tramite tramite = (Tramite) tramites.get(0);
-
-        // Verificar si el trámite ya está en el estado "Terminado"
-        if (tramite.getEstadoTramite() != null && "Terminado".equals(tramite.getEstadoTramite().getNombreEstadoTramite())) {
-            Messages.create("Error")
-                    .detail("No se puede cambiar el estado porque el trámite ya está en estado 'Terminado'.")
-                    .error()
-                    .add();
-            return;
-        }
-
-        // Obtener el historial de estados del trámite
-        List<TramiteEstadoTramite> tetList = tramite.getTramiteEstadoTramite();
-
-        // Calcular el nuevo valor del contador
-        int nuevoContador = tetList.isEmpty() 
-                ? 1 // Si no hay historial, inicializamos en 1
-                : tetList.stream()
-                         .mapToInt(TramiteEstadoTramite::getContadorTET)
-                         .max()
-                         .orElse(0) + 1; // Si hay historial, incrementamos el contador
-
-        // Validar el estado destino
-        criterioList.clear();
-        dto = new DTOCriterio();
-        dto.setAtributo("codEstadoTramite");
-        dto.setOperacion("=");
-        dto.setValor(codEstadoDestino);
-        criterioList.add(dto);
-
-        List estados = FachadaPersistencia.getInstance().buscar("EstadoTramite", criterioList);
-        if (estados == null || estados.isEmpty()) {
-            throw new CambioEstadoException("El estado destino no existe");
-        }
-
-        EstadoTramite estadoDestino = (EstadoTramite) estados.get(0);
-
-        // Configurar el nuevo cambio de estado
-        TramiteEstadoTramite tramiteEstadoTramite = new TramiteEstadoTramite();
-        Timestamp fechaDesde = fechaHoraActual.obtenerFechaHoraActual();
-
-        // Asignar el contador y las fechas
-        tramiteEstadoTramite.setContadorTET(nuevoContador);
-        tramiteEstadoTramite.setFechaDesdeTET(fechaDesde);
-        tramiteEstadoTramite.setEstadoTramite(estadoDestino);
-
-        // Actualizar el estado actual del trámite
-        tramite.setEstadoTramite(estadoDestino);
-        tramite.addTramiteEstadoTramite(tramiteEstadoTramite);
-
-        // Guardar los cambios
-        FachadaPersistencia.getInstance().guardar(tramiteEstadoTramite);
-        FachadaPersistencia.getInstance().guardar(tramite);
-
-        // Finalizar la transacción
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-
-        System.out.println("Cambio de estado realizado con éxito. Nuevo contador: " + nuevoContador);
-    } catch (Exception e) {
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-        e.printStackTrace();
-        throw new CambioEstadoException("Error al cambiar el estado del trámite");
     }
-}
-
-
+  
 
     // Método para obtener el trámite por número
-
     private Tramite obtenerTramitePorNumero(int nroTramite) {
         List<DTOCriterio> criterioList = new ArrayList<>();
 
@@ -267,93 +306,94 @@ public void cambiarEstado(int nroTramite, int codEstadoDestino) throws CambioEst
                 .orElse(null);  // Devuelve null si no se encuentra el trámite
     }
 
- public void deshacerUltimoCambio(int nroTramite) throws CambioEstadoException {
-    System.out.println("Iniciando deshacerUltimoCambio para trámite nro: " + nroTramite);
+    
+    public void deshacerUltimoCambio(int nroTramite) throws CambioEstadoException {
+        System.out.println("Iniciando deshacerUltimoCambio para trámite nro: " + nroTramite);
 
-    FachadaPersistencia.getInstance().iniciarTransaccion();
+        FachadaPersistencia.getInstance().iniciarTransaccion();
 
-    try {
-        // Obtener el trámite por número
-        Tramite tramite = obtenerTramitePorNumero(nroTramite);
-        if (tramite == null) {
-            throw new CambioEstadoException("Trámite no encontrado.");
+        try {
+            // Obtener el trámite por número
+            Tramite tramite = obtenerTramitePorNumero(nroTramite);
+            if (tramite == null) {
+                throw new CambioEstadoException("Trámite no encontrado.");
+            }
+
+            // Obtener el historial de estados del trámite
+            List<TramiteEstadoTramite> historial = tramite.getTramiteEstadoTramite();
+            if (historial == null || historial.isEmpty()) {
+                throw new CambioEstadoException("El trámite no tiene historial de estados.");
+            }
+
+            // Encontrar el estado con el mayor contador (último estado)
+            TramiteEstadoTramite ultimoCambio = historial.stream()
+                    .max(Comparator.comparing(TramiteEstadoTramite::getContadorTET))
+                    .orElseThrow(() -> new CambioEstadoException("No se encontró el último estado del trámite."));
+
+            // Encontrar el estado anterior (contadorTET menor al del último)
+            TramiteEstadoTramite estadoAnterior = historial.stream()
+                    .filter(e -> e.getContadorTET() < ultimoCambio.getContadorTET())
+                    .max(Comparator.comparing(TramiteEstadoTramite::getContadorTET))
+                    .orElse(null);
+
+            if (estadoAnterior == null) {
+                throw new CambioEstadoException("No hay estado anterior para deshacer el cambio.");
+            }
+
+            // Actualizar las fechas
+            Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
+            ultimoCambio.setFechaHastaTET(fechaActual); // Marcar el último estado como cerrado
+            estadoAnterior.setFechaHastaTET(null); // Marcar el estado anterior como el actual
+
+            // Actualizar el estado actual del trámite
+            tramite.setEstadoTramite(estadoAnterior.getEstadoTramite());
+
+            // Recalcular los contadores después de revertir
+            recalcularContadores(historial);
+
+            // Guardar los cambios
+            FachadaPersistencia.getInstance().guardar(ultimoCambio); // Guardar el último estado con fecha de cierre
+            FachadaPersistencia.getInstance().guardar(estadoAnterior); // Guardar el estado anterior como actual
+            FachadaPersistencia.getInstance().guardar(tramite); // Guardar el trámite con el nuevo estado actual
+
+            // Finalizar la transacción
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+
+            // Mensaje de éxito
+            Messages.create("Éxito")
+                    .detail("Se ha deshecho el último cambio. El estado actual del trámite es: "
+                            + estadoAnterior.getEstadoTramite().getNombreEstadoTramite())
+                    .add();
+
+        } catch (CambioEstadoException e) {
+            // Error específico
+            System.err.println("Error específico al deshacer cambio: " + e.getMessage());
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw e;
+        } catch (Exception e) {
+            // Error genérico
+            System.err.println("Error al deshacer cambio: " + e.getMessage());
+            FachadaPersistencia.getInstance().finalizarTransaccion();
+            throw new CambioEstadoException("Error al deshacer cambio: " + e.getMessage());
         }
+    }
 
-        // Obtener el historial de estados del trámite
-        List<TramiteEstadoTramite> historial = tramite.getTramiteEstadoTramite();
+    
+    private void recalcularContadores(List<TramiteEstadoTramite> historial) {
         if (historial == null || historial.isEmpty()) {
-            throw new CambioEstadoException("El trámite no tiene historial de estados.");
+            return; // No hay nada que recalcular
         }
 
-        // Encontrar el estado con el mayor contador (último estado)
-        TramiteEstadoTramite ultimoCambio = historial.stream()
-                .max(Comparator.comparing(TramiteEstadoTramite::getContadorTET))
-                .orElseThrow(() -> new CambioEstadoException("No se encontró el último estado del trámite."));
+        // Ordenar por el campo `contadorTET` ascendente
+        historial.sort(Comparator.comparingInt(TramiteEstadoTramite::getContadorTET));
 
-        // Encontrar el estado anterior (contadorTET menor al del último)
-        TramiteEstadoTramite estadoAnterior = historial.stream()
-                .filter(e -> e.getContadorTET() < ultimoCambio.getContadorTET())
-                .max(Comparator.comparing(TramiteEstadoTramite::getContadorTET))
-                .orElse(null);
-
-        if (estadoAnterior == null) {
-            throw new CambioEstadoException("No hay estado anterior para deshacer el cambio.");
+        // Recalcular los contadores desde 1 hacia adelante
+        int contador = 1;
+        for (TramiteEstadoTramite estado : historial) {
+            estado.setContadorTET(contador); // Ajustar el contador
+            contador++;
         }
-
-        // Actualizar las fechas
-        Timestamp fechaActual = fechaHoraActual.obtenerFechaHoraActual();
-        ultimoCambio.setFechaHastaTET(fechaActual); // Marcar el último estado como cerrado
-        estadoAnterior.setFechaHastaTET(null); // Marcar el estado anterior como el actual
-
-        // Actualizar el estado actual del trámite
-        tramite.setEstadoTramite(estadoAnterior.getEstadoTramite());
-
-        // Recalcular los contadores después de revertir
-        recalcularContadores(historial);
-
-        // Guardar los cambios
-        FachadaPersistencia.getInstance().guardar(ultimoCambio); // Guardar el último estado con fecha de cierre
-        FachadaPersistencia.getInstance().guardar(estadoAnterior); // Guardar el estado anterior como actual
-        FachadaPersistencia.getInstance().guardar(tramite); // Guardar el trámite con el nuevo estado actual
-
-        // Finalizar la transacción
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-
-        // Mensaje de éxito
-        Messages.create("Éxito")
-                .detail("Se ha deshecho el último cambio. El estado actual del trámite es: " 
-                        + estadoAnterior.getEstadoTramite().getNombreEstadoTramite())
-                .add();
-
-    } catch (CambioEstadoException e) {
-        // Error específico
-        System.err.println("Error específico al deshacer cambio: " + e.getMessage());
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-        throw e;
-    } catch (Exception e) {
-        // Error genérico
-        System.err.println("Error al deshacer cambio: " + e.getMessage());
-        FachadaPersistencia.getInstance().finalizarTransaccion();
-        throw new CambioEstadoException("Error al deshacer cambio: " + e.getMessage());
     }
-}
-private void recalcularContadores(List<TramiteEstadoTramite> historial) {
-    if (historial == null || historial.isEmpty()) {
-        return; // No hay nada que recalcular
-    }
-
-    // Ordenar por el campo `contadorTET` ascendente
-    historial.sort(Comparator.comparingInt(TramiteEstadoTramite::getContadorTET));
-
-    // Recalcular los contadores desde 1 hacia adelante
-    int contador = 1;
-    for (TramiteEstadoTramite estado : historial) {
-        estado.setContadorTET(contador); // Ajustar el contador
-        contador++;
-    }
-}
-
-
 
     public List<DTOHistorialEstado> obtenerHistorialEstados(int nroTramite) throws CambioEstadoException {
 
